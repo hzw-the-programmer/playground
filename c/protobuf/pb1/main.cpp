@@ -1,10 +1,51 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "stdint.h"
 #include "addressbook.pb-c.h"
 
-int main() {
-    uint8_t data[] = {0x0a, 0x21, 0x0a, 0x04, 0x62, 0x6a, 0x30, 0x31, 0x10, 0x01, 0x1a, 0x0c, 0x62, 0x6a, 0x30, 0x31, 0x40, 0x68, 0x7a, 0x77, 0x2e, 0x63, 0x6f, 0x6d, 0x22, 0x09, 0x0a, 0x07, 0x31, 0x32, 0x33, 0x34, 0x31, 0x36, 0x36};
-    AddressBook *book = address_book__unpack(NULL, sizeof(data), data);
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        printf("Usage: %s fn\n", argv[0]);
+        return 1;
+    }
+    char *fn = argv[1];
+
+    FILE *f = fopen(fn, "rb");
+    if (!f) {
+        perror("fopen");
+        return 1;
+    }
+
+    if (fseek(f, 0, SEEK_END)) {
+        perror("fseek");
+        return 1;
+    }
+
+    long size = ftell(f);
+    if (size == -1) {
+        perror("ftell");
+        return 1;
+    }
+
+    if (fseek(f, 0, SEEK_SET)) {
+        perror("fseek");
+        return 1;
+    }
+
+    uint8_t *data = (uint8_t*)malloc(size);
+    if (!data) {
+        perror("malloc");
+        return 1;
+    }
+
+    size_t n = fread(data, 1, size, f);
+    if (n != size) {
+        printf("fread: %d!=%d", n, size);
+        return 1;
+    }
+ 
+    AddressBook *book = address_book__unpack(NULL, size, data);
+
     for (int i = 0; i < book->n_people; i++) {
         Person *p = book->people[i];
         printf("Id: %d\n", p->id);
@@ -23,10 +64,8 @@ int main() {
                 printf("Work phone #: %s\n", pn->number);
                 break;
             }
-            
         }
     }
-    int i;
-    scanf("%d\n", &i);
+
     return 0;
 }
