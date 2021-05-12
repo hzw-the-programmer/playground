@@ -1,0 +1,27 @@
+<html>
+<body>
+  <script>
+    function resolveAfter2Seconds(x) {
+      console.log(3)
+      const p = new Promise(resolve => {
+        console.log(4)
+        setTimeout(() => resolve(x), 2000)
+        console.log(5)
+      })
+      console.log(6)
+      return p
+    }
+
+    async function add1(y) {
+      console.log(2)
+      const a = await resolveAfter2Seconds(20)
+      console.log(8)
+      return a + y
+    }
+
+    console.log(1)
+    add1(10).then(value => console.log(9))
+    console.log(7)
+  </script>
+</body>
+</html>

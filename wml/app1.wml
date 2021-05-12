@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN"
+"http://www.wapforum.org/DTD/wml_1.1.xml">
+
+<wml>
+    <card title="DMA" id="home">
+        <p>Our first card, and a <a href="#next">link</a> to the second.</p>
+    </card>
+    
+    <card title="DMA" id="next">
+        <p>Our second card.</p>
+    </card>
+</wml>

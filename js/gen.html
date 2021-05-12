@@ -1,0 +1,43 @@
+<html>
+<body>
+  <script>
+    function* gen1() {
+      let i = 0
+      while (true) {
+        yield i++
+      }
+    }
+    let g = gen1()
+    console.log(g)
+    console.log(g.next())
+    console.log(g.next())
+
+    function add5(value) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve(value + 5)
+        }, 2000);
+      })
+    }
+
+    function* gen2(value) {
+      const res = yield add5(value)
+      console.log(res)
+    }
+    
+    g = gen2(10)
+    g.next().value.then(res => g.next(res))
+
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const suc = Math.random() < 0.5
+        if (suc) {
+          resolve(10)
+        } else {
+          reject(20)
+        }
+      }, 1000)
+    }).then(value => console.log('resolve', value)).catch(value => console.log('reject', value))
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.2//EN"
+"http://www.wapforum.org/DTD/wml12.dtd">
+
+<wml>
+
+    <card title="GO Element">
+        <p>
+            <anchor>
+                Using Get Method 
+                <go href="chapter2.wml?x=17&y=42" method="get"/>
+            </anchor>
+        </p>
+    </card>
+
+</wml>

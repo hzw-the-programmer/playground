@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <style>
+            fieldset { width: 400px; padding: 1%; }
+            input[type=text], select, textarea { width: 98%; }
+            .half { float: left; width: 48%; padding: 1%; }
+            .full { clear: both; width: 98%; padding: 1%; }
+            .right { text-align: right; }
+        </style>
+    </head>
+    <body>
+        <fieldset>
+            <legend>Contact form</legend>
+            <form>
+                <div class="half">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name">
+                </div>
+                <div class="half">
+                    <label for="email">Email</label>
+                    <input type="text" id="email" name="email">
+                </div>
+                <div class="half">
+                    <label for="zip">Zip / Postal code</label>
+                    <input type="text" id="zip" name="zip">
+                </div>
+                <div class="half">
+                    <label for="country">Country</label>
+                    <select id="country" name="country"><option></option></select>
+                </div>
+                <div class="full">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message"></textarea>
+                </div>
+                <div class="half">
+                    <input type="checkbox" id="copy" name="copy">
+                    <label for="copy">Send me a copy</label>
+                </div>
+                <div class="half right">
+                    <input type="submit" value="send">
+                </div>
+            </form>
+        </fieldset>
+    </body>
+</html>

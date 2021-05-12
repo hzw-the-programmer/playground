@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <title>chat2</title>
+        <script>
+            function send() {
+                var msg = document.getElementById("msg").value
+                wssend({msg})
+            }
+
+            var ws
+            function wssend(msg) {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify(msg))
+                } else {
+                    ws = new WebSocket("ws://localhost:1123/chat")
+                    ws.onopen = function(event) {
+                        console.log("onopen")
+                        ws.send(JSON.stringify(msg))
+                    }
+                    ws.onmessage = function(event) {
+                        console.log("onmessage", JSON.parse(event.data))
+                    }
+                    ws.onclose = function(event) {
+                        console.log("onclose", event.code)
+                    }
+                    ws.onerror = function(event) {
+                        console.log("onerror", event)
+                    }
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div>
+            <label>
+                host:
+                <input />
+            </label>
+            <label>
+                port:
+                <input />
+            </label>
+        </div>
+        <input id="msg" />
+        <button onclick="send()">send</button>
+    </body>
+</html>

@@ -1,0 +1,3 @@
+build:
+	go fmt ./...
+	go build main.go

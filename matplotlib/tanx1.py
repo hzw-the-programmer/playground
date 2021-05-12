@@ -1,0 +1,81 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# x = np.linspace(-2, 2, 100)
+# plt.plot(x, np.arctan(x), label='y = arctan(x)')
+# plt.plot(x, x, label='y = x')
+# x = np.linspace(0.01, 2, 100)
+# l1 = plt.plot(x, np.arctan(1 / x), label='y = arctan(1/x)')
+# l2 = plt.plot(x, np.arctan(1 /x) / x**2, label='y = arctan(1/x) / x**2')
+# l3 = plt.plot(x, 1 / x**2, label='y = 1 / x**2')
+# x = np.linspace(-2, -0.01, 100)
+# plt.plot(x, np.arctan(1 / x), c=l1[0].get_color())
+# plt.plot(x, np.arctan(1 /x) / x**2, c=l2[0].get_color())
+# plt.plot(x, 1 / x**2, c=l3[0].get_color())
+
+# x = np.linspace(0.01, 2, 100)
+# l1 = plt.plot(x, np.arctan(1 /x) / x**2, label='y = arctan(1/x) / x**2')
+# l2 = plt.plot(x, np.arctan(1 /x**2) / x**2, label='y = arctan(1/x**2) / x**2')
+# l3 = plt.plot(x, 1 / x**2, label='y = 1 / x**2')
+# x = np.linspace(-2, -0.01, 100)
+# plt.plot(x, np.arctan(1 / x) / x**2, c=l1[0].get_color())
+# plt.plot(x, np.arctan(1 /x**2) / x**2, c=l2[0].get_color())
+# plt.plot(x, 1 / x**2, c=l3[0].get_color())
+
+# x = np.linspace(-2, 2, 100)
+# plt.plot(x, x * np.arctan(x), label='y = x * arctan(x)')
+# plt.plot(x, 2 * x * np.arctan(x), label='y = 2 * x * arctan(x)')
+# plt.plot(x, 3 * x * np.arctan(x), label='y = 3 * x * arctan(x)')
+# plt.plot(x, (1/2) * x * np.arctan(x), label='y = (1/2) * x * arctan(x)')
+# plt.plot(x, (1/3) * x * np.arctan(x), label='y = (1/3) * x * arctan(x)')
+# plt.plot(x, x**2 * np.arctan(x**2), label='y = x**2 * arctan(x**2)')
+# plt.plot(x, x**3 * np.arctan(x**3), label='y = x**3 * arctan(x**3)')
+
+# x = np.linspace(0.001, 2, 100)
+# l1 = plt.plot(x, x * np.arctan(1 / x), label='y = x * arctan(1 / x)')
+# l2 = plt.plot(x, x**2 * np.arctan(1 / x**2), label='y = x**2 * arctan(1 / x**2)')
+# l3 = plt.plot(x, x**3 * np.arctan(1 / x**3), label='y = x**3 * arctan(1 / x**3)')
+# x = np.linspace(-2, -0.001, 100)
+# plt.plot(x, x * np.arctan(1 / x), c=l1[0].get_color())
+# plt.plot(x, x**2 * np.arctan(1 / x**2), c=l2[0].get_color())
+# plt.plot(x, x**3 * np.arctan(1 / x**3), c=l3[0].get_color())
+
+# x = np.linspace(0.001, 2, 100)
+# l1 = plt.plot(x, np.arctan(x) / x, label='y = arctan(x) / x')
+# l2 = plt.plot(x, np.arctan(x**2) / x**2, label='y = arctan(x**2) / x**2')
+# l3 = plt.plot(x, np.arctan(x**3) / x**3, label='y = arctan(x**3) / x**3')
+# x = np.linspace(-2, -0.001, 100)
+# plt.plot(x, np.arctan(x) / x, c=l1[0].get_color())
+# plt.plot(x, np.arctan(x**2) / x**2, c=l2[0].get_color())
+# plt.plot(x, np.arctan(x**3) / x**3, c=l3[0].get_color())
+
+# x = np.linspace(0.001, 2, 100)
+# l1 = plt.plot(x, np.arctan(1 / x) / x, label='y = arctan(1 / x) / x')
+# l2 = plt.plot(x, np.arctan(1 / x**2) / x**2, label='y = arctan(1 / x**2) / x**2')
+# l3 = plt.plot(x, np.arctan(1 / x**3) / x**3, label='y = arctan(1 / x**3) / x**3')
+# x = np.linspace(-2, -0.001, 100)
+# plt.plot(x, np.arctan(1 / x) / x, c=l1[0].get_color())
+# plt.plot(x, np.arctan(1 / x**2) / x**2, c=l2[0].get_color())
+# plt.plot(x, np.arctan(1 / x**3) / x**3, c=l3[0].get_color())
+# plt.ylim([-2, 2])
+
+cmap = plt.get_cmap('jet_r')
+N = 20
+# x = np.linspace(-5, 5, 100)
+# x = np.linspace(-10, 10, 100)
+# x = np.linspace(-20, 20, 400)
+x = np.linspace(0, 5, 100)
+# x = np.linspace(0, 10, 100)
+# x = np.linspace(0, 20, 100)
+for i, n in enumerate(np.linspace(2.0, 0, N)):
+    # y = n * x * np.arctan(x)
+    y = x**n * np.arctan(x)
+    color = cmap(i/N)
+    lw = 2.5 if i==0 else 1
+    label = '%s * x * arctan(x)' % n if i<3 else ''
+    label = 'x**%s * arctan(x)' % n if i<3 else ''
+    plt.plot(x, y, c=color, lw=lw, zorder=-i, label=label)
+
+plt.grid(True)
+plt.legend()
+plt.show()

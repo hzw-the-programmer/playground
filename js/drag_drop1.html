@@ -1,0 +1,40 @@
+<html>
+<body>
+  <style>
+    .dropzone {
+      width: 200px;
+      height: 20px;
+      background: blueviolet;
+      margin-bottom: 10px;
+      padding: 10px;
+    }
+    #draggable {
+      background: white;
+      text-align: center;
+    }
+  </style>
+  <script>
+    document.addEventListener('dragstart', function (e) {
+      const t = e.target
+      t.style.opacity = .5
+    })
+    document.addEventListener('dragend', function (e) {
+      const t = e.target
+      t.style.opacity = ''
+    })
+    function dragstart_handler(e) {
+      const t = e.target
+    }
+  </script>
+  <div class="dropzone">
+    <div id="draggable"
+         draggable="true"
+         ondragstart="dragstart_handler(event)">
+      This div is draggable
+    </div>
+  </div>
+  <div class="dropzone"></div>
+  <div class="dropzone"></div>
+  <div class="dropzone"></div>
+</body>
+</html>

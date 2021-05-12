@@ -1,0 +1,382 @@
+<html>
+<head>
+    <script>
+        const GND_H = 0x08
+        const GND_L = 0x0C
+        const WS = 0x09
+        const VB = 0x0A
+        const INVALID = 0x00
+
+        const GET_SN = 0x06
+        const SET_SN = 0x05
+
+        const GET_PARAM = 0x52
+        const SET_PARAM = 0x53
+
+        const GET_WORK_TIME = 0x08
+        const SET_WORK_TIME = 0x07
+
+        const OPEN = 0x49
+        const CLOSE = 0x50
+
+        var wssock = null
+
+        function openWsSock(data) {
+            const ip = document.getElementById('wsip').value.trim()
+            const port = document.getElementById('wsport').value.trim()
+
+            if (!ip) {
+                alert("Please specify Iot Server Ip.")
+                return
+            }
+
+            if (!port) {
+                port = 9998
+            }
+
+            url = 'ws://' + ip + ':' + port
+
+            if (!wssock || wssock.readyState !== 1 || wssock.url !== url) {
+                wssock = new WebSocket(url)
+
+                wssock.onopen = function (event) {
+                    console.log('ws opened.');
+                    send(data)
+                }
+                wssock.onmessage = function (event) {
+                    console.log(event.data)
+                }
+                wssock.onerror = function (event) {
+                    console.log('ws errored.')
+                }
+                wssock.onclose = function (event) {
+                    console.log('ws closed.')
+                }
+            }
+        }
+
+        function send(data) {
+            if (wssock && wssock.readyState === 1) {
+                wssock.send(JSON.stringify(data))
+                console.log('send', data);
+            } else {
+                openWsSock(data)
+            }
+        }
+
+        function getTimestamp(year, month, day, hour, minute = 0, second = 0) {
+            date = new Date(year, month - 1, day, hour, minute, second)
+            return Math.floor(date.getTime() / 1000)
+        }
+
+        function getSns() {
+            sns = document.getElementById('sns').value.trim()
+            if (!sns) {
+                alert('Sns is empty')
+                return
+            }
+            return sns.split(',')
+        }
+
+        function getType() {
+            type = document.getElementById('type').value.trim()
+            if (!type) {
+                alert('type is empty')
+                return
+            }
+            return parseInt(type, 16);
+        }
+
+        function getIp() {
+            ip = document.getElementById('ip').value.trim()
+            if (!ip) {
+                alert('Ip is empty')
+                return
+            }
+            return ip
+        }
+
+        function getPort() {
+            port = document.getElementById('port').value.trim()
+            if (!port) {
+                port = 19268
+            }
+            return port
+        }
+
+        function getPid() {
+            let pid = document.getElementById('pid').value.trim()
+            if (!pid) {
+                alert('Place Id is empty')
+                return
+            }
+            return pid;
+        }
+
+        function getChannels() {
+            const pid = getPid()
+            if (!pid) return
+
+            const channels = []
+            for (let slot = 1; slot < 5; slot++) {
+                let type
+                switch (slot) {
+                    case 3:
+                        type = GND_L
+                        break
+                    case 4:
+                        type = WS
+                        break
+                    default:
+                        type = GND_H
+                        break
+                }
+                for (let port = 0; port < 4; port++) {
+                    if (type === WS && port >= 2) continue
+                    const name = `${slot}${port}`
+                    channels.push({slot, port, type, pid, name})
+                }
+            }
+            return channels
+        }
+
+        function getPeriods() {
+            return [
+                [getTimestamp(2018, 1, 23, 8), getTimestamp(2018, 1, 23, 12)],
+                [getTimestamp(2018, 1, 23, 13), getTimestamp(2018, 1, 23, 17)],
+                [getTimestamp(2018, 1, 23, 19), getTimestamp(2018, 1, 23, 20)],
+            ]
+        }
+
+        function getSn() {
+            const ip = getIp()
+            if (!ip) return
+            
+            const port = getPort()
+            if (!port) return
+
+            const cmd = GET_SN
+
+            send({
+                ip, port, cmd
+            });
+        }
+
+        function setSn() {
+            const ip = getIp()
+            if (!ip) return
+
+            const port = getPort()
+            if (!port) return
+
+            const cmd = SET_SN
+
+            const sns = getSns()
+            if (!sns) return
+
+
+            send({
+                ip, port, cmd, sns
+            });
+        }
+
+        function setParam() {
+            const sns = getSns()
+            if (!sns) return
+
+            const cmd = SET_PARAM
+
+            const type = getType()
+            if (!type) return
+
+            analogInterval = document.getElementById('analogInterval').value
+            lowerLimit = document.getElementById('lowerLimit').value
+            upperLimit = document.getElementById('upperLimit').value
+            alarmDelay = document.getElementById('alarmDelay').value
+            level1Delay = document.getElementById('level1Delay').value
+            level2Delay = document.getElementById('level2Delay').value
+            level3Delay = document.getElementById('level3Delay').value
+            
+            send({
+                sns,
+                cmd,
+                param: {
+                    type,
+                    analogInterval,
+                    lowerLimit,
+                    upperLimit,
+                    alarmDelay,
+                    level1Delay,
+                    level2Delay,
+                    level3Delay
+                }
+            });
+        }
+
+        function getParam() {
+            const sns = getSns()
+            if (!sns) return
+
+            const cmd = GET_PARAM
+
+            const type = getType()
+            if (!type) return
+
+            send({
+                sns,
+                cmd,
+                type
+            })
+        }
+
+        function openChannels() {
+            const sns = getSns()
+            if (!sns) return
+
+            const cmd = OPEN
+
+            const channels = getChannels()
+            if (!channels) return
+
+            send({
+                sns,
+                cmd,
+                channels
+            });
+        }
+
+        function closeChannels() {
+            const sns = getSns()
+            if (!sns) return
+
+            const cmd = CLOSE
+
+            const channels = getChannels()
+            if (!channels) return
+            
+            send({
+                sns,
+                cmd,
+                channels
+            });
+        }
+
+        function setWorkTime() {
+            const sns = getSns()
+            if (!sns) return
+
+            const cmd = SET_WORK_TIME
+
+            const periods = getPeriods()
+
+            send({
+                sns,
+                cmd,
+                periods
+            })
+        }
+
+        function getWorkTime() {
+            const sns = getSns()
+            if (!sns) return
+            
+            const cmd = GET_WORK_TIME
+
+            send({
+                sns,
+                cmd
+            })
+        }
+
+        function sync() {
+            const task = 'sync'
+
+            send({
+                task
+            })
+        }
+    </script>
+</head>
+
+<body>
+    <div>
+        <label for="ip">Ip:</label>
+        <input id="ip"/>
+    
+        <label for="port">Port:</label>
+        <input id="port" value="19268"/>
+    </div>
+    
+    <div>
+        <label for="sns">Sns:</label>
+        <input id="sns"/>
+    </div>
+
+    <div>
+        <button onclick="setSn()">Set Sn</button>
+        <button onclick="getSn()">Get Sn</button>
+    </div>
+
+    <div>
+        <label for="type">Type:</label>
+        <select id="type">
+            <option value="0x08">GND_H</option>
+            <option value="0x0C">GND_L</option>
+            <option value="0x09">WS</option>
+        </select>
+    
+        <label for="analogInterval">Analog Interval:</label>
+        <input id="analogInterval"/>
+    
+        <label for="lowerLimit">Lower Limit:</label>
+        <input id="lowerLimit"/>
+    
+        <label for="upperLimit">Upper Limit:</label>
+        <input id="upperLimit"/>
+    
+        <label for="alarmDelay">Alarm Delay:</label>
+        <input id="alarmDelay"/>
+    
+        <label for="level1Delay">Level1 Delay:</label>
+        <input id="level1Delay"/>
+    
+        <label for="level2Delay">Level2 Delay:</label>
+        <input id="level2Delay"/>
+    
+        <label for="level3Delay">Level3 Delay:</label>
+        <input id="level3Delay"/>
+
+        <div>
+            <button onclick="setParam()">Set Param</button>
+            <button onclick="getParam()">Get Param</button>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <label for="pid">Place Id:</label>
+            <input id="pid"/>
+        </div>
+        <div>
+            <button onclick="openChannels()">Open Channels</button>
+            <button onclick="closeChannels()">Close Channels</button>
+        </div>
+    </div>
+
+    <div>
+        <button onclick="setWorkTime()">Set Work Time</button>
+        <button onclick="getWorkTime()">Get Work Time</button>
+    </div>
+
+    <div>
+        <button onclick="sync()">Sync</button>
+    </div>
+
+    <div>
+        <label for="wsip">Iot Server Ip:</label>
+        <input id="wsip"/>
+        <label for="wsport">Iot Server Port:</label>
+        <input id="wsport" value="9998"/>
+    </div>
+</body>
+</html>

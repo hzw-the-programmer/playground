@@ -1,0 +1,11 @@
+#!/bin/bash
+
+for i in `ps -aux| awk '$11 ~ /php/ && $12 ~ /virtual_device.php/ {print $2}'`;
+do
+    kill $i
+    file=/tmp/iot/vd$i
+    if [ -f $file ];
+    then
+        rm $file
+    fi
+done

@@ -1,0 +1,2 @@
+mtk6260\plutommi\Service\DataLockSrv\DataLockSrv.c
+srv_data_lock_set_setting

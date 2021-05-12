@@ -1,0 +1,19 @@
+sudo yum install php72-php-fpm
+
+sudo systemctl status php72-php-fpm
+sudo systemctl enable php72-php-fpm
+sudo systemctl start php72-php-fpm
+
+sudo vi /etc/opt/remi/php72/php-fpm.conf
+sudo vi /etc/opt/remi/php72/php-fpm.d/www.conf
+
+user = nginx ;apache
+group = nginx ;apache
+
+listen = /var/opt/remi/php72/run/php-fpm/php-fpm.sock ;127.0.0.1:9000
+
+listen.owner = nginx
+listen.group = nginx
+
+sudo systemctl restart php72-php-fpm
+ls -l /var/opt/remi/php72/run/php-fpm/

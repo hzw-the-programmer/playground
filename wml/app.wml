@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN"
+"http://www.wapforum.org/DTD/wml_1.1.xml">
+
+<wml>
+    <card id="input_mobile" title="Input Mobile">
+        <select name="country_code">
+            <option value="86">(+86)China</option>
+            <option value="213">(+213)Algeria</option>
+            <option value="244">(+244)Angola</option>
+            <option value="229">(+229)Benin</option>
+            <option value="245">(+245)Bissau Guinea</option>
+        </select>
+        <br/>
+        <input name="phone"/>
+    </card>
+</wml>

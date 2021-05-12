@@ -1,0 +1,47 @@
+<html>
+<head>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    class EssayForm extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {value: 'Please write an essay about your favorite DOM element.'};
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+      }
+
+      handleSubmit(event) {
+        alert('An essay was submitted: ' + this.state.value);
+        event.preventDefalt();
+      }
+
+      handleChange(event) {
+        this.setState({value: event.target.value});
+      }
+
+      render() {
+        return (
+          <form onSubmit={this.handleSubmit}>
+            <label>
+              Essay:
+              <textarea value={this.state.value} onChange={this.handleChange} />
+            </label>
+            <input type="submit" value="Submit" />
+          </form>
+        );
+      }
+    }
+
+    ReactDOM.render(
+      <EssayForm />,
+      document.getElementById('root')
+    );
+  </script>
+</body>
+</html>

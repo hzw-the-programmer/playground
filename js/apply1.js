@@ -1,0 +1,6 @@
+let a = Math.max(1, 2, 3)
+console.log(a)
+a = Math.max([1, 2, 3])
+console.log(a)
+a = Math.max.apply(null, [1, 2, 3])
+console.log(a)

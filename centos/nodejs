@@ -1,0 +1,15 @@
+sudo yum info nodejs
+#tar -tf node-v8.12.0-linux-x64.tar.xz
+#sudo tar --strip-components 1 -xzvf node-v* -C /usr/local
+tar -xvf node-v8.12.0-linux-x64.tar.xz
+sudo ln -s ~/node-v8.12.0-linux-x64/bin/node /usr/bin/node
+sudo ln -s ~/node-v8.12.0-linux-x64/bin/npm /usr/bin/npm
+
+npm install
+npm run build
+
+sudo tar -xvf node-v8.12.0-linux-x64.tar.xz -C /opt
+sudo chown -R root:root node-v8.12.0-linux-x64/
+sudo chmod -R g-w node-v8.12.0-linux-x64/
+sudo ln -s /opt/node-v8.12.0-linux-x64/bin/node /usr/bin/node
+sudo ln -s /opt/node-v8.12.0-linux-x64/bin/npm /usr/bin/npm

@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>hello zhiwenhe!</title>
+    </head>
+    <body>
+        <h1>welcome zhiwenhe!!!</h1>
+        <script>
+            var ws = new WebSocket("wss://localhost:9501")
+            ws.onopen = function(event) {
+                console.log('ws opened')
+                ws.send("hello")
+            }
+            ws.onmessage = function(event) {
+                console.log(event.data)
+            }
+        </script>
+    </body>
+</html>

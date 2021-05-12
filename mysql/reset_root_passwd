@@ -1,0 +1,6 @@
+sudo echo "ALTER USER 'root'@'localhost' IDENTIFIED BY 'asdF@123';" > /var/lib/mysql/resetpasswd
+sudo chown mysql:mysql /var/lib/mysql/resetpasswd
+sudo vi /lib/systemd/system/mysql.service
+ExecStart=/usr/sbin/mysqld --init-file=/var/lib/mysql/resetpasswd
+sudo systemctl daemon-reload
+sudo systemctl restart mysql

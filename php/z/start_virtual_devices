@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ $# -ne 5 ];
+then
+    echo $0 remote_address remote_port sn_start port_start num
+    exit
+fi
+
+REMOTE_ADDRESS=$1
+REMOTE_PORT=$2
+SN_START=$3
+PORT_START=$4
+NUM=$5
+
+for i in `seq 1 $NUM`;
+do
+    sn=$(($SN_START + $i - 1))
+    port=$(($PORT_START + $i - 1))
+    
+    sn1=$(($sn + 100000000))
+    sn2=$(($sn + 200000000))
+
+    php virtual_device.php $REMOTE_ADDRESS $REMOTE_PORT $port $sn $sn1 $sn2 &
+done

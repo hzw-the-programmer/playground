@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.2//EN"
+"http://www.wapforum.org/DTD/wml12.dtd">
+
+<wml>
+    <card title="GO Element">
+        <p>
+            <anchor>
+                Using setvar:
+                <go href="go2.wml" method="get"> 
+                    <postfield name="x" value="17"/>
+                    <postfield name="y" value="42"/>
+                </go>
+            </anchor>
+        </p>
+    </card>
+</wml>

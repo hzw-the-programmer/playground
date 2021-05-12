@@ -1,0 +1,12 @@
+# man crontab
+# man 5 crontab
+# crontab -l
+# crontab timer3crontab
+# crontab -l
+# sudo ls /var/spool/cron/crontabs/
+# grep CRON /var/log/syslog
+
+SHELL=/bin/bash
+PATH=/usr/bin
+
+9 * * * * php /home/zhiwenhe/work/python-play-ground/php/swoole/timer3check.php

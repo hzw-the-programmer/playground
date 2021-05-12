@@ -1,0 +1,46 @@
+{
+  "name": "react_demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack-dev-server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-import": "^1.9.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.11",
+    "html-webpack-plugin": "^3.2.0",
+    "less": "^2.7.3",
+    "less-loader": "^4.1.0",
+    "style-loader": "^0.19.1",
+    "webpack": "^3.12.0",
+    "webpack-dev-server": "^2.11.3"
+  },
+  "dependencies": {
+    "antd": "^3.9.3",
+    "babel-preset-env": "^1.7.0",
+    "echarts": "^4.1.0",
+    "echarts-for-react": "^2.0.14",
+    "humps": "^2.0.1",
+    "lodash": "^4.17.11",
+    "normalizr": "^3.2.4",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-redux": "^5.0.7",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "redux": "^3.7.2",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "^0.16.0",
+    "redux-thunk": "^2.3.0"
+  }
+}

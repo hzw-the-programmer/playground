@@ -1,0 +1,28 @@
+.game {
+  display: flex;
+}
+
+.game-info {
+  margin-left: 20px;
+}
+
+.board-row {
+  clear: left;
+}
+
+.square {
+  width: 34px;
+  height: 34px;
+  float: left;
+  border: 1px solid #999;
+  background: #fff;
+  margin-right: -1px;
+  margin-top: -1px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.square:focus {
+  outline: none;
+  background: #ddd;
+}

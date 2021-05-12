@@ -1,0 +1,30 @@
+<html>
+<body>
+  <script>
+    function* g1() {
+      console.log(yield 4)
+      console.log(yield 5)
+      console.log(yield 6)
+      return 'you can comment me and have a try :)'
+    }
+
+    function* g2() {
+      console.log(yield 1)
+      console.log(yield 2)
+      console.log(yield 3)
+      console.log(yield* g1())
+      console.log(yield 7)
+      console.log(yield 8)
+      console.log(yield 9)
+    }
+
+    const g = g2()
+    let i = 1
+    let r = g.next()
+    while (!r.done) {
+      console.log('yield ' + r.value)
+      r = g.next(i++)
+    }
+  </script>
+</body>
+</html>

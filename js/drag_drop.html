@@ -1,0 +1,62 @@
+<html>
+<body>
+  <style>
+    .dragstart {
+      color: red
+    }
+    .dragend {
+      color: blue
+    }
+
+    .dragover {
+      color: purple
+    }
+    .dragenter {
+      color: red
+    }
+    .dragleave {
+      color: blue
+    }
+  </style>
+  <script>
+    const dragstart_handler = event => {
+      console.log(event.target.id + ' dragstart', event)
+      event.target.className = 'dragstart'
+    }
+
+    const dragend_handler = event => {
+      console.log(event.target.id + ' dragend', event)
+      event.target.className = 'dragend'
+    }
+
+    const dragover_handler = event => {
+      event.preventDefault()
+      const target = event.target
+      if (target.className !== 'dragover') {
+        console.log(target.id + ' dragover', event)
+        target.className = 'dragover'
+      }
+    }
+
+    const dragenter_handler = event => {
+      console.log(event.target.id + ' dragenter', event)
+      event.target.className = 'dragenter'
+    }
+
+    const dragleave_handler = event => {
+      console.log(event.target.id + ' dragleave', event)
+      event.target.className = 'dragleave'
+    }
+
+    const drop_handler = event => {
+      console.log(event.target.id + ' drop', event)
+    }
+  </script>
+  <p id="src" class="dragend" draggable="true" ondragstart="dragstart_handler(event)" ondragend="dragend_handler(event)">This is element is draggable.</p>
+  <div id="dest" class="dragleave"
+       ondragenter="dragenter_handler(event)"
+       ondragover="dragover_handler(event)"
+       ondragleave="dragleave_handler(event)"
+       ondrop="drop_handler(event)">Drop Zone</div>
+</body>
+</html>

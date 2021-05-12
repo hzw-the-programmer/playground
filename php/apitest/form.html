@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <script>
+            const data = {
+                username: 'hzw &',
+                age: 31
+            }
+
+            function fixEncodeURIComponent(comp) {
+                return encodeURIComponent(comp).replace(/%20/g, '+')
+            }
+
+            function post(body, type) {
+                fetch('form.php',{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': type
+                    },
+                    body
+                }).then(response => {
+                    console.log(response)
+                    if (response.ok) {
+                        return response.text()
+                    }
+
+                    throw new Error(`${response.status} ${response.statusText}`)
+                }).then(text => {
+                    console.log(text)
+                }).catch(error => console.log(error.message))
+            }
+
+            function postJson() {
+                post(JSON.stringify(data), 'application/json; charset=utf-8')
+            }
+
+            function postForm() {
+                const encodedData = Object.keys(data)
+                    .map(key => `${fixEncodeURIComponent(key)}=${fixEncodeURIComponent(data[key])}`)
+                    .join('&')
+                post(encodedData, 'application/x-www-form-urlencoded')
+            }
+        </script>
+    </head>
+    <body>
+        <form action="form.php" method="post">
+        <!--<form action="form.php">-->
+            <input name="username" value="hzw &" />
+            <input name="age" value="31"/>
+            <button>Submit</button>
+        </form>
+        <button onclick="postJson()">Post Json</button>
+        <button onclick="postForm()">Post Form</button>
+    </body>
+</html>

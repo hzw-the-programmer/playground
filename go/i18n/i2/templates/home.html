@@ -1,0 +1,15 @@
+{{template "base.html"}}
+
+{{define "title"}}
+    {{call .T "home"}}
+{{end}}
+
+{{define "body"}}
+    <div>
+        <a href="/devices">{{call .T "devices"}}</a>
+        <a href="/user">{{call .T "user"}}</a>
+    </div>
+    <div>
+        {{call .T "home"}}
+    </div>
+{{end}}

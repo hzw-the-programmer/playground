@@ -1,0 +1,1 @@
+{{define "t3"}}t3: hello my {{.}}{{end}}

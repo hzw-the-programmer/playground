@@ -1,0 +1,43 @@
+<html>
+<head>
+  <title>CSS Left Frame Layout</title>
+
+  <style type="text/css">
+    #framecontent {
+      width: 200px;
+      height: 100%;
+      background: navy;
+      color: white;
+    }
+    #maincontent {
+      position: fixed;
+      left: 200px;
+      top: 0;
+    }
+
+    .innertube{
+      margin: 15px;
+    }
+  </style>
+
+  <script type="text/javascript">
+  </script>
+</head>
+
+<body>
+  <div id="framecontent">
+    <div class="innertube">
+      <h1>CSS Left Frame Layout</h1>
+      <h3>Sample text here</h3>
+    </div>
+  </div>
+
+  <div id="maincontent">
+    <div class="innertube">
+      <h1>Dynamic Drive CSS Library</h1>
+      <p><script type="text/javascript">filltext(255)</script></p>
+      <p style="text-align: center">Credits: <a href="http://www.dynamicdrive.com/style/">Dynamic Drive CSS Library</a></p>
+    </div>
+  </div>
+</body>
+</html>

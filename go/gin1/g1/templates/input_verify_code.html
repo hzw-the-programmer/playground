@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>Input Verify Code</title>
+    </head>
+    <body>
+        <form>
+            Phone Number:<br />
+            <input name="phoneNumber" value="{{.phoneNumber}}" /><br />
+            Verify Code:<br />
+            <input name="verifyCode" /><br />
+            <input type="submit" value="OK" /><br />
+            {{range .flashes}}<span>{{.}}</span><br />{{end}}
+        </form>
+    </body>
+</html>

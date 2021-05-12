@@ -1,0 +1,1 @@
+0 * * * * root php /home/zhiwenhe/work/python-play-ground/php/z/clearlog.php

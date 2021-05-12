@@ -1,0 +1,58 @@
+<html>
+<body>
+  <svg id="drawing" style="background: red"></svg>
+
+  <script>
+    function createG(x, y) {
+      var ns = 'http://www.w3.org/2000/svg'
+      const [rows, columns, width, height, gap] = [6, 4, 25, 25, 10]
+
+      const g = document.createElementNS(ns, 'g')
+
+      for (let row = 0; row < rows; row++) {
+        const y = (height + gap) * row
+        for (let column = 0; column < columns; column++) {
+          const x = (width + gap) * column
+          var rect = document.createElementNS(ns, 'rect')
+          rect.setAttributeNS(null, 'x', x)
+          rect.setAttributeNS(null, 'y', y)
+          rect.setAttributeNS(null, 'width', width)
+          rect.setAttributeNS(null, 'height', height)
+          rect.setAttributeNS(null, 'fill', 'green')
+
+          g.appendChild(rect)
+        }
+      }
+
+      g.setAttributeNS(null, 'transform', 'translate(' + x + ' ' + y + ')')
+      return [g, columns * (width + gap), rows * (height + gap)]
+    }
+
+    var svg = document.getElementById('drawing')
+
+    let y = 0
+    let height = 0
+    let x = 0
+    let width = 0
+    for (let row = 0; row < 2; row++) {
+      y += height
+      x = 0
+      width = 0
+      for (let column = 0; column < 4; column++) {
+        x += width
+        let r = createG(x, y)
+        svg.appendChild(r[0])
+        width = r[1]
+        height = r[2]
+      }
+    }
+
+    const twidth = x + width
+    const theight = y + height
+
+    svg.setAttributeNS(null, 'width', document.body.clientHeight * (twidth / theight))
+    svg.setAttributeNS(null, 'height', document.body.clientHeight)
+    svg.setAttributeNS(null, 'viewBox', 0 + ' ' + 0 + ' ' + twidth + ' ' + theight)
+  </script>
+</body>
+</html>

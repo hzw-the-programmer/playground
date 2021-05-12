@@ -1,0 +1,115 @@
+<html>
+  <head>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <style>
+      #container {
+        min-width: 310px;
+        max-width: 800px;
+        height: 400px;
+        margin: 0 auto
+      }
+    </style>
+    <script>
+      function onload() {
+        rows = [
+          {date: '2018-02-25', type: 'GND-H', fr: 0.75, pr: 0.25},
+          {date: '2018-02-25', type: 'WS', fr: 0.25, pr: 0.75},
+          {date: '2018-02-26', type: 'GND-H', fr: 0.25, pr: 0.75},
+          {date: '2018-02-26', type: 'WS', fr: 0.75, pr: 0.25},
+          {date: '2018-02-27', type: 'GND-H', fr: 0, pr: 1},
+          {date: '2018-02-27', type: 'WS', fr: 1, pr: 0}
+        ]
+
+        const dates = []
+        const data = {}
+        for (let row of rows) {
+          var date = row['date']
+          if (dates.indexOf(date) === -1) {
+            dates.push(date)
+          }
+
+          var type = row['type']
+          data[date] = data[date] || {}
+          data[date][type] = data[date][type] || {}
+          data[date][type]['fr'] = row['fr']
+          data[date][type]['pr'] = row['pr']
+        }
+        console.log(dates)
+        console.log(data)
+
+        const rByType = {
+          'GND-L': {fr: [], pr: []},
+          'GND-H': {fr: [], pr: []},
+          'WS': {fr: [], pr: []},
+          'VB': {fr: [], pr: []},
+        }
+        for (let date of dates) {
+          for (let type in rByType) {
+            if (data[date][type]) {
+              rByType[type].fr.push(data[date][type].fr)
+              rByType[type].pr.push(data[date][type].pr)
+            } else {
+              rByType[type].fr.push(null)
+              rByType[type].pr.push(null)
+            }
+          }
+        }
+        console.log(rByType)
+
+        Highcharts.chart('container', {
+          series: [{
+            name: '低阻接地失效率',
+            data: rByType['GND-L'].fr
+          }, {
+            name: '低阻接地合格率',
+            data: rByType['GND-L'].pr
+          }, {
+            name: '高阻接地失效率',
+            data: rByType['GND-H'].fr
+          }, {
+            name: '高阻接地合格率',
+            data: rByType['GND-H'].pr
+          }, {
+            name: '手腕带失效率',
+            data: rByType['WS'].fr
+          }, {
+            name: '手腕带合格率',
+            data: rByType['WS'].pr
+          }, {
+            name: '平衡电压失效率',
+            data: rByType['VB'].fr
+          }, {
+            name: '平衡电压合格率',
+            data: rByType['VB'].pr
+          }],
+
+          xAxis: {
+            categories: dates,
+            title: {
+              text: '日期'
+            }
+          },
+
+          yAxis: {
+            min: 0,
+            max: 1,
+            title: {
+              text: '比列'
+            }
+          },
+
+          credits: false,
+
+          legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+          }
+        })
+      }
+    </script>
+  </head>
+  <body onload="onload()">
+    <div id="container" />
+  </body>
+</html>

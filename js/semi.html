@@ -1,0 +1,14 @@
+<html>
+  <body>
+    <script>
+      var globalCounter = { }
+
+      (function () {
+        var n = 0
+        globalCounter.increment = function () {
+          return ++n
+        }
+      })()
+    </script>
+  </body>
+</html>

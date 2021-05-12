@@ -1,0 +1,32 @@
+<html>
+<body>
+  <script>
+    function work_(work) {
+      console.log('work_ begin p')
+      const p = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (work) {
+            resolve(work)
+          } else {
+            reject(work)
+          }
+        }, 5000)
+      })
+      console.log('work_ end p')
+      return p
+    }
+
+    async function work(work) {
+      console.log('wait work to finish!!!')
+      const result = await work_(work)
+      console.log('work finished!!!')
+      return result
+    }
+
+    console.log(1)
+    work('Learn Reactjs')
+      .then(value => console.log(value))
+    console.log(2)
+  </script>
+</body>
+</html>

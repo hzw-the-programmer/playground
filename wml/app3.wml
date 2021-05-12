@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN"
+"http://www.wapforum.org/DTD/wml_1.1.xml">
+
+<wml>
+    <card title="DMA" id="home">
+        <p>A larger
+            <anchor>
+                <go href="app4.wml" method="post">
+                    <postfield name="user" value="me"/>
+                </go>
+                link
+            </anchor>
+            that will post information.
+        </p>
+    </card>
+</wml>

@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>{{.roomid}}</title>
+        <link rel="stylesheet" type="text/css" href="/public/reset.css">
+        <script src="/public/jquery-3.5.1.min.js"></script>
+        <script src="/public/jquery.form.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#message').focus();
+                $('#form').ajaxForm(function() {
+                    $('#message').val('');
+                    $('#message').focus();
+                });
+                if (!!window.EventSource) {
+                    const source = new EventSource('/stream/{{.roomid}}');
+                    source.addEventListener("message", function(e) {
+                        $('#messages').append(e.data + '<br />');
+                        $('html, body').animate({scrollTop: $(document).height()} ,'slow');
+                    });
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Welcome to {{.roomid}} room</h1>
+        <div id="messages"></div>
+        <form id="form" method="post" action="/room/{{.roomid}}">
+            User: <input name="userid" value="{{.userid}}" readonly />
+            Message: <input id="message" name="message" />
+            <input type="submit" value="Submit" />
+        </form>
+    </body>
+</html>

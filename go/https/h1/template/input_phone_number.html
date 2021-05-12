@@ -1,0 +1,19 @@
+<html>
+    <body>
+        <form method="post" action="send_sms">
+            <label for="country_code">Country Code:</label>
+            <br />
+            <select id="country_code" name="country_code">
+                {{range .}}<option value="{{.Code}}">{{printf "(+%d)%s" .Code .Name}}</option>{{end}}
+            </select>
+            <br />
+
+            <label for="phone_number">Phone Number:</label>
+            <br />
+            <input id="phone_number" name="phone_number" type="text" />
+            <br />
+
+            <input type="submit" value="Send Sms" />
+        </form>
+    </body>
+</html>

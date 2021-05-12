@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>实时监控</title>
+  <link rel="stylesheet" type="text/css" href="lib/jquery-easyui/themes/default/easyui.css">
+  <link rel="stylesheet" type="text/css" href="lib/jquery-easyui/themes/icon.css">
+  <script src="lib/jquery-easyui/jquery.min.js"></script>
+  <script src="lib/jquery-easyui/jquery.easyui.min.js"></script>
+  <script src="lib/jquery-easyui/easyui-lang-zh_CN.js"></script>
+  <script src="js/places_ctrl.js"></script>
+  <script src="js/realtime_monitor.js"></script>
+</head>
+
+<body>
+  <input id="plant">
+  <input id="workshop">
+  <input id="region">
+  <input id="line">
+  <input id="station">
+  
+  <div id="msg"
+    style="position: absolute; width: 430px; height: 280px; z-index: 10; background: white; border-radius: 20px; border: 3px solid #000000; display: none;">
+    <div id="name" style="position: absolute; left: 20px; top: 10px;"></div>
+    <div id="slot" style="position: absolute; left: 20px; top: 30px;"></div>
+    <div id="port" style="position: absolute; left: 20px; top: 50px;"></div>
+    
+    <div style="position: absolute; left: 20px; top: 70px;">--------------------------------------------</div>
+    <div style="position: absolute; left: 20px; top: 90px;">过往数据</div>
+    
+    <table style="position: absolute; left: 20px; top: 110px;">
+      <tr>
+        <td style="width: 160px;">时间</td>
+        <td style="width: 160px;">状态</td>
+      </tr>
+      <tr>
+        <td id="time0" class="time"></td>
+        <td id="status0" class="status"></td>
+      </tr>
+      <tr>
+        <td id="time1" class="time"></td>
+        <td id="status1" class="status"></td>
+      </tr>
+      <tr>
+        <td id="time2" class="time"></td>
+        <td id="status2" class="status"></td>
+      </tr>
+      <tr>
+        <td id="time3" class="time"></td>
+        <td id="status3" class="status"></td>
+      </tr>
+      <tr>
+        <td id="time4" class="time"></td>
+        <td id="status4" class="status"></td>
+      </tr>
+    </table>
+  </div>
+
+  <div id="content">
+  </div>
+
+</body>
+
+</html>

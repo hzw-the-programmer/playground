@@ -1,0 +1,35 @@
+********************************************
+sudo vi /etc/yum.repos.d/nginx.repo
+
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/mainline/centos/7/$basearch/
+gpgcheck=0
+enabled=1
+********************************************
+sudo yum install epel-release
+********************************************
+
+sudo yum install nginx
+
+sudo systemctl status nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx
+
+sudo firewall-cmd --list-all
+sudo firewall-cmd --permanent --zone=public --add-service=http
+sudo firewall-cmd --permanent --zone=public --add-service=https
+sudo firewall-cmd --reload
+
+sudo vi /etc/nginx/nginx.conf
+sudo vi /etc/nginx/conf.d/default.conf
+
+location ~ \.php$ {
+    fastcgi_pass unix:/var/opt/remi/php72/run/php-fpm/php-fpm.sock;
+    fastcgi_param SCRIPT_FILENAME /usr/share/nginx/html$fastcgi_script_name;
+    include fastcgi_params;
+}
+
+ps auxZ | grep nginx
+
+sudo cat /var/log/nginx/error.log

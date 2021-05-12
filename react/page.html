@@ -1,0 +1,54 @@
+<html>
+<head>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    function WarningBanner(props) {
+      const warn = props.warn;
+      if (!warn) return null;
+      return (
+        <div className="warning">
+          Warning!
+        </div>
+      );
+    }
+
+    class Page extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {warn: true};
+        this.handleToggleClick = this.handleToggleClick.bind(this);
+      }
+
+      handleToggleClick() {
+        this.setState(prevState => ({
+          warn: !prevState.warn
+        }));
+      }
+
+      render() {
+        const warn = this.state.warn;
+        return (
+          <div>
+            <WarningBanner warn={warn} />
+            <button onClick={this.handleToggleClick}>
+              {warn ? 'Hide' : 'Show'}
+            </button>
+          </div>
+        );
+      }
+    }
+
+    ReactDOM.render(
+      <Page />,
+      document.getElementById('root')
+    );
+  </script>
+</body>
+</html>

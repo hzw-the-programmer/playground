@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <script>
+            let websock = null
+
+            function send() {
+                const ip = document.getElementById('ip').value.trim()
+                if (!ip) {
+                    alert('ip is empty!')
+                    return
+                }
+
+                const port = document.getElementById('port').value.trim()
+                if (!port) {
+                    alert('port is empty!')
+                    return
+                }
+
+                const input = document.getElementById('input')
+                const msg = input.value.trim()
+                input.value = ''
+                if (!msg) {
+                    return
+                }
+
+                const output = document.getElementById('output')
+                output.value = (output.value ? output.value + '\n' : '') + 'client: ' + msg
+
+                url = `ws://${ip}:${port}/`
+
+                console.log(websock)
+
+                if (!websock || websock.readyState !== 1 || websock.url !== url) {
+                    if (websock) {
+                        websock.close()
+                    }
+                    websock = new WebSocket(url)
+                    
+                    websock.onopen = function(event) {
+                        console.log('onpen', event)
+                        websock.send(msg)
+                    }
+
+                    websock.onmessage = function(event) {
+                        console.log('onmessage', event)
+                        output.value = output.value + '\n' + 'server: ' + event.data
+                    }
+
+                    websock.onerror = function(event) {
+                        console.log('onerror', event)
+                    }
+
+                    websock.onclose = function(event) {
+                        console.log('onclose', event)
+                    }
+                } else {
+                    websock.send(msg)
+                }
+            }    
+        </script>
+    </head>
+    <body>
+        <textarea id="output" rows="10" cols="33"></textarea>
+        <div>
+            <input id="input" type="text" />
+            <button onclick="send()">Send</button>
+        </div>
+        <input id="ip" type="text" />
+        <input id="port" type="text" />
+    </body>
+</html>

@@ -1,0 +1,7 @@
+sed -n -e '/sendto / p' -e '/onPacket/ p' /var/log/iot/worker0
+sed -n -e '/\[2018-11-22 16:16:4.\]/,/\[2018-11-22 16:16:5.\]/ p' /var/log/iot/worker0
+
+ls -lh /var/log/iot/
+sudo truncate -s 0 /var/log/iot/worker0
+
+sed -i 's|php/z/||g' 000*

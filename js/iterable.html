@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    var giveMeSomething = (function() {
+      var nextVal;
+
+      return function() {
+        if (nextVal === undefined) {
+          nextVal = 1;
+        } else {
+          nextVal = (3 * nextVal) + 6;
+        }
+
+        return nextVal;
+      };
+    })();
+
+    // console.log(giveMeSomething());
+    // console.log(giveMeSomething());
+    // console.log(giveMeSomething());
+    // console.log(giveMeSomething());
+
+    var something = (function() {
+      var nextVal;
+      return {
+        next: function() {
+          if (nextVal === undefined) {
+            nextVal = 1;
+          } else {
+            nextVal = (3 * nextVal) + 6;
+          }
+
+          return {done: false, value: nextVal};
+        },
+        [Symbol.iterator]: function() {
+          return this;
+        }
+      };
+    })();
+
+    console.log(something.next().value);
+    console.log(something.next().value);
+    console.log(something.next().value);
+    console.log(something.next().value);
+
+    for (let v of something) {
+      console.log(v);
+      if (v > 500) {
+        break;
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+curl -sS https://getcomposer.org/installer | php72
+
+sudo mv composer.phar /usr/bin/composer
+sudo chown root:root /usr/bin/composer
+
+echo $PATH
+cd
+mkdir bin
+cd bin
+mv composer.phar composer
+composer -v
+which php72
+ls -l /usr/bin/php72
+ln -s /opt/remi/php72/root/usr/bin/php php
+
+sudo yum install unzip
+
+composer install
+sudo yum install php72-php-xml.x86_64
+sudo yum install php72-php-mbstring.x86_64
+sudo yum install php72-php-pecl-zip.x86_64

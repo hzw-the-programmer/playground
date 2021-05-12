@@ -1,0 +1,3 @@
+DECLARE @myString varchar (255)
+SELECT @myString = FORMATMESSAGE('%04d', 1)
+SELECT @myString

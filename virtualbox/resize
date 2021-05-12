@@ -1,0 +1,8 @@
+./VBoxManage.exe modifyhd /c/work/ubuntu-16.04.4-desktop-amd64.vdi --resize 40960
+/c/Program\ Files/Oracle/VirtualBox/VBoxManage.exe modifymedium disk ubuntu-16.04.4-desktop-amd64.vdi --resize 81920
+blkid
+ctrl + shift + c
+sudo vi /etc/fstab
+locate swap line, yy, p, comment out, delete old id
+i
+ctrl + shift + v

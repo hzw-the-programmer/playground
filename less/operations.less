@@ -1,0 +1,45 @@
+@conversion-1: 5cm + 10mm;
+h1 {
+  font-size: @conversion-1;
+}
+
+@conversion-2: 2 - 3cm - 5mm;
+h2 {
+  font-size: @conversion-2;
+}
+
+@incompatible-units: 2 + 5px - 3cm;
+h3 {
+  width: @incompatible-units;
+}
+
+@base: 5%;
+
+@filler: @base * 2;
+h4 {
+  width: @filler;
+}
+
+@other: @base + @filler;
+h5 {
+  width: @other;
+}
+
+// @base: 2cm * 3mm;
+// h6 {
+//   width: @base;
+// }
+@base1: 2cm * 3mm;
+h6 {
+  width: @base1;
+}
+
+@color: #224488 / 2;
+h7 {
+  background-color: @color;
+}
+
+@color1: #112244 + #111;
+h8 {
+  background-color: @color1;
+}

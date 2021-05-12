@@ -1,0 +1,15 @@
+{% extends 'icloud/base.html.twig' %}
+
+{% block title %}
+Offline Time Configuration
+{% endblock %}
+
+{% block body %}
+<form action="{{ action }}">
+    <label for="time">Time(second):</label>
+    <input name="time" value="{{ time }}" />
+    <button type="submit">Submit</button>
+    <br/>
+    <label>{{ msg }}</label>
+</form>
+{% endblock %}

@@ -1,0 +1,117 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <script src="https://npmcdn.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div id="container" class="col-md-8 col-md-offset-2"></div>
+  </div>
+
+  <script type="text/babel">
+    window.id = 0;
+
+    const Title = ({todoCount}) => {
+      return (
+        <div>
+          <div>
+            <h1>to-do ({todoCount})</h1>
+          </div>
+        </div>
+      );
+    };
+
+    const TodoForm = ({addTodo}) => {
+      let input;
+      return (
+        <form onSubmit={e => {
+          e.preventDefault();
+          addTodo(input.value);
+          input.value = '';
+        }}>
+          <input className="form-control col-md-12" ref={node => {
+            input = node;
+          }} />
+        </form>
+      );
+    };
+
+    const Todo = ({todo, remove}) => {
+      return (
+        <a href="#" className="list-group-item" onClick={() => remove(todo.id)}>
+          {todo.text}
+        </a>
+      );
+    };
+
+    const TodoList = ({todos, remove}) => {
+      return (
+        <div className="list-group">
+          {todos.map(todo => {
+            return <Todo key={todo.id} todo={todo} remove={remove} />;
+          })}
+        </div>
+      );
+    };
+
+    class TodoApp extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {todos: []};
+        this.addTodo = this.addTodo.bind(this);
+        this.remove = this.remove.bind(this);
+        this.apiUrl = 'https://57b1924b46b57d1100a3c3f8.mockapi.io/api/todos'
+      }
+
+      componentDidMount() {
+        axios.get(this.apiUrl)
+          .then(res => {
+            this.setState({todos: res.data})
+          });
+      }
+
+      addTodo(text) {
+        const todo = {text: text};
+        axios.post(this.apiUrl, todo)
+          .then(res => {
+            this.setState(prevState => {
+              prevState.todos.push(res.data);
+              return {todos: prevState.todos};
+            });
+          });
+      }
+
+      remove(id) {
+        axios.delete(this.apiUrl + '/' + id)
+          .then(res => {
+            this.setState(prevState => ({
+              todos: prevState.todos.filter(todo => {
+                if (todo.id !== id) return todo;
+              })
+            }));
+          });
+      }
+
+      render() {
+        const todos = this.state.todos;
+        return (
+          <div>
+            <Title todoCount={todos.length} />
+            <TodoForm addTodo={this.addTodo}/>
+            <TodoList todos={todos} remove={this.remove}/>
+          </div>
+        );
+      }
+    }
+
+    ReactDOM.render(
+      <TodoApp />,
+      document.getElementById('container')
+    );
+  </script>
+</body>
+</html>

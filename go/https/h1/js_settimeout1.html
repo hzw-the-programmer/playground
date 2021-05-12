@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        window.onload = function() {
+            var count = 0;
+            
+            function xmlreq() {
+                var xmlhttp = new XMLHttpRequest();
+                var url = "myTutorials.txt";
+
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var myArr = JSON.parse(this.responseText);
+                        const item = document.createElement('div');
+                        item.innerHTML = count++;
+                        document.getElementById('messages').append(item);
+                        setTimeout(xmlreq, 1000);
+                    }
+                };
+                xmlhttp.open("GET", url, true);
+                xmlhttp.send();
+            }
+
+            xmlreq();
+        };   
+    </script>        
+</head>
+<body>
+    <div id="messages">
+</body>
+</html>

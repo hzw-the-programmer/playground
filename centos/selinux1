@@ -1,0 +1,21 @@
+//sudo semanage fcontext -a -t httpd_log_t "/usr/share/nginx/html/icloud/app/logs(/.*)?"
+//cat /etc/selinux/targeted/contexts/files/file_contexts.local
+//sudo restorecon -Rv logs/
+
+//sudo semanage fcontext -d "/usr/share/nginx/html/icloud/app/logs(/.*)?"
+//cat /etc/selinux/targeted/contexts/files/file_contexts.local
+//sudo restore -Rv logs/
+
+sudo chown -R nginx:nginx cache logs
+
+sudo semanage fcontext -a -t httpd_log_t "/usr/share/nginx/html/icloud/app/logs"
+cat /etc/selinux/targeted/contexts/files/file_contexts.local
+sudo restore -v logs/
+
+//sudo semanage fcontext -a -t httpd_cache_t "/usr/share/nginx/html/icloud/app/cache/"
+sudo semanage fcontext -a -t httpd_cache_t "/usr/share/nginx/html/icloud/app/cache"
+cat /etc/selinux/targeted/contexts/files/file_contexts.local
+sudo restorecon -v cache/
+
+getsebool httpd_can_network_connect_db
+sudo setsebool -P httpd_can_network_connect_db on

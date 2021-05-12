@@ -1,0 +1,15 @@
+C:\Users\Admin>armcc --vsn
+ARM/Thumb C/C++ Compiler, RVCT3.1 [Build 569]
+Error: C9932E: Cannot obtain license for Compiler (feature compiler) with license version >= 3.1:
+Feature has expired.
+Feature:       compiler
+Expire date:   31-dec-2020
+License path:  D:\RVCT\Licenses\rvds_1.dat
+FLEXnet Licensing error:-10,32
+For further information, refer to the FLEXnet Licensing End User Guide,
+available at "www.macrovision.com".
+
+edit D:\RVCT\rvds.dat
+replace '31-dec-2020' with '31-dec-2050'
+open arm license wizard to install license
+if we have error, stay at the ui, wait sometime then install license again

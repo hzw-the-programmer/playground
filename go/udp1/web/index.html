@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <title>test</title>
+        <script>
+            var ws
+            function send(msg) {
+                host = document.getElementById("shost").value
+                port = document.getElementById("sport").value
+                if (!host) {
+                    alert("server host must be specified")
+                    return
+                }
+                if (!port) {
+                    alert("server port must be specified")
+                    return
+                }
+                url = "ws://" + host + ":" + port + "/ws"
+
+                if (ws && ws.url == url && ws.readyState == 1) {
+                    console.log(ws)
+                    console.log("ws exists: " + url)
+                    ws.send(JSON.stringify(msg))
+                    console.log("msg sent: " + JSON.stringify(msg))
+                    return
+                }
+                ws = new WebSocket(url)
+                ws.onopen = function(event) {
+                    console.log("onopen", event)
+                    send(msg)
+                }
+                ws.onmessage = function(event) {
+                    console.log("onmessage", event)
+                }
+                ws.onerror = function(event) {
+                    console.log("onerror", event)
+                }
+                ws.onclose = function(event) {
+                    console.log("onclose", event)
+                }
+            }
+
+            function ping() {
+                host = document.getElementById("chost").value
+                port = document.getElementById("cport").value
+                send({cmd: "ping", host, port})
+            }
+        </script>
+    </head>
+    <body>
+        <div>
+            <h3>Server Info</h3>
+            <label>host: <input id="shost"/></label>
+            <label>port: <input id="sport"/></label>
+        </div>
+        <div>
+            <h3>Client Info</h3>
+            <label>host: <input id="chost"/></label>
+            <label>port: <input id="cport"/></label>
+        </div>
+        <div>
+            <h3>Functions</h3>
+            <button onclick="ping()">ping</button>
+        </div>
+    </body>
+</html>

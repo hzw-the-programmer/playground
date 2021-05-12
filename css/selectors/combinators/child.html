@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <!--
+            The child combinator (>) is placed between two CSS selectors.
+            It matches only those elements matched by the second selector that
+            are the direct children of elements matched by the first.
+            
+            /* List items that are children of the "my-things" list */
+            ul.my-things > li {
+                margin: 2em;
+            }
+            
+            selector1 > selector2 { style properties }
+        -->
+        <style> 
+            span {
+                background-color: white;
+            }
+
+            div > span {
+                background-color: DodgerBlue;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <span>Span #1, in the div.
+                <span>Span #2, in the span that's in the div.</span>
+            </span>
+        </div>
+        <span>Span #3, not in the div at all.</span>
+    </body>
+</html>

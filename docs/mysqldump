@@ -1,0 +1,10 @@
+# no CREATE DATABASE
+mysqldump -u root -p --no-data iot > /tmp/iot.sql
+
+# CREATE DATABASE
+mysqldump -u root -p --no-data --databases iot > /tmp/iot.sql
+
+# DROP DATABASE and CREATE DATABASE
+mysqldump -u root -p --no-data --add-drop-database --databases iot > /tmp/iot.sql
+
+grant all on iot.* to 'root'@'%';

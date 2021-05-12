@@ -1,0 +1,10 @@
+const { interval } = require('rxjs')
+const { bufferCount } = require('rxjs/operators')
+
+//const a = interval(1000).pipe(bufferCount(3))
+//const a = interval(1000).pipe(bufferCount(3, 1))
+//const a = interval(1000).pipe(bufferCount(3, 2))
+//const a = interval(1000).pipe(bufferCount(3, 3))
+const a = interval(1000).pipe(bufferCount(3, 4))
+a.subscribe(x => console.log(x))
+console.log('finish')

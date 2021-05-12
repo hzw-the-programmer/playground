@@ -1,0 +1,52 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="keywords" content="jquery,ui,easy,easyui,web">
+	<meta name="description" content="easyui help you build your web page easily!">
+	<title>Add autoplay to tabs - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="http://www.jeasyui.com/easyui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="http://www.jeasyui.com/easyui/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="http://www.jeasyui.com/easyui/demo/demo.css">
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="http://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
+	<script>
+		$(function(){
+			var index = 0;
+			var t = $('#tt');
+			var tabs = t.tabs('tabs');
+			setInterval(function(){
+				t.tabs('select', tabs[index].panel('options').title);
+				index++;
+				if (index >= tabs.length){
+					index = 0;
+				}
+			}, 3000);
+		});
+	</script>
+</head>
+<body>
+	<h2>Add autoplay tab demo</h2>
+	<div class="demo-info" style="margin-bottom:10px">
+		<div class="demo-tip icon-tip"></div>
+		<div>The tab panel can be auto switched to next.</div>
+	</div>
+
+	<div id="tt" class="easyui-tabs" style="width:700px;height:270px;">
+		<div title="Shirt1" style="padding:20px;">
+			<img src="images/shirt1.gif">
+		</div>
+		<div title="Shirt2" style="padding:20px;">
+			<img src="images/shirt2.gif">
+		</div>
+		<div title="Shirt3" style="padding:20px;">
+			<img src="images/shirt3.gif">
+		</div>
+		<div title="Shirt4" style="padding:20px;">
+			<img src="images/shirt4.gif">
+		</div>
+		<div title="Shirt5" style="padding:20px;">
+			<img src="images/shirt5.gif">
+		</div>
+	</div>
+</body>
+</html>

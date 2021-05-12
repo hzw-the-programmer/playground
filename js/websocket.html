@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <script>
+            var websock = new WebSocket('ws://localhost:9502')
+            websock.onopen = function (event) {
+                console.log('onopen')
+            }
+            websock.onmessage = function (event) {
+                console.log(event.data)
+            }
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>

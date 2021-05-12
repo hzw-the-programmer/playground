@@ -1,0 +1,47 @@
+<html>
+  <body>
+    <script>
+      const materials = [
+        'Hydrogen',
+        'Helium',
+        'Lithium',
+        'Beryllium'
+      ]
+      console.log(materials.map(material => material.length))
+
+      function f(a, b) {
+        console.log(f.length)
+      }
+      f()
+
+      function sum(...nums) {
+        return nums.reduce((acc, num) => acc + num)
+      }
+      console.log(sum(1, 2, 3, 4))
+
+      function sum3(...[a, b, c]) {
+        return a + b + c
+      }
+      console.log(sum3(1, 2, 3, 4))
+
+      function multiply(multiplier, ...nums) {
+        return nums.map(num => multiplier * num)
+      }
+      console.log(multiply(2, 1, 2, 3, 4))
+
+      const array = [1, 30, 4, 21]
+      array.sort()
+      console.log(array)
+
+      console.log('******')
+      array.sort(function (a, b) {
+        return a - b
+      })
+      console.log(array)
+
+      console.log('******')
+      array.sort((a, b) => b - a)
+      console.log(array)
+    </script>
+  </body>
+</html>

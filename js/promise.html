@@ -1,0 +1,22 @@
+<html>
+<body>
+  <script>
+    Promise.resolve('resolve Zhiwen He').then(value => console.log(value))
+    console.log('He Ha')
+    Promise.reject('reject Zhiwen He').catch(reason => console.log(reason))
+    console.log('Ha He')
+    const p1 = new Promise((resolve, reject) => {
+      console.log('inside excutor')
+      // setTimeout(() => resolve('resolve Zhiwen He after 5s'), 5000)
+      resolve('resolve Zhiwen He after 5s')
+    })
+    console.log('outside excutor')
+    p1.then(value => console.log(value))
+    console.log('-----')
+    new Promise((resolve, reject) => {
+      setTimeout(() => reject('reject Zhiwen He after 5s'), 5000)
+    }).catch(reason => console.log(reason))
+    console.log('+++++')
+  </script>
+</body>
+</html>

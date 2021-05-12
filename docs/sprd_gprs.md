@@ -1,0 +1,7 @@
+MS_Code\MS_MMI\source\mmi_app\app\connection\c\mmiconn_manager_wintab.c
+MMIAPICONNECTION_SetGPRSSwitchStatus
+MMIAPICONNECTION_TurnOffGPRS
+MMIAPICONNECTION_TurnOnGPRS
+
+MS_Code\MS_MMI\source\mmi_app\app\setting\c\mmiset_func.c
+MMIAPISET_SetFlyMode

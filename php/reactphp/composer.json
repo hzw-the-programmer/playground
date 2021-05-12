@@ -1,0 +1,12 @@
+{
+    "require": {
+        "react/event-loop": "^1.0",
+        "react/stream": "^1.0",
+        "react/http": "^0.8.3",
+        "react/filesystem": "^0.1.2",
+        "react/datagram": "^1.4"
+    },
+    "autoload": {
+        "psr-4": {"": "./"}
+    }
+}

@@ -1,0 +1,3 @@
+SCI_CreateThread
+SCI_GetMutex
+SCI_PutMutex

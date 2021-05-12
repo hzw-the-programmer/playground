@@ -1,0 +1,10 @@
+VBoxManage modifyvm <your-vm name> --nataliasmode1 proxyonly
+
+VBoxManage list vms
+
+./VBoxManage.exe guestproperty set "ubuntu-16.04.4-desktop-amd64" "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold" 1000
+./VBoxManage.exe guestproperty set "ubuntu-16.04.4-desktop-amd64" "/VirtualBox/GuestAdd/VBoxService/--timesync-interval" 1000
+
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" setextradata "VM NAME" GUI/DefaultCloseAction Shutdown
+
+#VBoxManage setextradata VM_NAME VBoxInternal/TM/TSCTicksPerSecond 3400000000

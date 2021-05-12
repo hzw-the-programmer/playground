@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <style>
+      #container {
+        min-width: 310px;
+        max-width: 800px;
+        height: 400px;
+        margin: 0 auto
+      }
+    </style>
+    <script>
+      function onload() {
+        var myChart = Highcharts.chart('container', {
+          chart: {
+              type: 'bar'
+          },
+          title: {
+              text: 'Fruit Consumption'
+          },
+          xAxis: {
+              categories: ['Apples', 'Bananas', 'Oranges']
+          },
+          yAxis: {
+              title: {
+                  text: 'Fruit eaten'
+              }
+          },
+          series: [{
+              name: 'Jane',
+              data: [1, 0, 4]
+          }, {
+              name: 'John',
+              data: [5, 7, 3]
+          }]
+        });
+      }
+    </script>
+  </head>
+  <body onload="onload()">
+    <div id="container" />
+  </body>
+</html>

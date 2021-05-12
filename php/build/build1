@@ -1,0 +1,9 @@
+sudo apt-get install build-essential autoconf automake libtool bison re2c libxml2-dev libsqlite3-dev libcurl4-openssl-dev
+./buildconf
+./configure --prefix=$HOME/build/php --with-openssl --enable-mbstring --with-curl --enable-zip
+
+./configure --help | grep mysql
+./configure --prefix=$HOME/build/php --with-curl --with-openssl --with-mysqli --with-pdo-mysql --enable-mbstring --enable-zip
+make
+make install
+php -m

@@ -1,0 +1,1 @@
+./main -name= -id= -pic= -referer= -dir=

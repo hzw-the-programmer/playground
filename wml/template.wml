@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN"
+"http://www.wapforum.org/DTD/wml_1.1.xml">
+
+<wml>
+    <template>
+        <do type="home" lable="Home">
+            <go href="#home" />
+        </do>
+        <do type="contact" lable="Contact">
+            <go href="#contact" />
+        </do>
+    </template>
+    
+    <card title="Home" id="home">
+        <p>This is the first page.</p>
+    </card>
+    
+    <card title="Contact" id="contact">
+        <p>Don't call us, we will call you.</p>
+    </card>
+</wml>

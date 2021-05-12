@@ -1,0 +1,10 @@
+```
+mmi_key_hdlr_proc
+mmi_frm_send_event
+process_key_event_routing
+mmi_key_handle
+dev_key_handle
+mmi_frm_key_handle
+mmi_frm_execute_current_protocol_handler
+MMI_task
+```

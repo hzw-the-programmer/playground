@@ -1,0 +1,3 @@
+sed -i 's|\s\+$||' src/Server.php
+sed -i 's|php/z/||g' 0001-mysql-reconnet.patch
+git status | sed -n 's|.*\(src/.*\)|\1| p' | xargs sed -i 's|\s\+$||'

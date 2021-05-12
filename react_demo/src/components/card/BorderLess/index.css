@@ -1,0 +1,16 @@
+.code-box {
+  border: solid 1px #ebedf0;
+}
+
+.code-box-demo {
+  border-bottom: solid 1px #ebedf0;
+  padding: 42px 24px 50px;
+}
+
+.code-box-meta {
+  padding: 18px 32px;
+}
+
+.code-box {
+  margin: 24px;
+}

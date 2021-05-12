@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <title>golang websocket test</title>
+        <script src="jquery-3.4.1.min.js"></script>
+        <script>
+            $(function() {
+                var ul = $("#msgs")
+
+                var ws = new WebSocket("ws://localhost:8080/echo")
+                ws.onmessage = function(e) {
+                    var msg = "Receive: " + e.data
+                    console.log(msg)
+                    $("<li>").text(msg).appendTo(ul)
+                }
+
+                $("#sendBtn").click(function() {
+                    var data = $("#name").val()
+                    ws.send(data)
+                    var msg = "Send: " + data
+                    console.log(msg)
+                    $("<li>").text(msg).appendTo(ul)
+                })
+            })
+        </script>
+    </head>
+    <body>
+        <input id="name" type="text" />
+        <input id="sendBtn" type="button" value="Send" />
+        <ul id="msgs"></ul>
+    </body>
+</html>

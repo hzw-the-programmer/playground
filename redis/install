@@ -1,0 +1,54 @@
+git clone https://github.com/antirez/redis.git
+cd redis
+git checkout 4.0.11
+make
+make test
+sudo make install
+sudo mkdir /etc/redis
+sudo cp redis.conf /etc/redis/
+
+sudo vi /etc/redis/redis.conf
+supervised no -> systemd
+dir ./ -> /var/lib/redis
+
+sudo vi /etc/systemd/system/redis.service
+
+[Unit]
+Description=Redis In-Memory Data Store
+After=network.target
+
+[Service]
+User=redis
+Group=redis
+ExecStart=/usr/local/bin/redis-server /etc/redis/redis.conf
+ExecStop=/usr/local/bin/redis-cli shutdown
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+sudo adduser --system --group --no-create-home redis
+
+sudo mkdir /var/lib/redis
+sudo chown redis:redis /var/lib/redis
+sudo chmod 770 /var/lib/redis
+
+sudo systemctl start redis
+sudo systemctl status redis
+
+redis-cli
+
+ping
+set test "It's working!"
+get test
+
+exit
+
+sudo systemctl restart redis
+redis-cli
+
+get test
+
+exit
+
+sudo systemctl enable redis

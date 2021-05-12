@@ -1,0 +1,12 @@
+<Network>
+    <Adapter slot="0" enabled="true" MACAddress="080027859F4A" type="82540EM">
+        <NAT>
+            <Alias proxy-only="true"/>
+            <Forwarding name="Rule 1" proto="1" hostport="22" guestip="10.0.2.15" guestport="22"/>
+            <Forwarding name="Rule 2" proto="1" hostport="80" guestip="10.0.2.15" guestport="80"/>
+            <Forwarding name="Rule 3" proto="1" hostport="443" guestip="10.0.2.15" guestport="443"/>
+            <Forwarding name="Rule 4" proto="1" hostport="9998" guestip="10.0.2.15" guestport="9998"/>
+            <Forwarding name="Rule 5" proto="0" hostport="19268" guestip="10.0.2.15" guestport="19268"/>
+        </NAT>
+    </Adapter>
+</Network>

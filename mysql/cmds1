@@ -1,0 +1,25 @@
+SHOW CREATE TABLE city;
+
+DROP DATABASE IF EXISTS world;
+SOURCE /home/zhiwenhe/work/mysql_example_db/world.sql;
+SHOW INDEX FROM country;
+
+DROP USER IF EXISTS 'hzw'@'localhost';
+CREATE USER 'hzw'@'localhost' IDENTIFIED BY 'ASDf@123';
+GRANT CREATE ON website_skeleton.* TO 'hzw'@'localhost';
+GRANT SELECT ON website_skeleton.* TO 'hzw'@'localhost';
+GRANT ALTER ON website_skeleton.* TO 'hzw'@'localhost';
+GRANT DROP ON website_skeleton.* TO 'hzw'@'localhost';
+GRANT INSERT ON website_skeleton.* TO 'hzw'@'localhost';
+
+#GRANT REFERENCES ON website.* TO 'hzw'@'localhost';
+#REVOKE REFERENCES ON website.* FROM 'hzw'@'localhost';
+
+GRANT REFERENCES ON website_skeleton.* TO 'hzw'@'localhost';
+GRANT UPDATE ON website_skeleton.* TO 'hzw'@'localhost';
+GRANT DELETE ON website_skeleton.* TO 'hzw'@'localhost';
+
+GRANT CREATE ROUTINE ON website_skeleton.* TO 'hzw'@'localhost';
+GRANT ALTER ROUTINE ON website_skeleton.* TO 'hzw'@'localhost';
+
+GRANT CREATE VIEW ON website_skeleton.* TO 'hzw'@'localhost';

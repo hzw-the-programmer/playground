@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <script>
+      console.log('+++', console.log('haha'))
+      // Promise.resolve('1').then(
+      Promise.reject('reject 1').then(
+        // value => {
+        //   console.log('success', value)
+        //   a = a + 1
+        // },
+        value => console.log('success', value),
+        // error => console.log('error', error)
+        error => {
+          console.log('error', error)
+          a = a + 1
+        }
+      ).then(
+        value => console.log('success', value),
+        error => console.log('error:*****', error)
+      )
+    </script>
+  </head>
+  <body>
+
+  </body>
+</html>

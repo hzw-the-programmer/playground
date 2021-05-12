@@ -1,0 +1,33 @@
+<html>
+<head>
+  <title>Absolute Position</title>
+  <style>
+    .box {
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      background: red;
+      color: white;
+    }
+
+    #two {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: blue;
+    }
+  </style>
+</head>
+
+<body>
+  <p>Elements that are relatively positioned remain in the normal flow of the document.</p>
+  <p>In contrast, an element that is absolutely positioned is taken out of the flow; thus, other elements are positioned as if it did not exist.</p>
+  <p>The absolutely positioned element is positioned relative to its nearest positioned ancestor (i.e., the nearest ancestor that is not static).</p>
+  <p>If a positioned ancestor doesn't exist, the initial container is used.</p>
+  <p>In the example below, box "Two" has no positioned ancestor, so it is positioned relative to the the &lt;body&gt; of the document.</p>
+  <div class="box" id="one">One</div>
+  <div class="box" id="two">Two</div>
+  <div class="box" id="three">Three</div>
+  <div class="box" id="four">Four</div>
+</body>
+</html>

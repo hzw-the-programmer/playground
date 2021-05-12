@@ -1,0 +1,44 @@
+Thanks. I tried, but not work. 
+I disabled the network interface (ifconfig enp0s3 down) before the execution of the query until it throws exception.
+I want to simulate this: after connection success, do some query, then network broke, query again.
+and at this query, I want to get error or exception quick not block for a long time.
+Here is my code and comment:
+```
+<?php
+$server = '10.0.37.248'; //$argv[1];
+$user = 'sa'; //$argv[2];
+$passwd = '123456'; //$argv[3];
+
+$dsn = "sqlsrv:Server=$server;Database=test;LoginTimeout=5";
+
+$dbh = new PDO($dsn, $user, $passwd, [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::SQLSRV_ATTR_QUERY_TIMEOUT => 2 // this does not work as I expected.
+]);
+
+echo "before sleep\n"; // after this display, I disable the network interface: ifconfig enp0s3 down.
+sleep(10);
+echo "after sleep\n"; // when this display, network interface is already down.
+
+$start = microtime(true);
+try {
+    echo "before query\n"; // this will display.
+    $dbh->query("WAITFOR DELAY '00:00:10'; SELECT 1"); // it blocks here for about 242 seconds.
+} catch (PDOException $e) {
+    print_r($e->errorInfo); // this will run after about 242 seconds, not as I expected 1 second.
+}
+echo "cost: " . (microtime(true) - $start) . PHP_EOL;
+```
+Here is the output:
+```
+before sleep
+after sleep
+before query
+Array
+(
+    [0] => HYT00
+    [1] => 0
+    [2] => [Microsoft][ODBC Driver 17 for SQL Server]Query timeout expired
+)
+cost: 242.18173193932
+```

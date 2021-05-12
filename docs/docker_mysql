@@ -1,0 +1,10 @@
+docker pull mysql/mysql-server
+docker run --name=mysql1 -d mysql/mysql-server
+docker logs mysql1
+docker logs mysql1 2>&1 | grep GENERATED
+docker exec -it mysql1 mysql -uroot -p
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'asdF@123';
+docker exec -it mysql1 bash
+docker stop mysql1
+docker start mysql1
+docker inspect mysql1

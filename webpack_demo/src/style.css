@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'PressStart2P';
+  src: url('./PressStart2P.woff2') format('woff2'),
+       url('./PressStart2P.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+}
+
+.hello {
+  color: red;
+  font-family: 'PressStart2P';
+  background: url('./calculator.png');
+}

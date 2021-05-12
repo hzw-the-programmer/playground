@@ -1,0 +1,11 @@
+plutommi\Framework\GUI\GUI_SRC\wgui_draw_manager.c
+
+```
+mmi_setting_entry_main_menu_int
+ShowCategory15Screen_int
+ShowCategory52Screen_int
+ShowCategory53Screen_int
+ShowCategory353Screen_int
+ShowCategory353Screen_ext_int
+dm_redraw_category_screen
+```

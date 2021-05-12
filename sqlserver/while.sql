@@ -1,0 +1,8 @@
+DECLARE @i INT
+SET @i = 0
+WHILE @i < 20
+BEGIN
+	PRINT CONCAT('haha', CONVERT(CHAR(4), CAST(@i AS BINARY(1)), 1))
+	PRINT CONCAT('haha', CONVERT(CHAR(2), CAST(@i AS BINARY(1)), 2))
+	SET @i = @i + 1
+END

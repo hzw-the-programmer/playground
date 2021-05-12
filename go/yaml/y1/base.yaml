@@ -1,0 +1,8 @@
+redis:
+  addr: "localhost:6379"
+  timeout: "1s"
+  timeout1: "2s"
+  addr1: "addr1"
+  addr2: "addr2"
+  Addr3: "Addr3"
+  Addr4: "Addr4"

@@ -1,0 +1,17 @@
+sudo cp -R iot /opt
+cd /opt
+sudo chmod -R g-w iot
+
+sudo chown -R hzw:hzw iot
+cd iot
+git checkout swoole
+composer install
+cp src/Config.example.php src/Config.php
+vi src/Config.php
+cp iot.service /etc/systemd/system
+sudo vi /etc/systemd/system/iot.service
+sudo useradd --system --user-group iot
+
+//sudo systemctl daemon-reload
+sudo systemctl start iot
+sudo systemctl enable iot

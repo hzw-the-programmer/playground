@@ -1,0 +1,2 @@
+RES_ADD_STRING(TXT_HZW_HELLO,"Hello HZW!")
+

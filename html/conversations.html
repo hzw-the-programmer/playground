@@ -1,0 +1,113 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                margin: 0 auto;
+                max-width: 800px;
+                padding: 0 20px;
+            }
+            
+            /* Chat containers */
+            .container {
+                border: 2px solid #dedede;
+                background-color: #f1f1f1;
+                border-radius: 5px;
+                padding: 10px;
+                margin: 10px 0;
+            }
+
+            /* Darker chat container */
+            .darker {
+                border-color: #ccc;
+                background-color: #ddd;
+            }
+
+            /* Clear floats */
+            .container::after {
+                content: "";
+                clear: both;
+                display: table;
+            }
+
+            /* Style images */
+            .container img {
+                float: left;
+                max-width: 60px;
+                width: 100%;
+                margin-right: 20px;
+                border-radius: 50%;
+            }
+
+            /* Style the right image */
+            .container img.right {
+                float: right;
+                margin-left: 20px;
+                margin-right:0;
+            }
+
+            /* Style time text */
+            .time-right {
+                float: right;
+                color: #aaa;
+            }
+
+            /* Style time text */
+            .time-left {
+                float: left;
+                color: #999;
+            }
+
+            .pagination {
+                display: inline-block;
+            }
+
+            .pagination a {
+                color: black;
+                float: left;
+                padding: 8px 16px;
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div class="container">
+            <a href="chat.html">
+                <img src="bandmember.jpg" alt="Avatar">
+                <p>Hello. How are you today?</p>
+            </a>
+        </div>
+
+        <div class="container darker">
+            <img src="avatar_g2.jpg" alt="Avatar">
+            <p>Hey! I'm fine. Thanks for asking!</p>
+        </div>
+
+        <div class="container">
+            <img src="bandmember.jpg" alt="Avatar">
+            <p>Sweet! So, what do you wanna do today?</p>
+        </div>
+
+        <div class="container darker">
+            <img src="avatar_g2.jpg" alt="Avatar">
+            <p>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
+        </div>
+
+        <div class="container">
+            <img src="bandmember.jpg" alt="Avatar">
+            <p>Sweet! So, what do you wanna do today?</p>
+        </div>
+
+        <div class="pagination">
+            <a href="#">&laquo;</a>
+            <a href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+            <a href="#">6</a>
+            <a href="#">&raquo;</a>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,14 @@
+{
+    "name": "zhiwenhe/headfirst",
+    "description": "Design Patterns",
+    "authors": [
+        {
+            "name": "zhiwenhe",
+            "email": "18676797056@163.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"Hzw\\DesignPatterns\\": "src/"}
+    },
+    "require": {}
+}

@@ -1,0 +1,4 @@
+github.com/howeyc/crc16 v0.0.0-20171223171357-2b2a61e366a6 h1:IIVxLyDUYErC950b8kecjoqDet8P5S4lcVRUOM6rdkU=
+github.com/howeyc/crc16 v0.0.0-20171223171357-2b2a61e366a6/go.mod h1:JslaLRrzGsOKJgFEPBP65Whn+rdwDQSk0I0MCRFe2Zw=
+github.com/npat-efault/crc16 v0.0.0-20161013170008-4128ccbe47c3 h1:LreEMrgwmSTNPbtao3jPZjwrjRYrlYTDg0kTMPOgSHg=
+github.com/npat-efault/crc16 v0.0.0-20161013170008-4128ccbe47c3/go.mod h1:1E9pLoYv14Va+AZbH8ywpTseVh5R4rwkRla445GfE1U=

@@ -1,0 +1,52 @@
+sudo apt-get remove docker docker-engine docker.io containerd runc
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+docker --version
+docker info
+
+grep docker /etc/group
+sudo groupadd docker
+grep docker /etc/group
+
+groups
+sudo usermod -aG docker $USER
+// logout and login
+groups
+
+docker info
+
+docker image ls
+docker container ls
+docker container ls -all
+
+docker run hello-world
+
+docker image ls
+docker container ls
+docker container ls -all
+
+docker login
+docker tag friendlyhello hzwtheprogrammer/getstarted:p2
+docker push hzwtheprogrammer/getstarted:p2
+
+docker swarm init
+docker stack deploy -c docker-compose.yml getstartedlab
+
+docker service ls
+docker stack services getstartedlab
+docker service ps getstartedlab_web
+docker container ls -q
+
+docker stack rm getstartedlab
+docker swarm leave --force
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+docker-compose up

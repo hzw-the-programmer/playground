@@ -1,0 +1,2 @@
+kal_get_time
+kal_ticks_to_milli_secs

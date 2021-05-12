@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <!--
+            The adjacent sibling combinator (+) separates two selectors and
+            matches the second element only if it immediately follows the first element, and
+            both are children of the same parent element.
+            
+            /* Paragraphs that come immediately after any image */
+            img + p {
+                font-weight: bold;
+            }
+            
+            former_element + target_element { style properties }
+        -->
+        <style> 
+            li:first-of-type + li {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <ul>
+            <li>One</li>
+            <li>Two!</li>
+            <li>Three</li>
+        </ul>
+    </body>
+</html>

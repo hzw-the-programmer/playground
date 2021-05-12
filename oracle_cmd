@@ -1,0 +1,9 @@
+sqlplus sys/hzw as sysdba
+quit
+
+desc all_users;
+desc dba_users;
+desc user_users;
+select * from all_users;
+
+desc all_constraints;

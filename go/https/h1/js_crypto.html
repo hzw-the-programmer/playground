@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <script src="/aes.js"></script>
+        <script type="text/javascript">
+            window.onload = function() {
+                const value = "hello world!";
+                const key = "1234";
+
+                const encrypted = CryptoJS.AES.encrypt(value, key);
+                const decrypted = CryptoJS.AES.decrypt(encrypted, key);
+
+                document.getElementById("original").innerHTML = value;
+                document.getElementById("encrypted").innerHTML = encrypted;
+                document.getElementById("decrypted").innerHTML = decrypted;
+                document.getElementById("decryptedStr").innerHTML = decrypted.toString(CryptoJS.enc.Utf8);
+            };
+        </script>
+    </head>
+    <body>
+        <label>Original:</label>
+        <span id="original"></span>
+        <br />
+        <label>Encrypted:</label>
+        <span id="encrypted"></span>
+        <br />
+        <label>Decrypted:</label>
+        <span id="decrypted"></span>
+        <br />
+        <label>Decrypted string:</label>
+        <span id="decryptedStr"></span>
+    </body>
+</html>

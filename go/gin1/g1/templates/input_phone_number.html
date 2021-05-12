@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <title>Input Phone Number</title>
+    </head>
+    <body>
+        <form method="post" action="/send_verify_code">
+            Country code:<br />
+            <select name="countryCode">
+                {{range .countryCodes}}<option value="{{.Code}}" {{if eq .Code $.countryCode}}selected{{end}}>{{.Name}}</option>{{end}}
+            </select><br />
+            Phone number:<br />
+            <input name="phoneNumber" value="{{.phoneNumber}}" /><br />
+            <input type="submit" value="OK" /><br />
+            {{range .flashes}}<span>{{.}}</span><br />{{end}}
+        </form>
+    </body>
+</html>

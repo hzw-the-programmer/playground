@@ -1,0 +1,1067 @@
+```
+#define HZW_MODULE_ID
+#ifdef WIN32
+#define HZW_DEBUG
+#else
+#define HZW_DEBUG(fmt, ...) SCI_TRACE_LOW("HZW_DEBUG: " fmt, ##__VA_ARGS__)
+#endif
+
+typedef enum {
+	HZW_WIN_ID_START = HZW_MODULE_ID << 16,
+	HZW_WIN_ID_MAIN,
+	HZW_WIN_ID_END,
+} HZW_WIN_ID;
+
+typedef enum {
+	HZW_CTRL_ID_START = HZW_WIN_ID_END,
+	HZW_CTRL_ID_END,
+} HZW_CTRL_ID;
+
+static uint32 g_tick = 0;
+static uint32 g_netid = 0;
+
+static char* hzwKeyCodeStr(MMI_MESSAGE_ID_E msgId) {
+	switch (msgId & 0x00ff) {
+		case KEY_OK:
+			return "KEY_OK";
+		case KEY_CANCEL:
+			return "KEY_CANCEL";
+		case KEY_GREEN:
+			return "KEY_GREEN";
+		case KEY_RED:
+			return "KEY_RED";
+
+		case KEY_WEB:
+			return "KEY_WEB";
+
+		case KEY_UP:
+			return "KEY_UP";
+		case KEY_DOWN:
+			return "KEY_DOWN";
+		case KEY_LEFT:
+			return "KEY_LEFT";
+		case KEY_RIGHT:
+			return "KEY_RIGHT";
+
+		case KEY_1:
+			return "KEY_1";
+		case KEY_2:
+			return "KEY_2";
+		case KEY_3:
+			return "KEY_3";
+
+		case KEY_4:
+			return "KEY_4";
+		case KEY_5:
+			return "KEY_5";
+		case KEY_6:
+			return "KEY_6";
+
+		case KEY_7:
+			return "KEY_7";
+		case KEY_8:
+			return "KEY_8";
+		case KEY_9:
+			return "KEY_9";
+
+		case KEY_STAR:
+			return "KEY_STAR";
+		case KEY_0:
+			return "KEY_0";
+		case KEY_HASH:
+			return "KEY_HASH";
+
+		default:
+			return NULL;
+	}
+}
+
+static char* hzwKeyEventStr(MMI_MESSAGE_ID_E msgId) {
+	switch (msgId & 0xff00) {
+		case KEY_PRESSED:
+			return "KEY_PRESSED";
+		case KEY_RELEASED:
+			return "KEY_RELEASED";
+		default:
+			return NULL;
+	}
+}
+
+static char* hzwKeyMsgStr(MMI_MESSAGE_ID_E msgId) {
+	static char str[100] = {0};
+	char *keyCodeStr = hzwKeyCodeStr(msgId);
+	char *keyEventStr = hzwKeyEventStr(msgId);
+
+	if (!keyCodeStr || !keyEventStr) {
+		return NULL;
+	}
+
+	sprintf(str, "%s %s", keyCodeStr, keyEventStr);
+
+	return str;
+}
+
+static char* hzwMsgStr(MMI_MESSAGE_ID_E msgId) {
+	switch (msgId) {
+		//applet
+		case MSG_UPDATE_SCREEN:
+			return "MSG_UPDATE_SCREEN";
+		case MSG_APPLET_START:
+			return "MSG_APPLET_START";
+		case MSG_APPLET_STOP:
+			return "MSG_APPLET_STOP";
+		case MSG_APPLET_SUSPEND:
+			return "MSG_APPLET_SUSPEND";
+		case MSG_APPLET_RESUME:
+			return "MSG_APPLET_RESUME";
+		case MSG_APPLET_SWITCH:
+			return "MSG_APPLET_SWITCH";
+		case MSG_APPLET_CLEAR_FREE_MODULE:
+			return "MSG_APPLET_CLEAR_FREE_MODULE";
+		case MSG_APPLET_RESOLVE_CONFLICT:
+			return "MSG_APPLET_RESOLVE_CONFLICT";
+
+		//timer
+		case MSG_TIMER:
+			return "MSG_TIMER";
+
+		//window
+		case MSG_OPEN_WINDOW:
+			return "MSG_OPEN_WINDOW";
+		case MSG_CLOSE_WINDOW:
+			return "MSG_CLOSE_WINDOW";
+		case MSG_LOSE_FOCUS:
+			return "MSG_LOSE_FOCUS";
+		case MSG_GET_FOCUS:
+			return "MSG_GET_FOCUS";
+		case MSG_FULL_PAINT:
+			return "MSG_FULL_PAINT";
+		case MSG_LCD_SWITCH:
+			return "MSG_LCD_SWITCH";
+		case MSG_PRE_FULL_PAINT:
+			return "MSG_PRE_FULL_PAINT";
+		case MSG_END_FULL_PAINT:
+			return "MSG_END_FULL_PAINT";
+		case MSG_PRE_LCD_SWITCH:
+			return "MSG_PRE_LCD_SWITCH";
+
+		default: {
+			char *str = hzwKeyMsgStr(msgId);
+			if (str) return str;
+			return "DEFAULT";
+		}
+	}
+}
+
+static void hzwPaint() {
+	GUI_LCD_DEV_INFO dev = {GUI_MAIN_LCD_ID, GUI_BLOCK_MAIN};
+	GUI_RECT_T rect = {0, 0, MMI_MAINSCREEN_WIDTH, MMI_MAINSCREEN_HEIGHT};
+	MMI_STRING_T text = {0};
+	GUISTR_STYLE_T style = {0};
+	GUISTR_STATE_T state = 0;
+
+	LCD_FillRect(&dev, rect, MMI_WINDOW_BACKGROUND_COLOR);
+
+	style.font = MMI_DEFAULT_NORMAL_FONT;
+	style.font_color = MMI_WHITE_COLOR;
+	//style.align = ALIGN_HVMIDDLE;
+	state = GUISTR_STATE_SINGLE_LINE | GUISTR_STATE_ELLIPSIS;
+
+	text.wstr_ptr = L"Hello World!";
+	text.wstr_len = MMIAPICOM_Wstrlen(text.wstr_ptr);
+
+	GUISTR_DrawTextToLCDInRect(&dev,
+		&rect,
+		&rect,
+		&text,
+		&style,
+		state,
+		GUISTR_TEXT_DIR_AUTO);
+}
+
+static void hzwExit() {
+	MMK_CloseWin(HZW_WIN_ID_MAIN);
+}
+
+static char* hzwGetIfaceStr(MMIPDP_INTERFACE_E iface) {
+	switch (iface) {
+		case MMIPDP_INTERFACE_GPRS:
+			return "MMIPDP_INTERFACE_GPRS";
+		case MMIPDP_INTERFACE_WIFI:
+			return "MMIPDP_INTERFACE_WIFI";
+		case MMIPDP_INTERFACE_MAX:
+			return "MMIPDP_INTERFACE_MAX";
+		default:
+			return "DEFAULT";
+	}
+}
+
+static char* hzwGetIdStr(MMIPDP_APP_MSG_E id) {
+	switch (id) {
+		case MMIPDP_APP_MSG_INVALID:
+			return "MMIPDP_APP_MSG_INVALID";
+		case MMIPDP_ACTIVE_REQ:
+			return "MMIPDP_ACTIVE_REQ";
+		case MMIPDP_ACTIVE_CNF:
+			return "MMIPDP_ACTIVE_CNF";
+		case MMIPDP_DEACTIVE_REQ:
+			return "MMIPDP_DEACTIVE_REQ";
+		case MMIPDP_DEACTIVE_CNF:
+			return "MMIPDP_DEACTIVE_CNF";
+		case MMIPDP_DEACTIVE_IND:
+			return "MMIPDP_DEACTIVE_IND";
+		case MMIPDP_SERVICE_CHANGE_IND:
+			return "MMIPDP_SERVICE_CHANGE_IND";
+		case MMIPDP_SUSPEND_IND:
+			return "MMIPDP_SUSPEND_IND";
+		case MMIPDP_RESUME_IND:
+			return "MMIPDP_RESUME_IND";
+		case MMIPDP_ACTIVE_TIMOUT_IND:
+			return "MMIPDP_ACTIVE_TIMOUT_IND";
+		case MMIPDP_REACTIVE_TIMER_IND:
+			return "MMIPDP_REACTIVE_TIMER_IND";
+		case MMIPDP_PS_ACTIVE_CNF:
+			return "MMIPDP_PS_ACTIVE_CNF";
+		case MMIPDP_PS_DEACTIVE_CNF:
+			return "MMIPDP_PS_DEACTIVE_CNF";
+		case MMIPDP_PS_DEACTIVE_IND:
+			return "MMIPDP_PS_DEACTIVE_IND";
+		default:
+			return "DEFAULT";
+	}
+}
+
+static char* hzwGetResultStr(MMIPDP_RESULT_E result) {
+	switch (result) {
+		case MMIPDP_RESULT_SUCC:
+			return "MMIPDP_RESULT_SUCC";
+		case MMIPDP_RESULT_FAIL:
+			return "MMIPDP_RESULT_FAIL";
+#ifndef GPRSMPDP_SUPPORT
+		case MMIPDP_RESULT_AT_IS_ON: //正在使用AT拨号
+			return "MMIPDP_RESULT_AT_IS_ON";
+#endif
+		case MMIPDP_RESULT_DIFFER_DUALSYS:
+			return "MMIPDP_RESULT_DIFFER_DUALSYS";
+		case MMIPDP_RESULT_TIMEOUT:
+			return "MMIPDP_RESULT_TIMEOUT";
+		case MMIPDP_RESULT_NOT_PERMIT: //不允许使用网络，比如飞行模式
+			return "MMIPDP_RESULT_NOT_PERMIT";
+#ifdef DATA_ROAMING_SUPPORT
+		case MMIPDP_RESULT_NOT_PERMIT_ROAMING: //漫游模式关闭网络(added by feng.xiao)
+			return "MMIPDP_RESULT_NOT_PERMIT_ROAMING";
+#endif
+		case MMIPDP_RESULT_FDN_NOT_PERMIT: //不允许使用网络，FDN only
+			return "MMIPDP_RESULT_FDN_NOT_PERMIT";
+		default:
+			return "DEFAULT";
+	}
+}
+
+static void hzwActiveNetworkCb(MMIPDP_CNF_INFO_T *msg) {
+	char *ifaceStr = hzwGetIfaceStr(msg->ps_interface);
+	char *idStr = hzwGetIdStr(msg->msg_id);
+	char *resultStr = hzwGetResultStr(msg->result);
+	uint32 cost = 0;
+
+	if (g_tick) {
+		cost = SCI_GetTickCount() - g_tick;
+		g_tick = 0;
+	}
+
+	HZW_DEBUG("hzwActiveNetworkCb: interface=%s, id=%s, result=%s, nsapi=%d, cost=%d",
+		ifaceStr, idStr, resultStr, msg->nsapi, cost);
+
+	g_netid = msg->nsapi;
+}
+
+static void hzwActiveNetwork() {
+	MN_DUAL_SYS_E sim = MN_DUAL_SYS_MAX;
+	uint8 index = 0;
+	MMICONNECTION_LINKSETTING_DETAIL_T *item = NULL;
+	MMIPDP_ACTIVE_INFO_T info = {0};
+	BOOLEAN result = FALSE;
+
+	g_tick = SCI_GetTickCount();
+
+	sim = MMIAPISET_GetActiveSim();
+	index = MMIAPIBROWSER_GetNetSettingIndex(sim);
+	HZW_DEBUG("hzwActiveNetwork: sim=%d, index=%d", sim, index);
+	item = MMIAPICONNECTION_GetLinkSettingItemByIndex(sim, index);
+	HZW_DEBUG("hzwActiveNetwork: item=%x", item);
+
+	info.app_handler = HZW_MODULE_ID;
+	info.auth_type = item->auth_type;
+	info.apn_ptr = item->apn;
+	info.user_name_ptr = item->username;
+	info.psw_ptr = item->password;
+	info.dual_sys = sim;
+	info.priority = 3;
+	info.ps_service_rat = MN_UNSPECIFIED;
+	info.handle_msg_callback = hzwActiveNetworkCb;
+	info.ps_service_type = IM_E;
+	info.storage = MN_GPRS_STORAGE_ALL;
+
+	result = MMIAPIPDP_Active(&info);
+	HZW_DEBUG("hzwActiveNetwork: result=%d", result);
+}
+
+static void hzwDeactiveNetwork() {
+	MMIAPIPDP_Deactive(HZW_MODULE_ID);
+}
+
+static MMI_RESULT_E hzwWinFuncMain(MMI_WIN_ID_T winId, MMI_MESSAGE_ID_E msgId, DPARAM param) {
+	char *msgStr = hzwMsgStr(msgId);
+
+	HZW_DEBUG("hzwWinFuncMain: %s", msgStr);
+
+	SCI_ASSERT(winId == HZW_WIN_ID_MAIN);
+
+	switch (msgId) {
+		case MSG_FULL_PAINT:
+			hzwPaint();
+			break;
+		case MSG_KEYUP_RED:
+			hzwExit();
+			break;
+		case MSG_KEYUP_1:
+			hzwActiveNetwork();
+			break;
+		case MSG_KEYUP_2:
+			hzwDeactiveNetwork();
+			break;
+	}
+}
+
+WINDOW_TABLE(HZW_WIN_TAB) = {
+    WIN_ID(HZW_WIN_ID_MAIN),
+    WIN_FUNC((uint32)hzwWinFuncMain),
+    WIN_HIDE_STATUS,
+    END_WIN
+};
+
+void HzwLaunch() {
+	MMK_CreateWin(HZW_WIN_TAB, NULL);
+	HZW_DEBUG("HzwLaunch: after MMK_CreateWin");
+}
+
+void hzwFlyMode(BOOLEAN on) {
+	HZW_DEBUG("hzwFlyMode: on=%d", on);
+	if (!on) {
+		hzwActiveNetwork();
+	}
+}
+
+void hzwGprs(BOOLEAN on) {
+	HZW_DEBUG("hzwGprs: on=%d", on);
+	if (on) {
+		hzwActiveNetwork();
+	}
+}
+```
+
+```
+000001140027		114-27:HZW_DEBUG: HzwLaunch: after MMK_CreateWin
+000001140034		114-34:HZW_DEBUG: hzwWinHandleMsg: MSG_OPEN_WINDOW
+000001140038		114-38:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000001140041		114-41:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000001140048		114-48:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000001150033		115-33:HZW_DEBUG: hzwWinHandleMsg: KEY_WEB KEY_RELEASED
+000001460035		146-35:HZW_DEBUG: hzwWinHandleMsg: MSG_LOSE_FOCUS
+000001920018		192-18:HZW_DEBUG: hzwWinHandleMsg: MSG_GET_FOCUS
+000001920025		192-25:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000001920028		192-28:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000001930005		193-5:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000001930044		193-44:HZW_DEBUG: hzwWinHandleMsg: KEY_CANCEL KEY_RELEASED
+000002140046		214-46:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000002150023		215-23:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000002150028		215-28:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000002150029		215-29:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000002170018		217-18:HZW_DEBUG: hzwActiveNetwork: result=1
+000002700008		270-8:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1967
+000003210035		321-35:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000003220015		322-15:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000003220018		322-18:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000003220019		322-19:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000003220026		322-26:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=5
+000003220027		322-27:HZW_DEBUG: hzwActiveNetwork: result=1
+000003360034		336-34:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000003370039		337-39:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000003370042		337-42:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000003370043		337-43:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000003370049		337-49:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000003370050		337-50:HZW_DEBUG: hzwActiveNetwork: result=1
+000003470031		347-31:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000003480055		348-55:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000003480058		348-58:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000003480059		348-59:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000003490006		349-6:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000003490007		349-7:HZW_DEBUG: hzwActiveNetwork: result=1
+000003600031		360-31:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000003620001		362-1:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000003620004		362-4:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000003620005		362-5:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000003620011		362-11:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000003620012		362-12:HZW_DEBUG: hzwActiveNetwork: result=1
+000003710026		371-26:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000003730001		373-1:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000003730004		373-4:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000003730005		373-5:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000003730011		373-11:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000003730013		373-13:HZW_DEBUG: hzwActiveNetwork: result=1
+000003830005		383-5:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000003840028		384-28:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000003840033		384-33:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000003840034		384-34:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000003840040		384-40:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000003840041		384-41:HZW_DEBUG: hzwActiveNetwork: result=1
+000003930021		393-21:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000003950021		395-21:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000003950024		395-24:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000003950026		395-26:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000003950032		395-32:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=2
+000003950033		395-33:HZW_DEBUG: hzwActiveNetwork: result=1
+000004050029		405-29:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000004060054		406-54:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000004060057		406-57:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000004060058		406-58:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000004070006		407-6:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=2
+000004070007		407-7:HZW_DEBUG: hzwActiveNetwork: result=1
+000004150054		415-54:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000004180001		418-1:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000004180004		418-4:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000004180005		418-5:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000004180011		418-11:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000004180012		418-12:HZW_DEBUG: hzwActiveNetwork: result=1
+000004260045		426-45:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000004280014		428-14:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000004280017		428-17:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000004280018		428-18:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000004280024		428-24:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000004280025		428-25:HZW_DEBUG: hzwActiveNetwork: result=1
+000004370035		437-35:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000004390009		439-9:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000004390012		439-12:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000004390013		439-13:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000004390019		439-19:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000004390020		439-20:HZW_DEBUG: hzwActiveNetwork: result=1
+000004490006		449-6:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000004500046		450-46:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000004500050		450-50:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000004500051		450-51:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000004510001		451-1:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=2
+000004510002		451-2:HZW_DEBUG: hzwActiveNetwork: result=1
+000004590039		459-39:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000004610008		461-8:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000004610011		461-11:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000004610012		461-12:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000004610018		461-18:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000004610019		461-19:HZW_DEBUG: hzwActiveNetwork: result=1
+000004760042		476-42:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000004770046		477-46:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000004770049		477-49:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000004770050		477-50:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000004780001		478-1:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000004780002		478-2:HZW_DEBUG: hzwActiveNetwork: result=1
+000004870029		487-29:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000004880055		488-55:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000004880058		488-58:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000004890001		489-1:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000004890007		489-7:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=2
+000004890008		489-8:HZW_DEBUG: hzwActiveNetwork: result=1
+000004980057		498-57:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000005000033		500-33:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000005000037		500-37:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000005000038		500-38:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000005000044		500-44:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000005000047		500-47:HZW_DEBUG: hzwActiveNetwork: result=1
+000005100048		510-48:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000005120041		512-41:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000005120044		512-44:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000005120045		512-45:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000005120051		512-51:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000005120052		512-52:HZW_DEBUG: hzwActiveNetwork: result=1
+000005220008		522-8:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000005230038		523-38:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000005230041		523-41:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000005230042		523-42:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000005230048		523-48:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000005230049		523-49:HZW_DEBUG: hzwActiveNetwork: result=1
+000005320039		532-39:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000005340013		534-13:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000005340016		534-16:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000005340017		534-17:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000005340023		534-23:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000005340024		534-24:HZW_DEBUG: hzwActiveNetwork: result=1
+000005430001		543-1:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000005440046		544-46:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000005440049		544-49:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000005440050		544-50:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000005450001		545-1:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000005450002		545-2:HZW_DEBUG: hzwActiveNetwork: result=1
+000005540020		554-20:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000005560004		556-4:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000005560007		556-7:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000005560008		556-8:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000005560014		556-14:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000005560015		556-15:HZW_DEBUG: hzwActiveNetwork: result=1
+000005650047		565-47:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000005670010		567-10:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000005670013		567-13:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000005670014		567-14:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000005670020		567-20:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000005670021		567-21:HZW_DEBUG: hzwActiveNetwork: result=1
+000005760004		576-4:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000005770030		577-30:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000005770033		577-33:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000005770034		577-34:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000005770040		577-40:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000005770041		577-41:HZW_DEBUG: hzwActiveNetwork: result=1
+000005860038		586-38:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000005880029		588-29:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000005880032		588-32:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000005880033		588-33:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000005880039		588-39:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000005880040		588-40:HZW_DEBUG: hzwActiveNetwork: result=1
+000005970019		597-19:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000005980044		598-44:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000005980047		598-47:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000005980048		598-48:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000005980054		598-54:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000005990001		599-1:HZW_DEBUG: hzwActiveNetwork: result=1
+000006090050		609-50:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000006110016		611-16:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000006110019		611-19:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000006110020		611-20:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000006110026		611-26:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000006110027		611-27:HZW_DEBUG: hzwActiveNetwork: result=1
+000006210036		621-36:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000006230003		623-3:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000006230006		623-6:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000006230007		623-7:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000006230013		623-13:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000006230014		623-14:HZW_DEBUG: hzwActiveNetwork: result=1
+000006310054		631-54:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000006330020		633-20:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000006330023		633-23:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000006330024		633-24:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000006330030		633-30:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000006330031		633-31:HZW_DEBUG: hzwActiveNetwork: result=1
+000006430014		643-14:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000006440055		644-55:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000006450003		645-3:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000006450004		645-4:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000006450010		645-10:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000006450011		645-11:HZW_DEBUG: hzwActiveNetwork: result=1
+000006520053		652-53:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000006540040		654-40:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000006540043		654-43:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000006540044		654-44:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000006540050		654-50:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000006540051		654-51:HZW_DEBUG: hzwActiveNetwork: result=1
+000006640022		664-22:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000006650043		665-43:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000006650046		665-46:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000006650047		665-47:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000006650053		665-53:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000006660001		666-1:HZW_DEBUG: hzwActiveNetwork: result=1
+000006740042		674-42:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000006760043		676-43:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000006760046		676-46:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000006760047		676-47:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000006760053		676-53:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000006760054		676-54:HZW_DEBUG: hzwActiveNetwork: result=1
+000006850007		685-7:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000006860056		686-56:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000006860059		686-59:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000006870001		687-1:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000006870007		687-7:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000006870008		687-8:HZW_DEBUG: hzwActiveNetwork: result=1
+000006970006		697-6:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000006980035		698-35:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000006980038		698-38:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000006980039		698-39:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000006980046		698-46:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000006980047		698-47:HZW_DEBUG: hzwActiveNetwork: result=1
+000007070024		707-24:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000007090026		709-26:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000007090029		709-29:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000007090030		709-30:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000007090036		709-36:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000007090037		709-37:HZW_DEBUG: hzwActiveNetwork: result=1
+000007180012		718-12:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000007200011		720-11:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000007200014		720-14:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000007200015		720-15:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000007200021		720-21:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000007200022		720-22:HZW_DEBUG: hzwActiveNetwork: result=1
+000007300012		730-12:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000007320011		732-11:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000007320014		732-14:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000007320015		732-15:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000007320021		732-21:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000007320022		732-22:HZW_DEBUG: hzwActiveNetwork: result=1
+000007410047		741-47:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000007430040		743-40:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000007430043		743-43:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000007430044		743-44:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000007430050		743-50:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000007430051		743-51:HZW_DEBUG: hzwActiveNetwork: result=1
+000007520006		752-6:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000007530055		753-55:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000007530058		753-58:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000007530059		753-59:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000007540006		754-6:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000007540007		754-7:HZW_DEBUG: hzwActiveNetwork: result=1
+000007630013		763-13:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000007650006		765-6:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000007650009		765-9:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000007650010		765-10:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000007650016		765-16:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000007650017		765-17:HZW_DEBUG: hzwActiveNetwork: result=1
+000007750029		775-29:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000007770005		777-5:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000007770009		777-9:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000007770010		777-10:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000007770016		777-16:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=2
+000007770017		777-17:HZW_DEBUG: hzwActiveNetwork: result=1
+000007870001		787-1:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000007890007		789-7:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000007890010		789-10:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000007890011		789-11:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000007890017		789-17:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000007890018		789-18:HZW_DEBUG: hzwActiveNetwork: result=1
+000007970032		797-32:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000007990021		799-21:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000007990025		799-25:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000007990026		799-26:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000007990032		799-32:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000007990033		799-33:HZW_DEBUG: hzwActiveNetwork: result=1
+000008070048		807-48:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000008090030		809-30:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000008090033		809-33:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000008090034		809-34:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000008090040		809-40:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000008090041		809-41:HZW_DEBUG: hzwActiveNetwork: result=1
+000008190024		819-24:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000008200053		820-53:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000008200056		820-56:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000008200057		820-57:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000008210006		821-6:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000008210007		821-7:HZW_DEBUG: hzwActiveNetwork: result=1
+000008290042		829-42:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000008310008		831-8:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000008310011		831-11:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000008310012		831-12:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000008310018		831-18:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000008310019		831-19:HZW_DEBUG: hzwActiveNetwork: result=1
+000008390048		839-48:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000008410028		841-28:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000008410031		841-31:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000008410032		841-32:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000008410038		841-38:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000008410039		841-39:HZW_DEBUG: hzwActiveNetwork: result=1
+000008490030		849-30:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000008510014		851-14:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000008510017		851-17:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000008510018		851-18:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000008510024		851-24:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000008510025		851-25:HZW_DEBUG: hzwActiveNetwork: result=1
+000008610024		861-24:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000008630019		863-19:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000008630022		863-22:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000008630023		863-23:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000008630029		863-29:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000008630030		863-30:HZW_DEBUG: hzwActiveNetwork: result=1
+000008720013		872-13:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000008730041		873-41:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000008730044		873-44:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000008730045		873-45:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000008730051		873-51:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000008730053		873-53:HZW_DEBUG: hzwActiveNetwork: result=1
+000008830055		883-55:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000008850018		885-18:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000008850021		885-21:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000008850022		885-22:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000008850029		885-29:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=2
+000008850030		885-30:HZW_DEBUG: hzwActiveNetwork: result=1
+000008940045		894-45:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000008960040		896-40:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000008960043		896-43:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000008960044		896-44:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000008960050		896-50:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000008960051		896-51:HZW_DEBUG: hzwActiveNetwork: result=1
+000009060058		906-58:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000009080052		908-52:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000009080055		908-55:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000009080056		908-56:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000009090006		909-6:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000009090007		909-7:HZW_DEBUG: hzwActiveNetwork: result=1
+000009170019		917-19:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000009190015		919-15:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000009190018		919-18:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000009190019		919-19:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000009190025		919-25:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=2
+000009190026		919-26:HZW_DEBUG: hzwActiveNetwork: result=1
+000009280007		928-7:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000009290034		929-34:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000009290037		929-37:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000009290038		929-38:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000009290044		929-44:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000009290045		929-45:HZW_DEBUG: hzwActiveNetwork: result=1
+000009400008		940-8:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000009420008		942-8:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000009420011		942-11:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000009420012		942-12:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000009420018		942-18:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000009420019		942-19:HZW_DEBUG: hzwActiveNetwork: result=1
+000009510059		951-59:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000009540007		954-7:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000009540010		954-10:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000009540011		954-11:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000009540017		954-17:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000009540018		954-18:HZW_DEBUG: hzwActiveNetwork: result=1
+000009630016		963-16:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000009640042		964-42:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000009640045		964-45:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000009640046		964-46:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000009640052		964-52:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000009640053		964-53:HZW_DEBUG: hzwActiveNetwork: result=1
+000009730048		973-48:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000009750041		975-41:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000009750044		975-44:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000009750045		975-45:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000009750051		975-51:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000009750052		975-52:HZW_DEBUG: hzwActiveNetwork: result=1
+000009850048		985-48:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000009870028		987-28:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000009870031		987-31:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000009870032		987-32:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000009870038		987-38:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000009870039		987-39:HZW_DEBUG: hzwActiveNetwork: result=1
+000009960038		996-38:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000009980011		998-11:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000009980014		998-14:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000009980015		998-15:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000009980021		998-21:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000009980022		998-22:HZW_DEBUG: hzwActiveNetwork: result=1
+000010070009		1007-9:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000010080057		1008-57:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000010080060		1008-60:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000010090001		1009-1:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000010090007		1009-7:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000010090008		1009-8:HZW_DEBUG: hzwActiveNetwork: result=1
+000010170023		1017-23:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000010190009		1019-9:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000010190012		1019-12:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000010190013		1019-13:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000010190019		1019-19:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000010190020		1019-20:HZW_DEBUG: hzwActiveNetwork: result=1
+000010270040		1027-40:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000010290036		1029-36:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000010290039		1029-39:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000010290040		1029-40:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000010290046		1029-46:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000010290047		1029-47:HZW_DEBUG: hzwActiveNetwork: result=1
+000010390005		1039-5:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000010410002		1041-2:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000010410005		1041-5:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000010410006		1041-6:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000010410012		1041-12:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000010410013		1041-13:HZW_DEBUG: hzwActiveNetwork: result=1
+000010510001		1051-1:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000010520055		1052-55:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000010530001		1053-1:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000010530002		1053-2:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000010530008		1053-8:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000010530009		1053-9:HZW_DEBUG: hzwActiveNetwork: result=1
+000010620034		1062-34:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000010640014		1064-14:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000010640036		1064-36:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000010640037		1064-37:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000010640043		1064-43:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=3
+000010640044		1064-44:HZW_DEBUG: hzwActiveNetwork: result=1
+000010730001		1073-1:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000010740048		1074-48:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000010740051		1074-51:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000010740052		1074-52:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000010750002		1075-2:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000010750003		1075-3:HZW_DEBUG: hzwActiveNetwork: result=1
+000010830056		1083-56:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000010850042		1085-42:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000010850045		1085-45:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000010850046		1085-46:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000010850052		1085-52:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000010850053		1085-53:HZW_DEBUG: hzwActiveNetwork: result=1
+000010940058		1094-58:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000010960025		1096-25:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000010960028		1096-28:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000010960029		1096-29:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000010960035		1096-35:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000010960036		1096-36:HZW_DEBUG: hzwActiveNetwork: result=1
+000011040055		1104-55:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000011060033		1106-33:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000011060036		1106-36:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000011060037		1106-37:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000011060043		1106-43:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000011060044		1106-44:HZW_DEBUG: hzwActiveNetwork: result=1
+000011160022		1116-22:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000011180024		1118-24:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000011180027		1118-27:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000011180028		1118-28:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000011180034		1118-34:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000011180035		1118-35:HZW_DEBUG: hzwActiveNetwork: result=1
+000011330044		1133-44:HZW_DEBUG: hzwWinHandleMsg: KEY_RED KEY_PRESSED
+000011340037		1134-37:HZW_DEBUG: hzwWinHandleMsg: KEY_RED KEY_RELEASED
+000011340040		1134-40:HZW_DEBUG: hzwWinHandleMsg: MSG_CLOSE_WINDOW
+000013240036		1324-36:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_DEACTIVE_IND, result=MMIPDP_RESULT_SUCC, nsapi=0, cost=120718
+000015290028		1529-28:HZW_DEBUG: HzwLaunch: after MMK_CreateWin
+000015290035		1529-35:HZW_DEBUG: hzwWinHandleMsg: MSG_OPEN_WINDOW
+000015290039		1529-39:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000015290042		1529-42:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000015290045		1529-45:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000015310042		1531-42:HZW_DEBUG: hzwWinHandleMsg: KEY_WEB KEY_RELEASED
+000015450018		1545-18:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000015460024		1546-24:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000015460025		1546-25:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000015460026		1546-26:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000015460048		1546-48:HZW_DEBUG: hzwActiveNetwork: result=1
+000015680031		1568-31:HZW_DEBUG: hzwWinHandleMsg: MSG_LOSE_FOCUS
+000015770028		1577-28:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_FAIL, nsapi=0, cost=20395
+000016340038		1634-38:HZW_DEBUG: hzwWinHandleMsg: MSG_GET_FOCUS
+000016340045		1634-45:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000016340048		1634-48:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000016340058		1634-58:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000016360025		1636-25:HZW_DEBUG: hzwWinHandleMsg: KEY_CANCEL KEY_RELEASED
+000016480043		1648-43:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000016500014		1650-14:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000016500015		1650-15:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000016500016		1650-16:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000016500043		1650-43:HZW_DEBUG: hzwActiveNetwork: result=1
+000016720058		1672-58:HZW_DEBUG: hzwWinHandleMsg: MSG_LOSE_FOCUS
+000016820031		1682-31:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_FAIL, nsapi=0, cost=20388
+000017170053		1717-53:HZW_DEBUG: hzwWinHandleMsg: MSG_GET_FOCUS
+000017170060		1717-60:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000017180002		1718-2:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000017180033		1718-33:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000017190019		1719-19:HZW_DEBUG: hzwWinHandleMsg: KEY_CANCEL KEY_RELEASED
+000017360005		1736-5:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000017370014		1737-14:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000017370015		1737-15:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000017370016		1737-16:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000017370040		1737-40:HZW_DEBUG: hzwActiveNetwork: result=1
+000017590050		1759-50:HZW_DEBUG: hzwWinHandleMsg: MSG_LOSE_FOCUS
+000017690001		1769-1:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_FAIL, nsapi=0, cost=20399
+000018040022		1804-22:HZW_DEBUG: hzwWinHandleMsg: MSG_GET_FOCUS
+000018040029		1804-29:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000018040032		1804-32:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000018050003		1805-3:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000018050049		1805-49:HZW_DEBUG: hzwWinHandleMsg: KEY_CANCEL KEY_RELEASED
+000018220019		1822-19:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000018220056		1822-56:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000018220057		1822-57:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000018220058		1822-58:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000018230024		1823-24:HZW_DEBUG: hzwActiveNetwork: result=1
+000018450052		1845-52:HZW_DEBUG: hzwWinHandleMsg: MSG_LOSE_FOCUS
+000018550001		1855-1:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_FAIL, nsapi=0, cost=20419
+000018910039		1891-39:HZW_DEBUG: hzwWinHandleMsg: MSG_GET_FOCUS
+000018910046		1891-46:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000018910049		1891-49:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000018920022		1892-22:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000018930010		1893-10:HZW_DEBUG: hzwWinHandleMsg: KEY_CANCEL KEY_RELEASED
+000019110007		1911-7:HZW_DEBUG: hzwWinHandleMsg: KEY_RED KEY_PRESSED
+000019120007		1912-7:HZW_DEBUG: hzwWinHandleMsg: KEY_RED KEY_RELEASED
+000019120010		1912-10:HZW_DEBUG: hzwWinHandleMsg: MSG_CLOSE_WINDOW
+000024840001		2484-1:HZW_DEBUG: HzwLaunch: after MMK_CreateWin
+000024840008		2484-8:HZW_DEBUG: hzwWinHandleMsg: MSG_OPEN_WINDOW
+000024840012		2484-12:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000024840015		2484-15:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000024840019		2484-19:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000024850026		2485-26:HZW_DEBUG: hzwWinHandleMsg: KEY_WEB KEY_RELEASED
+000024960033		2496-33:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000024980025		2498-25:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000024980028		2498-28:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000024980029		2498-29:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000025000025		2500-25:HZW_DEBUG: hzwActiveNetwork: result=1
+000025530003		2553-3:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=2097
+000027300043		2730-43:HZW_DEBUG: hzwWinHandleMsg: MSG_LOSE_FOCUS
+000027910042		2791-42:HZW_DEBUG: hzwWinHandleMsg: MSG_GET_FOCUS
+000027910056		2791-56:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000027920001		2792-1:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000027920011		2792-11:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000027920050		2792-50:HZW_DEBUG: hzwWinHandleMsg: KEY_CANCEL KEY_RELEASED
+000028150021		2815-21:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000028160004		2816-4:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000028160009		2816-9:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000028160010		2816-10:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000028160035		2816-35:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=8
+000028160036		2816-36:HZW_DEBUG: hzwActiveNetwork: result=1
+000028300051		2830-51:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000028320008		2832-8:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000028320011		2832-11:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000028320012		2832-12:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000028320018		2832-18:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000028320019		2832-19:HZW_DEBUG: hzwActiveNetwork: result=1
+000028480009		2848-9:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000028500030		2850-30:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000028500033		2850-33:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000028500034		2850-34:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000028500040		2850-40:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000028500041		2850-41:HZW_DEBUG: hzwActiveNetwork: result=1
+000028630034		2863-34:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000028650001		2865-1:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000028650004		2865-4:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000028650005		2865-5:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000028650011		2865-11:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000028650012		2865-12:HZW_DEBUG: hzwActiveNetwork: result=1
+000028800025		2880-25:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000028810042		2881-42:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000028810045		2881-45:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000028810046		2881-46:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000028820004		2882-4:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=2
+000028820005		2882-5:HZW_DEBUG: hzwActiveNetwork: result=1
+000029000039		2900-39:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000029030019		2903-19:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000029030022		2903-22:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000029030023		2903-23:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000029030029		2903-29:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000029030030		2903-30:HZW_DEBUG: hzwActiveNetwork: result=1
+000029160019		2916-19:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000029170033		2917-33:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000029170036		2917-36:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000029170037		2917-37:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000029170043		2917-43:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=0
+000029170044		2917-44:HZW_DEBUG: hzwActiveNetwork: result=1
+000029340018		2934-18:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000029350001		2935-1:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000029350004		2935-4:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000029350005		2935-5:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000029350011		2935-11:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000029350012		2935-12:HZW_DEBUG: hzwActiveNetwork: result=1
+000029560047		2956-47:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000029590031		2959-31:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000029590034		2959-34:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000029590035		2959-35:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000029590041		2959-41:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000029590042		2959-42:HZW_DEBUG: hzwActiveNetwork: result=1
+000029720040		2972-40:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000029730048		2973-48:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000029730051		2973-51:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000029740001		2974-1:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000029740007		2974-7:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000029740008		2974-8:HZW_DEBUG: hzwActiveNetwork: result=1
+000029890015		2989-15:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000029900030		2990-30:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000029900033		2990-33:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000029900034		2990-34:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000029900040		2990-40:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1
+000029900041		2990-41:HZW_DEBUG: hzwActiveNetwork: result=1
+000030120011		3012-11:HZW_DEBUG: hzwWinHandleMsg: KEY_RED KEY_PRESSED
+000030140049		3014-49:HZW_DEBUG: hzwWinHandleMsg: KEY_RED KEY_RELEASED
+000030140052		3014-52:HZW_DEBUG: hzwWinHandleMsg: MSG_CLOSE_WINDOW
+000031660023		3166-23:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_DEACTIVE_IND, result=MMIPDP_RESULT_SUCC, nsapi=0, cost=410936
+000033000031		3300-31:HZW_DEBUG: HzwLaunch: after MMK_CreateWin
+000033000038		3300-38:HZW_DEBUG: hzwWinHandleMsg: MSG_OPEN_WINDOW
+000033000042		3300-42:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000033000045		3300-45:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000033000048		3300-48:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000033030006		3303-6:HZW_DEBUG: hzwWinHandleMsg: KEY_WEB KEY_RELEASED
+000033170010		3317-10:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000033180028		3318-28:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000033180031		3318-31:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000033180032		3318-32:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000033210033		3321-33:HZW_DEBUG: hzwActiveNetwork: result=1
+000033680039		3368-39:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1876
+000034180058		3418-58:HZW_DEBUG: hzwWinHandleMsg: KEY_RED KEY_PRESSED
+000034190030		3419-30:HZW_DEBUG: hzwWinHandleMsg: KEY_RED KEY_RELEASED
+000034190033		3419-33:HZW_DEBUG: hzwWinHandleMsg: MSG_CLOSE_WINDOW
+000040310027		4031-27:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_DEACTIVE_IND, result=MMIPDP_RESULT_SUCC, nsapi=0, cost=473236
+000041440004		4144-4:HZW_DEBUG: HzwLaunch: after MMK_CreateWin
+000041440011		4144-11:HZW_DEBUG: hzwWinHandleMsg: MSG_OPEN_WINDOW
+000041440015		4144-15:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000041440018		4144-18:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000041440021		4144-21:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000041460025		4146-25:HZW_DEBUG: hzwWinHandleMsg: KEY_WEB KEY_RELEASED
+000041610058		4161-58:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000041630010		4163-10:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000041630014		4163-14:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000041630015		4163-15:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000041630018		4163-18:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_FAIL, nsapi=0, cost=4
+000041630019		4163-19:HZW_DEBUG: hzwActiveNetwork: result=1
+000041800057		4180-57:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000041820007		4182-7:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000041820010		4182-10:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000041820011		4182-11:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000041820014		4182-14:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_FAIL, nsapi=0, cost=1
+000041820015		4182-15:HZW_DEBUG: hzwActiveNetwork: result=1
+000041960029		4196-29:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000041970035		4197-35:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000041970039		4197-39:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000041970040		4197-40:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000041970043		4197-43:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_FAIL, nsapi=0, cost=1
+000041970044		4197-44:HZW_DEBUG: hzwActiveNetwork: result=1
+000042120059		4212-59:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000042140017		4214-17:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000042140020		4214-20:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000042140021		4214-21:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000042140024		4214-24:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_FAIL, nsapi=0, cost=1
+000042140025		4214-25:HZW_DEBUG: hzwActiveNetwork: result=1
+000042270059		4227-59:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000042290014		4229-14:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000042290017		4229-17:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000042290018		4229-18:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000042290021		4229-21:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_FAIL, nsapi=0, cost=1
+000042290022		4229-22:HZW_DEBUG: hzwActiveNetwork: result=1
+000042580042		4258-42:HZW_DEBUG: hzwWinHandleMsg: KEY_OK KEY_PRESSED
+000042580057		4258-57:HZW_DEBUG: hzwWinHandleMsg: KEY_OK KEY_RELEASED
+000042740020		4274-20:HZW_DEBUG: hzwWinHandleMsg: KEY_RED KEY_PRESSED
+000042760038		4276-38:HZW_DEBUG: hzwWinHandleMsg: KEY_RED KEY_RELEASED
+000042760041		4276-41:HZW_DEBUG: hzwWinHandleMsg: MSG_CLOSE_WINDOW
+000045290001		4529-1:HZW_DEBUG: HzwLaunch: after MMK_CreateWin
+000045290052		4529-52:HZW_DEBUG: hzwWinHandleMsg: MSG_OPEN_WINDOW
+000045290056		4529-56:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000045300002		4530-2:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000045300009		4530-9:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000045310019		4531-19:HZW_DEBUG: hzwWinHandleMsg: KEY_WEB KEY_RELEASED
+000045450034		4545-34:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000045460044		4546-44:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000045460047		4546-47:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000045460048		4546-48:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000045490030		4549-30:HZW_DEBUG: hzwActiveNetwork: result=1
+000045960022		4596-22:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_SUCC, nsapi=6, cost=1835
+000046510059		4651-59:HZW_DEBUG: hzwWinHandleMsg: KEY_RED KEY_PRESSED
+000046520054		4652-54:HZW_DEBUG: hzwWinHandleMsg: KEY_RED KEY_RELEASED
+000046520057		4652-57:HZW_DEBUG: hzwWinHandleMsg: MSG_CLOSE_WINDOW
+000053570033		5357-33:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_DEACTIVE_IND, result=MMIPDP_RESULT_SUCC, nsapi=0, cost=913556
+000054220049		5422-49:HZW_DEBUG: HzwLaunch: after MMK_CreateWin
+000054220056		5422-56:HZW_DEBUG: hzwWinHandleMsg: MSG_OPEN_WINDOW
+000054230001		5423-1:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000054230004		5423-4:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000054230009		5423-9:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000054240022		5424-22:HZW_DEBUG: hzwWinHandleMsg: KEY_WEB KEY_RELEASED
+000054380001		5438-1:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000054390011		5439-11:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000054390012		5439-12:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000054390013		5439-13:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000054390035		5439-35:HZW_DEBUG: hzwActiveNetwork: result=1
+000054610053		5461-53:HZW_DEBUG: hzwWinHandleMsg: MSG_LOSE_FOCUS
+000054710009		5471-9:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_FAIL, nsapi=0, cost=20399
+000091230059		9123-59:HZW_DEBUG: hzwWinHandleMsg: MSG_GET_FOCUS
+000091240002		9124-2:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000091240005		9124-5:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000091240051		9124-51:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000091250032		9125-32:HZW_DEBUG: hzwWinHandleMsg: KEY_CANCEL KEY_RELEASED
+000091480049		9148-49:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_PRESSED
+000091490030		9149-30:HZW_DEBUG: hzwWinHandleMsg: KEY_1 KEY_RELEASED
+000091490031		9149-31:HZW_DEBUG: hzwActiveNetwork: sim=0, index=0
+000091490032		9149-32:HZW_DEBUG: hzwActiveNetwork: item=4627cd8
+000091490054		9149-54:HZW_DEBUG: hzwActiveNetwork: result=1
+000091690007		9169-7:HZW_DEBUG: hzwWinHandleMsg: MSG_LOSE_FOCUS
+000091780062		9178-62:HZW_DEBUG: hzwActiveNetworkCb: interface=MMIPDP_INTERFACE_GPRS, id=MMIPDP_ACTIVE_CNF, result=MMIPDP_RESULT_FAIL, nsapi=0, cost=20431
+000092220067		9222-67:HZW_DEBUG: hzwWinHandleMsg: MSG_GET_FOCUS
+000092230004		9223-4:HZW_DEBUG: hzwWinHandleMsg: MSG_PRE_FULL_PAINT
+000092230007		9223-7:HZW_DEBUG: hzwWinHandleMsg: MSG_FULL_PAINT
+000092230017		9223-17:HZW_DEBUG: hzwWinHandleMsg: MSG_END_FULL_PAINT
+000092240005		9224-5:HZW_DEBUG: hzwWinHandleMsg: KEY_CANCEL KEY_RELEASED
+000092440055		9244-55:HZW_DEBUG: hzwWinHandleMsg: MSG_LOSE_FOCUS
+```

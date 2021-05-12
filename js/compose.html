@@ -1,0 +1,20 @@
+<html>
+<body>
+  <script>
+    function compose(...funcs) {
+      return funcs.reduce((a, b) => (...args) => a(b(...args)))
+    }
+    function f1() {
+      console.log('f1', arguments)
+    }
+    function f2() {
+      console.log('f2', arguments)
+    }
+    function f3() {
+      console.log('f3', arguments)
+      return 'rf3'
+    }
+    compose(f1, f2, f3)(1, 2, 3)
+  </script>
+</body>
+</html>
