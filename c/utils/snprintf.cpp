@@ -369,13 +369,24 @@ char* number(char *buf, char *end, unsigned long long num, struct printf_spec sp
 	return buf;
 }
 
+#define MAX_INT (~(1<<(sizeof(int)*8-1)))
+
 int hzw_vsnprintf(char *buf, size_t size, const char *fmt, va_list args) {
 	unsigned long long num;
 	char *str, *end;
 	struct printf_spec spec = {0};
 
 	str = buf;
-	end = buf + size;
+
+    if (buf + size < buf) {
+        size = ((char*)-1) - buf;
+    }
+
+    if (size > MAX_INT) {
+        size = MAX_INT;
+    }
+
+    end = buf + size;
 
 	while (*fmt) {
 		const char *old_fmt = fmt;
@@ -472,7 +483,7 @@ int hzw_vsnprintf(char *buf, size_t size, const char *fmt, va_list args) {
 
 	if (str < end) {
 		*str = '\0';
-	} else {
+	} else if (end > buf) {
 		end[-1] = '\0';
 	}
 
@@ -490,52 +501,67 @@ int hzw_snprintf(char *buf, size_t size, const char *fmt, ...) {
 	return i;
 }
 
+int hzw_sprintf(char *buf, const char *fmt, ...) {
+	va_list args;
+	int i;
+
+	va_start(args, fmt);
+	// i = hzw_vsnprintf(buf, MAX_INT, fmt, args);
+    i = hzw_vsnprintf(buf, (size_t)(char*)-1, fmt, args);
+	va_end(args);
+
+	return i;
+}
+
 void test_hzw_snprintf() {
 	char formatted[512];
-	for (int i = 0; i < 512; i++) {
-		formatted[i] = 0xff;
-	}
-	int len;
-
-	char *fmt;
+    int len;
 	char *expected;
 
 	expected = "abcdefg";
-	len = hzw_snprintf(formatted, 512, "abcdefg");
+    memset(formatted, 0x0ff, sizeof(formatted));
+	len = hzw_snprintf(formatted, sizeof(formatted), "abcdefg");
 	assert(strcmp(formatted, expected) == 0);
 	assert(len == 7);
 
 	expected = "ab";
+    memset(formatted, 0x0ff, sizeof(formatted));
 	len = hzw_snprintf(formatted, 3, "abcdefg");
 	assert(strcmp(formatted, expected) == 0);
 	assert(len == 7);
 
 	expected = "a";
-	len = hzw_snprintf(formatted, 512, "%c", 'a');
+    memset(formatted, 0x0ff, sizeof(formatted));
+	len = hzw_snprintf(formatted, sizeof(formatted), "%c", 'a');
 	assert(strcmp(formatted, expected) == 0);
 	assert(len == 1);
 
 	expected = "         a";
-	len = hzw_snprintf(formatted, 512, "%10c", 'a');
+    memset(formatted, 0x0ff, sizeof(formatted));
+	len = hzw_snprintf(formatted, sizeof(formatted), "%10c", 'a');
 	assert(strcmp(formatted, expected) == 0);
 	assert(len == 10);
 
 	expected = "a         ";
-	len = hzw_snprintf(formatted, 512, "%-10c", 'a');
+    memset(formatted, 0x0ff, sizeof(formatted));
+	len = hzw_snprintf(formatted, sizeof(formatted), "%-10c", 'a');
 	assert(strcmp(formatted, expected) == 0);
 	assert(len == 10);
 
 	expected = "";
+    memset(formatted, 0x0ff, sizeof(formatted));
 	len = hzw_snprintf(formatted, 1, "%c", 'a');
 	assert(strcmp(formatted, expected) == 0);
 	assert(len == 1);
 
 	expected = "    ";
+    memset(formatted, 0x0ff, sizeof(formatted));
 	len = hzw_snprintf(formatted, 5, "%10c", 'a');
 	assert(strcmp(formatted, expected) == 0);
 	assert(len == 10);
 
 	expected = "a      ";
+    memset(formatted, 0x0ff, sizeof(formatted));
 	len = hzw_snprintf(formatted, 8, "%-10c", 'a');
 	assert(strcmp(formatted, expected) == 0);
 	assert(len == 10);
@@ -544,37 +570,44 @@ void test_hzw_snprintf() {
 	{
 		// enough space
 		expected = "abcd";
-		len = hzw_snprintf(formatted, 512, "a%sd", "bc");
+        memset(formatted, 0x0ff, sizeof(formatted));
+		len = hzw_snprintf(formatted, sizeof(formatted), "a%sd", "bc");
 		assert(strcmp(formatted, expected) == 0);
 		assert(len == 4);
 
 		expected = "a        bcd";
-		len = hzw_snprintf(formatted, 512, "a%10sd", "bc");
+        memset(formatted, 0x0ff, sizeof(formatted));
+		len = hzw_snprintf(formatted, sizeof(formatted), "a%10sd", "bc");
 		assert(strcmp(formatted, expected) == 0);
 		assert(len == 12);
 
 		expected = "abc        d";
-		len = hzw_snprintf(formatted, 512, "a%-10sd", "bc");
+        memset(formatted, 0x0ff, sizeof(formatted));
+		len = hzw_snprintf(formatted, sizeof(formatted), "a%-10sd", "bc");
 		assert(strcmp(formatted, expected) == 0);
 		assert(len == 12);
 
 		expected = "a       bcdh";
-		len = hzw_snprintf(formatted, 512, "a%10.3sh", "bcdefg");
+        memset(formatted, 0x0ff, sizeof(formatted));
+		len = hzw_snprintf(formatted, sizeof(formatted), "a%10.3sh", "bcdefg");
 		assert(strcmp(formatted, expected) == 0);
 		assert(len == 12);
 
 		expected = "abcd       h";
-		len = hzw_snprintf(formatted, 512, "a%-10.3sh", "bcdefg");
+        memset(formatted, 0x0ff, sizeof(formatted));
+		len = hzw_snprintf(formatted, sizeof(formatted), "a%-10.3sh", "bcdefg");
 		assert(strcmp(formatted, expected) == 0);
 		assert(len == 12);
 
 		// not enough space
 		expected = "a";
+        memset(formatted, 0x0ff, sizeof(formatted));
 		len = hzw_snprintf(formatted, 2, "a%sd", "bc");
 		assert(strcmp(formatted, expected) == 0);
 		assert(len == 4);
 
 		expected = "a   ";
+        memset(formatted, 0x0ff, sizeof(formatted));
 		len = hzw_snprintf(formatted, 5, "a%10sd", "bc");
 		assert(strcmp(formatted, expected) == 0);
 		assert(len == 12);
@@ -583,10 +616,18 @@ void test_hzw_snprintf() {
 	// %%
 	{
 		expected = "a%bc";
-		len = hzw_snprintf(formatted, 512, "a%%%s", "bc");
+        memset(formatted, 0x0ff, sizeof(formatted));
+		len = hzw_snprintf(formatted, sizeof(formatted), "a%%%s", "bc");
 		assert(strcmp(formatted, expected) == 0);
 		assert(len == 4);
 	}
+
+    assert(hzw_snprintf(NULL, 0, "a%%%s", "bc") == 4);
+    
+    memset(formatted, 0x0ff, sizeof(formatted));
+    len = hzw_sprintf(formatted, "a%%%s", "bc");
+    assert(strcmp(formatted, expected) == 0);
+	assert(len == 4);
 }
 
 void test_format_decode() {
