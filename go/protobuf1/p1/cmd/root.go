@@ -8,6 +8,7 @@ var rootCmd = &cobra.Command{}
 
 func init() {
 	rootCmd.AddCommand(addCmd, listCmd, catCmd)
+	rootCmd.AddCommand(t1Cmd)
 }
 
 func Execute() {
