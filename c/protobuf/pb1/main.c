@@ -6,42 +6,50 @@
 int get_content(const char *fn, uint8_t **data, long *fs) {
     FILE *f;
     size_t n;
+    int result = 1;
 
     f = fopen(fn, "rb");
     if (!f) {
         perror("fopen");
-        return 1;
+        goto end;
     }
 
     if (fseek(f, 0, SEEK_END)) {
         perror("fseek");
-        return 1;
+        goto end;
     }
 
     *fs = ftell(f);
     if (*fs == -1) {
         perror("ftell");
-        return 1;
+        goto end;
     }
 
     if (fseek(f, 0, SEEK_SET)) {
         perror("fseek");
-        return 1;
+        goto end;
     }
 
     *data = (uint8_t*)malloc(*fs);
     if (!*data) {
         perror("malloc");
-        return 1;
+        goto end;
     }
 
     n = fread(*data, 1, *fs, f);
     if (n != *fs) {
+        free(*data);
         printf("fread: %d!=%d", n, *fs);
-        return 1;
+        goto end;
     }
 
-    return 0;
+    result = 0;
+
+end:
+    if (f) {
+        fclose(f);
+    }
+    return result;
 }
 
 int main(int argc, char *argv[]) {
