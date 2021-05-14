@@ -1,7 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "stdint.h"
-#include "addressbook.pb-c.h"
+// #include "addressbook.pb-c.h"
+// #include "test1.pb-c.h"
+#include "pb_encode.h"
+#include "pb_decode.h"
+#include "simple.pb.h"
+#include "addressbook.pb.h"
 
 int get_content(const char *fn, uint8_t **data, long *fs) {
     FILE *f;
@@ -52,22 +57,11 @@ end:
     return result;
 }
 
-int main(int argc, char *argv[]) {
-    uint8_t *data;
-    long fs;
+/*
+void address_book(long fs, uint8_t *data) {
     AddressBook *book;
     int i, j;
-    
-    if (argc != 2) {
-        printf("Usage: %s fn\n", argv[0]);
-        return 1;
-    }
 
-    if (get_content(argv[1], &data, &fs)) {
-        printf("get_content failed\n");
-        return 1;
-    }
- 
     book = address_book__unpack(NULL, fs, data);
 
     for (i = 0; i < book->n_people; i++) {
@@ -90,6 +84,76 @@ int main(int argc, char *argv[]) {
             }
         }
     }
+}
+
+void t1(long fs, uint8_t *data) {
+    Test1 *t1;
+
+    t1 = test1__unpack(NULL, fs, data);
+    printf("F1: %s\n", t1->f1);
+    printf("F2: %s\n", t1->f2);
+    printf("F3: %s\n", t1->f3);
+    printf("F4: %s\n", t1->f4);
+    printf("F5: %s\n", t1->f5);
+    printf("F6: %d\n", t1->f6);
+    printf("F7: %d\n", t1->f7);
+    printf("F8: %s\n", t1->f8);
+    printf("F9: %s\n", t1->f9);
+}
+*/
+
+void simple() {
+    uint8_t *buf;
+    size_t bufsize;
+    pb_ostream_t ostream;
+    pb_istream_t istream;
+    SimpleMessage message = SimpleMessage_init_zero;
+    bool status;
+    
+    message.lucky_number = 13;
+    pb_get_encoded_size(&bufsize, SimpleMessage_fields, &message);
+
+    buf = (uint8_t*)malloc(bufsize);
+    ostream = pb_ostream_from_buffer(buf, bufsize);
+    status = pb_encode(&ostream, SimpleMessage_fields, &message);
+
+    istream = pb_istream_from_buffer(buf, bufsize);
+    message.lucky_number = 0;
+    status = pb_decode(&istream, SimpleMessage_fields, &message);
+}
+
+bool decode_people(pb_istream_t *stream, const pb_field_t *field, void **arg) {
+    printf("haha");
+}
+
+void address_book(long fs, uint8_t *data) {
+    AddressBook book = AddressBook_init_zero;
+    pb_istream_t istream;
+    bool status;
+    
+    book.people.funcs.decode = decode_people;
+
+    istream = pb_istream_from_buffer(data, fs);
+    status = pb_decode(&istream, AddressBook_fields, &book);
+}
+
+int main(int argc, char *argv[]) {
+    uint8_t *data;
+    long fs;
+    
+    if (argc != 2) {
+        printf("Usage: %s fn\n", argv[0]);
+        return 1;
+    }
+
+    if (get_content(argv[1], &data, &fs)) {
+        printf("get_content failed\n");
+        return 1;
+    }
+ 
+    address_book(fs, data);
+    // t1(fs, data);
+    simple();
 
     return 0;
 }
