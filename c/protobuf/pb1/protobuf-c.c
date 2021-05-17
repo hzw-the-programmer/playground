@@ -3252,10 +3252,8 @@ protobuf_c_message_unpack(const ProtobufCMessageDescriptor *desc,
 			    !REQUIRED_FIELD_BITMAP_IS_SET(f))
 			{
 				CLEAR_REMAINING_N_PTRS();
-				#if 0
 				PROTOBUF_C_UNPACK_ERROR("message '%s': missing required field '%s'",
 							desc->name, field->name);
-				#endif
 				goto error_cleanup;
 			}
 		}
@@ -3278,11 +3276,9 @@ protobuf_c_message_unpack(const ProtobufCMessageDescriptor *desc,
 
 		for (j = 0; j < max; j++) {
 			if (!parse_member(slab + j, rv, allocator)) {
-				#if 0
 				PROTOBUF_C_UNPACK_ERROR("error parsing member %s of %s",
 							slab->field ? slab->field->name : "*unknown-field*",
 					desc->name);
-				#endif
 				goto error_cleanup;
 			}
 		}
@@ -3549,9 +3545,6 @@ const ProtobufCEnumValue *
 protobuf_c_enum_descriptor_get_value_by_name(const ProtobufCEnumDescriptor *desc,
 					     const char *name)
 {
-	#if 1//delete values_by_name
-	return NULL;
-	#else
 	unsigned start = 0;
 	unsigned count;
 
@@ -3576,30 +3569,23 @@ protobuf_c_enum_descriptor_get_value_by_name(const ProtobufCEnumDescriptor *desc
 	if (strcmp(desc->values_by_name[start].name, name) == 0)
 		return desc->values + desc->values_by_name[start].index;
 	return NULL;
-	#endif
 }
 
 const ProtobufCEnumValue *
 protobuf_c_enum_descriptor_get_value(const ProtobufCEnumDescriptor *desc,
 				     int value)
 {
-	#if 1//delete values
-	return NULL;
-	#else
 	int rv = int_range_lookup(desc->n_value_ranges, desc->value_ranges, value);
 	if (rv < 0)
 		return NULL;
 	return desc->values + rv;
-	#endif
 }
 
+#if 0
 const ProtobufCFieldDescriptor *
 protobuf_c_message_descriptor_get_field_by_name(const ProtobufCMessageDescriptor *desc,
 						const char *name)
 {
-	#if 1
-	return NULL;
-	#else
 	unsigned start = 0;
 	unsigned count;
 	const ProtobufCFieldDescriptor *field;
@@ -3628,8 +3614,8 @@ protobuf_c_message_descriptor_get_field_by_name(const ProtobufCMessageDescriptor
 	if (strcmp(field->name, name) == 0)
 		return field;
 	return NULL;
-	#endif
 }
+#endif
 
 const ProtobufCFieldDescriptor *
 protobuf_c_message_descriptor_get_field(const ProtobufCMessageDescriptor *desc,

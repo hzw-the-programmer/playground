@@ -496,7 +496,6 @@ struct ProtobufCEnumDescriptor {
 	/** Magic value checked to ensure that the API is used correctly. */
 	uint32_t			magic;
 
-	#if 0
 	/** The qualified name (e.g., "namespace.Type"). */
 	const char			*name;
 	/** The unqualified name as given in the .proto file (e.g., "Type"). */
@@ -505,35 +504,30 @@ struct ProtobufCEnumDescriptor {
 	const char			*c_name;
 	/** The dot-separated namespace. */
 	const char			*package_name;
-	#endif
-	
-	#if 0//delete values
+
 	/** Number elements in `values`. */
 	unsigned			n_values;
 	/** Array of distinct values, sorted by numeric value. */
 	const ProtobufCEnumValue	*values;
-	#endif
 
-	#if 0//delete values_by_name
 	/** Number of elements in `values_by_name`. */
 	unsigned			n_value_names;
 	/** Array of named values, including aliases, sorted by name. */
 	const ProtobufCEnumValueIndex	*values_by_name;
-	#endif
-	
+
 	/** Number of elements in `value_ranges`. */
 	unsigned			n_value_ranges;
 	/** Value ranges, for faster lookups by numeric value. */
 	const ProtobufCIntRange		*value_ranges;
 
 	/** Reserved for future use. */
-	//void				*reserved1;
+	void				*reserved1;
 	/** Reserved for future use. */
-	//void				*reserved2;
+	void				*reserved2;
 	/** Reserved for future use. */
-	//void				*reserved3;
+	void				*reserved3;
 	/** Reserved for future use. */
-	//void				*reserved4;
+	void				*reserved4;
 };
 
 /**
@@ -564,8 +558,10 @@ struct ProtobufCEnumValueIndex {
  * Describes a single field in a message.
  */
 struct ProtobufCFieldDescriptor {
+#if 0
 	/** Name of the field as given in the .proto file. */
-	//const char		*name;
+	const char		*name;
+#endif
 
 	/** Tag value of the field as given in the .proto file. */
 	uint32_t		id;
@@ -611,12 +607,14 @@ struct ProtobufCFieldDescriptor {
 	 */
 	uint32_t		flags;
 
+#if 0
 	/** Reserved for future use. */
-	//unsigned		reserved_flags;
+	unsigned		reserved_flags;
 	/** Reserved for future use. */
-	//void			*reserved2;
+	void			*reserved2;
 	/** Reserved for future use. */
-	//void			*reserved3;
+	void			*reserved3;
+#endif
 };
 
 /**
@@ -668,7 +666,7 @@ struct ProtobufCMessageDescriptor {
 	/** Magic value checked to ensure that the API is used correctly. */
 	uint32_t			magic;
 
-	#if 0
+#if 0
 	/** The qualified name (e.g., "namespace.Type"). */
 	const char			*name;
 	/** The unqualified name as given in the .proto file (e.g., "Type"). */
@@ -677,8 +675,8 @@ struct ProtobufCMessageDescriptor {
 	const char			*c_name;
 	/** The dot-separated namespace. */
 	const char			*package_name;
-	#endif
-	
+#endif
+
 	/**
 	 * Size in bytes of the C structure representing an instance of this
 	 * type of message.
@@ -689,8 +687,10 @@ struct ProtobufCMessageDescriptor {
 	unsigned			n_fields;
 	/** Field descriptors, sorted by tag number. */
 	const ProtobufCFieldDescriptor	*fields;
+#if 0
 	/** Used for looking up fields by name. */
-	//const unsigned			*fields_sorted_by_name;
+	const unsigned			*fields_sorted_by_name;
+#endif
 
 	/** Number of elements in `field_ranges`. */
 	unsigned			n_field_ranges;
@@ -701,11 +701,11 @@ struct ProtobufCMessageDescriptor {
 	ProtobufCMessageInit		message_init;
 
 	/** Reserved for future use. */
-	//void				*reserved1;
+	void				*reserved1;
 	/** Reserved for future use. */
-	//void				*reserved2;
+	void				*reserved2;
 	/** Reserved for future use. */
-	//void				*reserved3;
+	void				*reserved3;
 };
 
 /**
@@ -757,7 +757,6 @@ struct ProtobufCServiceDescriptor {
 	/** Magic value checked to ensure that the API is used correctly. */
 	uint32_t			magic;
 
-	#if 0
 	/** Service name. */
 	const char			*name;
 	/** Short version of service name. */
@@ -766,8 +765,6 @@ struct ProtobufCServiceDescriptor {
 	const char			*c_name;
 	/** Package name. */
 	const char			*package;
-	#endif
-	
 	/** Number of elements in `methods`. */
 	unsigned			n_methods;
 	/** Method descriptors, in the order defined in the .proto file. */
