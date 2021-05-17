@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "stdint.h"
 #include "test1.h"
+#include "test2.h"
 
 int get_content(const char *fn, uint8_t **data, long *fs) {
     FILE *f;
@@ -67,6 +68,7 @@ int main(int argc, char *argv[]) {
     }
 
     test1_process(buf, len);
+    test2_process(buf, len);
 
     return 0;
 }
