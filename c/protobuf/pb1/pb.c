@@ -1,4 +1,5 @@
 #include "pb.h"
+#include "memory.h"
 
 size_t parse_tag_and_wiretype(size_t len,
 		       const uint8_t *data,
@@ -63,7 +64,7 @@ size_t scan_length_prefixed_data(size_t len, const uint8_t *data,
 	return hdr_len + val;
 }
 
-bool pb_scanned_member(size_t len, const uint8_t *buf, ScannedMember *sm) {
+bool pb_scanned_member(size_t len, const uint8_t *buf, scanned_member_t *sm) {
     uint32_t tag;
     ProtobufCWireType wire_type;
     size_t used;
@@ -135,10 +136,24 @@ bool pb_scanned_member(size_t len, const uint8_t *buf, ScannedMember *sm) {
     return false;
 }
 
-char* pb_string(ScannedMember *sm) {
-    size_t len = sm->len - sm->length_prefix_len;
-    char *str = malloc(len + 1);
-    memcpy(str, sm->data + sm->length_prefix_len, len);
+char* pb_string(size_t len, const uint8_t *buf) {
+    char *str = HZW_MALLOC(len + 1);
+    memcpy(str, buf, len);
     str[len] = 0;
     return str;
+}
+
+uint64_t pb_uint64(size_t len, const uint8_t *buf) {
+    uint64_t rv = 0;
+    size_t i = 0, shift = 0;
+
+    for (i = 0; i < len; i++) {
+        rv |= (buf[i]&0x7f) << shift;
+        if ((buf[i]&0x80) == 0) {
+            break;
+        }
+        shift += 7;
+    }
+
+    return rv;
 }

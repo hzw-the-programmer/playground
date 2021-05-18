@@ -2,8 +2,8 @@
 #include "stdbool.h"
 #include "protobuf-c.h"
 
-typedef struct _ScannedMember ScannedMember;
-struct _ScannedMember {
+typedef struct scanned_member_s scanned_member_t;
+struct scanned_member_s {
 	uint32_t tag;
 	uint8_t wire_type;
 	uint8_t length_prefix_len;
@@ -11,4 +11,4 @@ struct _ScannedMember {
 	const uint8_t *data;
 };
 
-extern bool pb_scanned_member(size_t len, const uint8_t *buf, ScannedMember *sm);
+extern bool pb_scanned_member(size_t len, const uint8_t *buf, scanned_member_t *sm);

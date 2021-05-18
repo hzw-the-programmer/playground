@@ -3,6 +3,7 @@
 #include "stdint.h"
 #include "test1.h"
 #include "test2.h"
+#include "memory.h"
 
 int get_content(const char *fn, uint8_t **data, long *fs) {
     FILE *f;
@@ -69,6 +70,8 @@ int main(int argc, char *argv[]) {
 
     test1_process(buf, len);
     test2_process(buf, len);
+
+    MemoryCheck();
 
     return 0;
 }
