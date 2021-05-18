@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strconv"
+	"time"
 )
 
 type Size struct {
@@ -25,45 +26,74 @@ func main() {
 	}
 
 	dir := os.Args[1]
-	lis := os.Args[2]
+	mapfile := os.Args[2]
 
-	pat := filepath.Join(dir, "*", "*.c")
-	files, err := filepath.Glob(pat)
+	sizes := map[string]*Size{}
+	err := filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
+		if filepath.Ext(path) == ".c" {
+			base := filepath.Base(path)
+			base = base[:len(base)-2] + ".obj"
+			sizes[base] = &Size{}
+		}
+		return nil
+	})
 	if err != nil {
 		panic(err)
 	}
-	names := map[string]*Size{}
-	for _, f := range files {
-		base := filepath.Base(f)
-		base = base[:len(base)-2] + ".obj"
-		names[base] = &Size{}
-	}
-	pat = ""
-	for n := range names {
+
+	pat := ""
+	for name := range sizes {
 		if len(pat) != 0 {
 			pat += "|"
 		}
-		pat += n
+		pat += name
 	}
 	pat = `\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(` + pat + ")"
 	reg := regexp.MustCompile(pat)
 
-	f, err := os.Open(lis)
+	out, err := os.Create(time.Now().Format("20060102150405") + ".size")
 	if err != nil {
 		panic(err)
 	}
-	s := bufio.NewScanner(f)
-	for s.Scan() {
-		line := s.Text()
+	defer out.Close()
+
+	in, err := os.Open(mapfile)
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
+
+	scanner := bufio.NewScanner(in)
+	for scanner.Scan() {
+		line := scanner.Text()
 		if m := reg.FindStringSubmatch(line); m != nil {
-			fmt.Println(line)
-			if s, ok := names[m[7]]; ok {
-				s.Code, _ = strconv.ParseInt(m[1], 10, 64)
-				s.Inc, _ = strconv.ParseInt(m[2], 10, 64)
-				s.RO, _ = strconv.ParseInt(m[3], 10, 64)
-				s.RW, _ = strconv.ParseInt(m[4], 10, 64)
-				s.ZI, _ = strconv.ParseInt(m[5], 10, 64)
-				s.Debug, _ = strconv.ParseInt(m[6], 10, 64)
+			fmt.Fprintln(out, line)
+			if s, ok := sizes[m[7]]; ok {
+				var err error
+				s.Code, err = strconv.ParseInt(m[1], 10, 64)
+				if err != nil {
+					panic(err)
+				}
+				s.Inc, err = strconv.ParseInt(m[2], 10, 64)
+				if err != nil {
+					panic(err)
+				}
+				s.RO, err = strconv.ParseInt(m[3], 10, 64)
+				if err != nil {
+					panic(err)
+				}
+				s.RW, err = strconv.ParseInt(m[4], 10, 64)
+				if err != nil {
+					panic(err)
+				}
+				s.ZI, err = strconv.ParseInt(m[5], 10, 64)
+				if err != nil {
+					panic(err)
+				}
+				s.Debug, err = strconv.ParseInt(m[6], 10, 64)
+				if err != nil {
+					panic(err)
+				}
 			}
 		}
 	}
@@ -74,7 +104,7 @@ func main() {
 	var rw int64
 	var zi int64
 	var debug int64
-	for _, s := range names {
+	for _, s := range sizes {
 		code += s.Code
 		inc += s.Inc
 		ro += s.RO
@@ -82,10 +112,13 @@ func main() {
 		zi += s.ZI
 		debug += s.Debug
 	}
-	fmt.Println("Code total: ", code)
-	fmt.Println("Inc total: ", inc)
-	fmt.Println("RO total: ", ro)
-	fmt.Println("RW total: ", rw)
-	fmt.Println("ZI total: ", zi)
-	fmt.Println("Debug total: ", debug)
+	fmt.Fprintln(out, "Code: ", code)
+	fmt.Fprintln(out, "(inc. data): ", inc)
+	fmt.Fprintln(out, "RO Data: ", ro)
+	fmt.Fprintln(out, "RW Data: ", rw)
+	fmt.Fprintln(out, "ZI Data: ", zi)
+	fmt.Fprintln(out, "Debug: ", debug)
+	fmt.Fprintln(out, "Total RO Size (Code +  RO Data): ", code+ro)
+	fmt.Fprintln(out, "Total RW Size (RW Data + ZI Data): ", rw+zi)
+	fmt.Fprintln(out, "Total ROM Size (Code + RO Data + RW Data): ", code+ro+rw)
 }
