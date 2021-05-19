@@ -699,8 +699,10 @@ struct ProtobufCMessage {
  * Describes a message.
  */
 struct ProtobufCMessageDescriptor {
+#if 0
 	/** Magic value checked to ensure that the API is used correctly. */
 	uint32_t			magic;
+#endif
 
 	#if 0
 	/** The qualified name (e.g., "namespace.Type"). */
@@ -726,10 +728,12 @@ struct ProtobufCMessageDescriptor {
 	/** Used for looking up fields by name. */
 	//const unsigned			*fields_sorted_by_name;
 
+#if 0
 	/** Number of elements in `field_ranges`. */
 	unsigned			n_field_ranges;
 	/** Used for looking up fields by id. */
 	const ProtobufCIntRange		*field_ranges;
+#endif
 
 	/** Message initialisation function. */
 	ProtobufCMessageInit		message_init;

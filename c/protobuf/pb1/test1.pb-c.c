@@ -145,17 +145,10 @@ static const ProtobufCFieldDescriptor test1__field_descriptors[9] =
     0             /* flags */
   },
 };
-static const ProtobufCIntRange test1__number_ranges[1 + 1] =
-{
-  { 1, 0 },
-  { 0, 9 }
-};
 const ProtobufCMessageDescriptor test1__descriptor =
 {
-  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
   sizeof(Test1),
   9,
   test1__field_descriptors,
-  1,  test1__number_ranges,
   (ProtobufCMessageInit) test1__init
 };

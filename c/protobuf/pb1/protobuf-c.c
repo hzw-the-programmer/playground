@@ -127,8 +127,12 @@ const char protobuf_c_empty_string[] = "";
 #define ASSERT_IS_ENUM_DESCRIPTOR(desc) \
 	assert((desc)->magic == PROTOBUF_C__ENUM_DESCRIPTOR_MAGIC)
 
+#if 0
 #define ASSERT_IS_MESSAGE_DESCRIPTOR(desc) \
 	assert((desc)->magic == PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC)
+#else
+#define ASSERT_IS_MESSAGE_DESCRIPTOR(desc)
+#endif
 
 #define ASSERT_IS_MESSAGE(message) \
 	ASSERT_IS_MESSAGE_DESCRIPTOR((message)->descriptor)
@@ -2049,6 +2053,7 @@ protobuf_c_message_pack_to_buffer(const ProtobufCMessage *message,
  * @{
  */
 
+#if 0
 static inline int
 int_range_lookup(unsigned n_ranges, const ProtobufCIntRange *ranges, int value)
 {
@@ -2089,6 +2094,22 @@ int_range_lookup(unsigned n_ranges, const ProtobufCIntRange *ranges, int value)
 	}
 	return -1;
 }
+#else
+static inline int
+int_range_lookup(unsigned n_fields, const ProtobufCFieldDescriptor	*fields, int value)
+{
+	unsigned i;
+
+    for (i = 0; i < n_fields; i++)
+    {
+        if (fields[i].id == value) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+#endif
 
 static size_t
 parse_tag_and_wiretype(size_t len,
@@ -2273,6 +2294,7 @@ merge_messages(ProtobufCMessage *earlier_msg,
 			if (fields[i].flags & PROTOBUF_C_FIELD_FLAG_ONEOF) {
 				if (*latter_case_p == 0) {
 					/* lookup correct oneof field */
+#if 0
 					int field_index =
 						int_range_lookup(
 							latter_msg->descriptor
@@ -2280,6 +2302,15 @@ merge_messages(ProtobufCMessage *earlier_msg,
 							latter_msg->descriptor
 							->field_ranges,
 							*earlier_case_p);
+#else
+                    int field_index =
+						int_range_lookup(
+							latter_msg->descriptor
+							->n_fields,
+							latter_msg->descriptor
+							->fields,
+							*earlier_case_p);
+#endif
 					if (field_index < 0)
 						return FALSE;
 					field = latter_msg->descriptor->fields +
@@ -2673,10 +2704,17 @@ parse_oneof_member (ScannedMember *scanned_member,
 		const ProtobufCFieldDescriptor *old_field;
 		size_t el_size;
 		/* lookup field */
+#if 0
 		int field_index =
 			int_range_lookup(message->descriptor->n_field_ranges,
 					 message->descriptor->field_ranges,
 					 *oneof_case);
+#else
+		int field_index =
+			int_range_lookup(message->descriptor->n_fields,
+					 message->descriptor->fields,
+					 *oneof_case);
+#endif
 		if (field_index < 0)
 			return FALSE;
 		old_field = message->descriptor->fields + field_index;
@@ -3131,10 +3169,17 @@ protobuf_c_message_unpack(const ProtobufCMessageDescriptor *desc,
 		 */
 		if (last_field == NULL || last_field->id != tag) {
 			/* lookup field */
+#if 0
 			int field_index =
 			    int_range_lookup(desc->n_field_ranges,
 					     desc->field_ranges,
 					     tag);
+#else
+            int field_index =
+			    int_range_lookup(desc->n_fields,
+					     desc->fields,
+					     tag);
+#endif
 			if (field_index < 0) {
 				field = NULL;
 				n_unknown++;
@@ -3448,12 +3493,20 @@ protobuf_c_message_check(const ProtobufCMessage *message)
 {
 	unsigned i;
 
+#if 0
 	if (!message ||
 	    !message->descriptor ||
 	    message->descriptor->magic != PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC)
 	{
 		return FALSE;
 	}
+#else
+    if (!message ||
+	    !message->descriptor)
+	{
+		return FALSE;
+	}
+#endif
 
 	for (i = 0; i < message->descriptor->n_fields; i++) {
 		const ProtobufCFieldDescriptor *f = message->descriptor->fields + i;
@@ -3670,8 +3723,12 @@ const ProtobufCFieldDescriptor *
 protobuf_c_message_descriptor_get_field(const ProtobufCMessageDescriptor *desc,
 					unsigned value)
 {
+#if 0
 	int rv = int_range_lookup(desc->n_field_ranges,desc->field_ranges, value);
-	if (rv < 0)
+#else
+    int rv = int_range_lookup(desc->n_fields,desc->fields, value);
+#endif
+    if (rv < 0)
 		return NULL;
 	return desc->fields + rv;
 }
