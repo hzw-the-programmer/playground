@@ -46,9 +46,12 @@
  */
 
 #include <stdlib.h>	/* for malloc, free */
-#include <string.h>	/* for strcmp, strlen, memcpy, memmove, memset */
-
+//#include <string.h>	/* for strcmp, strlen, memcpy, memmove, memset */
 #include "protobuf-c.h"
+#if 0
+#include "ra_helper.h"
+#include "ra_feature_def.h"
+#endif
 
 #define TRUE				1
 #define FALSE				0
@@ -57,7 +60,9 @@
 
 /* Workaround for Microsoft compilers. */
 #ifdef _MSC_VER
-# define inline __inline
+#define inline __inline
+#else
+#define inline
 #endif
 
 /**
@@ -81,7 +86,11 @@
 #define MAX_UINT64_ENCODED_SIZE		10
 
 #ifndef PROTOBUF_C_UNPACK_ERROR
-# define PROTOBUF_C_UNPACK_ERROR(...)
+#ifdef RA_FEATURE_PLATFORM_SPRD
+#define PROTOBUF_C_UNPACK_ERROR
+#else
+#define PROTOBUF_C_UNPACK_ERROR(...)
+#endif
 #endif
 
 const char protobuf_c_empty_string[] = "";
@@ -148,13 +157,22 @@ protobuf_c_version_number(void)
 static void *
 system_alloc(void *allocator_data, size_t size)
 {
-	return malloc(size);
+#if 0
+	void *p = g_ra_malloc_hook_func(size);
+	return p;
+#else
+    return malloc(size);
+#endif
 }
 
 static void
 system_free(void *allocator_data, void *data)
 {
-	free(data);
+#if 0
+	g_ra_free_hook_func(data);
+#else
+    free(data);
+#endif
 }
 
 static inline void *
@@ -312,9 +330,10 @@ int32_size(int32_t v)
 static inline uint32_t
 zigzag32(int32_t v)
 {
-	// Note:  the right-shift must be arithmetic
-	// Note:  left shift must be unsigned because of overflow
-	return ((uint32_t)(v) << 1) ^ (uint32_t)(v >> 31);
+	if (v < 0)
+		return (-(uint32_t)v) * 2 - 1;
+	else
+		return (uint32_t)(v) * 2;
 }
 
 /**
@@ -376,9 +395,10 @@ uint64_size(uint64_t v)
 static inline uint64_t
 zigzag64(int64_t v)
 {
-	// Note:  the right-shift must be arithmetic
-	// Note:  left shift must be unsigned because of overflow
-	return ((uint64_t)(v) << 1) ^ (uint64_t)(v >> 63);
+	if (v < 0)
+		return (-(uint64_t)v) * 2 - 1;
+	else
+		return (uint64_t)(v) * 2;
 }
 
 /**
@@ -771,7 +791,7 @@ size_t protobuf_c_message_get_packed_size(const ProtobufCMessage *message)
  * \return
  *      Number of bytes written to `out`.
  */
-static inline size_t
+inline size_t
 uint32_pack(uint32_t value, uint8_t *out)
 {
 	unsigned rv = 0;
@@ -808,7 +828,7 @@ uint32_pack(uint32_t value, uint8_t *out)
  * \return
  *      Number of bytes written to `out`.
  */
-static inline size_t
+inline size_t
 int32_pack(int32_t value, uint8_t *out)
 {
 	if (value < 0) {
@@ -836,7 +856,7 @@ int32_pack(int32_t value, uint8_t *out)
  * \return
  *      Number of bytes written to `out`.
  */
-static inline size_t
+size_t
 sint32_pack(int32_t value, uint8_t *out)
 {
 	return uint32_pack(zigzag32(value), out);
@@ -853,7 +873,7 @@ sint32_pack(int32_t value, uint8_t *out)
  * \return
  *      Number of bytes written to `out`.
  */
-static size_t
+size_t
 uint64_pack(uint64_t value, uint8_t *out)
 {
 	uint32_t hi = (uint32_t) (value >> 32);
@@ -893,7 +913,7 @@ uint64_pack(uint64_t value, uint8_t *out)
  * \return
  *      Number of bytes written to `out`.
  */
-static inline size_t
+inline size_t
 sint64_pack(int64_t value, uint8_t *out)
 {
 	return uint64_pack(zigzag64(value), out);
@@ -910,7 +930,7 @@ sint64_pack(int64_t value, uint8_t *out)
  * \return
  *      Number of bytes written to `out`.
  */
-static inline size_t
+inline size_t
 fixed32_pack(uint32_t value, void *out)
 {
 #if !defined(WORDS_BIGENDIAN)
@@ -941,7 +961,7 @@ fixed32_pack(uint32_t value, void *out)
  * \return
  *      Number of bytes written to `out`.
  */
-static inline size_t
+inline size_t
 fixed64_pack(uint64_t value, void *out)
 {
 #if !defined(WORDS_BIGENDIAN)
@@ -1621,8 +1641,19 @@ required_field_pack_to_buffer(const ProtobufCFieldDescriptor *field,
 		uint8_t simple_buffer_scratch[256];
 		size_t sublen;
 		const ProtobufCMessage *msg = *(ProtobufCMessage * const *) member;
-		ProtobufCBufferSimple simple_buffer =
-			PROTOBUF_C_BUFFER_SIMPLE_INIT(simple_buffer_scratch);
+		ProtobufCBufferSimple simple_buffer = {0};
+			//PROTOBUF_C_BUFFER_SIMPLE_INIT(simple_buffer_scratch);
+        simple_buffer.base.append = &protobuf_c_buffer_simple_append;;
+        /** Number of bytes allocated in `data`. */
+        simple_buffer.alloced = sizeof(simple_buffer_scratch);
+        /** Number of bytes currently stored in `data`. */
+        simple_buffer.len = 0;
+        /** Data bytes. */
+        simple_buffer.data = simple_buffer_scratch;
+        /** Whether `data` must be freed. */
+        simple_buffer.must_free_data = 0;
+        /** Allocator to use. May be NULL to indicate the system allocator. */
+        simple_buffer.allocator = NULL;
 
 		scratch[0] |= PROTOBUF_C_WIRE_TYPE_LENGTH_PREFIXED;
 		if (msg == NULL)
@@ -2394,7 +2425,7 @@ count_packed_elements(ProtobufCType type,
 	}
 }
 
-static inline uint32_t
+inline uint32_t
 parse_uint32(unsigned len, const uint8_t *data)
 {
 	uint32_t rv = data[0] & 0x7f;
@@ -2412,7 +2443,7 @@ parse_uint32(unsigned len, const uint8_t *data)
 	return rv;
 }
 
-static inline uint32_t
+inline uint32_t
 parse_int32(unsigned len, const uint8_t *data)
 {
 	return parse_uint32(len, data);
@@ -2421,8 +2452,10 @@ parse_int32(unsigned len, const uint8_t *data)
 static inline int32_t
 unzigzag32(uint32_t v)
 {
-	// Note:  Using unsigned types prevents undefined behavior
-	return (int32_t)((v >> 1) ^ (~(v & 1) + 1));
+	if (v & 1)
+		return -(v >> 1) - 1;
+	else
+		return v >> 1;
 }
 
 static inline uint32_t
@@ -2440,7 +2473,7 @@ parse_fixed_uint32(const uint8_t *data)
 #endif
 }
 
-static uint64_t
+uint64_t
 parse_uint64(unsigned len, const uint8_t *data)
 {
 	unsigned shift, i;
@@ -2463,8 +2496,10 @@ parse_uint64(unsigned len, const uint8_t *data)
 static inline int64_t
 unzigzag64(uint64_t v)
 {
-	// Note:  Using unsigned types prevents undefined behavior
-	return (int64_t)((v >> 1) ^ (~(v & 1) + 1));
+	if (v & 1)
+		return -(v >> 1) - 1;
+	else
+		return v >> 1;
 }
 
 static inline uint64_t
@@ -3252,8 +3287,10 @@ protobuf_c_message_unpack(const ProtobufCMessageDescriptor *desc,
 			    !REQUIRED_FIELD_BITMAP_IS_SET(f))
 			{
 				CLEAR_REMAINING_N_PTRS();
+				#if 0
 				PROTOBUF_C_UNPACK_ERROR("message '%s': missing required field '%s'",
 							desc->name, field->name);
+				#endif
 				goto error_cleanup;
 			}
 		}
@@ -3276,9 +3313,11 @@ protobuf_c_message_unpack(const ProtobufCMessageDescriptor *desc,
 
 		for (j = 0; j < max; j++) {
 			if (!parse_member(slab + j, rv, allocator)) {
+				#if 0
 				PROTOBUF_C_UNPACK_ERROR("error parsing member %s of %s",
 							slab->field ? slab->field->name : "*unknown-field*",
 					desc->name);
+				#endif
 				goto error_cleanup;
 			}
 		}
@@ -3545,6 +3584,9 @@ const ProtobufCEnumValue *
 protobuf_c_enum_descriptor_get_value_by_name(const ProtobufCEnumDescriptor *desc,
 					     const char *name)
 {
+	#if 1//delete values_by_name
+	return NULL;
+	#else
 	unsigned start = 0;
 	unsigned count;
 
@@ -3569,23 +3611,30 @@ protobuf_c_enum_descriptor_get_value_by_name(const ProtobufCEnumDescriptor *desc
 	if (strcmp(desc->values_by_name[start].name, name) == 0)
 		return desc->values + desc->values_by_name[start].index;
 	return NULL;
+	#endif
 }
 
 const ProtobufCEnumValue *
 protobuf_c_enum_descriptor_get_value(const ProtobufCEnumDescriptor *desc,
 				     int value)
 {
+	#if 1//delete values
+	return NULL;
+	#else
 	int rv = int_range_lookup(desc->n_value_ranges, desc->value_ranges, value);
 	if (rv < 0)
 		return NULL;
 	return desc->values + rv;
+	#endif
 }
 
-#if 0
 const ProtobufCFieldDescriptor *
 protobuf_c_message_descriptor_get_field_by_name(const ProtobufCMessageDescriptor *desc,
 						const char *name)
 {
+	#if 1
+	return NULL;
+	#else
 	unsigned start = 0;
 	unsigned count;
 	const ProtobufCFieldDescriptor *field;
@@ -3614,8 +3663,8 @@ protobuf_c_message_descriptor_get_field_by_name(const ProtobufCMessageDescriptor
 	if (strcmp(field->name, name) == 0)
 		return field;
 	return NULL;
+	#endif
 }
-#endif
 
 const ProtobufCFieldDescriptor *
 protobuf_c_message_descriptor_get_field(const ProtobufCMessageDescriptor *desc,

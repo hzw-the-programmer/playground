@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "stdint.h"
-#include "test1.h"
-#include "test2.h"
-#include "memory.h"
 
 int get_content(const char *fn, uint8_t **data, long *fs) {
     FILE *f;
@@ -56,7 +53,7 @@ end:
 
 int main(int argc, char *argv[]) {
     uint8_t *buf;
-    size_t len, n;
+    size_t len;
     
     if (argc != 2) {
         printf("Usage: %s fn\n", argv[0]);
@@ -68,10 +65,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    test1_process(buf, len);
-    test2_process(buf, len);
-
-    MemoryCheck();
+    test1_process(len, buf);
 
     return 0;
 }

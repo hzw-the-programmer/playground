@@ -199,7 +199,41 @@ size_t foo__bar__baz_bah__pack_to_buffer
 #include <assert.h>
 #include <limits.h>
 #include <stddef.h>
-#include "stdint.h"
+//#include "ra_feature_def.h"
+//#include <stdint.h>
+
+#ifdef RA_FEATURE_PLATFORM_SPRD
+
+#include "types.h"
+
+typedef   signed          char int8_t;
+typedef   signed short     int int16_t;
+typedef   signed           int int32_t;
+typedef   signed       __int64 int64_t;
+
+/* exact-width unsigned integer types */
+
+// comment out for compile error(redefinition), defined in types.h of vcard APP
+//typedef unsigned          char uint8_t;
+//typedef unsigned short     int uint16_t;
+//typedef unsigned           int uint32_t;
+typedef unsigned       __int64 uint64_t;
+
+#else //RA_FEATURE_PLATFORM_SPRD
+
+typedef   signed          char int8_t;
+typedef   signed short     int int16_t;
+typedef   signed           int int32_t;
+typedef   signed       __int64 int64_t;
+
+/* exact-width unsigned integer types */
+
+typedef unsigned          char uint8_t;
+typedef unsigned short     int uint16_t;
+typedef unsigned           int uint32_t;
+typedef unsigned       __int64 uint64_t;
+
+#endif //RA_FEATURE_PLATFORM_SPRD
 
 #ifdef __cplusplus
 # define PROTOBUF_C__BEGIN_DECLS	extern "C" {
@@ -496,6 +530,7 @@ struct ProtobufCEnumDescriptor {
 	/** Magic value checked to ensure that the API is used correctly. */
 	uint32_t			magic;
 
+	#if 0
 	/** The qualified name (e.g., "namespace.Type"). */
 	const char			*name;
 	/** The unqualified name as given in the .proto file (e.g., "Type"). */
@@ -504,16 +539,21 @@ struct ProtobufCEnumDescriptor {
 	const char			*c_name;
 	/** The dot-separated namespace. */
 	const char			*package_name;
-
+	#endif
+	
+	#if 0//delete values
 	/** Number elements in `values`. */
 	unsigned			n_values;
 	/** Array of distinct values, sorted by numeric value. */
 	const ProtobufCEnumValue	*values;
+	#endif
 
+	#if 0//delete values_by_name
 	/** Number of elements in `values_by_name`. */
 	unsigned			n_value_names;
 	/** Array of named values, including aliases, sorted by name. */
 	const ProtobufCEnumValueIndex	*values_by_name;
+	#endif
 
 	/** Number of elements in `value_ranges`. */
 	unsigned			n_value_ranges;
@@ -521,13 +561,13 @@ struct ProtobufCEnumDescriptor {
 	const ProtobufCIntRange		*value_ranges;
 
 	/** Reserved for future use. */
-	void				*reserved1;
+	//void				*reserved1;
 	/** Reserved for future use. */
-	void				*reserved2;
+	//void				*reserved2;
 	/** Reserved for future use. */
-	void				*reserved3;
+	//void				*reserved3;
 	/** Reserved for future use. */
-	void				*reserved4;
+	//void				*reserved4;
 };
 
 /**
@@ -558,10 +598,8 @@ struct ProtobufCEnumValueIndex {
  * Describes a single field in a message.
  */
 struct ProtobufCFieldDescriptor {
-#if 0
 	/** Name of the field as given in the .proto file. */
-	const char		*name;
-#endif
+	//const char		*name;
 
 	/** Tag value of the field as given in the .proto file. */
 	uint32_t		id;
@@ -607,14 +645,12 @@ struct ProtobufCFieldDescriptor {
 	 */
 	uint32_t		flags;
 
-#if 0
 	/** Reserved for future use. */
-	unsigned		reserved_flags;
+	//unsigned		reserved_flags;
 	/** Reserved for future use. */
-	void			*reserved2;
+	//void			*reserved2;
 	/** Reserved for future use. */
-	void			*reserved3;
-#endif
+	//void			*reserved3;
 };
 
 /**
@@ -666,7 +702,7 @@ struct ProtobufCMessageDescriptor {
 	/** Magic value checked to ensure that the API is used correctly. */
 	uint32_t			magic;
 
-#if 0
+	#if 0
 	/** The qualified name (e.g., "namespace.Type"). */
 	const char			*name;
 	/** The unqualified name as given in the .proto file (e.g., "Type"). */
@@ -675,7 +711,7 @@ struct ProtobufCMessageDescriptor {
 	const char			*c_name;
 	/** The dot-separated namespace. */
 	const char			*package_name;
-#endif
+	#endif
 
 	/**
 	 * Size in bytes of the C structure representing an instance of this
@@ -687,10 +723,8 @@ struct ProtobufCMessageDescriptor {
 	unsigned			n_fields;
 	/** Field descriptors, sorted by tag number. */
 	const ProtobufCFieldDescriptor	*fields;
-#if 0
 	/** Used for looking up fields by name. */
-	const unsigned			*fields_sorted_by_name;
-#endif
+	//const unsigned			*fields_sorted_by_name;
 
 	/** Number of elements in `field_ranges`. */
 	unsigned			n_field_ranges;
@@ -701,11 +735,11 @@ struct ProtobufCMessageDescriptor {
 	ProtobufCMessageInit		message_init;
 
 	/** Reserved for future use. */
-	void				*reserved1;
+	//void				*reserved1;
 	/** Reserved for future use. */
-	void				*reserved2;
+	//void				*reserved2;
 	/** Reserved for future use. */
-	void				*reserved3;
+	//void				*reserved3;
 };
 
 /**
@@ -757,6 +791,7 @@ struct ProtobufCServiceDescriptor {
 	/** Magic value checked to ensure that the API is used correctly. */
 	uint32_t			magic;
 
+	#if 0
 	/** Service name. */
 	const char			*name;
 	/** Short version of service name. */
@@ -765,6 +800,7 @@ struct ProtobufCServiceDescriptor {
 	const char			*c_name;
 	/** Package name. */
 	const char			*package;
+	#endif
 	/** Number of elements in `methods`. */
 	unsigned			n_methods;
 	/** Method descriptors, in the order defined in the .proto file. */
@@ -1061,6 +1097,19 @@ protobuf_c_service_descriptor_get_method_by_name(
 /**
  * Clear a `ProtobufCBufferSimple` object, freeing any allocated memory.
  */
+#if 0
+#define PROTOBUF_C_BUFFER_SIMPLE_CLEAR(simp_buf)                        \
+do {                                                                    \
+	if ((simp_buf)->must_free_data) {                               \
+		if ((simp_buf)->allocator != NULL)                      \
+			(simp_buf)->allocator->free(                    \
+				(simp_buf)->allocator,                  \
+				(simp_buf)->data);			\
+		else                                                    \
+			g_ra_free_hook_func((simp_buf)->data);                         \
+	}                                                               \
+} while (0)
+#else
 #define PROTOBUF_C_BUFFER_SIMPLE_CLEAR(simp_buf)                        \
 do {                                                                    \
 	if ((simp_buf)->must_free_data) {                               \
@@ -1072,6 +1121,7 @@ do {                                                                    \
 			free((simp_buf)->data);                         \
 	}                                                               \
 } while (0)
+#endif
 
 /**
  * The `append` method for `ProtobufCBufferSimple`.
@@ -1106,6 +1156,17 @@ protobuf_c_service_invoke_internal(
 	const ProtobufCMessage *input,
 	ProtobufCClosure closure,
 	void *closure_data);
+
+
+
+uint32_t parse_int32(unsigned len, const uint8_t *data);
+uint32_t parse_uint32(unsigned len, const uint8_t *data);
+uint64_t parse_uint64(unsigned len, const uint8_t *data);
+
+
+size_t int32_pack(int32_t value, uint8_t *out);
+size_t sint32_pack(int32_t value, uint8_t *out);
+size_t uint64_pack(uint64_t value, uint8_t *out);
 
 /**@}*/
 
