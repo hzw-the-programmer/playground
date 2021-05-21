@@ -6,7 +6,6 @@ void test1_process(size_t len, const uint8_t *buf) {
     t1 = test1__unpack(NULL, len, buf);
     test1__free_unpacked(t1, NULL);
 
-    test1__init(&t);
     t.f1 = "hj1";
     t.f2 = "hj2";
     t.f3 = "bj1";

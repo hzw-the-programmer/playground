@@ -199,41 +199,7 @@ size_t foo__bar__baz_bah__pack_to_buffer
 #include <assert.h>
 #include <limits.h>
 #include <stddef.h>
-//#include "ra_feature_def.h"
-//#include <stdint.h>
-
-#ifdef RA_FEATURE_PLATFORM_SPRD
-
-#include "types.h"
-
-typedef   signed          char int8_t;
-typedef   signed short     int int16_t;
-typedef   signed           int int32_t;
-typedef   signed       __int64 int64_t;
-
-/* exact-width unsigned integer types */
-
-// comment out for compile error(redefinition), defined in types.h of vcard APP
-//typedef unsigned          char uint8_t;
-//typedef unsigned short     int uint16_t;
-//typedef unsigned           int uint32_t;
-typedef unsigned       __int64 uint64_t;
-
-#else //RA_FEATURE_PLATFORM_SPRD
-
-typedef   signed          char int8_t;
-typedef   signed short     int int16_t;
-typedef   signed           int int32_t;
-typedef   signed       __int64 int64_t;
-
-/* exact-width unsigned integer types */
-
-typedef unsigned          char uint8_t;
-typedef unsigned short     int uint16_t;
-typedef unsigned           int uint32_t;
-typedef unsigned       __int64 uint64_t;
-
-#endif //RA_FEATURE_PLATFORM_SPRD
+#include <stdint.h>
 
 #ifdef __cplusplus
 # define PROTOBUF_C__BEGIN_DECLS	extern "C" {
@@ -272,7 +238,11 @@ PROTOBUF_C__BEGIN_DECLS
 #define PROTOBUF_C__ENUM_DESCRIPTOR_MAGIC       0x114315af
 
 /* Empty string used for initializers */
+#if defined(_WIN32) && defined(PROTOBUF_C_USE_SHARED_LIB)
+static const char protobuf_c_empty_string[] = "";
+#else
 extern const char protobuf_c_empty_string[];
+#endif
 
 /**
  * \defgroup api Public API
@@ -699,22 +669,6 @@ struct ProtobufCMessage {
  * Describes a message.
  */
 struct ProtobufCMessageDescriptor {
-#if 0
-	/** Magic value checked to ensure that the API is used correctly. */
-	uint32_t			magic;
-#endif
-
-	#if 0
-	/** The qualified name (e.g., "namespace.Type"). */
-	const char			*name;
-	/** The unqualified name as given in the .proto file (e.g., "Type"). */
-	const char			*short_name;
-	/** Identifier used in generated C code. */
-	const char			*c_name;
-	/** The dot-separated namespace. */
-	const char			*package_name;
-	#endif
-
 	/**
 	 * Size in bytes of the C structure representing an instance of this
 	 * type of message.
@@ -725,25 +679,6 @@ struct ProtobufCMessageDescriptor {
 	unsigned			n_fields;
 	/** Field descriptors, sorted by tag number. */
 	const ProtobufCFieldDescriptor	*fields;
-	/** Used for looking up fields by name. */
-	//const unsigned			*fields_sorted_by_name;
-
-#if 0
-	/** Number of elements in `field_ranges`. */
-	unsigned			n_field_ranges;
-	/** Used for looking up fields by id. */
-	const ProtobufCIntRange		*field_ranges;
-#endif
-
-	/** Message initialisation function. */
-	ProtobufCMessageInit		message_init;
-
-	/** Reserved for future use. */
-	//void				*reserved1;
-	/** Reserved for future use. */
-	//void				*reserved2;
-	/** Reserved for future use. */
-	//void				*reserved3;
 };
 
 /**
@@ -838,13 +773,13 @@ protobuf_c_version_number(void);
  * The version of the protobuf-c headers, represented as a string using the same
  * format as protobuf_c_version().
  */
-#define PROTOBUF_C_VERSION		"1.3.3"
+#define PROTOBUF_C_VERSION		"1.4.0"
 
 /**
  * The version of the protobuf-c headers, represented as an integer using the
  * same format as protobuf_c_version_number().
  */
-#define PROTOBUF_C_VERSION_NUMBER	1003003
+#define PROTOBUF_C_VERSION_NUMBER	1004000
 
 /**
  * The minimum protoc-c version which works with the current version of the
@@ -940,7 +875,7 @@ protobuf_c_message_descriptor_get_field(
  */
 PROTOBUF_C__API
 size_t
-protobuf_c_message_get_packed_size(const ProtobufCMessage *message);
+protobuf_c_message_get_packed_size(const void *message, const ProtobufCMessageDescriptor *descriptor);
 
 /**
  * Serialise a message from its in-memory representation.
@@ -960,7 +895,7 @@ protobuf_c_message_get_packed_size(const ProtobufCMessage *message);
  */
 PROTOBUF_C__API
 size_t
-protobuf_c_message_pack(const ProtobufCMessage *message, uint8_t *out);
+protobuf_c_message_pack(const void *message, const ProtobufCMessageDescriptor *descriptor, uint8_t *out);
 
 /**
  * Serialise a message from its in-memory representation to a virtual buffer.
@@ -1021,7 +956,8 @@ protobuf_c_message_unpack(
 PROTOBUF_C__API
 void
 protobuf_c_message_free_unpacked(
-	ProtobufCMessage *message,
+	void *message,
+    const ProtobufCMessageDescriptor *descriptor,
 	ProtobufCAllocator *allocator);
 
 /**
@@ -1101,19 +1037,6 @@ protobuf_c_service_descriptor_get_method_by_name(
 /**
  * Clear a `ProtobufCBufferSimple` object, freeing any allocated memory.
  */
-#if 0
-#define PROTOBUF_C_BUFFER_SIMPLE_CLEAR(simp_buf)                        \
-do {                                                                    \
-	if ((simp_buf)->must_free_data) {                               \
-		if ((simp_buf)->allocator != NULL)                      \
-			(simp_buf)->allocator->free(                    \
-				(simp_buf)->allocator,                  \
-				(simp_buf)->data);			\
-		else                                                    \
-			g_ra_free_hook_func((simp_buf)->data);                         \
-	}                                                               \
-} while (0)
-#else
 #define PROTOBUF_C_BUFFER_SIMPLE_CLEAR(simp_buf)                        \
 do {                                                                    \
 	if ((simp_buf)->must_free_data) {                               \
@@ -1125,7 +1048,6 @@ do {                                                                    \
 			free((simp_buf)->data);                         \
 	}                                                               \
 } while (0)
-#endif
 
 /**
  * The `append` method for `ProtobufCBufferSimple`.
@@ -1160,17 +1082,6 @@ protobuf_c_service_invoke_internal(
 	const ProtobufCMessage *input,
 	ProtobufCClosure closure,
 	void *closure_data);
-
-
-
-uint32_t parse_int32(unsigned len, const uint8_t *data);
-uint32_t parse_uint32(unsigned len, const uint8_t *data);
-uint64_t parse_uint64(unsigned len, const uint8_t *data);
-
-
-size_t int32_pack(int32_t value, uint8_t *out);
-size_t sint32_pack(int32_t value, uint8_t *out);
-size_t uint64_pack(uint64_t value, uint8_t *out);
 
 /**@}*/
 

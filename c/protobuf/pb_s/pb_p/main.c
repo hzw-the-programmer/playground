@@ -67,6 +67,7 @@ int main(int argc, char *argv[]) {
 
     test1_process(len, buf);
     addressbook_process(len, buf);
+    test2_process(len, buf);
 
     return 0;
 }
