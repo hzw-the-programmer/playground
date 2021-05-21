@@ -1,0 +1,16 @@
+syntax = "proto2";
+
+option go_package = "/pb";
+
+message A {
+    optional string str = 1;
+}
+
+message B {
+    required int32 i = 1;
+}
+
+message C {
+    required A a = 1;
+    optional B b = 2;
+}
