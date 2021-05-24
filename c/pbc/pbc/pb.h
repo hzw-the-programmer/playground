@@ -31,6 +31,13 @@
 #define PB_TYPE_MESSAGE (17 << 4)
 #define PB_TYPE_MASK 0xfff0
 
+typedef enum {
+	PB_WIRE_TYPE_VARINT = 0,
+	PB_WIRE_TYPE_64BIT = 1,
+	PB_WIRE_TYPE_LENGTH_PREFIXED = 2,
+	PB_WIRE_TYPE_32BIT = 5,
+} PbWireType;
+
 typedef int PbBool;
 
 typedef struct PbBinaryData {
@@ -53,3 +60,4 @@ typedef struct PbStructDescriptor {
 } PbStructDescriptor;
 
 extern size_t pb_get_packed_size(const void *message, const PbStructDescriptor *descriptor);
+extern size_t pb_pack(const void *message, const PbStructDescriptor *descriptor, uint8_t *out);
