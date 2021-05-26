@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 )
 
+// git diff --name-only HEAD HEAD^ | /d/bin/extract1.exe /d/target/
+
 func main() {
 	dst := os.Args[1]
 	s := bufio.NewScanner(os.Stdin)
