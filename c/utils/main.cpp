@@ -42,6 +42,7 @@ void test_redux1();
 void test_sizeof();
 void testContact();
 void test_offsetof();
+extern "C" void test_mw();
 
 int main(int argc, char *args) {
 	int i;
@@ -87,6 +88,7 @@ int main(int argc, char *args) {
     test_sizeof();
     testContact();
     test_offsetof();
+    test_mw();
 
 	MemoryCheck();
 
