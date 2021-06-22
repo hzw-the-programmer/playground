@@ -115,34 +115,75 @@ void test_replace_header() {
     buffer2_t buf = {0};
     replace_header(&buf, "k1", "v1");
     assert(strcmp("k1: v1\r\n", buf.ptr) == 0);
+    free(buf.ptr);
+}
+
+void test_append_header_helper(buffer2_t *buf) {
+    append_header(buf, "k1", "v1");
+    assert(strcmp("k1: v1\r\n", buf->ptr) == 0);
+    
+    append_header(buf, "k2", "v2");
+    assert(strcmp("k1: v1\r\nk2: v2\r\n", buf->ptr) == 0);
+   
+    append_header(buf, "k3", "v3");
+    assert(strcmp("k1: v1\r\nk2: v2\r\nk3: v3\r\n", buf->ptr) == 0);
+    
+    append_header(buf, "k4", "v4");
+    assert(strcmp("k1: v1\r\nk2: v2\r\nk3: v3\r\nk4: v4\r\n", buf->ptr) == 0);
+}
+
+void test_replace_header_helper(buffer2_t *buf) {
+    replace_header(buf, "k5", "v5");
+    assert(strcmp("k1: v1\r\nk2: v2\r\nk3: v3\r\nk4: v4\r\nk5: v5\r\n", buf->ptr) == 0);
+
+    replace_header(buf, "k2", "rk42");
+    assert(strcmp("k1: v1\r\nk3: v3\r\nk4: v4\r\nk5: v5\r\nk2: rk42\r\n", buf->ptr) == 0);
+
+    replace_header(buf, "k1", "kk21");
+    assert(strcmp("k3: v3\r\nk4: v4\r\nk5: v5\r\nk2: rk42\r\nk1: kk21\r\n", buf->ptr) == 0);
+
+    replace_header(buf, "k2", "hzw");
+    assert(strcmp("k3: v3\r\nk4: v4\r\nk5: v5\r\nk1: kk21\r\nk2: hzw\r\n", buf->ptr) == 0);
+
+    replace_header(buf, "k2", "ml");
+    assert(strcmp("k3: v3\r\nk4: v4\r\nk5: v5\r\nk1: kk21\r\nk2: ml\r\n", buf->ptr) == 0);
+}
+
+void test_delete_header_helper(buffer2_t *buf) {
+    delete_header(buf, "k2");
+    assert(strcmp("k3: v3\r\nk4: v4\r\nk5: v5\r\nk1: kk21\r\n", buf->ptr) == 0);
+
+    delete_header(buf, "k2");
+    assert(strcmp("k3: v3\r\nk4: v4\r\nk5: v5\r\nk1: kk21\r\n", buf->ptr) == 0);
+
+    delete_header(buf, "k3");
+    assert(strcmp("k4: v4\r\nk5: v5\r\nk1: kk21\r\n", buf->ptr) == 0);
+
+    delete_header(buf, "k5");
+    assert(strcmp("k4: v4\r\nk1: kk21\r\n", buf->ptr) == 0);
+
+    delete_header(buf, "k4");
+    assert(strcmp("k1: kk21\r\n", buf->ptr) == 0);
+
+    delete_header(buf, "k1");
+    assert(strcmp("", buf->ptr) == 0);
+
+    delete_header(buf, "k1");
+    assert(strcmp("", buf->ptr) == 0);
 }
 
 void test_op_header() {
     buffer2_t buf = {0};
 
-    append_header(&buf, "k1", "v1");
-    assert(strcmp("k1: v1\r\n", buf.ptr) == 0);
-    append_header(&buf, "k2", "v2");
-    assert(strcmp("k1: v1\r\nk2: v2\r\n", buf.ptr) == 0);
-    append_header(&buf, "k3", "v3");
-    assert(strcmp("k1: v1\r\nk2: v2\r\nk3: v3\r\n", buf.ptr) == 0);
-    append_header(&buf, "k4", "v4");
-    assert(strcmp("k1: v1\r\nk2: v2\r\nk3: v3\r\nk4: v4\r\n", buf.ptr) == 0);
+    test_append_header_helper(&buf);
+    test_replace_header_helper(&buf);
+    test_delete_header_helper(&buf);
 
-    replace_header(&buf, "k5", "v5");
-    assert(strcmp("k1: v1\r\nk2: v2\r\nk3: v3\r\nk4: v4\r\nk5: v5\r\n", buf.ptr) == 0);
+    test_append_header_helper(&buf);
+    test_replace_header_helper(&buf);
+    test_delete_header_helper(&buf);
 
-    replace_header(&buf, "k2", "rk42");
-    assert(strcmp("k1: v1\r\nk3: v3\r\nk4: v4\r\nk5: v5\r\nk2: rk42\r\n", buf.ptr) == 0);
-
-    replace_header(&buf, "k1", "kk21");
-    assert(strcmp("k3: v3\r\nk4: v4\r\nk5: v5\r\nk2: rk42\r\nk1: kk21\r\n", buf.ptr) == 0);
-
-    replace_header(&buf, "k2", "hzw");
-    assert(strcmp("k3: v3\r\nk4: v4\r\nk5: v5\r\nk1: kk21\r\nk2: hzw\r\n", buf.ptr) == 0);
-
-    replace_header(&buf, "k2", "ml");
-    assert(strcmp("k3: v3\r\nk4: v4\r\nk5: v5\r\nk1: kk21\r\nk2: ml\r\n", buf.ptr) == 0);
+    free(buf.ptr);
 }
 
 void test_buffer2() {
