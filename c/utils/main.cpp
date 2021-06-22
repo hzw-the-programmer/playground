@@ -43,6 +43,7 @@ void test_sizeof();
 void testContact();
 void test_offsetof();
 extern "C" void test_mw();
+extern "C" void test_buffer2();
 
 int main(int argc, char *args) {
 	int i;
@@ -89,6 +90,7 @@ int main(int argc, char *args) {
     testContact();
     test_offsetof();
     test_mw();
+    test_buffer2();
 
 	MemoryCheck();
 

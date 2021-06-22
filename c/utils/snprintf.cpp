@@ -369,23 +369,16 @@ char* number(char *buf, char *end, unsigned long long num, struct printf_spec sp
 	return buf;
 }
 
-#define MAX_INT (~(1<<(sizeof(int)*8-1)))
-
 int hzw_vsnprintf(char *buf, size_t size, const char *fmt, va_list args) {
 	unsigned long long num;
 	char *str, *end;
 	struct printf_spec spec = {0};
 
-	str = buf;
-
     if (buf + size < buf) {
         size = ((char*)-1) - buf;
     }
 
-    if (size > MAX_INT) {
-        size = MAX_INT;
-    }
-
+    str = buf;
     end = buf + size;
 
 	while (*fmt) {
@@ -396,7 +389,7 @@ int hzw_vsnprintf(char *buf, size_t size, const char *fmt, va_list args) {
 
 		switch(spec.type) {
 			case FORMAT_TYPE_NONE: {
-				int copy = read;
+				size_t copy = read;
 				if (str < end) {
 					if (copy > end - str) {
 						copy = end - str;
@@ -504,10 +497,14 @@ int hzw_snprintf(char *buf, size_t size, const char *fmt, ...) {
 int hzw_sprintf(char *buf, const char *fmt, ...) {
 	va_list args;
 	int i;
+    size_t size = -1;
+
+    if (!buf) {
+        size = 0;
+    }
 
 	va_start(args, fmt);
-	// i = hzw_vsnprintf(buf, MAX_INT, fmt, args);
-    i = hzw_vsnprintf(buf, (size_t)(char*)-1, fmt, args);
+    i = hzw_vsnprintf(buf, size, fmt, args);
 	va_end(args);
 
 	return i;
@@ -628,6 +625,9 @@ void test_hzw_snprintf() {
     len = hzw_sprintf(formatted, "a%%%s", "bc");
     assert(strcmp(formatted, expected) == 0);
 	assert(len == 4);
+
+    len = hzw_sprintf(NULL, "%s", "hello world");
+    assert(len == 11);
 }
 
 void test_format_decode() {
