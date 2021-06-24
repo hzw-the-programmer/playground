@@ -79,13 +79,10 @@ bool delete_header(buffer2_t *buf, const char *k) {
 
     s = buf->ptr;
     e = NULL;
-    for (;;) {
-        s = strstr(s, k);
-        if (s == NULL) {
-            break;
-        }
+    while ((s = strstr(s, k)) != NULL) {
+        size_t len = s - buf->ptr;
 
-        if (*(s+kl) == ':' && *(s+kl+1) == ' ') {
+        if ((len == 0 || (len >1 && *(s-2) == '\r' && *(s-1) == '\n')) && *(s+kl) == ':' && *(s+kl+1) == ' ') {
             e = strstr(s + kl + 2, "\r\n");
             break;
         }
@@ -186,8 +183,22 @@ void test_op_header() {
     free(buf.ptr);
 }
 
+void test_edge_case() {
+    buffer2_t buf = {0};
+
+    append_header(&buf, "k1", "k2: v2");
+    assert(strcmp("k1: k2: v2\r\n", buf.ptr) == 0);
+    append_header(&buf, "k2", "value2");
+    assert(strcmp("k1: k2: v2\r\nk2: value2\r\n", buf.ptr) == 0);
+    replace_header(&buf, "k2", "replace2");
+    assert(strcmp("k1: k2: v2\r\nk2: replace2\r\n", buf.ptr) == 0);
+    replace_header(&buf, "k1", "r1");
+    assert(strcmp("k2: replace2\r\nk1: r1\r\n", buf.ptr) == 0);
+}
+
 void test_buffer2() {
     test_delete_header();
     test_replace_header();
     test_op_header();
+    test_edge_case();
 }
