@@ -103,6 +103,19 @@ bool replace_header(buffer2_t *buf, const char *k, const char *v) {
     return append_header(buf, k, v);
 }
 
+bool append_str(buffer2_t *buf, const char *str) {
+    size_t len;
+
+    len = strlen(str);
+    if (!reserve_str(buf, len)) {
+        return false;
+    }
+
+    strcat(buf->ptr, str);
+    buf->len += len;
+    return true;
+}
+
 void test_delete_header() {
     buffer2_t buf = {0};
     delete_header(&buf, "k1");
@@ -196,9 +209,54 @@ void test_edge_case() {
     assert(strcmp("k2: replace2\r\nk1: r1\r\n", buf.ptr) == 0);
 }
 
+void test_append_str() {
+    buffer2_t buf = {0};
+
+    append_str(&buf, "first line\r\n");
+    assert(strcmp("first line\r\n", buf.ptr) == 0);
+    append_header(&buf, "k1", "k2: v2");
+    assert(strcmp("first line\r\nk1: k2: v2\r\n", buf.ptr) == 0);
+    append_header(&buf, "k2", "value2");
+    assert(strcmp("first line\r\nk1: k2: v2\r\nk2: value2\r\n", buf.ptr) == 0);
+    replace_header(&buf, "k2", "replace2");
+    assert(strcmp("first line\r\nk1: k2: v2\r\nk2: replace2\r\n", buf.ptr) == 0);
+    replace_header(&buf, "k1", "r1");
+    assert(strcmp("first line\r\nk2: replace2\r\nk1: r1\r\n", buf.ptr) == 0);
+}
+
+void test_edge_case1() {
+    buffer2_t buf = {0};
+
+    append_str(&buf, "first line k1: v1 k2: v2, k3: v3\r\n");
+    assert(strcmp("first line k1: v1 k2: v2, k3: v3\r\n", buf.ptr) == 0);
+    
+    replace_header(&buf, "k1", "v1");
+    assert(strcmp("first line k1: v1 k2: v2, k3: v3\r\nk1: v1\r\n", buf.ptr) == 0);
+    replace_header(&buf, "k2", "v2");
+    assert(strcmp("first line k1: v1 k2: v2, k3: v3\r\nk1: v1\r\nk2: v2\r\n", buf.ptr) == 0);
+    replace_header(&buf, "k3", "v3");
+    assert(strcmp("first line k1: v1 k2: v2, k3: v3\r\nk1: v1\r\nk2: v2\r\nk3: v3\r\n", buf.ptr) == 0);
+    
+    replace_header(&buf, "k1", "r1");
+    assert(strcmp("first line k1: v1 k2: v2, k3: v3\r\nk2: v2\r\nk3: v3\r\nk1: r1\r\n", buf.ptr) == 0);
+    replace_header(&buf, "k2", "r2");
+    assert(strcmp("first line k1: v1 k2: v2, k3: v3\r\nk3: v3\r\nk1: r1\r\nk2: r2\r\n", buf.ptr) == 0);
+    replace_header(&buf, "k3", "r3");
+    assert(strcmp("first line k1: v1 k2: v2, k3: v3\r\nk1: r1\r\nk2: r2\r\nk3: r3\r\n", buf.ptr) == 0);
+
+    delete_header(&buf, "k1");
+    assert(strcmp("first line k1: v1 k2: v2, k3: v3\r\nk2: r2\r\nk3: r3\r\n", buf.ptr) == 0);
+    delete_header(&buf, "k2");
+    assert(strcmp("first line k1: v1 k2: v2, k3: v3\r\nk3: r3\r\n", buf.ptr) == 0);
+    delete_header(&buf, "k3");
+    assert(strcmp("first line k1: v1 k2: v2, k3: v3\r\n", buf.ptr) == 0);
+}
+
 void test_buffer2() {
     test_delete_header();
     test_replace_header();
     test_op_header();
     test_edge_case();
+    test_append_str();
+    test_edge_case1();
 }
