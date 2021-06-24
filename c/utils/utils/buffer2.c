@@ -207,6 +207,8 @@ void test_edge_case() {
     assert(strcmp("k1: k2: v2\r\nk2: replace2\r\n", buf.ptr) == 0);
     replace_header(&buf, "k1", "r1");
     assert(strcmp("k2: replace2\r\nk1: r1\r\n", buf.ptr) == 0);
+
+    free(buf.ptr);
 }
 
 void test_append_str() {
@@ -222,6 +224,8 @@ void test_append_str() {
     assert(strcmp("first line\r\nk1: k2: v2\r\nk2: replace2\r\n", buf.ptr) == 0);
     replace_header(&buf, "k1", "r1");
     assert(strcmp("first line\r\nk2: replace2\r\nk1: r1\r\n", buf.ptr) == 0);
+
+    free(buf.ptr);
 }
 
 void test_edge_case1() {
@@ -250,6 +254,8 @@ void test_edge_case1() {
     assert(strcmp("first line k1: v1 k2: v2, k3: v3\r\nk3: r3\r\n", buf.ptr) == 0);
     delete_header(&buf, "k3");
     assert(strcmp("first line k1: v1 k2: v2, k3: v3\r\n", buf.ptr) == 0);
+
+    free(buf.ptr);
 }
 
 void test_buffer2() {
