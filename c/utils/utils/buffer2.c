@@ -86,8 +86,9 @@ bool delete_header(buffer2_t *buf, const char *k) {
     }
 
     if (e != NULL) {
-        memmove(s, e + 2, buf->ptr + buf->len + 1 - e - 2);
-        buf->len -= e + 2 - s;
+        e += 2;
+        memmove(s, e, buf->ptr + buf->len + 1 - e);
+        buf->len -= e - s;
     }
 
     return true;

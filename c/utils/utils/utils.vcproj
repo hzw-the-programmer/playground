@@ -358,6 +358,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\varints.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\wsnprintf.cpp"
 				>
 			</File>

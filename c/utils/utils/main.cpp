@@ -44,6 +44,7 @@ void testContact();
 void test_offsetof();
 extern "C" void test_mw();
 extern "C" void test_buffer2();
+void test_varints();
 
 int main(int argc, char *args) {
 	int i;
@@ -91,6 +92,7 @@ int main(int argc, char *args) {
     test_offsetof();
     test_mw();
     test_buffer2();
+    test_varints();
 
 	MemoryCheck();
 
