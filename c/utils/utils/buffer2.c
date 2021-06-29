@@ -29,18 +29,13 @@ bool reserve(buffer2_t *buf, size_t by) {
 }
 
 bool reserve_str(buffer2_t *buf, size_t by) {
-    if (buf->len == 0) {
-        by += 1;
-    }
+    by += 1;
 
     if (!reserve(buf, by)) {
         return false;
     }
 
-    if (buf->len == 0) {
-        buf->len = 1;
-    }
-    buf->ptr[buf->len - 1] = '\0';
+    buf->ptr[buf->len] = '\0';
 
     return true;
 }
@@ -71,8 +66,8 @@ bool delete_header(buffer2_t *buf, const char *k) {
     size_t kl;
     char *s, *e;
 
-    if (buf->len == 0) {
-        return true;
+    if (!reserve_str(buf, 0)) {
+        return false;
     }
 
     kl = strlen(k);
@@ -91,8 +86,8 @@ bool delete_header(buffer2_t *buf, const char *k) {
     }
 
     if (e != NULL) {
-        memmove(s, e+2, buf->ptr+buf->len-e-2);
-        buf->len -= e+2-s;
+        memmove(s, e + 2, buf->ptr + buf->len + 1 - e - 2);
+        buf->len -= e + 2 - s;
     }
 
     return true;
@@ -124,7 +119,7 @@ bool prepend_str(buffer2_t *buf, const char *str) {
         return false;
     }
 
-    memmove(buf->ptr + len, buf->ptr, buf->len);
+    memmove(buf->ptr + len, buf->ptr, buf->len + 1);
     memcpy(buf->ptr, str, len);
     buf->len += len;
     return true;
@@ -143,6 +138,7 @@ bool append_bytes(buffer2_t *buf, const char *bytes, size_t len) {
 void buffer_free(buffer2_t *buf) {
     assert((buf->ptr == NULL && buf->cap == 0) || (buf->ptr != NULL && buf->cap != 0) );
     free(buf->ptr);
+    buf->ptr = NULL;
     buf->cap = 0;
     buf->len = 0;
 }
@@ -343,6 +339,45 @@ static void test_append_bytes() {
     buffer_free(&buf);
 }
 
+static void test_str_bytes() {
+    buffer2_t buf = {0};
+
+    replace_header(&buf, "k1", "value1");
+    assert(strcmp("k1: value1\r\n", buf.ptr) == 0);
+
+    append_bytes(&buf, "hello, world!hahaha", 13);
+    assert(memcmp("k1: value1\r\nhello, world!", buf.ptr, buf.len) == 0);
+
+    replace_header(&buf, "k2", "value2");
+    assert(strcmp("k1: value1\r\nhello, world!k2: value2\r\n", buf.ptr) == 0);
+
+    buffer_free(&buf);
+
+    append_bytes(&buf, "hello, world!hahaha", 13);
+    assert(memcmp("hello, world!", buf.ptr, buf.len) == 0);
+
+    prepend_str(&buf, "hzw");
+    assert(strcmp("hzwhello, world!", buf.ptr) == 0);
+
+    buffer_free(&buf);
+
+    append_bytes(&buf, "hello, world!hahaha", 13);
+    assert(memcmp("hello, world!", buf.ptr, buf.len) == 0);
+
+    append_str(&buf, "hzw");
+    assert(strcmp("hello, world!hzw", buf.ptr) == 0);
+
+    buffer_free(&buf);
+
+    append_bytes(&buf, "hello: world!\r\nhahaha", 15);
+    assert(memcmp("hello: world!\r\n", buf.ptr, buf.len) == 0);
+    
+    replace_header(&buf, "hello", "hzw");
+    assert(strcmp("hello: hzw\r\n", buf.ptr) == 0);
+
+    buffer_free(&buf);
+}
+
 void test_buffer2() {
     test_delete_header();
     test_replace_header();
@@ -353,4 +388,5 @@ void test_buffer2() {
     test_prepend_str();
     test_prepend_str1();
     test_append_bytes();
+    test_str_bytes();
 }
