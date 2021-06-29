@@ -130,16 +130,38 @@ bool prepend_str(buffer2_t *buf, const char *str) {
     return true;
 }
 
+bool append_bytes(buffer2_t *buf, const char *bytes, size_t len) {
+    if (!reserve(buf, len)) {
+        return false;
+    }
+
+    memcpy(buf->ptr + buf->len, bytes, len);
+    buf->len += len;
+    return true;
+}
+
+void buffer_free(buffer2_t *buf) {
+    assert((buf->ptr == NULL && buf->cap == 0) || (buf->ptr != NULL && buf->cap != 0) );
+    free(buf->ptr);
+    buf->cap = 0;
+    buf->len = 0;
+}
+
 static void test_delete_header() {
     buffer2_t buf = {0};
+
     delete_header(&buf, "k1");
+
+    buffer_free(&buf);
 }
 
 static void test_replace_header() {
     buffer2_t buf = {0};
+    
     replace_header(&buf, "k1", "v1");
     assert(strcmp("k1: v1\r\n", buf.ptr) == 0);
-    free(buf.ptr);
+    
+    buffer_free(&buf);
 }
 
 static void test_append_header_helper(buffer2_t *buf) {
@@ -207,7 +229,7 @@ static void test_op_header() {
     test_replace_header_helper(&buf);
     test_delete_header_helper(&buf);
 
-    free(buf.ptr);
+    buffer_free(&buf);
 }
 
 static void test_edge_case() {
@@ -215,14 +237,17 @@ static void test_edge_case() {
 
     append_header(&buf, "k1", "k2: v2");
     assert(strcmp("k1: k2: v2\r\n", buf.ptr) == 0);
+    
     append_header(&buf, "k2", "value2");
     assert(strcmp("k1: k2: v2\r\nk2: value2\r\n", buf.ptr) == 0);
+    
     replace_header(&buf, "k2", "replace2");
     assert(strcmp("k1: k2: v2\r\nk2: replace2\r\n", buf.ptr) == 0);
+    
     replace_header(&buf, "k1", "r1");
     assert(strcmp("k2: replace2\r\nk1: r1\r\n", buf.ptr) == 0);
 
-    free(buf.ptr);
+    buffer_free(&buf);
 }
 
 static void test_append_str() {
@@ -239,7 +264,7 @@ static void test_append_str() {
     replace_header(&buf, "k1", "r1");
     assert(strcmp("first line\r\nk2: replace2\r\nk1: r1\r\n", buf.ptr) == 0);
 
-    free(buf.ptr);
+    buffer_free(&buf);
 }
 
 static void test_edge_case1() {
@@ -269,7 +294,7 @@ static void test_edge_case1() {
     delete_header(&buf, "k3");
     assert(strcmp("first line k1: v1 k2: v2, k3: v3\r\n", buf.ptr) == 0);
 
-    free(buf.ptr);
+    buffer_free(&buf);
 }
 
 static void test_prepend_str() {
@@ -280,7 +305,7 @@ static void test_prepend_str() {
     prepend_str(&buf, "first line \r\n");
     assert(strcmp("first line \r\nkey1: value1\r\n", buf.ptr) == 0);
 
-    free(buf.ptr);
+    buffer_free(&buf);
 }
 
 static void test_prepend_str1() {
@@ -289,7 +314,33 @@ static void test_prepend_str1() {
     prepend_str(&buf, "first line \r\n");
     assert(strcmp("first line \r\n", buf.ptr) == 0);
 
-    free(buf.ptr);
+    buffer_free(&buf);
+}
+
+static void test_append_bytes() {
+    buffer2_t buf = {0};
+
+    append_bytes(&buf, "hello, world!", 13);
+    assert(buf.len == 13);
+    assert(memcmp("hello, world!", buf.ptr, buf.len) == 0);
+
+    append_bytes(&buf, "h", 1);
+    assert(buf.len == 14);
+    assert(memcmp("hello, world!h", buf.ptr, buf.len) == 0);
+
+    append_bytes(&buf, "zw", 2);
+    assert(buf.len == 16);
+    assert(memcmp("hello, world!hzw", buf.ptr, buf.len) == 0);
+
+    append_bytes(&buf, "\0\0\0", 3);
+    assert(buf.len == 19);
+    assert(memcmp("hello, world!hzw\0\0\0", buf.ptr, buf.len) == 0);
+
+    append_bytes(&buf, "amazing", 7);
+    assert(buf.len == 26);
+    assert(memcmp("hello, world!hzw\0\0\0amazing", buf.ptr, buf.len) == 0);
+
+    buffer_free(&buf);
 }
 
 void test_buffer2() {
@@ -301,4 +352,5 @@ void test_buffer2() {
     test_edge_case1();
     test_prepend_str();
     test_prepend_str1();
+    test_append_bytes();
 }
