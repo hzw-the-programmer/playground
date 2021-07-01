@@ -2,19 +2,27 @@
 #include <assert.h>
 #include <string.h> // memcmp
 
-#define output(buf, len, index, value) if (index < len) buf[index] = value
-
 size_t uint32_pack(uint32_t value, char *buf, size_t len) {
     size_t index = 0;
+    char b;
 
-    while (value & ~0x7f) {
-        output(buf, len, index, value | 0x80);
-        index++;
+    while (1) {
+        if (value & ~0x7f) {
+            b = value | 0x80;
+        } else {
+            b = value;
+        }
         value >>= 7;
-    }
 
-    output(buf, len, index, value);
-    index++;
+        if (index < len) {
+            buf[index] = b;
+        }
+        index++;
+
+        if (!(b & 0x80)) {
+            break;
+        }
+    }
 
     return index;
 }
