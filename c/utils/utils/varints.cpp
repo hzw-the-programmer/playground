@@ -9,10 +9,10 @@ size_t uint32_pack(uint32_t value, char *buf, size_t len) {
     while (1) {
         if (value & ~0x7f) {
             b = value | 0x80;
+            value >>= 7;
         } else {
             b = value;
         }
-        value >>= 7;
 
         if (index < len) {
             buf[index] = b;
