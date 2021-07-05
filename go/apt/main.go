@@ -16,6 +16,9 @@ func main() {
 	project := os.Args[3]
 	app := os.Args[4]
 	pkg := os.Args[5]
+	lib := os.Args[6]
+
+	provides, notProvideObjs := parseProvide("provide.txt")
 
 	os.RemoveAll(pkg)
 	appDir := filepath.Join(pkg, app)
@@ -24,8 +27,6 @@ func main() {
 			panic(err)
 		}
 	}
-
-	provides, notProvideObjs := parseProvide("provide.txt")
 
 	for _, p := range provides {
 		src := filepath.Join(dir, app, p)
@@ -39,7 +40,7 @@ func main() {
 		panic(err)
 	}
 	objs = filter(objs, notProvideObjs)
-	run("armar", filepath.Join(appDir, app), objs...)
+	run("armar", filepath.Join(appDir, lib), objs...)
 
 	modisObjsDir := filepath.Join(dir, "MoDIS_VC9", app, "Debug", "*.obj")
 	modisObjs, err := filepath.Glob(modisObjsDir)
@@ -47,7 +48,7 @@ func main() {
 		panic(err)
 	}
 	modisObjs = filter(modisObjs, notProvideObjs)
-	run("lib", filepath.Join(appDir, app), modisObjs...)
+	run("lib", filepath.Join(appDir, lib), modisObjs...)
 }
 
 func parseProvide(fn string) ([]string, map[string]interface{}) {
