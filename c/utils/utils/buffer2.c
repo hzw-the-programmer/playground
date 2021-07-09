@@ -144,6 +144,16 @@ void buffer_free(buffer2_t *buf) {
     buf->len = 0;
 }
 
+bool append_buffer(buffer2_t *dist, buffer2_t *src) {
+    if (!reserve(dist, src->len)) {
+        return false;
+    }
+
+    memcpy(dist->ptr + dist->len, src->ptr, src->len);
+    dist->len += src->len;
+    return true;
+}
+
 static void test_delete_header() {
     buffer2_t buf = {0};
 
