@@ -8,3 +8,7 @@ git log --since="1 week ago"
 git remote set-url origin git@github.com:hzw-the-programmer/playground.git
 
 ssh-keygen -o -t rsa -C "email" -b 4096
+
+git clone path
+git submodule init
+git submodule update

@@ -13,4 +13,11 @@ vc project file:
 project\MS_Code\build\project_name_builddir\win\simulator.dsw
 set msdevkernel as active project
 
+make p=project_name new
+make p=project_name update
+make p=project_name clean
+make p=project_name image
 
+make p=project_name m=app
+
+make p=project_name m=app update
