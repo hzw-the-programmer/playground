@@ -20,19 +20,20 @@ type Size struct {
 }
 
 func main() {
-	if len(os.Args) != 3 {
-		fmt.Printf("Usage: %s dir mapfile\n", os.Args[0])
+	if len(os.Args) != 4 {
+		fmt.Printf("Usage: %s dir mapfile ext\n", os.Args[0])
 		return
 	}
 
 	dir := os.Args[1]
 	mapfile := os.Args[2]
+	ext := os.Args[3]
 
 	sizes := map[string]*Size{}
 	err := filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
 		if filepath.Ext(path) == ".c" {
 			base := filepath.Base(path)
-			base = base[:len(base)-2] + ".obj"
+			base = base[:len(base)-2] + ext
 			sizes[base] = &Size{}
 		}
 		return nil
