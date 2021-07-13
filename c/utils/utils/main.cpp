@@ -45,6 +45,8 @@ void test_offsetof();
 extern "C" void test_mw();
 extern "C" void test_buffer2();
 void test_varints();
+void test_vwsnprintf();
+void test_vsnprintf();
 
 int main(int argc, char *args) {
 	int i;
@@ -93,6 +95,8 @@ int main(int argc, char *args) {
     test_mw();
     test_buffer2();
     test_varints();
+    test_vwsnprintf();
+    test_vsnprintf();
 
 	MemoryCheck();
 
