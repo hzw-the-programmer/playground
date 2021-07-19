@@ -2,10 +2,12 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"flag"
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 )
@@ -17,17 +19,25 @@ func main() {
 	objdir := flag.String("objdir", "objsdir", "app object files directory")
 	mobjdir := flag.String("mobjdir", "mobjdir", "app modis object files directory")
 	providefn := flag.String("providefn", "provide.txt", "specify provide files here")
+	libname := flag.String("libname", "app", ".a name")
 
 	flag.Parse()
 
-	fmt.Println(*prjdir)
-	fmt.Println(*objdir)
-	fmt.Println(*mobjdir)
-
 	createDir(*outdir)
+
 	exobjs := copyProvide(*appdir, *outdir, *providefn)
+
 	objs := findObjs(*appdir, exobjs)
-	fmt.Println(objs)
+
+	appname := filepath.Base(*appdir)
+
+	paths := objsToPaths(objs, *objdir)
+	run("armar", filepath.Join(*outdir, appname, *libname), paths...)
+
+	paths = objsToPaths(objs, *mobjdir)
+	run("lib", filepath.Join(*outdir, appname, *libname), paths...)
+
+	extract(*prjdir)
 }
 
 func createDir(dir string) {
@@ -100,6 +110,51 @@ func findObjs(dir string, exobjs []string) (objs []string) {
 	}
 
 	return
+}
+
+func objsToPaths(objs []string, dir string) (paths []string) {
+	all, err := filepath.Glob(filepath.Join(dir, "*"))
+	if err != nil {
+		panic(err)
+	}
+	for _, p := range all {
+		base := filepath.Base(p)
+		ext := filepath.Ext(p)
+		if strInSlice(base[:len(base)-len(ext)], objs) {
+			paths = append(paths, p)
+		}
+	}
+	return
+}
+
+func run(name, fn string, args ...string) {
+	path, err := exec.LookPath(name)
+	if err != nil {
+		panic(err)
+	}
+
+	var newArgs []string
+	if name == "armar" {
+		newArgs = append(newArgs, name, "-r", fn+".a")
+	} else if name == "lib" {
+		args = append(args, "/out:"+fn+".lib")
+		newArgs = append(newArgs, name)
+	}
+
+	newArgs = append(newArgs, args...)
+
+	cmd := exec.Cmd{Path: path, Args: newArgs}
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err = cmd.Run()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(out.String())
+}
+
+func extract(dir string) {
+
 }
 
 func copy(dstPath, srcPath string) {
