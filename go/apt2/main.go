@@ -55,14 +55,19 @@ func copyProvide(srcdir, dstdir, fn string) (exobjs []string) {
 		pair := strings.Split(s.Text(), ">")
 		pair0 := strings.Trim(pair[0], " \t")
 		src := filepath.Join(srcdir, pair0)
-		dst := filepath.Join(dstdir, name, pair0)
+		dst := filepath.Join(dstdir, name, filepath.Base(pair0))
 		if len(pair) > 1 {
 			pair1 := strings.Trim(pair[1], " \t")
-			if pair1 == "." {
-				pair1 = filepath.Base(pair0)
-			}
 			dst = filepath.Join(dstdir, name, pair1)
 		}
+		// dst := filepath.Join(dstdir, name, pair0)
+		// if len(pair) > 1 {
+		// 	pair1 := strings.Trim(pair[1], " \t")
+		// 	if pair1 == "." {
+		// 		pair1 = filepath.Base(pair0)
+		// 	}
+		// 	dst = filepath.Join(dstdir, name, pair1)
+		// }
 		if err := os.MkdirAll(filepath.Dir(dst), 0666); err != nil {
 			panic(err)
 		}
