@@ -14,10 +14,12 @@ import (
 
 func main() {
 	outdir := flag.String("outdir", "v1.2.3", "directory to store extraced files")
-	prjdir := flag.String("prjdir", "prjdir", "project directory")
 	appdir := flag.String("appdir", "appdir", "app source directory")
 	objdir := flag.String("objdir", "objsdir", "app object files directory")
 	mobjdir := flag.String("mobjdir", "mobjdir", "app modis object files directory")
+	prjdir := flag.String("prjdir", "prjdir", "project directory")
+	firstcf := flag.String("firstcf", "firstcf", "first git commit file")
+	excludefn := flag.String("excludefn", "exclude.txt", "specify exclude files")
 	providefn := flag.String("providefn", "provide.txt", "specify provide files here")
 	libname := flag.String("libname", "app", ".a name")
 
@@ -37,7 +39,7 @@ func main() {
 	paths = objsToPaths(objs, *mobjdir)
 	run("lib", filepath.Join(*outdir, appname, *libname), paths...)
 
-	extract(*prjdir)
+	extract(*prjdir, *firstcf, *excludefn, *outdir)
 }
 
 func createDir(dir string) {
@@ -153,8 +155,58 @@ func run(name, fn string, args ...string) {
 	fmt.Println(out.String())
 }
 
-func extract(dir string) {
+func extract(dir, firstCommitFile, excludefn, outdir string) {
+	var excludes []string
+	f, err := os.Open(excludefn)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+	s := bufio.NewScanner(f)
+	for s.Scan() {
+		excludes = append(excludes, s.Text())
+	}
 
+	firstCommitCmd := exec.Command("git", "log", "--pretty=format:%h", "--diff-filter=A", "--", firstCommitFile)
+	firstCommitCmd.Dir = dir
+	firstCommit, err := firstCommitCmd.Output()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(firstCommit)
+
+	modifiedFilesCmd := exec.Command("git", "diff", "--name-only", string(firstCommit), "HEAD")
+	modifiedFilesCmd.Dir = dir
+	modifiedFiles, err := modifiedFilesCmd.Output()
+	if err != nil {
+		panic(err)
+	}
+
+	var files []string
+	r := bytes.NewReader(modifiedFiles)
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		text := scanner.Text()
+		found := false
+		for _, exclude := range excludes {
+			if strings.HasPrefix(text, exclude) {
+				found = true
+				break
+			}
+		}
+		if found {
+			continue
+		}
+		files = append(files, text)
+		// fmt.Println(text)
+	}
+
+	for _, f := range files {
+		src := filepath.Join(dir, f)
+		dst := filepath.Join(outdir, f)
+		os.MkdirAll(filepath.Dir(dst), 0666)
+		copy(dst, src)
+	}
 }
 
 func copy(dstPath, srcPath string) {
