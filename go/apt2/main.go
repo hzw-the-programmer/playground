@@ -173,12 +173,13 @@ func extract(dir, firstCommitFile, excludefn, outdir string) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(firstCommit)
+	fmt.Println(string(firstCommit))
 
 	modifiedFilesCmd := exec.Command("git", "diff", "--name-only", string(firstCommit), "HEAD")
 	modifiedFilesCmd.Dir = dir
-	modifiedFiles, err := modifiedFilesCmd.Output()
+	modifiedFiles, err := modifiedFilesCmd.CombinedOutput()
 	if err != nil {
+		fmt.Println(string(modifiedFiles))
 		panic(err)
 	}
 
@@ -198,7 +199,7 @@ func extract(dir, firstCommitFile, excludefn, outdir string) {
 			continue
 		}
 		files = append(files, text)
-		// fmt.Println(text)
+		fmt.Println(text)
 	}
 
 	for _, f := range files {

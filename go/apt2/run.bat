@@ -5,3 +5,4 @@ apt2.exe -outdir=outdir ^
          -prjdir=prjdir ^
          -firstcf=firstcf ^
          -libname=app
+pause
