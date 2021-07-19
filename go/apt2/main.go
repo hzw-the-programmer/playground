@@ -26,7 +26,8 @@ func main() {
 
 	createDir(*outdir)
 	exobjs := copyProvide(*appdir, *outdir, *providefn)
-	fmt.Println(exobjs)
+	objs := findObjs(*appdir, exobjs)
+	fmt.Println(objs)
 }
 
 func createDir(dir string) {
@@ -82,6 +83,25 @@ func copyProvide(srcdir, dstdir, fn string) (exobjs []string) {
 	return
 }
 
+func findObjs(dir string, exobjs []string) (objs []string) {
+	err := filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
+		if filepath.Ext(path) == ".c" {
+			base := filepath.Base(path)
+			base = base[:len(base)-2]
+			if !strInSlice(base, exobjs) {
+				objs = append(objs, base)
+			}
+		}
+		return nil
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	return
+}
+
 func copy(dstPath, srcPath string) {
 	dst, err := os.Create(dstPath)
 	if err != nil {
@@ -99,4 +119,14 @@ func copy(dstPath, srcPath string) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func strInSlice(str string, strs []string) bool {
+	for _, s := range strs {
+		if str == s {
+			return true
+		}
+	}
+
+	return false
 }
