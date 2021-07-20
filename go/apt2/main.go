@@ -22,22 +22,34 @@ func main() {
 	excludefn := flag.String("excludefn", "exclude.txt", "specify exclude files")
 	providefn := flag.String("providefn", "provide.txt", "specify provide files here")
 	libname := flag.String("libname", "app", ".a name")
+	liboutdir := flag.String("liboutdir", "", "directory to store .a")
+	provideoutdir := flag.String("provideoutdir", "", "directory to store provide files")
 
 	flag.Parse()
 
+	appname := filepath.Base(*appdir)
+
+	liboutfn := filepath.Join(*outdir, appname, *libname)
+	if *liboutdir != "" {
+		liboutfn = filepath.Join(*outdir, *liboutdir, *libname)
+	}
+
+	provideout := filepath.Join(*outdir, appname)
+	if *provideoutdir != "" {
+		provideout = filepath.Join(*outdir, *provideoutdir)
+	}
+
 	createDir(*outdir)
 
-	exobjs := copyProvide(*appdir, *outdir, *providefn)
+	exobjs := copyProvide(*appdir, provideout, *providefn)
 
 	objs := findObjs(*appdir, exobjs)
 
-	appname := filepath.Base(*appdir)
-
 	paths := objsToPaths(objs, *objdir)
-	run("armar", filepath.Join(*outdir, appname, *libname), paths...)
+	run("armar", liboutfn, paths...)
 
 	paths = objsToPaths(objs, *mobjdir)
-	run("lib", filepath.Join(*outdir, appname, *libname), paths...)
+	run("lib", liboutfn, paths...)
 
 	extract(*prjdir, *firstcf, *excludefn, *outdir)
 }
@@ -55,8 +67,6 @@ func createDir(dir string) {
 }
 
 func copyProvide(srcdir, dstdir, fn string) (exobjs []string) {
-	name := filepath.Base(srcdir)
-
 	f, err := os.Open(fn)
 	if err != nil {
 		panic(err)
@@ -68,19 +78,10 @@ func copyProvide(srcdir, dstdir, fn string) (exobjs []string) {
 		pair := strings.Split(s.Text(), ">")
 		pair0 := strings.Trim(pair[0], " \t")
 		src := filepath.Join(srcdir, pair0)
-		dst := filepath.Join(dstdir, name, filepath.Base(pair0))
+		dst := filepath.Join(dstdir, filepath.Base(pair0))
 		if len(pair) > 1 {
-			pair1 := strings.Trim(pair[1], " \t")
-			dst = filepath.Join(dstdir, name, pair1)
+			dst = filepath.Join(dstdir, strings.Trim(pair[1], " \t"))
 		}
-		// dst := filepath.Join(dstdir, name, pair0)
-		// if len(pair) > 1 {
-		// 	pair1 := strings.Trim(pair[1], " \t")
-		// 	if pair1 == "." {
-		// 		pair1 = filepath.Base(pair0)
-		// 	}
-		// 	dst = filepath.Join(dstdir, name, pair1)
-		// }
 		if err := os.MkdirAll(filepath.Dir(dst), 0666); err != nil {
 			panic(err)
 		}
@@ -130,6 +131,8 @@ func objsToPaths(objs []string, dir string) (paths []string) {
 }
 
 func run(name, fn string, args ...string) {
+	os.MkdirAll(filepath.Dir(fn), 0666)
+
 	path, err := exec.LookPath(name)
 	if err != nil {
 		panic(err)
@@ -145,14 +148,19 @@ func run(name, fn string, args ...string) {
 
 	newArgs = append(newArgs, args...)
 
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
 	cmd := exec.Cmd{Path: path, Args: newArgs}
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	err = cmd.Run()
-	if err != nil {
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	if err := cmd.Run(); err != nil {
+		fmt.Println("stderr:", stderr.String())
 		panic(err)
 	}
-	fmt.Println(out.String())
+
+	fmt.Println(stdout.String())
 }
 
 func extract(dir, firstCommitFile, excludefn, outdir string) {
