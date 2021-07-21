@@ -9,11 +9,20 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
+	"time"
 )
 
+const OUT_DIR_FMT = "hzw_%s_%s_%s_%s_%s"
+
+var VERSION_PAT = regexp.MustCompile(`^[^/]*#define\s+\S*VERSION\s+"(\S+)"`)
+var RELEASE_PAT = regexp.MustCompile(`^[^/]*#define\s+\S*RELEASE\s+(\S+)`)
+var PLATFORM_PAT = regexp.MustCompile(`^[^/]*#define\s+\S*PLATFORM\s+\S*_(\S+)`)
+var LCD_PAT = regexp.MustCompile(`^[^/]*#define\s+\S*LCD\s+\S*_(\S+_\S+)`)
+
 func main() {
-	outdir := flag.String("outdir", "v1.2.3", "directory to store extraced files")
+	metainfofn := flag.String("metainfofn", "metainfofn", "file contains version, release, platform, lcd")
 	appdir := flag.String("appdir", "appdir", "app source directory")
 	objdir := flag.String("objdir", "objsdir", "app object files directory")
 	mobjdir := flag.String("mobjdir", "mobjdir", "app modis object files directory")
@@ -27,19 +36,27 @@ func main() {
 
 	flag.Parse()
 
+	platform, lcd, version, isrelease := parseMetainfo(*metainfofn)
+	release := "DBG"
+	if isrelease {
+		release = "REL"
+	}
+	date := time.Now().Format("20060102")
+	outdir := fmt.Sprintf(OUT_DIR_FMT, version, release, date, platform, lcd)
+
 	appname := filepath.Base(*appdir)
 
-	liboutfn := filepath.Join(*outdir, appname, *libname)
+	liboutfn := filepath.Join(outdir, appname, *libname)
 	if *liboutdir != "" {
-		liboutfn = filepath.Join(*outdir, *liboutdir, *libname)
+		liboutfn = filepath.Join(outdir, *liboutdir, *libname)
 	}
 
-	provideout := filepath.Join(*outdir, appname)
+	provideout := filepath.Join(outdir, appname)
 	if *provideoutdir != "" {
-		provideout = filepath.Join(*outdir, *provideoutdir)
+		provideout = filepath.Join(outdir, *provideoutdir)
 	}
 
-	createDir(*outdir)
+	createDir(outdir)
 
 	exobjs := copyProvide(*appdir, provideout, *providefn)
 
@@ -51,7 +68,38 @@ func main() {
 	paths = objsToPaths(objs, *mobjdir)
 	run("lib", liboutfn, paths...)
 
-	extract(*prjdir, *firstcf, *excludefn, *outdir)
+	extract(*prjdir, *firstcf, *excludefn, outdir)
+}
+
+func parseMetainfo(fn string) (platform, lcd, version string, isrelease bool) {
+	f, err := os.Open(fn)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	s := bufio.NewScanner(f)
+	for s.Scan() {
+		line := s.Text()
+		if m := VERSION_PAT.FindStringSubmatch(line); m != nil {
+			version = m[1]
+		} else if m := RELEASE_PAT.FindStringSubmatch(line); m != nil {
+			if m[1] == "1" {
+				isrelease = true
+			}
+		} else if m := PLATFORM_PAT.FindStringSubmatch(line); m != nil {
+			platform = m[1]
+		} else if m := LCD_PAT.FindStringSubmatch(line); m != nil {
+			lcd = m[1]
+		}
+	}
+
+	fmt.Println(version)
+	fmt.Println(isrelease)
+	fmt.Println(platform)
+	fmt.Println(lcd)
+
+	return
 }
 
 func createDir(dir string) {
@@ -226,17 +274,21 @@ func extract(dir, firstCommitFile, excludefn, outdir string) {
 }
 
 func copy(dstPath, srcPath string) {
+	src, err := os.Open(srcPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			fmt.Printf("WARNING: %s does not exist\n", srcPath)
+			return
+		}
+		panic(err)
+	}
+	defer src.Close()
+
 	dst, err := os.Create(dstPath)
 	if err != nil {
 		panic(err)
 	}
 	defer dst.Close()
-
-	src, err := os.Open(srcPath)
-	if err != nil {
-		panic(err)
-	}
-	defer src.Close()
 
 	_, err = io.Copy(dst, src)
 	if err != nil {

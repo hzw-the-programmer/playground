@@ -1,4 +1,4 @@
-apt2.exe -outdir=outdir ^
+apt2.exe -metainfofn=metainfofn ^
          -appdir=appdir ^
          -objdir=objdir ^
          -mobjdir=mobjdir ^
