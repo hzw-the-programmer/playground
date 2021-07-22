@@ -47,6 +47,18 @@ typedef struct {
     unsigned char f1;
 } S3;
 
+typedef struct {
+    unsigned long f2;
+    unsigned short f7;
+    unsigned char f1;
+} S4;
+
+typedef struct {
+    unsigned long f2;
+    unsigned char f1;
+    unsigned short f7;
+} S5;
+
 int main() {
     {
         unsigned char b = 0xaa;
@@ -76,6 +88,18 @@ int main() {
     {
         S3 s = {0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff, 0xffff, 0xffff, 0xffffffff, 0xff};
         printf("sizeof(S3) = %d\n", sizeof(S3));
+        print_buf_bits((unsigned char*)&s, sizeof(s));
+    }
+
+    {
+        S4 s = {0xffffffff, 0xffff, 0xff};
+        printf("sizeof(S4) = %d\n", sizeof(S4));
+        print_buf_bits((unsigned char*)&s, sizeof(s));
+    }
+
+    {
+        S5 s = {0xffffffff, 0xff, 0xffff};
+        printf("sizeof(S5) = %d\n", sizeof(S5));
         print_buf_bits((unsigned char*)&s, sizeof(s));
     }
 }
