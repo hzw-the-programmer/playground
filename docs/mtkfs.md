@@ -121,3 +121,72 @@ void reserve_test() {
     reserve(32 * 1024, L"E:\\bj", L"tj");
 }
 ```
+
+```
+#define PATH_LEN 50
+
+static void getFree(U8 drv, U64 *free) {
+#if 0
+    *free += 10*1024;
+#else
+    srv_fmgr_drv_get_size(drv, NULL, free);
+#endif
+}
+
+static U64 reserve(U64 target, const WCHAR *dir, const WCHAR *ext) {
+    U64 free = 0;
+    WCHAR path[PATH_LEN + 1];
+    FS_HANDLE handle;
+    FS_DOSDirEntry entry;
+    WCHAR fn[PATH_LEN + 1];
+
+    getFree(dir[0], &free);
+    if (free >= target) {
+        return free;
+    }
+
+    kal_wstrcpy(path, dir);
+    kal_wstrcat(path, L"*.");
+    kal_wstrcat(path, ext);
+    
+    handle = FS_FindFirst(
+                path, 
+                0, 
+                0, 
+                &entry, 
+                fn, 
+                sizeof(fn));
+
+    if (handle <= 0) {
+        return free;
+    }
+
+    do {
+        kal_wstrcpy(path, dir);
+        kal_wstrcat(path, fn);
+
+        kal_prompt_trace(MOD_ABM, "delete: %d", (S32)entry.FileSize);
+        FS_Delete(path);
+
+        getFree(dir[0], &free);
+    } while (free < target && FS_FindNext(handle, &entry, fn, sizeof(fn)) == FS_NO_ERROR);
+
+    FS_FindClose(handle);
+
+    return free;
+}
+
+void reserve_test() {
+    U64 total, free;
+    U32 start;
+
+    srv_fmgr_drv_get_size(SRV_FMGR_PHONE_DRV, &total, &free);
+    kal_prompt_trace(MOD_ABM, "%d, %d, %d", SRV_FMGR_PHONE_DRV, (S32)total, (S32)free);
+    srv_fmgr_drv_get_size(SRV_FMGR_CARD_DRV, &total, &free);
+    kal_prompt_trace(MOD_ABM, "%d, %d, %d", SRV_FMGR_CARD_DRV, (S32)total, (S32)free);
+
+    start = kal_get_systicks();
+    free = reserve(1773800000, L"E:\\tj", L"bj");    
+    kal_prompt_trace(MOD_ABM, "cost=%d, free=%d", kal_get_systicks() - start, (S32)free);
+}
+```
