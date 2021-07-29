@@ -255,3 +255,66 @@ static void get20Oldest(const WCHAR *pattern) {
 #undef cap
 }
 ```
+
+```
+typedef struct {
+    WCHAR fn[PATH_LEN + 1];
+    U32 ts;
+} FileInfo;
+
+static void convertDosDt(FS_DOSDateTime *dosdt, applib_time_struct *dt) {
+    dt->nYear = dosdt->Year1980 + 1980;
+    dt->nMonth = dosdt->Month;
+    dt->nDay = dosdt->Day;
+    dt->nHour = dosdt->Hour;
+    dt->nMin = dosdt->Minute;
+    dt->nSec = dosdt->Second2;
+    dt->DayIndex = 0;
+}
+
+static U32 getOldest(const WCHAR *pattern, FileInfo *fis, U32 cap, U32 *len) {
+    FS_HANDLE handle;
+    FS_DOSDirEntry entry;
+    WCHAR fn[PATH_LEN + 1];
+    U32 i, ts, total = 0;
+    applib_time_struct dt;
+
+    *len = 0;
+
+    handle = FS_FindFirst(
+                pattern, 
+                0, 
+                0, 
+                &entry, 
+                fn, 
+                sizeof(fn));
+
+    if (handle <= 0) {
+        return;
+    }
+
+    do {
+        total++;
+        convertDosDt(&entry.CreateDateTime, &dt);
+        ts = applib_dt_mytime_2_utc_sec(&dt, 0);
+        for (i = 0; i < *len; i++) {
+            if (ts < fis[i].ts) {
+                break;
+            }
+        }
+        if (i == cap) {
+            continue;
+        }
+        memmove(&fis[i + 1], &fis[i], (cap - i - 1) * sizeof(fis[0]));
+        kal_wstrcpy(fis[i].fn, fn);
+        fis[i].ts = ts;
+        if (*len < cap) {
+            (*len)++;
+        }
+    } while (FS_FindNext(handle, &entry, fn, sizeof(fn)) == FS_NO_ERROR);
+
+    FS_FindClose(handle);
+
+    return total;
+}
+```
