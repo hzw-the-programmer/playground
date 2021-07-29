@@ -318,3 +318,146 @@ static U32 getOldest(const WCHAR *pattern, FileInfo *fis, U32 cap, U32 *len) {
     return total;
 }
 ```
+
+```
+#define PATH_LEN 50
+
+typedef struct {
+    WCHAR fn[PATH_LEN + 1];
+    U32 ts;
+} FileInfo;
+
+static void convertDosDt(FS_DOSDateTime *dosdt, applib_time_struct *dt) {
+    dt->nYear = dosdt->Year1980 + 1980;
+    dt->nMonth = dosdt->Month;
+    dt->nDay = dosdt->Day;
+    dt->nHour = dosdt->Hour;
+    dt->nMin = dosdt->Minute;
+    dt->nSec = dosdt->Second2;
+    dt->DayIndex = 0;
+}
+
+static void getOldest(const WCHAR *pattern,
+                          FileInfo *fis,
+                          S32 cap,
+                          S32 *len,
+                          S32 *total) {
+    FS_HANDLE handle;
+    FS_DOSDirEntry entry;
+    WCHAR fn[PATH_LEN + 1];
+    S32 i;
+    U32 ts;
+    applib_time_struct dt;
+
+    *len = 0;
+    *total = 0;
+
+    handle = FS_FindFirst(
+                pattern, 
+                0, 
+                0, 
+                &entry, 
+                fn, 
+                sizeof(fn));
+
+    if (handle <= 0) {
+        return;
+    }
+
+    do {
+        (*total)++;
+        convertDosDt(&entry.CreateDateTime, &dt);
+        ts = applib_dt_mytime_2_utc_sec(&dt, 0);
+        for (i = 0; i < *len; i++) {
+            if (ts < fis[i].ts) {
+                break;
+            }
+        }
+        if (i == cap) {
+            continue;
+        }
+        memmove(&fis[i + 1], &fis[i], (cap - i - 1) * sizeof(fis[0]));
+        kal_wstrcpy(fis[i].fn, fn);
+        fis[i].ts = ts;
+        if (*len < cap) {
+            (*len)++;
+        }
+    } while (FS_FindNext(handle, &entry, fn, sizeof(fn)) == FS_NO_ERROR);
+
+    FS_FindClose(handle);
+}
+
+static void getFree(U8 drv, U64 *free) {
+#if 1
+    *free += 10*1024;
+#else
+    srv_fmgr_drv_get_size(drv, NULL, free);
+#endif
+}
+
+static U64 reserve(U64 target,
+                      const WCHAR *dir,
+                      const WCHAR *ext,
+                      FileInfo *fis,
+                      S32 cap,
+                      S32 *len,
+                      S32 *total) {
+    WCHAR pattern[PATH_LEN + 1];
+    WCHAR fn[PATH_LEN + 1];
+    U64 free = 0;
+    S32 i;
+
+    kal_wstrcpy(pattern, dir);
+    kal_wstrcat(pattern, L"*.");
+    kal_wstrcat(pattern, ext);
+
+    getFree(pattern[0], &free);
+    if (free >= target) {
+        return free;
+    }
+
+    getOldest(pattern, fis, cap, len, total);
+    for (i = 0; i < *len; i++) {
+        kal_wstrcpy(fn, dir);
+        kal_wstrcat(fn, fis[i].fn);
+        FS_Delete(fn);
+        fis[i].ts = 0;
+        getFree(pattern[0], &free);
+        if (free >= target) {
+            return free;
+        }
+    }
+
+    return free;
+}
+
+void reserve_test() {
+    FileInfo fis[20 + 1] = {0};
+    S32 len, total, i;
+    U64 free;
+    U32 start;
+    CHAR fn[PATH_LEN + 1];
+
+    kal_wstrcpy(fis[20].fn, L"hezhiwen");
+    fis[20].ts = 123;
+
+    start = kal_get_systicks();
+    free = reserve(32*1024,
+                   L"bj",
+                   L"tj",
+                   fis,
+                   20,
+                   &len,
+                   &total);
+    kal_prompt_trace(MOD_ABM,
+                     "cost=%d, free=%d, len=%d, total=%d",
+                     kal_get_systicks() - start,
+                     (S32)free,
+                     len,
+                     total);
+    for (i = 0; i < 20 + 1; i++) {
+        mmi_ucs2_to_asc(fn, (CHAR*)fis[i].fn);
+        kal_prompt_trace(MOD_ABM, "i=%02d, fn=%s, ts=%d", i, fn, fis[i].ts);
+    }
+}
+```
