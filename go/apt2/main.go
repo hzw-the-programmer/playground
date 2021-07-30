@@ -72,6 +72,8 @@ func main() {
 }
 
 func parseMetainfo(fn string) (platform, lcd, version string, isrelease bool) {
+	fmt.Println("***parseMetainfo***")
+
 	f, err := os.Open(fn)
 	if err != nil {
 		panic(err)
@@ -186,6 +188,8 @@ func objsToPaths(objs []string, dir string) (paths []string) {
 }
 
 func run(name, fn string, args ...string) {
+	fmt.Printf("***run %s***\n", name)
+
 	os.MkdirAll(filepath.Dir(fn), 0666)
 
 	path, err := exec.LookPath(name)
@@ -219,6 +223,8 @@ func run(name, fn string, args ...string) {
 }
 
 func extract(dir, firstCommitFile, excludefn, outdir string) {
+	fmt.Println("***extract***")
+
 	var excludes []string
 	f, err := os.Open(excludefn)
 	if err != nil {
@@ -227,7 +233,12 @@ func extract(dir, firstCommitFile, excludefn, outdir string) {
 	defer f.Close()
 	s := bufio.NewScanner(f)
 	for s.Scan() {
-		excludes = append(excludes, s.Text())
+		l := s.Text()
+		if l == "" || l[0] == '#' {
+			continue
+		}
+		l = strings.Replace(l, "\\", "/", -1)
+		excludes = append(excludes, l)
 	}
 
 	firstCommitCmd := exec.Command("git", "log", "--pretty=format:%h", "--diff-filter=A", "--", firstCommitFile)
@@ -262,10 +273,10 @@ func extract(dir, firstCommitFile, excludefn, outdir string) {
 			continue
 		}
 		files = append(files, text)
-		fmt.Println(text)
 	}
 
 	for _, f := range files {
+		fmt.Println(f)
 		src := filepath.Join(dir, f)
 		dst := filepath.Join(outdir, f)
 		os.MkdirAll(filepath.Dir(dst), 0666)
