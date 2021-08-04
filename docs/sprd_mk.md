@@ -1,3 +1,8 @@
+https://www.gnu.org/software/make/manual/html_node/Wildcard-Function.html
+https://www.gnu.org/software/make/manual/html_node/Text-Functions.html#Text-Functions
+https://www.gnu.org/software/make/manual/html_node/File-Name-Functions.html
+$(notdir src/foo.c hacks)
+
 ```
 mkdir MS_Code/MS_MMI/source/demo/a
 mkdir MS_Code/MS_MMI/source/demo/b
