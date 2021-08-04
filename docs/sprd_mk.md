@@ -25,5 +25,5 @@ DEMOSRCPATH += MS_MMI/source/demo/b
 DEMOSRCPATH += MS_MMI/source/demo/c
 
 MSRCPATH += $(DEMOSRCPATH)
-SOURCES += $(foreach dir, ${DEMOSRCPATH}, $(patsubst ${dir}/%.c,%.c,$(wildcard ${dir}/*.c)))
+SOURCES += $(foreach dir, ${DEMOSRCPATH}, $(notdir $(wildcard ${dir}/*.c)))
 ```
