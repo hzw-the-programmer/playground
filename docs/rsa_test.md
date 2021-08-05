@@ -406,14 +406,15 @@ static kal_int32 rsa_pri_decrypt(kal_uint8 *ct, kal_uint32 ct_len, kal_uint8 *pt
 
     rsaCtx.len = sizeof(n);
     mpi_read_binary(&sslCtx, &rsaCtx.N, n, sizeof(n));
-    mpi_read_binary(&sslCtx, &rsaCtx.D, d, sizeof(d));
+    //mpi_read_binary(&sslCtx, &rsaCtx.D, d, sizeof(d));
     mpi_read_binary(&sslCtx, &rsaCtx.P, p, sizeof(p));
     mpi_read_binary(&sslCtx, &rsaCtx.Q, q, sizeof(q));
     mpi_read_binary(&sslCtx, &rsaCtx.DP, dp, sizeof(dp));
     mpi_read_binary(&sslCtx, &rsaCtx.DQ, dq, sizeof(dq));
     mpi_read_binary(&sslCtx, &rsaCtx.QP, qp, sizeof(qp));
     optrs[2] = rsaCtx.N.p;
-    optrs[3] = rsaCtx.D.p;
+    //optrs[3] = rsaCtx.D.p;
+    optrs[3] = rsaCtx.N.p;
     optrs[4] = rsaCtx.P.p;
     optrs[5] = rsaCtx.Q.p;
     optrs[6] = rsaCtx.DP.p;
