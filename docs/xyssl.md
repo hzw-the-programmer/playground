@@ -1,4 +1,6 @@
 ```
+#include "xyssl_interface.h"
+
 void* sslmalloc(int mem_size, void *user_data) {
     return malloc(mem_size);
 }
@@ -7,11 +9,11 @@ void sslfree(void *mem_ptr, void *user_data) {
     free(mem_ptr);
 }
 
-int rand_func(void *p) {
+static int rand_func(void *p) {
     return rand()<<16 | rand();
 }
 
-void rsa_test() {
+static void rsa_test() {
     ssl_context sslCtx;
     rsa_context rsaCtx;
     int ret, pt1l = 13;
@@ -23,8 +25,9 @@ void rsa_test() {
     xyssl_adp_ssl_init(&sslCtx, sslmalloc, sslfree, NULL);
     xyssl_rsa_init(&rsaCtx, RSA_PKCS_V15, RSA_SHA256, rand_func, NULL);
 
+    xyssl_adp_RAND_seed();
     start = kal_get_systicks();
-    ret = xyssl_rsa_gen_key(&sslCtx, &rsaCtx, 1024, 37);
+    ret = xyssl_rsa_gen_key(&sslCtx, &rsaCtx, 512, 37);
     kal_prompt_trace(MOD_ABM, "xyssl_rsa_gen_key cost=%d", kal_get_systicks() - start);
 
     strcpy(pt, "hello world!");    
