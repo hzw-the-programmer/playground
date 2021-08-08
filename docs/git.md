@@ -33,3 +33,6 @@ git checkout --theirs path/to/file
 git add path/to/file
 git rebase --continue
 ```
+
+git status applib/mem/
+git diff applib/mem/

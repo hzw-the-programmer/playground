@@ -1,8 +1,10 @@
 @echo off
 SET prj=
 SET app=%prj%\
-SET arm=%prj%\
-SET vc=%prj%\
+REM SET arm=%prj%\build\PLT_PRJ\gprs\PLTo\app
+REM SET vc=%prj%\MoDIS_VC9\app\Debug
+SET arm=%prj%\MS_Code\build\PRJ_builddir\obj\app
+SET vc=%prj%\MS_Code\build\PRJ_builddir\win\app\Debug
 SET first_commit_file=%prj%\
 SET provide=provide.txt
 SET exclude=exclude.txt
