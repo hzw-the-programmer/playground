@@ -1,6 +1,14 @@
 use std::io;
 use rand::Rng;
 
+// vi ~/.cargo/config.toml
+// [source.crates-io]
+// replace-with = "sjtu"
+//
+// [source.sjtu]
+// registry = "https://mirrors.sjtug.sjtu.edu.cn/git/crates.io-index"
+//
+
 fn main() {
     println!("Guess the number!");
 
