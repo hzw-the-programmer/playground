@@ -105,3 +105,57 @@ static void asm_test() {
 	kal_prompt_trace(MOD_ABM, "app%d: ret=%d", current, ret);
 }
 ```
+
+```
+app0_prepare_asm begin
+alloc_count=1
+alloc_count=2
+app0_prepare_asm end
+app0: ret=1
+
+app1_prepare_asm begin
+alloc_count=2
+alloc_count=2
+asm_core_v10_release_mem begin
+asm_core_v10_release_mem next_idx=0, app_count=0
+asm_core_v10_release_mem end
+app1: ret=0
+
+asm_core_v10_release_mem begin
+asm_core_v10_release_mem next_idx=0, app_count=1
+app0_mem_release_cb begin
+alloc_count=1
+alloc_count=0
+asm_core_v10_release_mem begin
+app1_mem_release_success_cb begin
+app1_prepare_asm begin
+alloc_count=0
+alloc_count=1
+app1_prepare_asm end
+app1_mem_release_success_cb end: ret=1
+app0_mem_release_cb end
+```
+
+```
+app0_prepare_asm begin
+alloc_count=2
+alloc_count=2
+asm_core_v10_release_mem begin
+asm_core_v10_release_mem next_idx=0, app_count=0
+asm_core_v10_release_mem end
+app0: ret=0
+
+asm_core_v10_release_mem begin
+asm_core_v10_release_mem next_idx=0, app_count=1
+app1_mem_release_cb begin
+alloc_count=1
+alloc_count=0
+asm_core_v10_release_mem begin
+app0_mem_release_success_cb begin
+app0_prepare_asm begin
+alloc_count=0
+alloc_count=1
+app0_prepare_asm end
+app0_mem_release_success_cb end: ret=1
+app1_mem_release_cb end
+```
