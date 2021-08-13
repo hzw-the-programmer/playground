@@ -28,6 +28,11 @@ g_applib_mem_cntx.app_pool_id = (kal_uint32) kal_adm_create(
                                         pool_size,
                                         (kal_uint32*) g_applib_mem_pool_chunk_size,
                                         KAL_FALSE);
+result = kal_adm_get_max_alloc_size((KAL_ADM_ID)g_applib_mem_cntx.app_pool_id);
+chunk = kal_adm_alloc_nc_align(
+                        (KAL_ADM_ID)g_applib_mem_cntx.app_pool_id,
+                        chunk_size,
+                        __MMI_GDI_LAYER_FRAMEBUF_ALIGNMENT__);
 ```
 
 ```
