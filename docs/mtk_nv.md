@@ -11,7 +11,7 @@ if exist $(FIXPATH)\$(MMIDIR)\Customer\CustResource\$(strip $(CUSTOMER))_MMI\Nvr
 if exist $(FIXPATH)\$(MMIDIR)\Customer\CustResource\$(strip $(CUSTOMER))_MMI\common_nvram_editor_data_item.h \
  		(copy /y $(FIXPATH)\$(MMIDIR)\Customer\CustResource\$(strip $(CUSTOMER))_MMI\Common_nvram_editor_data_item.h $(FIXPATH)\custom\common\pluto_mmi\*.* > nul)
 ```
-make CUSTOMER gprs codegen
+#make CUSTOMER gprs codegen
 make CUSTOMER gprs resgen
 
 nvram_ltable_construct

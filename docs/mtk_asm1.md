@@ -1,3 +1,35 @@
+plutommi\Service\PhbSrv\PhbMemSrv.c
+```
+/* Use U32 to be 4-byte aligned */
+static U32 srv_phb_mem_pool[MMI_PHB_MEM_SIZE / 4];
+srv_phb_mem_id = kal_adm_create(srv_phb_mem_pool, sizeof(srv_phb_mem_pool), NULL, KAL_FALSE);
+ptr = (kal_uint32*) kal_adm_alloc(srv_phb_mem_id, (U32)size);
+kal_adm_free(srv_phb_mem_id, memblock);
+
+kal_adm_print_log(srv_phb_mem_id);
+corrupted_mem_address = kal_adm_check_integrity(srv_phb_mem_id);
+leftSize = (S32)kal_adm_get_total_left_size(srv_phb_mem_id);
+```
+
+plutommi\mmi\Resource\MemoryRes.c
+```
+ALIGN(ASM_ALIGN_SIZE)  U8 g_applib_mem_ap_pool[APPLIB_MEM_AP_POOL_SIZE + 10240];
+```
+
+plutommi\Framework\MemManager\MemManagerSrc\AppMemMgrCore.c
+```
+mmi_frm_appmem_stage1_init
+```
+
+applib\mem\src\app_mem.c
+```
+g_applib_mem_cntx.app_pool_id = (kal_uint32) kal_adm_create(
+                                        mem_pool,
+                                        pool_size,
+                                        (kal_uint32*) g_applib_mem_pool_chunk_size,
+                                        KAL_FALSE);
+```
+
 ```
 MoDIS.exe!applib_mem_ap_init(void (unsigned int, unsigned int, kal_bool)* stop_finish_callback_by_MMI=0x00e05c40, void * mem_pool=0x09ebfe38, unsigned int pool_size=3594885)  行2420	C
 MoDIS.exe!mmi_frm_appmem_stage1_init()  行3459 + 0x16 字节	C
