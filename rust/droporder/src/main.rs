@@ -24,5 +24,7 @@ fn main() {
     let _d1 = D{i: 1};
     let _d2 = D{i: 2};
     let _dd = Dd{d1: D{i: 1}, d2: D{i: 2}};
+    let mut v = vec![D{i: 1}, D{i: 2}, D{i: 3}];
+    v.truncate(2);
     println!("main finish");
 }
