@@ -9,11 +9,13 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
+	"os"
 )
 
 func main() {
 	//example1()
-	example2()
+	//example2()
+	example3()
 }
 
 func example1() {
@@ -193,4 +195,26 @@ func example2() {
 		panic(err)
 	}
 	fmt.Println(string(pt))
+}
+
+func example3() {
+	fn := os.Args[1]
+	b, err := ioutil.ReadFile(fn)
+	if err != nil {
+		panic(err)
+	}
+
+	block, _ := pem.Decode(b)
+	key, err := x509.ParsePKCS1PublicKey(block.Bytes)
+	if err != nil {
+		panic(err)
+	}
+	for i, b := range key.N.Bytes() {
+		fmt.Printf("0x%02x, ", b);
+		if i % 10 == 9 {
+			fmt.Printf("\n")
+		}	
+	}
+	fmt.Printf("\n")
+	fmt.Printf("e:\n%x\n", key.E)
 }
