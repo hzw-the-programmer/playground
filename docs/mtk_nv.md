@@ -80,3 +80,13 @@ custom/common/PLUTO_MMI/nvram_common_config.c:          NVRAM_NORMAL(NVRAM_EF_DE
 custom/common/PLUTO_MMI/nvram_common_config.c:          VER(NVRAM_EF_DEMO_APP_CONFIG_LID)
 custom/common/PLUTO_MMI/nvram_common_defs.h:    NVRAM_EF_DEMO_APP_CONFIG_LID,
 ```
+
+```
+S16 error;
+demo_app_config config;
+
+ReadRecord(NVRAM_EF_DEMO_APP_CONFIG_LID, 1, (void*)&config, NVRAM_EF_DEMO_APP_CONFIG_SIZE, &error);
+config.c2--;
+config.c3++;
+WriteRecord(NVRAM_EF_DEMO_APP_CONFIG_LID, 1, (void*)&config, NVRAM_EF_DEMO_APP_CONFIG_SIZE, &error);
+```
