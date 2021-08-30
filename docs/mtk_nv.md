@@ -76,3 +76,56 @@ ntdll.dll!770487a4()
 ntdll.dll!77048774() 	
 
 ```
+
+plutommi\Customer\CustResource\UL28_BTD_XB61_RIVO_S625_MMI\nvram_common_config.c
+```
+ltable_entry_struct logical_data_item_table_common_app[] =
+{
+	...
+	{
+        NVRAM_EF_ALM_ALARM_DATA_LID,
+        NVRAM_ALM_ALARM_DATA_TOTAL,
+        NVRAM_ALM_ALARM_DATA_SIZE ,
+        NVRAM_NORMAL(NVRAM_EF_ZERO_DEFAULT),
+        NVRAM_CATEGORY_USER,
+        NVRAM_ATTR_SW_VERNO_RESET,
+        "MP1N",
+        VER(NVRAM_EF_ALM_ALARM_DATA_LID)
+    },
+	...
+}
+```
+
+custom\common\PLUTO_MMI\nvram_common_defs.h
+```
+typedef enum
+{
+	...
+	NVRAM_EF_ALM_ALARM_DATA_LID,
+	...
+} nvram_lid_commapp_enum;
+```
+
+custom\common\PLUTO_MMI\custom_mmi_default_value.h
+```
+typedef struct
+{
+    unsigned char Hour;
+    ...
+#ifdef __MMI_ALM_CUST_VOLUME__
+    unsigned char Volume;
+#endif
+	...
+    kal_uint32 timestamp;
+} alm_nvram_struct;
+
+#define NVRAM_ALM_ALARM_DATA_TOTAL  NUM_OF_ALM
+#define NVRAM_ALM_ALARM_DATA_SIZE   sizeof(alm_nvram_struct)
+```
+
+plutommi\Customer\CustResource\UL28_BTD_XB61_RIVO_S625_MMI\common_nvram_editor_data_item.h
+```
+...
+#define NVRAM_EF_ALM_ALARM_DATA_LID_VERNO               "000"
+...
+```

@@ -1,0 +1,14 @@
+plutommi\MtkApp\Camera\CameraSrc\CameraApp.c
+mmi_camera_lauch
+mmi_camera_lauch_init
+
+plutommi\MtkApp\Video\VideoSrc\VdoPlyApp.c
+mmi_vdoply_entry_app
+mmi_vdoply_pre_entry_app
+
+plutommi\MtkApp\AudioPlayer\AudioPlayerSrc\AudioPlayerSrc.c
+mmi_audply_entry_main
+mmi_audply_app_pre_entry
+
+plutommi\MtkApp\FMRadio\FMRadioSrc\FMRadioSrc.c
+mmi_fmrdo_run_app
