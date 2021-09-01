@@ -9,6 +9,12 @@ impl Drop for H {
     }
 }
 
+impl H {
+    fn new() -> H {
+        H {}
+    }
+}
+
 fn greeting(s: String) {
     println!("{}", s);
 }
@@ -17,7 +23,21 @@ fn greeting_reference(s: &String) {
     println!("{}", s);
 }
 
+fn fo<F, T>(f: F, h1: T, h2: T) 
+where
+    F: FnOnce(T),
+{
+    f(h1);
+    //f(h2);
+    println!("hzw");
+}
+
 fn main() {
+    // t1();
+    t2();
+}
+
+fn t1() {
     let s = String::from("hello");
     // greeting(s);
     // greeting_reference(s);
@@ -36,4 +56,13 @@ fn main() {
     });
     // println!("{:?}", p);
     println!("hee");
+
+    let h1 = H{};
+    let h2 = H{};
+    fo(|x| {1;}, h1, h2);
+}
+
+fn t2() {
+    let h = H::new();
+    println!("returned from H::new: {:?}", h);
 }
