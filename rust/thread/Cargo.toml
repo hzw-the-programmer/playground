@@ -7,3 +7,6 @@ edition = "2018"
 
 [dependencies]
 threadpool = "1.8.1"
+
+[dev-dependencies]
+loom = "0.2.1"

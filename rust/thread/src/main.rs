@@ -1,10 +1,16 @@
+#[cfg(not(test))]
 use std::thread;
 use std::time::Duration;
 use std::sync::{Arc, Barrier};
 use threadpool::ThreadPool;
 use std::sync::mpsc::channel;
+#[cfg(not(test))]
 use std::sync::atomic::AtomicUsize;
 use std::sync::atomic::Ordering::SeqCst;
+#[cfg(test)]
+use loom::sync::atomic::AtomicUsize;
+#[cfg(test)]
+use loom::thread;
 
 fn main() {
     // t1();
@@ -12,6 +18,7 @@ fn main() {
     t3();
 }
 
+#[cfg(not(test))]
 fn t1() {
     let v = vec![10, 9, 8, 7];
     let handle = thread::spawn(move || {
@@ -70,10 +77,13 @@ fn t3() {
 
 #[test]
 fn t4() {
-    let v = Arc::new(AtomicUsize::new(0));
-    let v2 = v.clone();
-    thread::spawn(move || {
-        v.store(1, SeqCst);
+    loom::model(|| {
+        let v = Arc::new(AtomicUsize::new(0));
+        let v2 = v.clone();
+        thread::spawn(move || {
+            v.store(1, SeqCst);
+        });
+        // assert_eq!(0, v2.load(SeqCst));
+        assert_eq!(1, v2.load(SeqCst));
     });
-    assert_eq!(0, v2.load(SeqCst));
 }
