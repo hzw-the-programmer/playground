@@ -1,7 +1,13 @@
 use std::thread;
 use std::time::Duration;
+use std::sync::{Arc, Barrier};
 
 fn main() {
+    // t1();
+    t2();
+}
+
+fn t1() {
     let v = vec![10, 9, 8, 7];
     let handle = thread::spawn(move || {
         println!("child: {:?}", v);
@@ -19,4 +25,25 @@ fn main() {
     }
     
     handle.join().unwrap();
+}
+
+fn t2() {
+    let num = 10;
+    let mut handles = Vec::with_capacity(num);
+    let barrier = Arc::new(Barrier::new(num));
+    let mut j = 0;
+    for i in 0..num {
+        let barrier = Arc::clone(&barrier);
+        handles.push(thread::spawn(move || {
+            j+=1;
+            println!("{} brefore wait: j = {}", i, j);
+            barrier.wait();
+            println!("{} after wait: j = {}", i, j);
+        }));
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+    println!("j = {}", j);
 }
