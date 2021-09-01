@@ -3,6 +3,8 @@ use std::time::Duration;
 use std::sync::{Arc, Barrier};
 use threadpool::ThreadPool;
 use std::sync::mpsc::channel;
+use std::sync::atomic::AtomicUsize;
+use std::sync::atomic::Ordering::SeqCst;
 
 fn main() {
     // t1();
@@ -64,4 +66,14 @@ fn t3() {
         });
     }
     println!("{}", rx.iter().take(n_jobs).fold(0, |a, b| a + b));
+}
+
+#[test]
+fn t4() {
+    let v = Arc::new(AtomicUsize::new(0));
+    let v2 = v.clone();
+    thread::spawn(move || {
+        v.store(1, SeqCst);
+    });
+    assert_eq!(0, v2.load(SeqCst));
 }
