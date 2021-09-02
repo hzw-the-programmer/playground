@@ -1,4 +1,5 @@
 use std::task::Poll;
+use std::alloc::{alloc, Layout};
 
 #[derive(Debug)]
 struct H {}
@@ -34,7 +35,12 @@ where
 
 fn main() {
     // t1();
-    t2();
+    // t2();
+    // t3();
+    // t4();
+    // t5();
+    // t6();
+    t7();
 }
 
 fn t1() {
@@ -65,4 +71,34 @@ fn t1() {
 fn t2() {
     let h = H::new();
     println!("returned from H::new: {:?}", h);
+}
+
+fn t3() {
+    let h = H{};
+    let b = Box::new(h);
+    println!("end");
+}
+
+fn t4() {
+    let h = H{};
+    let b = Box::new(h);
+    let p = Box::into_raw(b);
+}
+
+fn t5() {
+    let h = H{};
+    let b = Box::new(h);
+    let p = Box::into_raw(b);
+    let b1 = unsafe { Box::from_raw(p) };
+    println!("end");
+}
+
+fn t6() {
+    let p = unsafe { alloc(Layout::new::<H>()) as *mut H };
+}
+
+fn t7() {
+    let p = unsafe { alloc(Layout::new::<H>()) as *mut H };
+    let b = unsafe { Box::from_raw(p) };
+    println!("end");
 }
