@@ -36,3 +36,5 @@ git rebase --continue
 
 git status applib/mem/
 git diff applib/mem/
+
+git tag --contains <commit>
