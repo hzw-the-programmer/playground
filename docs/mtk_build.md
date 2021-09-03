@@ -28,3 +28,5 @@ make project gprs r app
 grep -r "BrowserAppInterface.c" make
 make/plutommi/inet_app/inet_app.mak:SRC_LIST += plutommi\MMI\BrowserApp\Browser\BrowserSrc\BrowserAppInterface.c
 make project gprs r inet_app
+
+make {custom} {project} codegen
