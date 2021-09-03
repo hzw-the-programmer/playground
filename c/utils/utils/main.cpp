@@ -47,6 +47,8 @@ extern "C" void test_buffer2();
 void test_varints();
 void test_vwsnprintf();
 void test_vsnprintf();
+void test_preprocessor();
+void test_param();
 
 int main(int argc, char *args) {
 	int i;
@@ -97,6 +99,8 @@ int main(int argc, char *args) {
     test_varints();
     test_vwsnprintf();
     test_vsnprintf();
+    test_preprocessor();
+    test_param();
 
 	MemoryCheck();
 
