@@ -9,7 +9,8 @@ use std::sync::atomic::Ordering::SeqCst;
 fn main() {
     // t1();
     // t2();
-    t3();
+    // t3();
+    t4();
 }
 
 fn t1() {
@@ -66,6 +67,31 @@ fn t3() {
         });
     }
     println!("{}", rx.iter().take(n_jobs).fold(0, |a, b| a + b));
+}
+
+fn t4() {
+    #[derive(Debug, Copy, Clone)]
+    struct Foo {
+        i: i32,
+    }
+    let num = 10;
+    let mut handles = Vec::with_capacity(num);
+    let barrier = Arc::new(Barrier::new(num));
+    let mut foo = Foo {i: 0};
+    for i in 0..num {
+        let barrier = Arc::clone(&barrier);
+        handles.push(thread::spawn(move || {
+            foo.i += 1;
+            println!("{} brefore wait: foo = {:?}", i, foo);
+            barrier.wait();
+            println!("{} after wait: foo = {:?}", i, foo);
+        }));
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+    println!("foo = {:?}", foo);
 }
 
 #[cfg(test)]
