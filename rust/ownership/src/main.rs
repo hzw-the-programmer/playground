@@ -40,7 +40,10 @@ fn main() {
     // t4();
     // t5();
     // t6();
-    t7();
+    // t7();
+    // t8();
+    // f9();
+    f10();
 }
 
 fn t1() {
@@ -101,4 +104,34 @@ fn t7() {
     let p = unsafe { alloc(Layout::new::<H>()) as *mut H };
     let b = unsafe { Box::from_raw(p) };
     println!("end");
+}
+
+#[derive(Debug)]
+struct Foo {
+    f1: i32,
+}
+
+fn t8() {
+    let foo1 = Foo{f1: 1};
+    let foo2 = foo1;
+    // println!("{:?}", foo1);
+}
+
+#[derive(Debug, Copy, Clone)]
+struct Bar {
+    f1: i32,
+}
+
+fn f9() {
+    let mut bar1 = Bar{ f1: 1};
+    let bar2 = bar1;
+    bar1.f1 += 1;
+    println!("{:?}, {:?}", bar1, bar2);
+}
+
+fn f10() {
+    let i = 23;
+    let r1 = &i;
+    let r2 = r1;
+    println!("{}, {}", r1, r2);
 }
