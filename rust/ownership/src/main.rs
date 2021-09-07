@@ -43,7 +43,8 @@ fn main() {
     // t7();
     // t8();
     // f9();
-    f10();
+    // f10();
+    f11();
 }
 
 fn t1() {
@@ -134,4 +135,10 @@ fn f10() {
     let r1 = &i;
     let r2 = r1;
     println!("{}, {}", r1, r2);
+}
+
+fn f11() {
+    let mut h = H{};
+    h = H{};
+    println!("f11");
 }
