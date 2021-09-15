@@ -20,3 +20,11 @@ cd /c/Program Files/Oracle/VirtualBox
 ./VBoxManage.exe list vms
 ./VBoxManage.exe modifymedium eabc91c5-dc1a-4402-a899-aa26fbe48b23 --resize <megabytes>
 gparted
+
+settings->display->size 128M
+                 ->controller VMSVGA
+
+settings->display->size 128M
+                 ->VBoxSVGA
+
+quit scale mode: home(right ctrl) + c
