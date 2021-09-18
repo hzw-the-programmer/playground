@@ -190,12 +190,13 @@ func objsToPaths(objs []string, dir string) (paths []string) {
 func run(name, fn string, args ...string) {
 	fmt.Printf("***run %s***\n", name)
 
-	os.MkdirAll(filepath.Dir(fn), 0666)
-
 	path, err := exec.LookPath(name)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return
 	}
+
+	os.MkdirAll(filepath.Dir(fn), 0666)
 
 	var newArgs []string
 	if name == "armar" {
@@ -216,7 +217,8 @@ func run(name, fn string, args ...string) {
 
 	if err := cmd.Run(); err != nil {
 		fmt.Println("stderr:", stderr.String())
-		panic(err)
+		fmt.Println(err)
+		return
 	}
 
 	fmt.Println(stdout.String())
@@ -240,6 +242,10 @@ func extract(dir, firstCommitFile, excludefn, outdir string) {
 		l = strings.Replace(l, "\\", "/", -1)
 		excludes = append(excludes, l)
 	}
+
+	// for _, e := range excludes {
+	// 	fmt.Println(e)
+	// }
 
 	firstCommitCmd := exec.Command("git", "log", "--pretty=format:%h", "--diff-filter=A", "--", firstCommitFile)
 	firstCommitCmd.Dir = dir
