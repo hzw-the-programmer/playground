@@ -16,5 +16,8 @@ void test_param() {
     u16((uint16_t*)&i32);
     assert(i32 == 0x03040102);
 
-    u32((uint32_t*)&i16);
+    /*
+    Run-Time Check Failure #2 - Stack around the variable 'i16' was corrupted.
+    */
+    //u32((uint32_t*)&i16);
 }

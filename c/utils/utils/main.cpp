@@ -49,6 +49,7 @@ void test_vwsnprintf();
 void test_vsnprintf();
 void test_preprocessor();
 void test_param();
+void test_shift();
 
 int main(int argc, char *args) {
 	int i;
@@ -101,6 +102,7 @@ int main(int argc, char *args) {
     test_vsnprintf();
     test_preprocessor();
     test_param();
+    test_shift();
 
 	MemoryCheck();
 
