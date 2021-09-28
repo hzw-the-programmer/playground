@@ -50,6 +50,8 @@ void test_vsnprintf();
 void test_preprocessor();
 void test_param();
 void test_shift();
+void test_align();
+void test_log();
 
 int main(int argc, char *args) {
 	int i;
@@ -103,6 +105,8 @@ int main(int argc, char *args) {
     test_preprocessor();
     test_param();
     test_shift();
+    test_align();
+    test_log();
 
 	MemoryCheck();
 
