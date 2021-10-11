@@ -35,35 +35,34 @@ void log(const char *file, int line, int log_level, const char *module, const ch
     va_end(args);
 }
 
-#define LOG_FATAL
-#define LOG_ERROR
-#define LOG_WARN
-#define LOG_INFO
-#define LOG_DEBUG
-
 #if LOG_LEVEL >= LOG_LEVEL_FATAL
-#undef LOG_FATAL
 #define LOG_FATAL(module, fmt, ...) log(__FILE__, __LINE__, LOG_LEVEL_FATAL, module, fmt, ##__VA_ARGS__)
+#else
+#define LOG_FATAL
 #endif
 
 #if LOG_LEVEL >= LOG_LEVEL_ERROR
-#undef LOG_ERROR
 #define LOG_ERROR(module, fmt, ...) log(__FILE__, __LINE__, LOG_LEVEL_ERROR, module, fmt, ##__VA_ARGS__)
+#else
+#define LOG_ERROR
 #endif
 
 #if LOG_LEVEL >= LOG_LEVEL_WARN
-#undef LOG_WARN
 #define LOG_WARN(module, fmt, ...) log(__FILE__, __LINE__, LOG_LEVEL_WARN, module, fmt, ##__VA_ARGS__)
+#else
+#define LOG_WARN
 #endif
 
 #if LOG_LEVEL >= LOG_LEVEL_INFO
-#undef LOG_INFO
 #define LOG_INFO(module, fmt, ...) log(__FILE__, __LINE__, LOG_LEVEL_INFO, module, fmt, ##__VA_ARGS__)
+#else
+#define LOG_INFO
 #endif
 
 #if LOG_LEVEL >= LOG_LEVEL_DEBUG
-#undef LOG_DEBUG
 #define LOG_DEBUG(module, fmt, ...) log(__FILE__, __LINE__, LOG_LEVEL_DEBUG, module, fmt, ##__VA_ARGS__)
+#else
+#define LOG_DEBUG
 #endif
 
 void test_log() {
