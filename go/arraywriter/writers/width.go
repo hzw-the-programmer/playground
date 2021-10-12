@@ -30,6 +30,9 @@ func (w *width) Write(p []byte) (n int, err error) {
 
 		col := w.count % w.cols		
 		if col == 0 {
+			if w.count != 0 {
+				w.w.Write([]byte{'\n'})
+			}
 			w.w.Write([]byte("    "))
 		}
 
@@ -40,10 +43,6 @@ func (w *width) Write(p []byte) (n int, err error) {
 		w.ww.Write(b[:len])
 		b = b[len:]
 		w.count += len
-
-		if w.count % w.cols == 0 {
-			w.w.Write([]byte{'\n'})
-		}
 	}
 
 	return len(p), nil
