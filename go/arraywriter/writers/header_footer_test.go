@@ -23,8 +23,8 @@ func TestHeaderFooter(t *testing.T) {
 			cols:    7,
 			hex:     true,
 			want: `static const unsigned char en = {
-    0x68, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x77,
-    0x6f, 0x72, 0x6c, 0x64, 0x21,
+0x68, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x77,
+0x6f, 0x72, 0x6c, 0x64, 0x21,
 };`,
 		},
 		{
@@ -34,8 +34,8 @@ func TestHeaderFooter(t *testing.T) {
 			cols:    7,
 			hex:     false,
 			want: `static const unsigned char en = {
-    hello w
-    orld!
+hello w
+orld!
 };`,
 		},
 	}

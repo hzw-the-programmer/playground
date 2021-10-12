@@ -33,7 +33,6 @@ func (w *width) Write(p []byte) (n int, err error) {
 			if w.count != 0 {
 				w.w.Write([]byte{'\n'})
 			}
-			w.w.Write([]byte("    "))
 		}
 
 		if len > w.cols-col {
