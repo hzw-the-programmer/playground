@@ -2,9 +2,9 @@ package writers
 
 import (
 	"bytes"
-	"testing"
 	"fmt"
 	"io"
+	"testing"
 )
 
 func TestHeaderFooter(t *testing.T) {
@@ -25,6 +25,17 @@ func TestHeaderFooter(t *testing.T) {
 			want: `static const unsigned char en = {
     0x68, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x77,
     0x6f, 0x72, 0x6c, 0x64, 0x21,
+};`,
+		},
+		{
+			header:  "static const unsigned char en = {\n",
+			content: "hello world!",
+			footer:  "\n};",
+			cols:    7,
+			hex:     false,
+			want: `static const unsigned char en = {
+    hello w
+    orld!
 };`,
 		},
 	}
