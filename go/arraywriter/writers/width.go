@@ -6,15 +6,13 @@ import (
 
 type width struct {
 	w     io.Writer
-	ww    io.Writer
 	cols  int
 	count int
 }
 
-func NewWidth(w io.Writer, ww io.Writer, cols int) io.Writer {
+func NewWidth(w io.Writer, cols int) io.Writer {
 	return &width{
 		w:    w,
-		ww:   ww,
 		cols: cols,
 	}
 }
@@ -39,7 +37,7 @@ func (w *width) Write(p []byte) (n int, err error) {
 			len = w.cols - col
 		}
 
-		w.ww.Write(b[:len])
+		w.w.Write(b[:len])
 		b = b[len:]
 		w.count += len
 	}
