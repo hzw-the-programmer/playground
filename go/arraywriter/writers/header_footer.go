@@ -5,17 +5,17 @@ import (
 )
 
 type HeaderFooter struct {
-	w io.Writer
-	ww io.Writer
-	count int
+	w      io.Writer
+	ww     io.Writer
+	count  int
 	header []byte
 	footer []byte
 }
 
 func NewHeaderFooter(w io.Writer, ww io.Writer, header string, footer string) io.WriteCloser {
 	return &HeaderFooter{
-		w: w,
-		ww: ww,
+		w:      w,
+		ww:     ww,
 		header: []byte(header),
 		footer: []byte(footer),
 	}
@@ -30,7 +30,7 @@ func (w *HeaderFooter) Write(p []byte) (n int, err error) {
 
 	len := len(p)
 	w.count += len
-	
+
 	return len, nil
 }
 

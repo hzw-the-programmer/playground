@@ -1,8 +1,8 @@
 package writers
 
 import (
-	"testing"
 	"bytes"
+	"testing"
 )
 
 func TestHeaderFooter(t *testing.T) {
@@ -14,12 +14,12 @@ func TestHeaderFooter(t *testing.T) {
     0x68, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x77,
     0x6f, 0x72, 0x6c, 0x64, 0x21,
 };`
-	
+
 	var buf bytes.Buffer
 	hex := NewHex(&buf, cols)
 	width := NewWidth(&buf, hex, cols)
 	w := NewHeaderFooter(&buf, width, header, footer)
-	
+
 	w.Write([]byte(content))
 	w.Close()
 
