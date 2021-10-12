@@ -10,5 +10,5 @@ change target property of the shortcut file to: "C:\Program Files\Git\git-bash.e
 
 batch chang working dir:
 cd /d dir
-call make
+call make {custom} c,r {app}
 pause
