@@ -8,22 +8,28 @@ import (
 
 func TestIdent(t *testing.T) {
 	tests := []struct {
+		ident   string
 		inputs []string
 		want   string
-		char   byte
-		repeat int
-		nl     bool
 	}{
 		{
+			ident: "    ",
 			inputs: []string{
-				"hello ",
+				"#define BEGIN_MACRO begin\n",
+				"static const unsigned char en[] = {\n",
 				"world!\nI'm Zhiwen He.\n",
 				"I'm from China\n",
+				"};\n",
+				"#define END_MACRO end\n",
 			},
-			want:   "hello world!\n    I'm Zhiwen He.\n    I'm from China\n",
-			char:   ' ',
-			repeat: 4,
-			nl:     false,
+			want:   `#define BEGIN_MACRO begin
+static const unsigned char en[] = {
+    world!
+    I'm Zhiwen He.
+    I'm from China
+};
+#define END_MACRO end
+`,
 		},
 	}
 
@@ -31,14 +37,55 @@ func TestIdent(t *testing.T) {
 		name := fmt.Sprintf("%d", i)
 		t.Run(name, func(t *testing.T) {
 			var buf bytes.Buffer
-			w := NewIdent(&buf, test.char, test.repeat, test.nl)
+			
+			w := NewIdent(&buf, test.ident)
+			
 			for _, input := range test.inputs {
 				w.Write([]byte(input))
 			}
+			
 			got := buf.String()
+			
 			if got != test.want {
 				t.Errorf("\ngot:\n%s\nwant:\n%s", got, test.want)
 			}
 		})
 	}
 }
+
+// func TestIdent(t *testing.T) {
+// 	tests := []struct {
+// 		inputs []string
+// 		want   string
+// 		char   byte
+// 		repeat int
+// 		nl     bool
+// 	}{
+// 		{
+// 			inputs: []string{
+// 				"hello ",
+// 				"world!\nI'm Zhiwen He.\n",
+// 				"I'm from China\n",
+// 			},
+// 			want:   "hello world!\n    I'm Zhiwen He.\n    I'm from China\n",
+// 			char:   ' ',
+// 			repeat: 4,
+// 			nl:     false,
+// 		},
+// 	}
+
+// 	for i, test := range tests {
+// 		name := fmt.Sprintf("%d", i)
+// 		t.Run(name, func(t *testing.T) {
+// 			var buf bytes.Buffer
+// 			w := NewIdent(&buf, test.char, test.repeat, test.nl)
+// 			for _, input := range test.inputs {
+// 				w.Write([]byte(input))
+// 			}
+// 			got := buf.String()
+// 			if got != test.want {
+// 				t.Errorf("\ngot:\n%s\nwant:\n%s", got, test.want)
+// 			}
+// 		})
+// 	}
+// }
