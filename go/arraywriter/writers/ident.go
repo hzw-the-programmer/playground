@@ -29,10 +29,14 @@ func (w *Ident) Write(p []byte) (n int, err error) {
 		}
 
 		if w.nl {
-			if len > 0 && b[0] == '}' {
+			if b[0] == '}' {
 				w.repeat--;
 			}
-			w.writeIdent()
+
+			if b[0] != '\n' {
+				w.writeIdent()
+			}
+			
 			w.nl = false
 		}
 
