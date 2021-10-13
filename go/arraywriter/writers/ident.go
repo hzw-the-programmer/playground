@@ -7,14 +7,14 @@ import (
 
 type Ident struct {
 	w      io.Writer
-	ident []byte
+	ident  []byte
 	repeat int
-	nl bool
+	nl     bool
 }
 
 func NewIdent(w io.Writer, ident string) io.Writer {
 	return &Ident{
-		w:      w,
+		w:     w,
 		ident: []byte(ident),
 	}
 }
@@ -30,13 +30,13 @@ func (w *Ident) Write(p []byte) (n int, err error) {
 
 		if w.nl {
 			if b[0] == '}' {
-				w.repeat--;
+				w.repeat--
 			}
 
 			if b[0] != '\n' {
 				w.writeIdent()
 			}
-			
+
 			w.nl = false
 		}
 
@@ -46,9 +46,9 @@ func (w *Ident) Write(p []byte) (n int, err error) {
 			break
 		} else {
 			w.nl = true
-			
-			if i > 0 && b[i - 1] == '{' {
-				w.repeat++;
+
+			if i > 0 && b[i-1] == '{' {
+				w.repeat++
 			}
 
 			if i == len {

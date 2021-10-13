@@ -8,7 +8,7 @@ import (
 
 func TestIdent(t *testing.T) {
 	tests := []struct {
-		ident   string
+		ident  string
 		inputs []string
 		want   string
 	}{
@@ -22,7 +22,7 @@ func TestIdent(t *testing.T) {
 				"};\n",
 				"#define END_MACRO end\n",
 			},
-			want:   `#define BEGIN_MACRO begin
+			want: `#define BEGIN_MACRO begin
 static const unsigned char en[] = {
     world!
     I'm Zhiwen He.
@@ -34,32 +34,32 @@ static const unsigned char en[] = {
 		{
 			ident: "    ",
 			inputs: []string{
-`#include "stdio.h"
+				`#include "stdio.h"
 
 void process(int i);
 
 `,
-`int main(int argc, char **argv)
+				`int main(int argc, char **argv)
 {
 `,
-`int i;
+				`int i;
 
 `,
-`for (i = 0; i < 10; i++)
+				`for (i = 0; i < 10; i++)
 {
 process(i);
 }
 `,
-`}
+				`}
 
 `,
-`void process(int i)
+				`void process(int i)
 {
 printf("%d", i);
 }
 `,
 			},
-			want:   `#include "stdio.h"
+			want: `#include "stdio.h"
 
 void process(int i);
 
@@ -85,15 +85,15 @@ void process(int i)
 		name := fmt.Sprintf("%d", i)
 		t.Run(name, func(t *testing.T) {
 			var buf bytes.Buffer
-			
+
 			w := NewIdent(&buf, test.ident)
-			
+
 			for _, input := range test.inputs {
 				w.Write([]byte(input))
 			}
-			
+
 			got := buf.String()
-			
+
 			if got != test.want {
 				t.Errorf("\ngot:\n%s\nwant:\n%s", got, test.want)
 			}
