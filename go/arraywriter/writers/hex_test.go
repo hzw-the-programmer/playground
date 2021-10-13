@@ -36,6 +36,7 @@ func TestHex(t *testing.T) {
 	}
 }
 
+// go test ./... -run TestHexWidthIdent
 func TestHexWidthIdent(t *testing.T) {
 	tests := []struct {
 		header   string
