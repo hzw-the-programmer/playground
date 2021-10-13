@@ -7,11 +7,13 @@ import (
 
 type Hex struct {
 	w     io.Writer
+	space bool
 }
 
-func NewHex(w io.Writer) io.Writer {
+func NewHex(w io.Writer, space bool) io.Writer {
 	return &Hex{
-		w:    w,
+		w:     w,
+		space: space,
 	}
 }
 
@@ -24,6 +26,10 @@ func (w *Hex) Write(p []byte) (n int, err error) {
 		w.w.Write([]byte("0x"))
 		w.w.Write(dst[:])
 		w.w.Write([]byte{','})
+
+		if w.space {
+			w.w.Write([]byte{' '})
+		}
 	}
 
 	return len(p), nil
