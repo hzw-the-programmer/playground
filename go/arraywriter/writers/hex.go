@@ -10,7 +10,7 @@ type Hex struct {
 	space bool
 }
 
-func NewHex(w io.Writer, space bool) io.Writer {
+func NewHex(w io.Writer, space bool) io.WriteCloser {
 	return &Hex{
 		w:     w,
 		space: space,
@@ -33,4 +33,12 @@ func (w *Hex) Write(p []byte) (n int, err error) {
 	}
 
 	return len(p), nil
+}
+
+func (w *Hex) Close() error {
+	if c, ok := w.w.(io.Closer); ok {
+		c.Close()
+	}
+
+	return nil
 }

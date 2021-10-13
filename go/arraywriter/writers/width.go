@@ -4,20 +4,20 @@ import (
 	"io"
 )
 
-type width struct {
+type Width struct {
 	w     io.Writer
 	cols  int
 	count int
 }
 
-func NewWidth(w io.Writer, cols int) io.Writer {
-	return &width{
+func NewWidth(w io.Writer, cols int) io.WriteCloser {
+	return &Width{
 		w:    w,
 		cols: cols,
 	}
 }
 
-func (w *width) Write(p []byte) (n int, err error) {
+func (w *Width) Write(p []byte) (n int, err error) {
 	b := p[:]
 
 	for {
@@ -43,4 +43,12 @@ func (w *width) Write(p []byte) (n int, err error) {
 	}
 
 	return len(p), nil
+}
+
+func (w *Width) Close() error {
+	if c, ok := w.w.(io.Closer); ok {
+		c.Close()
+	}
+
+	return nil
 }

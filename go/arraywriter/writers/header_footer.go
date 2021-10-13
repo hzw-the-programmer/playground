@@ -4,29 +4,29 @@ import (
 	"io"
 )
 
+type WriteCb func(w io.Writer)
+
 type HeaderFooter struct {
 	w      io.Writer
-	ww     io.Writer
 	count  int
-	header []byte
-	footer []byte
+	header WriteCb
+	footer WriteCb
 }
 
-func NewHeaderFooter(w io.Writer, ww io.Writer, header string, footer string) io.WriteCloser {
+func NewHeaderFooter(w io.Writer, header WriteCb, footer WriteCb) io.WriteCloser {
 	return &HeaderFooter{
 		w:      w,
-		ww:     ww,
-		header: []byte(header),
-		footer: []byte(footer),
+		header: header,
+		footer: footer,
 	}
 }
 
 func (w *HeaderFooter) Write(p []byte) (n int, err error) {
-	if w.count == 0 {
-		w.w.Write(w.header)
+	if w.count == 0 && w.header != nil {
+		w.header(w.w)
 	}
 
-	w.ww.Write(p)
+	w.w.Write(p)
 
 	len := len(p)
 	w.count += len
@@ -35,7 +35,9 @@ func (w *HeaderFooter) Write(p []byte) (n int, err error) {
 }
 
 func (w *HeaderFooter) Close() error {
-	w.w.Write(w.footer)
+	if w.footer != nil {
+		w.footer(w.w)
+	}
 
 	return nil
 }

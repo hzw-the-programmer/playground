@@ -1,81 +1,57 @@
 package writers
 
-// import (
-// 	"bytes"
-// 	"fmt"
-// 	"io"
-// 	"testing"
-// )
+import (
+	"bytes"
+	// "fmt"
+	"io"
+	"testing"
+)
 
-// func TestHeaderFooter(t *testing.T) {
-// 	tests := []struct {
-// 		header  string
-// 		contents []string
-// 		footer  string
-// 		ident bool
-// 		char byte
-// 		repeat int
-// 		nl bool
-// 		hex     bool
-// 		width bool
-// 		cols    int
-// 		want    string
-// 	}{
-// 		{
-// 			header:  "static const unsigned char en = {\n",
-// 			contents: []string{"hello world!"},
-// 			footer:  "\n};",
-// 			ident: true,
-// 			char: ' ',
-// 			repeat: 4,
-// 			nl: true,
-// 			hex:     true,
-// 			width: true,
-// 			cols:    7,
-// 			want: `static const unsigned char en = {
-//     0x68, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x77,
-//     0x6f, 0x72, 0x6c, 0x64, 0x21,
-// };`,
-// 		},
-// 	}
+func TestHeaderFooter(t *testing.T) {
+	var buf bytes.Buffer
 
-// 	for i, test := range tests {
-// 		name := fmt.Sprintf("%d", i)
-// 		t.Run(name, func(t *testing.T) {
-// 			var buf bytes.Buffer
-// 			var raw io.Writer
-// 			var wrapped io.Writer
-// 			var ident io.Writer
-// 			var width io.Writer
-// 			var hex io.Writer
+	wrapped := NewIdent(&buf, "    ")
 
-// 			raw = &buf
+	header := func(w io.Writer) {
+		c := `static const unsigned char en[] =
+{
+`
+		w.Write([]byte(c))
+	}
+	footer := func(w io.Writer) {
+		c := `
+};
+`
+w.Write([]byte(c))
+	}
 
-// 			if test.ident {
-// 				raw = NewIdent(raw, test.char, test.repeat, test.nl)
-// 			}
+	wrapped = NewHeaderFooter(wrapped, header, footer)
+	wrapped = NewWidth(wrapped, 10*6)
+	wrapped = NewHex(wrapped, true)
 
-// 			if test.width {
-// 				wrapped = NewWidth(ident, hex, test.cols)
-// 			}
+out:
+	for i, j := 0, 1; ; j++ {
+		for k := 0; k < j; k++ {
+			wrapped.Write([]byte{byte(i)})
+			if i++; i == 21 {
+				break out
+			}
+		}
+	}
 
-// 			if test.hex {
-// 				wrapped = NewHex(wrapped, test.cols)
-// 			}
+	wrapped.Close()
 
-// 			w := NewHeaderFooter(raw, wrapped, test.header, test.footer)
+	got := buf.String()
 
-// 			for _, content := range test.contents {
-// 				w.Write([]byte(content))
-// 			}
+	want := `static const unsigned char en[] =
+{
+    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 
+    0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 
+    0x14, 
+};
+`
 
-// 			w.Close()
-
-// 			got := buf.String()
-
-// 			if got != test.want {
-// 				t.Errorf("\ngot:\n%s\nwant:\n%s", got, test.want)
-// 			}
-// 		})
-// 	}
-// }
+	if got != want {
+		t.Errorf("\ngot:\n%s\nwant:\n%s", got, want)
+	}
+}
