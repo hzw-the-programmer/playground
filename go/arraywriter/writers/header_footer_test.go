@@ -22,7 +22,7 @@ func TestHeaderFooter(t *testing.T) {
 		c := `
 };
 `
-w.Write([]byte(c))
+		w.Write([]byte(c))
 	}
 
 	wrapped = NewHeaderFooter(wrapped, header, footer)
