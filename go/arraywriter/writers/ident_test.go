@@ -1,9 +1,9 @@
 package writers
 
 import (
+	"bytes"
 	"fmt"
 	"testing"
-	"bytes"
 )
 
 func TestIdent(t *testing.T) {

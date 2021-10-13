@@ -1,8 +1,8 @@
 package writers
 
 import (
-	"io"
 	"bytes"
+	"io"
 )
 
 type Ident struct {

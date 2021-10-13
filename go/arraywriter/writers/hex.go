@@ -7,14 +7,11 @@ import (
 
 type Hex struct {
 	w     io.Writer
-	cols  int
-	count int
 }
 
-func NewHex(w io.Writer, cols int) io.Writer {
+func NewHex(w io.Writer) io.Writer {
 	return &Hex{
 		w:    w,
-		cols: cols,
 	}
 }
 
@@ -24,17 +21,9 @@ func (w *Hex) Write(p []byte) (n int, err error) {
 
 		hex.Encode(dst[:], []byte{b})
 
-		if w.count != 0 {
-			if w.cols == 0 || w.count%w.cols != 0 {
-				w.w.Write([]byte{' '})
-			}
-		}
-
 		w.w.Write([]byte("0x"))
 		w.w.Write(dst[:])
 		w.w.Write([]byte{','})
-
-		w.count++
 	}
 
 	return len(p), nil
