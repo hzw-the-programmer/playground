@@ -27,16 +27,16 @@ func (w *Ident) Write(p []byte) (n int, err error) {
 		}
 
 		if w.nl {
+			w.nl = false
 			if b != '\n' {
 				w.writeIdent()
 			}
-			w.nl = false
 		}
 
-		if b == '{' {
-			w.repeat++
-		} else if b == '\n' {
+		if b == '\n' {
 			w.nl = true
+		} else if b == '{' {
+			w.repeat++
 		}
 
 		w.w.Write([]byte{b})
