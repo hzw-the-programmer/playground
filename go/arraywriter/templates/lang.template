@@ -1,9 +1,9 @@
 /*
- * file name: str_{lang}.h
- * this file is auto generated at {time} by {app}
+ * file name: str_{{.lang}}.h
+ * this file is auto generated at {{.time}} by {{.app}}
 */
 
-staic const unsigend char str_{lang}[] =
+staic const unsigend char str_{{.lang}}[] =
 {
-    {content}
+{{.content}}
 };

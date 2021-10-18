@@ -16,14 +16,31 @@ limitations under the License.
 package cmd
 
 import (
+	"bytes"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"regexp"
+	"strings"
+	"text/template"
+	"time"
 
 	"github.com/spf13/cobra"
+
+	"github.com/hzw-the-programmer/gen/writers"
 )
 
 var langPath string
 var enumPath string
 var outDir string
+var major int
+var minor int
+var ext string
+var pat string
+
+var fnPat = regexp.MustCompile(`file name: (\S*)`)
 
 // strCmd represents the str command
 var strCmd = &cobra.Command{
@@ -36,7 +53,32 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("str called %s, %s, %s, %v", langPath, enumPath, outDir, args)
+		fmt.Printf("str called %s, %s, %s, %v\n", langPath, enumPath, outDir, args)
+		fmt.Printf("str called %d, %d, %s, %s\n", major, minor, ext, pat)
+
+		kvs := map[string]interface{}{
+			"lang":  "arabic",
+			"time":  time.Now().Format("2006-01-02 15:04:05"),
+			"app":   "gen str",
+			"major": major,
+			"minor": minor,
+			"ext":   ext,
+			"pat":   pat,
+		}
+
+		genLang(kvs, func(w io.Writer) {
+			strs := []string{
+				"hello world!",
+				"I'm Zhiwen He",
+				"a happy coder",
+			}
+
+			for _, str := range strs {
+				w.Write([]byte(str))
+				w.Write([]byte{0})
+			}
+		})
+		genEnum(kvs)
 	},
 }
 
@@ -58,4 +100,69 @@ func init() {
 	strCmd.Flags().StringVar(&langPath, "lang", "templates/lang.template", "language template file path")
 	strCmd.Flags().StringVar(&enumPath, "enum", "templates/enum.template", "enum template file path")
 	strCmd.Flags().StringVar(&outDir, "out", "out", "output directory")
+	strCmd.Flags().IntVar(&major, "major", 1, "major version")
+	strCmd.Flags().IntVar(&minor, "minor", 0, "minor version")
+	strCmd.Flags().StringVar(&ext, "ext", ".gz", "file extension")
+	strCmd.Flags().StringVar(&pat, "pat", "%s_%d.%d%s", "file extension")
+}
+
+func genLang(kvs map[string]interface{}, cb writers.WriteCb) {
+	header, footer := getHeaderFooter(langPath, kvs)
+	fmt.Println(header[len(header)-1], header[len(header)-2])
+
+	fn := "lang.h"
+	if m := fnPat.FindStringSubmatch(header); m != nil {
+		fn = m[1]
+	}
+
+	os.MkdirAll(outDir, 0666)
+
+	f, err := os.Create(filepath.Join(outDir, fn))
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	w := writers.NewUtf16Gzip(f, func(w io.Writer) {
+		w.Write([]byte(header))
+	}, func(w io.Writer) {
+		w.Write([]byte(footer))
+	})
+	defer w.Close()
+
+	cb(w)
+}
+
+func genEnum(kvs map[string]interface{}) {
+	header, footer := getHeaderFooter(enumPath, kvs)
+	fmt.Print(header, footer)
+}
+
+func substitute(temp string, kvs map[string]interface{}) string {
+	var buf bytes.Buffer
+	t := template.Must(template.New("").Parse(temp))
+	err := t.Execute(&buf, kvs)
+	if err != nil {
+		panic(err)
+	}
+	return buf.String()
+}
+
+func getHeaderFooter(path string, kvs map[string]interface{}) (header, footer string) {
+	b, err := ioutil.ReadFile(path)
+	if err != nil {
+		panic(err)
+	}
+
+	strs := strings.Split(string(b), "{{.content}}")
+
+	if len(strs) > 0 {
+		header = substitute(strs[0], kvs)
+	}
+
+	if len(strs) > 1 {
+		footer = substitute(strs[1], kvs)
+	}
+
+	return
 }
