@@ -1,0 +1,19 @@
+/*
+ * file name: str_enum.h
+ * this file is auto generated at {time} by {app}
+*/
+
+#ifndef __STR_ENUM_H__
+#define __STR_ENUM_H__
+
+#define STR_MAJOR {major}
+#define STR_MINOR {minor}
+#define STR_EXTENSION "{ext}"
+#define STR_FILE_NAME_FMT "{fmt}"
+
+typedef enum
+{
+    {content}
+} STR_ENUM;
+
+#endif // __STR_ENUM_H__

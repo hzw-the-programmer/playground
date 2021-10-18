@@ -21,6 +21,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var langPath string
+var enumPath string
+var outDir string
+
 // strCmd represents the str command
 var strCmd = &cobra.Command{
 	Use:   "str",
@@ -32,11 +36,13 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("str called")
+		fmt.Printf("str called %s, %s, %s, %v", langPath, enumPath, outDir, args)
 	},
 }
 
 func init() {
+	fmt.Println("str.init")
+
 	rootCmd.AddCommand(strCmd)
 
 	// Here you will define your flags and configuration settings.
@@ -48,4 +54,8 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// strCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	strCmd.Flags().StringVar(&langPath, "lang", "templates/lang.template", "language template file path")
+	strCmd.Flags().StringVar(&enumPath, "enum", "templates/enum.template", "enum template file path")
+	strCmd.Flags().StringVar(&outDir, "out", "out", "output directory")
 }

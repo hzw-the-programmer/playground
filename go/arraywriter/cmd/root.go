@@ -51,6 +51,8 @@ func Execute() {
 }
 
 func init() {
+	fmt.Println("root.init")
+
 	cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
