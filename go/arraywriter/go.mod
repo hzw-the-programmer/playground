@@ -1,4 +1,4 @@
-module github.com/hzw-the-programmer/genstr
+module github.com/hzw-the-programmer/gen
 
 go 1.14
 

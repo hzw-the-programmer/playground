@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/hzw-the-programmer/genstr/cmd"
+import "github.com/hzw-the-programmer/gen/cmd"
 
 func main() {
 	cmd.Execute()
