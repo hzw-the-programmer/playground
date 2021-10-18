@@ -1,7 +1,6 @@
 package writers
 
 import (
-	"bytes"
 	"io"
 )
 
@@ -20,48 +19,30 @@ func NewIdent(w io.Writer, ident string) io.Writer {
 }
 
 func (w *Ident) Write(p []byte) (n int, err error) {
-	b := p[:]
+	n = len(p)
 
-	for {
-		len := len(b)
-		if len == 0 {
-			break
+	for _, b := range p {
+		if b == '}' {
+			w.repeat--
 		}
 
 		if w.nl {
-			if b[0] == '}' {
-				w.repeat--
-			}
-
-			if b[0] != '\n' {
+			if b != '\n' {
 				w.writeIdent()
 			}
-
 			w.nl = false
 		}
 
-		i := bytes.IndexByte(b, '\n')
-		if i == -1 {
-			w.w.Write(b)
-			break
-		} else {
+		if b == '{' {
+			w.repeat++
+		} else if b == '\n' {
 			w.nl = true
-
-			if i > 0 && b[i-1] == '{' {
-				w.repeat++
-			}
-
-			if i == len {
-				w.w.Write(b)
-				break
-			} else {
-				w.w.Write(b[:i+1])
-				b = b[i+1:]
-			}
 		}
+
+		w.w.Write([]byte{b})
 	}
 
-	return len(p), err
+	return
 }
 
 func (w *Ident) writeIdent() {

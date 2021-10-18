@@ -79,6 +79,18 @@ void process(int i)
 }
 `,
 		},
+		{
+			ident: "    ",
+			inputs: []string{
+				"#define BEGIN_MACRO begin\r\n",
+				"static const unsigned char en[] = {\r\n",
+				"world!\r\nI'm Zhiwen He.\r\n",
+				"I'm from China\r\n",
+				"};\r\n",
+				"#define END_MACRO end\r\n",
+			},
+			want: "#define BEGIN_MACRO begin\r\nstatic const unsigned char en[] = {\r\n    world!\r\n    I'm Zhiwen He.\r\n    I'm from China\r\n};\r\n#define END_MACRO end\r\n",
+		},
 	}
 
 	for i, test := range tests {
