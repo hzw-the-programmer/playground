@@ -10,7 +10,7 @@ import (
 func TestHeaderFooter(t *testing.T) {
 	var buf bytes.Buffer
 
-	wrapped := NewIdent(&buf, "    ")
+	ident := NewIdent(&buf, "    ")
 
 	header := func(w io.Writer) {
 		c := `static const unsigned char en[] =
@@ -25,21 +25,21 @@ func TestHeaderFooter(t *testing.T) {
 		w.Write([]byte(c))
 	}
 
-	wrapped = NewHeaderFooter(wrapped, header, footer)
-	wrapped = NewWidth(wrapped, 10*6)
-	wrapped = NewHex(wrapped, true)
+	headerFooter := NewHeaderFooter(ident, header, footer)
+	width := NewWidth(headerFooter, 10*6)
+	hex := NewHex(width, true)
 
 out:
 	for i, j := 0, 1; ; j++ {
 		for k := 0; k < j; k++ {
-			wrapped.Write([]byte{byte(i)})
+			hex.Write([]byte{byte(i)})
 			if i++; i == 21 {
 				break out
 			}
 		}
 	}
 
-	wrapped.Close()
+	headerFooter.Close()
 
 	got := buf.String()
 

@@ -12,7 +12,7 @@ type Ident struct {
 	nl     bool
 }
 
-func NewIdent(w io.Writer, ident string) io.WriteCloser {
+func NewIdent(w io.Writer, ident string) io.Writer {
 	return &Ident{
 		w:     w,
 		ident: []byte(ident),
@@ -62,14 +62,6 @@ func (w *Ident) Write(p []byte) (n int, err error) {
 	}
 
 	return len(p), err
-}
-
-func (w *Ident) Close() error {
-	if c, ok := w.w.(io.Closer); ok {
-		c.Close()
-	}
-
-	return nil
 }
 
 func (w *Ident) writeIdent() {

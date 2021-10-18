@@ -39,9 +39,5 @@ func (w *HeaderFooter) Close() error {
 		w.footer(w.w)
 	}
 
-	if c, ok := w.w.(io.Closer); ok {
-		c.Close()
-	}
-
 	return nil
 }
