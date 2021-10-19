@@ -21,7 +21,9 @@ func NewIdent(w io.Writer, ident string) io.Writer {
 func (w *Ident) Write(p []byte) (n int, err error) {
 	n = len(p)
 
-	for _, b := range p {
+	j := 0
+
+	for i, b := range p {
 		if b == '}' {
 			w.repeat--
 		}
@@ -29,6 +31,8 @@ func (w *Ident) Write(p []byte) (n int, err error) {
 		if w.nl {
 			w.nl = false
 			if b != '\n' {
+				w.w.Write(p[j:i])
+				j = i
 				w.writeIdent()
 			}
 		}
@@ -38,9 +42,9 @@ func (w *Ident) Write(p []byte) (n int, err error) {
 		} else if b == '{' {
 			w.repeat++
 		}
-
-		w.w.Write([]byte{b})
 	}
+
+	w.w.Write(p[j:])
 
 	return
 }
