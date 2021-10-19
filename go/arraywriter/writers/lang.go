@@ -9,7 +9,7 @@ import (
 )
 
 type Lang struct {
-	w io.Writer
+	w            io.Writer
 	utf16        io.WriteCloser
 	gzip         io.WriteCloser
 	headerFooter io.WriteCloser
@@ -38,11 +38,11 @@ func NewLangExt(w io.Writer, header, footer WriteCb, isUtf16, isBinary bool) io.
 		if isUtf16 {
 			utf16 = transform.NewWriter(gz, unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewEncoder())
 			wrapped = utf16
-		}	
+		}
 	}
 
 	return &Lang{
-		w: wrapped,
+		w:            wrapped,
 		utf16:        utf16,
 		gzip:         gz,
 		headerFooter: headerFooter,

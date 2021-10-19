@@ -28,52 +28,42 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"github.com/xuri/excelize/v2"
 
 	"github.com/hzw-the-programmer/gen/writers"
 )
 
-var langPath string
-var enumPath string
-var transPath string
-var outDir string
-var major int
-var minor int
-var ext string
-var pat string
-
 var fnPat = regexp.MustCompile(`file name: (\S*)`)
 
-// strCmd represents the str command
 var strCmd = &cobra.Command{
 	Use:   "str",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "generate embed and download translations",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("str called %s, %s, %s, %v\n", langPath, enumPath, outDir, args)
-		fmt.Printf("str called %d, %d, %s, %s\n", major, minor, ext, pat)
+		langTemplateFile := viper.GetString("langTemplateFile")
+		enumTemplateFile := viper.GetString("enumTemplateFile")
+		translationFile := viper.GetString("translationFile")
+		outDir := viper.GetString("outDir")
+		major := viper.GetInt("major")
+		minor := viper.GetInt("minor")
+		extension := viper.GetString("extension")
+		filenamePattern := viper.GetString("filenamePattern")
 
-		f, err := excelize.OpenFile(transPath)
+		f, err := excelize.OpenFile(translationFile)
 		if err != nil {
 			panic(err)
 		}
 
 		kvs := map[string]interface{}{
-			"lang":  "arabic",
+			"lang":  "",
 			"time":  time.Now().Format("2006-01-02 15:04:05"),
 			"app":   "gen str",
 			"major": major,
 			"minor": minor,
-			"ext":   ext,
-			"pat":   pat,
+			"ext":   extension,
+			"pat":   filenamePattern,
 		}
 
-		var colName string
 		name := f.GetSheetName(0)
 		rows, err := f.GetRows(name)
 		if err != nil {
@@ -81,16 +71,18 @@ to quickly create a Cobra application.`,
 		}
 		row := rows[0]
 		row = row[1:]
-		for _, colName = range row {
-			kvs["lang"] = colName
+
+		for _, colName := range row {
 			newWriter := writers.NewLangUtf16
 			if colName == "english" {
 				newWriter = writers.NewLang
 			}
-			genFile(outDir, "lang.h", langPath, kvs, newWriter, func(w io.Writer) {
+			kvs["lang"] = colName
+			fn := "lang.h"
+			genFile(outDir, fn, langTemplateFile, kvs, newWriter, func(w io.Writer) {
 				for i := 0; i < 2; i++ {
 					name := f.GetSheetName(i)
-					
+
 					if colName != "english" && i != 0 {
 						break
 					}
@@ -99,9 +91,9 @@ to quickly create a Cobra application.`,
 					if err != nil {
 						panic(err)
 					}
-		
+
 					for _, col := range cols {
-						if (col[0] != colName) {
+						if col[0] != colName {
 							continue
 						}
 						col = col[1:]
@@ -114,13 +106,13 @@ to quickly create a Cobra application.`,
 			})
 		}
 
-		for _, colName = range row {
-			kvs["lang"] = colName
+		for _, colName := range row {
 			newWriter := writers.NewLangUtf16Binary
 			if colName == "english" {
 				newWriter = writers.NewLangBinary
 			}
-			fn := fmt.Sprintf(pat, colName, major, minor, ext)
+			kvs["lang"] = colName
+			fn := fmt.Sprintf(filenamePattern, colName, major, minor, extension)
 			genFile(outDir, fn, "", kvs, newWriter, func(w io.Writer) {
 				for i := 0; i < 2; i++ {
 					name := f.GetSheetName(i)
@@ -129,17 +121,17 @@ to quickly create a Cobra application.`,
 					if err != nil {
 						panic(err)
 					}
-		
-					var en[]string
+
+					var en []string
 					for _, col := range cols {
 						if col[0] == "english" {
 							en = col[1:]
 						}
-						
-						if (col[0] != colName) {
+
+						if col[0] != colName {
 							continue
 						}
-						
+
 						col = col[1:]
 						for i, cell := range col {
 							str := cell
@@ -154,8 +146,9 @@ to quickly create a Cobra application.`,
 			})
 		}
 
-		colName = "id"
-		genFile(outDir, "enum.h", enumPath, kvs, writers.NewEnum, func(w io.Writer) {
+		colName := "id"
+		fn := "enum.h"
+		genFile(outDir, fn, enumTemplateFile, kvs, writers.NewEnum, func(w io.Writer) {
 			for i := 0; i < 2; i++ {
 				name := f.GetSheetName(i)
 
@@ -163,14 +156,14 @@ to quickly create a Cobra application.`,
 					w.Write(writers.NL)
 				}
 				fmt.Fprintf(w, "// %s", name)
-				
+
 				cols, err := f.GetCols(name)
 				if err != nil {
 					panic(err)
 				}
-	
+
 				for _, col := range cols {
-					if (col[0] != colName) {
+					if col[0] != colName {
 						continue
 					}
 					col = col[1:]
@@ -185,28 +178,25 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	fmt.Println("str.init")
-
 	rootCmd.AddCommand(strCmd)
 
-	// Here you will define your flags and configuration settings.
+	strCmd.Flags().String("lang", "templates/lang.template", "language template file")
+	strCmd.Flags().String("enum", "templates/enum.template", "enum template file")
+	strCmd.Flags().String("trans", "translations.xlsx", "translation file")
+	strCmd.Flags().String("out", "out", "output directory")
+	strCmd.Flags().Int("major", 1, "major version")
+	strCmd.Flags().Int("minor", 0, "minor version")
+	strCmd.Flags().String("ext", "_gz", "file extension")
+	strCmd.Flags().String("pat", "%s_%d.%d%s", "file name pattern")
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// strCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// strCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
-	strCmd.Flags().StringVar(&langPath, "lang", "templates/lang.template", "language template file path")
-	strCmd.Flags().StringVar(&enumPath, "enum", "templates/enum.template", "enum template file path")
-	strCmd.Flags().StringVar(&transPath, "trans", "translations.xlsx", "translations file path")
-	strCmd.Flags().StringVar(&outDir, "out", "out", "output directory")
-	strCmd.Flags().IntVar(&major, "major", 1, "major version")
-	strCmd.Flags().IntVar(&minor, "minor", 0, "minor version")
-	strCmd.Flags().StringVar(&ext, "ext", "_gz", "file extension")
-	strCmd.Flags().StringVar(&pat, "pat", "%s_%d.%d%s", "file extension")
+	viper.BindPFlag("langTemplateFile", strCmd.Flags().Lookup("lang"))
+	viper.BindPFlag("enumTemplateFile", strCmd.Flags().Lookup("enum"))
+	viper.BindPFlag("translationFile", strCmd.Flags().Lookup("trans"))
+	viper.BindPFlag("outDir", strCmd.Flags().Lookup("out"))
+	viper.BindPFlag("major", strCmd.Flags().Lookup("major"))
+	viper.BindPFlag("minor", strCmd.Flags().Lookup("minor"))
+	viper.BindPFlag("extension", strCmd.Flags().Lookup("ext"))
+	viper.BindPFlag("filenamePattern", strCmd.Flags().Lookup("pat"))
 }
 
 func genFile(dir, fn string, templatePath string, kvs map[string]interface{}, writer writers.HeaderFooterCb, cb writers.WriteCb) {

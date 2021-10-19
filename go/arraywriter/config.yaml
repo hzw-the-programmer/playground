@@ -1,0 +1,8 @@
+langTemplateFile: lang.template
+enumTemplateFile: enum.template
+translationFile: translations.xlsx
+outDir: out
+major: 1
+minor: 23
+extension: _gzip
+filenamePattern: _%s_%d.%d%s
