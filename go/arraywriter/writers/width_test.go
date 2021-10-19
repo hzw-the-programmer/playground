@@ -6,6 +6,10 @@ import (
 	"testing"
 )
 
+func init() {
+	NL = []byte{'\n'}
+}
+
 func TestWidth(t *testing.T) {
 	tests := []struct {
 		inputs []string

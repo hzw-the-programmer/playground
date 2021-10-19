@@ -14,6 +14,7 @@
 typedef enum
 {
 {{.content}}
+MAX,
 } STR_ENUM;
 
 #endif // __STR_ENUM_H__

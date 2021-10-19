@@ -28,12 +28,14 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/xuri/excelize/v2"
 
 	"github.com/hzw-the-programmer/gen/writers"
 )
 
 var langPath string
 var enumPath string
+var transPath string
 var outDir string
 var major int
 var minor int
@@ -56,6 +58,11 @@ to quickly create a Cobra application.`,
 		fmt.Printf("str called %s, %s, %s, %v\n", langPath, enumPath, outDir, args)
 		fmt.Printf("str called %d, %d, %s, %s\n", major, minor, ext, pat)
 
+		f, err := excelize.OpenFile(transPath)
+		if err != nil {
+			panic(err)
+		}
+
 		kvs := map[string]interface{}{
 			"lang":  "arabic",
 			"time":  time.Now().Format("2006-01-02 15:04:05"),
@@ -66,29 +73,72 @@ to quickly create a Cobra application.`,
 			"pat":   pat,
 		}
 
-		genFile(outDir, "lang.h", langPath, kvs, writers.NewLang, func(w io.Writer) {
-			strs := []string{
-				"hello world!",
-				"I'm Zhiwen He",
-				"a happy coder",
+		var colName string
+		name := f.GetSheetName(0)
+		rows, err := f.GetRows(name)
+		if err != nil {
+			panic(err)
+		}
+		row := rows[0]
+		row = row[1:]
+		for _, colName = range row {
+			kvs["lang"] = colName
+			newWriter := writers.NewLangUtf16
+			if colName == "english" {
+				newWriter = writers.NewLang
 			}
+			genFile(outDir, "lang.h", langPath, kvs, newWriter, func(w io.Writer) {
+				for i := 0; i < 2; i++ {
+					name := f.GetSheetName(i)
+					
+					if colName != "english" && i != 0 {
+						break
+					}
 
-			for _, str := range strs {
-				w.Write([]byte(str))
-				w.Write([]byte{0})
-			}
-		})
+					cols, err := f.GetCols(name)
+					if err != nil {
+						panic(err)
+					}
+		
+					for _, col := range cols {
+						if (col[0] != colName) {
+							continue
+						}
+						col = col[1:]
+						for _, cell := range col {
+							w.Write([]byte(cell))
+							w.Write([]byte{0})
+						}
+					}
+				}
+			})
+		}
 
+		colName = "id"
 		genFile(outDir, "enum.h", enumPath, kvs, writers.NewEnum, func(w io.Writer) {
-			strs := []string{
-				"hello world!",
-				"I'm Zhiwen He",
-				"a happy coder",
-			}
+			for i := 0; i < 2; i++ {
+				name := f.GetSheetName(i)
 
-			for _, str := range strs {
-				w.Write([]byte(str))
-				w.Write([]byte{'\n'})
+				if i != 0 {
+					w.Write(writers.NL)
+				}
+				fmt.Fprintf(w, "// %s", name)
+				
+				cols, err := f.GetCols(name)
+				if err != nil {
+					panic(err)
+				}
+	
+				for _, col := range cols {
+					if (col[0] != colName) {
+						continue
+					}
+					col = col[1:]
+					for _, cell := range col {
+						w.Write(writers.NL)
+						fmt.Fprintf(w, "%s,", cell)
+					}
+				}
 			}
 		})
 	},
@@ -111,6 +161,7 @@ func init() {
 
 	strCmd.Flags().StringVar(&langPath, "lang", "templates/lang.template", "language template file path")
 	strCmd.Flags().StringVar(&enumPath, "enum", "templates/enum.template", "enum template file path")
+	strCmd.Flags().StringVar(&transPath, "trans", "translations.xlsx", "translations file path")
 	strCmd.Flags().StringVar(&outDir, "out", "out", "output directory")
 	strCmd.Flags().IntVar(&major, "major", 1, "major version")
 	strCmd.Flags().IntVar(&minor, "minor", 0, "minor version")

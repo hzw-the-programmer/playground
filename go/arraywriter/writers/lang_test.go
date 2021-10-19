@@ -46,7 +46,7 @@ func TestLang(t *testing.T) {
 		w.Write([]byte(footer))
 	}
 
-	w := NewLang(&buf, headerCb, footerCb)
+	w := NewLangUtf16(&buf, headerCb, footerCb)
 
 	for _, str := range strs {
 		w.Write([]byte(str))

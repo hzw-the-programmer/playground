@@ -4,6 +4,8 @@ import (
 	"io"
 )
 
+var NL = []byte{'\r', '\n'}
+
 type Width struct {
 	w     io.Writer
 	cols  int
@@ -29,7 +31,7 @@ func (w *Width) Write(p []byte) (n int, err error) {
 		col := w.count % w.cols
 		if col == 0 {
 			if w.count != 0 {
-				w.w.Write([]byte{'\n'})
+				w.w.Write(NL)
 			}
 		}
 
