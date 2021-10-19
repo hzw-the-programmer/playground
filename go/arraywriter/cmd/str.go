@@ -78,6 +78,19 @@ to quickly create a Cobra application.`,
 				w.Write([]byte{0})
 			}
 		})
+
+		genFile(outDir, "enum.h", enumPath, kvs, writers.NewEnum, func(w io.Writer) {
+			strs := []string{
+				"hello world!",
+				"I'm Zhiwen He",
+				"a happy coder",
+			}
+
+			for _, str := range strs {
+				w.Write([]byte(str))
+				w.Write([]byte{'\n'})
+			}
+		})
 	},
 }
 
