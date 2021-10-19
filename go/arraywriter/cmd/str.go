@@ -114,6 +114,46 @@ to quickly create a Cobra application.`,
 			})
 		}
 
+		for _, colName = range row {
+			kvs["lang"] = colName
+			newWriter := writers.NewLangUtf16Binary
+			if colName == "english" {
+				newWriter = writers.NewLangBinary
+			}
+			fn := fmt.Sprintf(pat, colName, major, minor, ext)
+			genFile(outDir, fn, "", kvs, newWriter, func(w io.Writer) {
+				for i := 0; i < 2; i++ {
+					name := f.GetSheetName(i)
+
+					cols, err := f.GetCols(name)
+					if err != nil {
+						panic(err)
+					}
+		
+					var en[]string
+					for _, col := range cols {
+						if col[0] == "english" {
+							en = col[1:]
+						}
+						
+						if (col[0] != colName) {
+							continue
+						}
+						
+						col = col[1:]
+						for i, cell := range col {
+							str := cell
+							if len(str) == 0 {
+								str = en[i]
+							}
+							w.Write([]byte(str))
+							w.Write([]byte{0})
+						}
+					}
+				}
+			})
+		}
+
 		colName = "id"
 		genFile(outDir, "enum.h", enumPath, kvs, writers.NewEnum, func(w io.Writer) {
 			for i := 0; i < 2; i++ {
@@ -165,7 +205,7 @@ func init() {
 	strCmd.Flags().StringVar(&outDir, "out", "out", "output directory")
 	strCmd.Flags().IntVar(&major, "major", 1, "major version")
 	strCmd.Flags().IntVar(&minor, "minor", 0, "minor version")
-	strCmd.Flags().StringVar(&ext, "ext", ".gz", "file extension")
+	strCmd.Flags().StringVar(&ext, "ext", "_gz", "file extension")
 	strCmd.Flags().StringVar(&pat, "pat", "%s_%d.%d%s", "file extension")
 }
 
@@ -207,7 +247,7 @@ func substitute(temp string, kvs map[string]interface{}) string {
 func getHeaderFooter(path string, kvs map[string]interface{}) (header, footer string) {
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
-		panic(err)
+		return
 	}
 
 	strs := strings.Split(string(b), "{{.content}}")
