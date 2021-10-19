@@ -66,7 +66,7 @@ to quickly create a Cobra application.`,
 			"pat":   pat,
 		}
 
-		genLang(kvs, func(w io.Writer) {
+		genFile(outDir, "lang.h", langPath, kvs, writers.NewLang, func(w io.Writer) {
 			strs := []string{
 				"hello world!",
 				"I'm Zhiwen He",
@@ -78,7 +78,6 @@ to quickly create a Cobra application.`,
 				w.Write([]byte{0})
 			}
 		})
-		genEnum(kvs)
 	},
 }
 
@@ -106,24 +105,22 @@ func init() {
 	strCmd.Flags().StringVar(&pat, "pat", "%s_%d.%d%s", "file extension")
 }
 
-func genLang(kvs map[string]interface{}, cb writers.WriteCb) {
-	header, footer := getHeaderFooter(langPath, kvs)
-	fmt.Println(header[len(header)-1], header[len(header)-2])
+func genFile(dir, fn string, templatePath string, kvs map[string]interface{}, writer writers.HeaderFooterCb, cb writers.WriteCb) {
+	header, footer := getHeaderFooter(templatePath, kvs)
 
-	fn := "lang.h"
 	if m := fnPat.FindStringSubmatch(header); m != nil {
 		fn = m[1]
 	}
 
-	os.MkdirAll(outDir, 0666)
+	os.MkdirAll(dir, 0666)
 
-	f, err := os.Create(filepath.Join(outDir, fn))
+	f, err := os.Create(filepath.Join(dir, fn))
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
 
-	w := writers.NewUtf16Gzip(f, func(w io.Writer) {
+	w := writer(f, func(w io.Writer) {
 		w.Write([]byte(header))
 	}, func(w io.Writer) {
 		w.Write([]byte(footer))
@@ -131,11 +128,6 @@ func genLang(kvs map[string]interface{}, cb writers.WriteCb) {
 	defer w.Close()
 
 	cb(w)
-}
-
-func genEnum(kvs map[string]interface{}) {
-	header, footer := getHeaderFooter(enumPath, kvs)
-	fmt.Print(header, footer)
 }
 
 func substitute(temp string, kvs map[string]interface{}) string {

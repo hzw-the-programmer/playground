@@ -5,6 +5,7 @@ import (
 )
 
 type WriteCb func(w io.Writer)
+type HeaderFooterCb func(w io.Writer, header WriteCb, footer WriteCb) io.WriteCloser
 
 type HeaderFooter struct {
 	w      io.Writer

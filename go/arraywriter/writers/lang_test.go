@@ -10,7 +10,7 @@ import (
 	// "golang.org/x/text/transform"
 )
 
-func TestUtf16Gip(t *testing.T) {
+func TestLang(t *testing.T) {
 	header := `static const unsigned char en[] =
 {
 `
@@ -46,7 +46,7 @@ func TestUtf16Gip(t *testing.T) {
 		w.Write([]byte(footer))
 	}
 
-	w := NewUtf16Gzip(&buf, headerCb, footerCb)
+	w := NewLang(&buf, headerCb, footerCb)
 
 	for _, str := range strs {
 		w.Write([]byte(str))

@@ -8,13 +8,13 @@ import (
 	"golang.org/x/text/transform"
 )
 
-type Utf16Gzip struct {
+type Lang struct {
 	utf16        io.WriteCloser
 	gzip         io.WriteCloser
 	headerFooter io.WriteCloser
 }
 
-func NewUtf16Gzip(w io.Writer, header WriteCb, footer WriteCb) io.WriteCloser {
+func NewLang(w io.Writer, header WriteCb, footer WriteCb) io.WriteCloser {
 	ident := NewIdent(w, "    ")
 	headerFooter := NewHeaderFooter(ident, header, footer)
 	width := NewWidth(headerFooter, 10*6)
@@ -22,18 +22,18 @@ func NewUtf16Gzip(w io.Writer, header WriteCb, footer WriteCb) io.WriteCloser {
 	gzip := gzip.NewWriter(hex)
 	utf16 := transform.NewWriter(gzip, unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewEncoder())
 
-	return &Utf16Gzip{
+	return &Lang{
 		utf16:        utf16,
 		gzip:         gzip,
 		headerFooter: headerFooter,
 	}
 }
 
-func (w *Utf16Gzip) Write(data []byte) (n int, err error) {
+func (w *Lang) Write(data []byte) (n int, err error) {
 	return w.utf16.Write(data)
 }
 
-func (w *Utf16Gzip) Close() error {
+func (w *Lang) Close() error {
 	w.utf16.Close()
 	w.gzip.Close()
 	w.headerFooter.Close()
