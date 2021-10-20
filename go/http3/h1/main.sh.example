@@ -1,1 +1,5 @@
-./main -name= -id= -pic= -referer= -dir=
+./main -name= \
+       -id= \
+       -pic= \
+       -referer= \
+       -dir=
