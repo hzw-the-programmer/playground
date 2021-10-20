@@ -54,6 +54,21 @@ var strCmd = &cobra.Command{
 			panic(err)
 		}
 
+		langs, err := getLangs(f)
+		if err != nil {
+			panic(err)
+		}
+
+		trans, err := getTranslation(f)
+		if err != nil {
+			panic(err)
+		}
+
+		ids, err := getIds(f)
+		if err != nil {
+			panic(err)
+		}
+
 		kvs := map[string]interface{}{
 			"lang":  "",
 			"time":  time.Now().Format("2006-01-02 15:04:05"),
@@ -64,114 +79,55 @@ var strCmd = &cobra.Command{
 			"pat":   filenamePattern,
 		}
 
-		name := f.GetSheetName(0)
-		rows, err := f.GetRows(name)
-		if err != nil {
-			panic(err)
-		}
-		row := rows[0]
-		row = row[1:]
-
-		for _, colName := range row {
+		for _, lang := range langs {
 			newWriter := writers.NewLangUtf16
-			if colName == "english" {
+			if lang == "english" {
 				newWriter = writers.NewLang
 			}
-			kvs["lang"] = colName
-			fn := "lang.h"
-			genFile(outDir, fn, langTemplateFile, kvs, newWriter, func(w io.Writer) {
-				for i := 0; i < 2; i++ {
-					name := f.GetSheetName(i)
+			kvs["lang"] = lang
+			genFile(outDir, "lang.h", langTemplateFile, kvs, newWriter, func(w io.Writer) {
+				for _, tr := range trans {
+					for i, str := range tr[lang] {
+						if len(str) == 0 {
+							str = tr["english"][i]
+						}
+						w.Write([]byte(str))
+						w.Write([]byte{0})
+					}
 
-					if colName != "english" && i != 0 {
+					if lang != "english" {
 						break
 					}
-
-					cols, err := f.GetCols(name)
-					if err != nil {
-						panic(err)
-					}
-
-					for _, col := range cols {
-						if col[0] != colName {
-							continue
-						}
-						col = col[1:]
-						for _, cell := range col {
-							w.Write([]byte(cell))
-							w.Write([]byte{0})
-						}
-					}
 				}
 			})
 		}
 
-		for _, colName := range row {
+		for _, lang := range langs {
 			newWriter := writers.NewLangUtf16Binary
-			if colName == "english" {
+			if lang == "english" {
 				newWriter = writers.NewLangBinary
 			}
-			kvs["lang"] = colName
-			fn := fmt.Sprintf(filenamePattern, colName, major, minor, extension)
+			kvs["lang"] = lang
+			fn := fmt.Sprintf(filenamePattern, lang, major, minor, extension)
 			genFile(outDir, fn, "", kvs, newWriter, func(w io.Writer) {
-				for i := 0; i < 2; i++ {
-					name := f.GetSheetName(i)
-
-					cols, err := f.GetCols(name)
-					if err != nil {
-						panic(err)
-					}
-
-					var en []string
-					for _, col := range cols {
-						if col[0] == "english" {
-							en = col[1:]
+				for _, tr := range trans {
+					for i, str := range tr[lang] {
+						if len(str) == 0 {
+							str = tr["english"][i]
 						}
-
-						if col[0] != colName {
-							continue
-						}
-
-						col = col[1:]
-						for i, cell := range col {
-							str := cell
-							if len(str) == 0 {
-								str = en[i]
-							}
-							w.Write([]byte(str))
-							w.Write([]byte{0})
-						}
+						w.Write([]byte(str))
+						w.Write([]byte{0})
 					}
 				}
 			})
 		}
 
-		colName := "id"
-		fn := "enum.h"
-		genFile(outDir, fn, enumTemplateFile, kvs, writers.NewEnum, func(w io.Writer) {
-			for i := 0; i < 2; i++ {
-				name := f.GetSheetName(i)
-
+		genFile(outDir, "enum.h", enumTemplateFile, kvs, writers.NewEnum, func(w io.Writer) {
+			for i, id := range ids {
 				if i != 0 {
 					w.Write(writers.NL)
 				}
-				fmt.Fprintf(w, "// %s", name)
-
-				cols, err := f.GetCols(name)
-				if err != nil {
-					panic(err)
-				}
-
-				for _, col := range cols {
-					if col[0] != colName {
-						continue
-					}
-					col = col[1:]
-					for _, cell := range col {
-						w.Write(writers.NL)
-						fmt.Fprintf(w, "%s,", cell)
-					}
-				}
+				fmt.Fprintf(w, "%s,", id)
 			}
 		})
 	},
@@ -248,6 +204,49 @@ func getHeaderFooter(path string, kvs map[string]interface{}) (header, footer st
 
 	if len(strs) > 1 {
 		footer = substitute(strs[1], kvs)
+	}
+
+	return
+}
+
+func getLangs(f *excelize.File) (langs []string, err error) {
+	name := f.GetSheetName(0)
+	rows, err := f.GetRows(name)
+	if err != nil {
+		return
+	}
+
+	return rows[0][1:], nil
+}
+
+func getTranslation(f *excelize.File) (trans []map[string][]string, err error) {
+	for i := 0; i < f.SheetCount; i++ {
+		name := f.GetSheetName(i)
+		cols, err := f.GetCols(name)
+		if err != nil {
+			return nil, err
+		}
+
+		t := map[string][]string{}
+		for _, col := range cols[1:] {
+			t[col[0]] = col[1:]
+		}
+		trans = append(trans, t)
+	}
+
+	return
+}
+
+func getIds(f *excelize.File) (ids []string, err error) {
+	for i := 0; i < f.SheetCount; i++ {
+		name := f.GetSheetName(i)
+		cols, err := f.GetCols(name)
+		if err != nil {
+			return nil, err
+		}
+
+		ids = append(ids, fmt.Sprintf("// %s", name))
+		ids = append(ids, cols[0][1:]...)
 	}
 
 	return
