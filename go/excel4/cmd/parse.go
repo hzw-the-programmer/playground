@@ -53,6 +53,9 @@ to quickly create a Cobra application.`,
 			}
 			break
 		}
+
+		fmt.Println(f.GetSheetName(0))
+		fmt.Println(f.GetSheetName(1))
 	},
 }
 
