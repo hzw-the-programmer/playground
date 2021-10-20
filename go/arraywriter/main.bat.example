@@ -1,0 +1,10 @@
+gen.exe str --config=config.yaml ^
+            --lang=templates\lang.template ^
+            --enum=templates\enum.template ^
+            --trans=translations.xlsx ^
+            --out=out ^
+            --major=1 ^
+            --minor=23 ^
+            --ext=_gzip ^
+            --pat=%%s_%%d.%%d%%s
+pause

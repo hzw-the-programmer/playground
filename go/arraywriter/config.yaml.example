@@ -1,8 +1,0 @@
-langTemplateFile: lang.template
-enumTemplateFile: enum.template
-translationFile: translations.xlsx
-outDir: out
-major: 1
-minor: 61
-extension: _gzip
-filenamePattern: fp_res_language_%s_%d.%d%s

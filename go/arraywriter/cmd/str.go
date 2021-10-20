@@ -102,6 +102,7 @@ var strCmd = &cobra.Command{
 			})
 		}
 
+		removeOld(outDir, filenamePattern)
 		for _, lang := range langs {
 			newWriter := writers.NewLangUtf16Binary
 			if lang == "english" {
@@ -250,4 +251,21 @@ func getIds(f *excelize.File) (ids []string, err error) {
 	}
 
 	return
+}
+
+func removeOld(outDir, fnp string) {
+	fn := fnp + "*"
+	i := strings.Index(fnp, "%s")
+	if i != -1 {
+		fn = fnp[:i] + "*"
+	}
+
+	files, err := filepath.Glob(filepath.Join(outDir, fn))
+	if err != nil {
+		return
+	}
+
+	for _, f := range files {
+		os.Remove(f)
+	}
 }
