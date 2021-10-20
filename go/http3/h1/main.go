@@ -30,6 +30,7 @@ func main() {
 	pdir := flag.String("dir", "", "")
 	pext := flag.String("ext", "jpg", "")
 	pnum := flag.Int("num", 100, "")
+	pnumw := flag.Int("numw", 1, "")
 
 	flag.Parse()
 
@@ -52,7 +53,7 @@ func main() {
 		go func(i int) {
 			defer wg.Done()
 
-			pic := fmt.Sprintf("%s/%d/%d.%s", *ppic, *pid, i, *pext)
+			pic := fmt.Sprintf("%s/%d/%0*d.%s", *ppic, *pid, *pnumw, i, *pext)
 			referer := fmt.Sprintf("%s/%d_%d.html", *preferer, *pid, i)
 
 			req, err := http.NewRequest("GET", pic, nil)
