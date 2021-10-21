@@ -102,7 +102,17 @@ var strCmd = &cobra.Command{
 			})
 		}
 
-		removeOld(outDir, filenamePattern)
+		genFile(outDir, "enum.h", enumTemplateFile, kvs, writers.NewEnum, func(w io.Writer) {
+			for i, id := range ids {
+				if i != 0 {
+					w.Write(writers.NL)
+				}
+				fmt.Fprintf(w, "%s,", id)
+			}
+		})
+
+		dir := "."
+		removeOld(dir, filenamePattern)
 		for _, lang := range langs {
 			newWriter := writers.NewLangUtf16Binary
 			if lang == "english" {
@@ -110,7 +120,7 @@ var strCmd = &cobra.Command{
 			}
 			kvs["lang"] = lang
 			fn := fmt.Sprintf(filenamePattern, lang, major, minor, extension)
-			genFile(outDir, fn, "", kvs, newWriter, func(w io.Writer) {
+			genFile(dir, fn, "", kvs, newWriter, func(w io.Writer) {
 				for _, tr := range trans {
 					for i, str := range tr[lang] {
 						if len(str) == 0 {
@@ -122,15 +132,6 @@ var strCmd = &cobra.Command{
 				}
 			})
 		}
-
-		genFile(outDir, "enum.h", enumTemplateFile, kvs, writers.NewEnum, func(w io.Writer) {
-			for i, id := range ids {
-				if i != 0 {
-					w.Write(writers.NL)
-				}
-				fmt.Fprintf(w, "%s,", id)
-			}
-		})
 	},
 }
 
