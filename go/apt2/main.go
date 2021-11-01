@@ -51,14 +51,14 @@ func main() {
 		liboutfn = filepath.Join(outdir, *liboutdir, *libname)
 	}
 
-	provideout := filepath.Join(outdir, appname)
+	provideout := appname
 	if *provideoutdir != "" {
-		provideout = filepath.Join(outdir, *provideoutdir)
+		provideout = *provideoutdir
 	}
 
 	createDir(outdir)
 
-	exobjs := copyProvide(*appdir, provideout, *providefn)
+	exobjs := copyProvide(*appdir, outdir, provideout, *providefn)
 
 	objs := findObjs(*appdir, exobjs)
 
@@ -116,7 +116,7 @@ func createDir(dir string) {
 	}
 }
 
-func copyProvide(srcdir, dstdir, fn string) (exobjs []string) {
+func copyProvide(srcdir, outdir, provideoutdir, fn string) (exobjs []string) {
 	f, err := os.Open(fn)
 	if err != nil {
 		panic(err)
@@ -126,22 +126,34 @@ func copyProvide(srcdir, dstdir, fn string) (exobjs []string) {
 	s := bufio.NewScanner(f)
 	for s.Scan() {
 		pair := strings.Split(s.Text(), ">")
+
 		pair0 := strings.Trim(pair[0], " \t")
 		if pair0 == "" || pair0[0] == '#' {
 			continue
 		}
+
 		src := filepath.Join(srcdir, pair0)
-		dst := filepath.Join(dstdir, filepath.Base(pair0))
+		dst := filepath.Join(outdir, provideoutdir, filepath.Base(pair0))
+
 		if len(pair) > 1 {
 			pair1 := strings.Trim(pair[1], " \t")
-			dst = filepath.Join(dstdir, pair1)
-			if pair1 == "." || pair1[len(pair1)-1] == '\\' || pair1[len(pair1)-1] == '/' {
-				dst = filepath.Join(dst, filepath.Base(pair0))
+			if pair1 != "" {
+				dst = filepath.Join(outdir, provideoutdir, pair1)
+
+				if os.IsPathSeparator(pair1[0]) {
+					dst = filepath.Join(outdir, pair1)
+				}
+
+				if pair1 == "." || os.IsPathSeparator(pair1[len(pair1)-1]) {
+					dst = filepath.Join(dst, filepath.Base(pair0))
+				}
 			}
 		}
+
 		if err := os.MkdirAll(filepath.Dir(dst), 0666); err != nil {
 			panic(err)
 		}
+
 		copy(dst, src)
 
 		base := filepath.Base(pair0)

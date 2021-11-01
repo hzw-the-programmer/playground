@@ -38,3 +38,9 @@ git status applib/mem/
 git diff applib/mem/
 
 git tag --contains <commit>
+git branch -a --contains <commit>
+
+git tag -d tag1 tag2
+git push --delete origin tag1 tag2
+git push --tags
+git push origin :refs/tags/<tag>
