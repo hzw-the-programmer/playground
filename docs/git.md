@@ -44,3 +44,9 @@ git tag -d tag1 tag2
 git push --delete origin tag1 tag2
 git push --tags
 git push origin :refs/tags/<tag>
+
+git show commit:path/to/file.c > path/to/file_old.c
+
+git checkout main
+git checkout -b main_merge
+git merge feature
