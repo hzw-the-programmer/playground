@@ -21,3 +21,5 @@ make p=project_name image
 make p=project_name m=app
 
 make p=project_name m=app update
+
+make p=project_name m=app update image

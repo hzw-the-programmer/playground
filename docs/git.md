@@ -50,3 +50,14 @@ git show commit:path/to/file.c > path/to/file_old.c
 git checkout main
 git checkout -b main_merge
 git merge feature
+
+git log --graph --author=hezhiwen not..reachable
+git log --graph --author=hezhiwen ^not reachable
+
+git branch --contains $COMMIT_ID
+git tag --contains <commit>
+
+git ls-files --others --exclude-standard >> .gitignore
+
+git ls-files --modified >> modified
+xargs --arg-file=modified git update-index --assume-unchanged
