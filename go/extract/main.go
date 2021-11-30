@@ -5,12 +5,14 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
+	"strings"
 )
 
 var (
 	macroExp = regexp.MustCompile(`---- (\w+) Matches \(\d+ in \d+ files\) ----`)
-	pathExp  = regexp.MustCompile(`(\w+\.?\w*) \(([\w\\]+)\).* : `)
+	pathExp  = regexp.MustCompile(`(\w+\.?\w*) \(([\w\\:]+)\).* : `)
 )
 
 func copy(dstPath, srcPath string) {
@@ -39,11 +41,7 @@ func main() {
 	}
 
 	searchResultFile := os.Args[1]
-	projectDir := os.Args[2]
-
-	if projectDir[len(projectDir)-1] != '\\' || projectDir[len(projectDir)-1] != '/' {
-		projectDir += "/"
-	}
+	projectDir := strings.Replace(os.Args[2], "\\", "/", -1)
 
 	file, err := os.Open(searchResultFile)
 	if err != nil {
@@ -66,14 +64,16 @@ func main() {
 
 		matches = pathExp.FindStringSubmatch(text)
 		if matches != nil {
-			srcPath := projectDir + matches[2] + "/" + matches[1]
-			dstPath := macro + "/" + matches[2]
+			path := strings.TrimPrefix(strings.Replace(matches[2], "\\", "/", -1), projectDir)
+			srcPath := filepath.Join(projectDir, path, matches[1])
+			dstPath := filepath.Join(macro, path)
+
 			if _, err := os.Stat(dstPath); err != nil {
 				if err := os.MkdirAll(dstPath, 0666); err != nil {
 					log.Fatal(err)
 				}
 			}
-			dstPath += "/" + matches[1]
+			dstPath = filepath.Join(dstPath, matches[1])
 			copy(dstPath, srcPath)
 		}
 	}
