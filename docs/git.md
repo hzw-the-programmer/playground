@@ -61,3 +61,18 @@ git ls-files --others --exclude-standard >> .gitignore
 
 git ls-files --modified >> modified
 xargs --arg-file=modified git update-index --assume-unchanged
+
+git submodule add https://github.com/chaconinc/DbConnector
+git diff --cached --submodule
+git commit -am 'Add DbConnector module'
+git push origin master
+
+git clone https://github.com/chaconinc/MainProject
+
+git submodule init
+git submodule update
+
+git submodule update --init
+git submodule update --init --recursive
+
+git clone --recurse-submodules https://github.com/chaconinc/MainProject
