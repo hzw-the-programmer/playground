@@ -1,8 +1,11 @@
 make/{customer}_GPRS.mak
-APP_SUPPORT = SRC # LIB
+APP_SUPPORT = SRC
+  # SRC
+  # LIB
+  # NONE
 
 make/Option.mak
-ifdef APP_SUPPORT
+ifneq ($(filter SRC LIB,$(strip $(APP_SUPPORT))),)
 	COM_DEFS += __APP__
 	COMPLIST += app # for src
 	ifeq ($(strip $(APP_SUPPORT)),LIB)
@@ -18,12 +21,12 @@ endif
 
 # for COMPLIST src code
 make/app/app.mak
-ifeq ($(strip $(APP_SUPPORT)),LIB)
-APPDIR := vendor/app
-APPINCLUDE := -I $(APPDIR)
-else
+ifeq ($(strip $(APP_SUPPORT)),SRC)
 APPDIR := app
 include make/app/app_src.mak
+else
+APPDIR := vendor/app
+APPINCLUDE := -I $(APPDIR)
 endif
 
 INC_DIR += ${APPINCLUDE} \
