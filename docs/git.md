@@ -76,3 +76,6 @@ git submodule update --init
 git submodule update --init --recursive
 
 git clone --recurse-submodules https://github.com/chaconinc/MainProject
+
+git log --pretty=format:%h --diff-filter=A -- nucleus
+git diff --name-only commitid HEAD

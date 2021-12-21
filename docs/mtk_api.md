@@ -1,2 +1,8 @@
 memset
 srv_sim_ctrl_get_imsi
+
+dm_draw_scr_bg_image
+srv_mediacache_get_curr_img_to_layer
+
+mmi_ivex_create_view_layers
+mmi_ivex_create_osd_layers
