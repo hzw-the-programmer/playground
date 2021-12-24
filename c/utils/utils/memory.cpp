@@ -1,7 +1,10 @@
 #include <stdlib.h> // malloc
 #include <stdio.h> // printf
 //#include <string.h> // strdup
+
 #include "utlist.h"
+
+#include "memory.h"
 
 typedef struct hzwMemItem {
 	void *ptr;

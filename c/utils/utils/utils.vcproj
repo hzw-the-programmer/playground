@@ -166,6 +166,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\align.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\bitfield.cpp"
 				>
 			</File>
@@ -246,11 +250,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\input.c"
+				>
+			</File>
+			<File
+				RelativePath=".\insertion_sort.c"
+				>
+			</File>
+			<File
 				RelativePath=".\int.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\itoa.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\linear_layout.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\log.cpp"
 				>
 			</File>
 			<File
@@ -278,6 +298,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\param.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\preprocessor.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\queue.cpp"
 				>
 			</File>
@@ -295,6 +323,10 @@
 			</File>
 			<File
 				RelativePath=".\redux_test.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\shift.cpp"
 				>
 			</File>
 			<File

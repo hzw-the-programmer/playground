@@ -52,6 +52,9 @@ void test_param();
 void test_shift();
 void test_align();
 void test_log();
+void test_linear_layout();
+extern "C" void test_insertion_sort();
+extern "C" void test_input();
 
 int main(int argc, char *args) {
 	int i;
@@ -107,6 +110,9 @@ int main(int argc, char *args) {
     test_shift();
     test_align();
     test_log();
+    test_linear_layout();
+    test_insertion_sort();
+    test_input();
 
 	MemoryCheck();
 
