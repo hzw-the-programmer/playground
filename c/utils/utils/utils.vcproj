@@ -290,6 +290,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\merge_sort.c"
+				>
+			</File>
+			<File
 				RelativePath=".\mw.c"
 				>
 			</File>

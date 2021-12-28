@@ -55,6 +55,7 @@ void test_log();
 void test_linear_layout();
 extern "C" void test_insertion_sort();
 extern "C" void test_input();
+extern "C" void test_merge_sort();
 
 int main(int argc, char *args) {
 	int i;
@@ -113,6 +114,7 @@ int main(int argc, char *args) {
     test_linear_layout();
     test_insertion_sort();
     test_input();
+    test_merge_sort();
 
 	MemoryCheck();
 
