@@ -6,12 +6,16 @@ void merge(int *a, int begin, int middle, int end, int *b) {
     int i, j, k;
 
     i = begin, j = middle;
-    for (k = 0; k <= end; k++) {
+    for (k = begin; k <= end; k++) {
         if (i < middle && (j > end || a[i] <= a[j])) {
             b[k] = a[i++];
         } else {
             b[k] = a[j++];
         }
+    }
+
+    for (k = begin; k <= end; k++) {
+        a[k] = b[k];
     }
 }
 
@@ -24,7 +28,7 @@ void merge_sort(int *a, int begin, int end, int *b) {
 
     merge_sort(a, begin, middle - 1, b);
     merge_sort(a, middle, end, b);
-    merge(b, begin, middle, end, a);
+    merge(a, begin, middle, end, b);
 }
 
 void test_merge() {
