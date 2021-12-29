@@ -40,7 +40,7 @@ void test_merge() {
     
     for (i = 0; i < ARRAY_SIZE(a); i++)
     {
-        assert(b[i] == i);
+        assert(a[i] == i);
     }
 }
 
@@ -53,7 +53,7 @@ void test_merge_sort_1() {
     
     for (i = 0; i < ARRAY_SIZE(a); i++)
     {
-        assert(b[i] == i);
+        assert(a[i] == i);
     }
 }
 
@@ -66,7 +66,7 @@ void test_merge_sort_2() {
     
     for (i = 0; i < ARRAY_SIZE(a); i++)
     {
-        assert(b[i] == i);
+        assert(a[i] == i);
     }
 }
 
@@ -79,7 +79,7 @@ void test_merge_sort_3() {
     
     for (i = 0; i < ARRAY_SIZE(a); i++)
     {
-        assert(b[i] == i);
+        assert(a[i] == i);
     }
 }
 
