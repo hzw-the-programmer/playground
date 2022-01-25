@@ -1,6 +1,7 @@
 fn main() {
     test1();
     test2();
+    test3();
 }
 
 fn test1() {
@@ -21,4 +22,41 @@ fn test2() {
         .fold(0, |acc, next| acc + next);
     assert_eq!(total, 16);
     println!("{:?}", players);
+}
+
+#[derive(Debug)]
+struct Foo {
+    i: i32,
+}
+
+impl Drop for Foo {
+    fn drop(&mut self) {
+        println!("drop {}", self.i);
+    }
+}
+
+fn test3() {
+    let mut v = Vec::new();
+
+    for i in 0..5 {
+        let f = Foo { i };
+        v.push(f);
+    }
+
+    let mut i = v.iter();
+    println!("{:?}", i.nth(1));
+    println!("{:?}", i.nth(1));
+    println!("{}", v.len());
+
+    // for i in v {
+    // for i in &v {
+    for i in &mut v {
+        // println!("b {}", v.len());
+        println!("b");
+        i.i += 1;
+        println!("{:?}", i);
+        println!("a");
+    }
+
+    println!("finish");
 }
