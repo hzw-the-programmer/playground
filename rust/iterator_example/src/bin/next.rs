@@ -8,4 +8,6 @@ fn main() {
     assert_eq!(Some(&3), i.next());
     assert_eq!(None, i.next());
     assert_eq!(None, i.next());
+
+    println!("{:?}", a);
 }
