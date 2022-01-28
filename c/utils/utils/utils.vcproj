@@ -190,6 +190,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\buffer3.c"
+				>
+			</File>
+			<File
 				RelativePath=".\c_enum.cpp"
 				>
 			</File>
@@ -351,6 +355,10 @@
 			</File>
 			<File
 				RelativePath=".\socket.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\socket1.c"
 				>
 			</File>
 			<File
