@@ -58,6 +58,7 @@ extern "C" void test_input();
 extern "C" void test_merge_sort();
 extern "C" void test_socket();
 extern "C" void test_buf3();
+extern "C" void test_array2d();
 
 int main(int argc, char *args) {
 	int i;
@@ -119,6 +120,7 @@ int main(int argc, char *args) {
     test_merge_sort();
     test_socket();
     test_buf3();
+    test_array2d();
 
 	MemoryCheck();
 

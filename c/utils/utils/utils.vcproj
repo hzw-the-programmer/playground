@@ -170,6 +170,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\array2d.c"
+				>
+			</File>
+			<File
 				RelativePath=".\bitfield.cpp"
 				>
 			</File>
