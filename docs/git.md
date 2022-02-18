@@ -79,3 +79,6 @@ git clone --recurse-submodules https://github.com/chaconinc/MainProject
 
 git log --pretty=format:%h --diff-filter=A -- nucleus
 git diff --name-only commitid HEAD
+
+git describe --tags
+git describe --tags --abbrev=0
