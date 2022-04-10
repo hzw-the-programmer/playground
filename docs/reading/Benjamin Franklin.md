@@ -24,3 +24,10 @@ our founding Yuppie.
 
 industry and frugality are means of procuring wealth
  and thereby securing virtue.
+
+terrestrial pilgrim tenacious
+
+[An Essay upon Projects](https://www.gutenberg.org/files/4087/4087-h/4087-h.htm)
+[Bonifacius](https://quod.lib.umich.edu/e/evans/N01223.0001.001?rgn=main;view=fulltext)
+[Plutarch's Lives](https://penelope.uchicago.edu/Thayer/e/roman/texts/plutarch/lives/home.html)
+[Pilgrim's Progress]()
