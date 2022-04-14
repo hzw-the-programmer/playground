@@ -1,4 +1,8 @@
 https://go.dev/doc/effective_go
+https://go101.org/article/memory-block.html
+https://go101.org/article/value-part.html
+https://go.dev/blog/go15gc
+https://go.dev/doc/faq#Pointers
 
 var p *[]int = new([]int)
  stack      heap
