@@ -15,9 +15,9 @@ mod errors {
 #[tokio::main]
 async fn main() -> errors::Result<()> {
     let tmp_dir = Builder::new().prefix("example").tempdir()?;
-    //let target = "https://www.rust-lang.org/logos/rust-logo-512x512.png";
-    let target = "https://httpbin.org/ip";
-    let resp = reqwest::get(target).await?;
+    //let url = "https://www.rust-lang.org/logos/rust-logo-512x512.png";
+    let url = std::env::args().nth(1).expect("no url given");
+    let resp = reqwest::get(url).await?;
     let mut dest = {
         let fname = resp
             .url()
