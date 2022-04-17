@@ -9,20 +9,28 @@ impl Drop for Item {
 }
 
 impl Item {
-    fn bref(&self) {}
-    fn bval(self) {}
-}
-
-impl AsRef<Item> for Item {
-    fn as_ref(&self) -> &Item {
-        self
+    fn bref(&self) {
+        println!("{} bref", self.i);
+    }
+    fn bval(self) {
+        println!("{} bval", self.i);
     }
 }
 
 fn f1<T>(d: T) {
+    println!("f1: {}", std::any::type_name::<T>());
+}
+
+impl AsRef<Item> for Item {
+    fn as_ref(&self) -> &Item {
+        println!("as_ref: {} {}", std::any::type_name::<Self>(), self.i);
+        self
+    }
 }
 
 fn f2<T: AsRef<Item>>(d: T) {
+    println!("f2: {}", std::any::type_name::<T>());
+    d.as_ref();
 }
 
 trait Show {
@@ -32,27 +40,27 @@ trait Show {
 
 impl Show for Item {
     fn showr(&self) {
-        println!("showr");
+        println!("showr: {}, T", std::any::type_name::<Self>());
     }
     fn showv(self) {
-        println!("showv");
+        println!("showv: {}, T", std::any::type_name::<Self>());
     }
 }
 
 fn f3<T: Show>(d: T) {
+    println!("f3: {}", std::any::type_name::<T>());
     d.showr();
     d.showv();
-    println!("f3 end");
 }
 
 impl<T> Show for &T
 where
     T: Show {
     fn showr(&self) {
-        println!("&T showr");
+        println!("showr: {}, &T", std::any::type_name::<T>());
     }
     fn showv(self) {
-        println!("&T showv");
+        println!("showv: {}, &T", std::any::type_name::<T>());
     }
 }
 
@@ -60,38 +68,109 @@ impl<T> Show for &mut T
 where
     T: Show {
     fn showr(&self) {
-        println!("&mut T showr");
+        println!("showr: {}, &mut T", std::any::type_name::<T>());
     }
     fn showv(self) {
-        println!("&mut T showv");
+        println!("showv: {}, &mut T", std::any::type_name::<T>());
     }
 }
 
-fn main() {
+fn f4<T: Show>(d: &T) {
+    println!("f4: {}", std::any::type_name::<T>());
+    d.showr();
+    d.showv();
+}
+
+fn test_bref_bval() {
     let d0 = Item{i: 0};
-    let d1 = Item{i: 1};
-    let d2 = Item{i: 2};
-    let d3 = Item{i: 3};
-    let d4 = &Item{i: 4};
-    let d5 = Item{i: 5};
-    let d6 = &mut Item{i: 6};
-    let d7 = Item{i: 7};
-    let d8 = &Item{i: 8};
-    let d9 = &mut Item{i: 9};
+    println!("d0.bref/bval begin");
+    d0.bref();
+    d0.bval();
+    println!("d0.bref/bval end");
+
+    let d1 = &Item{i: 1};
+    println!("d1.bref/bval begin");
+    d1.bref();
+    //d1.bval();
+    println!("d1.bref/bval end");
+}
+
+fn test_f1() {
+    let d0 = Item{i: 0};
+    println!("f1(d0) begin");
     f1(d0);
+    println!("f1(d0) end");
+    
+    let mut d1 = Item{i: 1};
+    println!("f1(&d1) begin");
     f1(&d1);
-    d2.bref();
-    d3.bref();
-    d3.bval();
-    d4.bref();
-    //d4.bval();
-    let d = d4.as_ref();
-    let d = d5.as_ref();
-    f2(d4);
-    f2(d5);
-    f2(d6);
-    f3(d7);
-    f3(d8);
-    f3(d9);
-    println!("end");
+    println!("f1(&d1) end");
+    
+    println!("f1(&mut d1) begin");
+    f1(&mut d1);
+    println!("f1(&mut d1) end");
+}
+
+fn test_f2() {
+    let d0 = Item{i: 0};
+    println!("f2(d0) begin");
+    f2(d0);
+    println!("f2(d0) end");
+    
+    let mut d1 = Item{i: 1};
+    println!("f2(&d1) begin");
+    f2(&d1);
+    println!("f2(&d1) end");
+    
+    println!("f2(&mut d1) begin");
+    f2(&mut d1);
+    println!("f2(&mut d1) end");
+}
+
+fn test_f3() {
+    let d0 = Item{i: 0};
+    println!("f3(d0) begin");
+    f3(d0);
+    println!("f3(d0) end");
+    
+    let mut d1 = Item{i: 1};
+    println!("f3(&d1) begin");
+    f3(&d1);
+    println!("f3(&d1) end");
+    
+    println!("f3(&mut d1) begin");
+    f3(&mut d1);
+    println!("f3(&mut d1) end");
+}
+
+fn test_f4() {
+    let mut d1 = Item{i: 1};
+    println!("f4(&d1) begin");
+    f4(&d1);
+    println!("f4(&d1) end");
+    
+    println!("f4(&mut d1) begin");
+    f4(&mut d1);
+    println!("f4(&mut d1) end");
+
+    println!("f4(&&d1) begin");
+    f4(&&d1);
+    println!("f4(&&d1) end");
+}
+
+fn main() {
+    test_bref_bval();
+    println!("");
+
+    test_f1();
+    println!("");
+
+    test_f2();
+    println!("");
+
+    test_f3();
+    println!("");
+
+    test_f4();
+    println!("");
 }
