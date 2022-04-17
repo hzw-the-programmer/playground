@@ -13,15 +13,17 @@ async fn main() -> reqwest1::errors::Result<()> {
     let fname = reqwest1::fname(&url, &dir)?;
 
     if !dir.is_dir() {
-        println!("create dir: {:?}", dir);
         fs::create_dir(dir); 
     }
 
     if !fname.is_file() {
-        println!("create file: {:?}", fname);
-        reqwest1::download(&url, &fname).await?;
+        match reqwest1::download(&url, &fname).await {
+            Ok(size) => println!("download {:?} successful, size={}", fname.file_name().expect("file_name"), size),
+            Err(err) => return Err(err)
+        }
     }
 
+    let mut handles = vec![];
     let file = File::open(fname)?;
     let buf = io::BufReader::new(file);
     let mut r = m3u::EntryExtReader::new_ext(buf)?;
@@ -30,12 +32,23 @@ async fn main() -> reqwest1::errors::Result<()> {
         if let m3u::Entry::Url(url) = e.entry {
             let url = Url::parse(url.as_str())?;
             let fname = reqwest1::fname(&url, &dir)?;
-            tokio::spawn(async move {
-                match reqwest1::download(&url, &fname).await {
-                    Ok(()) => println!("ok"),
-                    Err(e) => println!("{:?}", e)
+            if !fname.is_file() {
+                let handle = tokio::spawn(async move {
+                    match reqwest1::download(&url, &fname).await {
+                        Ok(size) => println!("download {:?} successful, size={}", fname.file_name().expect("file_name"), size),
+                        Err(err) => {
+                            println!("download {:?} failed, err={:?}", fname.file_name().expect("file_name"), err);
+                        }
+                    }
+                });
+                handles.push(handle);
+            }
+            if handles.len() == 10 {
+                for handle in handles {
+                    handle.await;
                 }
-            });
+                handles = vec![];
+            }
         }
     }
 

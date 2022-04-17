@@ -1,6 +1,6 @@
 use std::fs::{self, File};
 use std::io::copy;
-use std::path::{self, Path, PathBuf};
+use std::path::{Path, PathBuf};
 use url::Url;
 
 pub mod errors {
@@ -16,14 +16,17 @@ pub mod errors {
     }
 }
 
-pub async fn download(url: &Url, fname: &Path) -> errors::Result<()> {
-    let mut dst = File::create(fname)?;
-
+pub async fn download(url: &Url, fname: &Path) -> errors::Result<u64> {
     let resp = reqwest::get(url.as_str()).await?;
     let src = resp.text().await?;
-    copy(&mut src.as_bytes(), &mut dst);
-
-    Ok(())
+    let mut dst = File::create(fname)?;
+    match copy(&mut src.as_bytes(), &mut dst) {
+        Ok(size) => Ok(size),
+        Err(err) => {
+            fs::remove_file(fname)?;
+            Err(errors::Error::from_kind(errors::ErrorKind::Io(err)))
+        }
+    }
 }
 
 pub fn fname(url: &Url, dir: &Path) -> errors::Result<PathBuf> {
