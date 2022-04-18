@@ -12,6 +12,7 @@ pub mod errors {
             UrlParse(url::ParseError);
             EntryReaderConstruction(m3u::EntryExtReaderConstructionError);
             ReadEntry(m3u::ReadEntryExtError);
+            Join(tokio::task::JoinError);
         }
     }
 }
