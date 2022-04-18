@@ -11,6 +11,11 @@ struct Task {
 
 impl Drop for Task {
     fn drop(&mut self) {
+        /*
+        if self.sender_id != 0 {
+            return;
+        }
+        */
         println!("{} -> {}: {} dropped", self.sender_id, self.receiver_id, self.id);
     }
 }
@@ -42,7 +47,7 @@ async fn main() -> errors::Result<()> {
 
     //receiver.close();
     
-    for i in 0..10 {
+    for i in 0..5 {
         let sender = sender.clone();
         let handle = tokio::spawn(async move {
             let mut id = 0;
