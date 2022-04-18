@@ -11,3 +11,7 @@ vi main.go
 go mod edit --replace example.com/greetings=../greetings
 go mod tidy
 go run .
+
+go fmt
+go test
+go test -v
