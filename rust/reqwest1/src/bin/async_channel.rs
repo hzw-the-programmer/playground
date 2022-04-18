@@ -11,7 +11,7 @@ struct Task {
 
 impl Drop for Task {
     fn drop(&mut self) {
-        println!("task {} from sender {} to receiver {} dropped", self.id, self.sender_id, self.receiver_id);
+        println!("{} -> {}: {} dropped", self.sender_id, self.receiver_id, self.id);
     }
 }
 
@@ -28,13 +28,13 @@ async fn main() -> errors::Result<()> {
                 match receiver.recv().await {
                     Ok(mut task) => {
                         task.receiver_id = receiver_id;
-                        println!("receiver {}: {:?}", receiver_id, task);
+                        //println!("receiver {}: {:?}", receiver_id, task);
                     }
                     Err(err) => {
                         println!("receiver {}: {:?}", receiver_id, err);
                     }
                 }
-                time::sleep(Duration::from_millis(10000)).await;
+                time::sleep(Duration::from_millis(1000)).await;
             }
         });
         handles.push(handle);
@@ -53,7 +53,7 @@ async fn main() -> errors::Result<()> {
                 id = id + 1;
                 match sender.send(task).await {
                     Ok(()) => {
-                        println!("sender {}: send task {} successful", sender_id, id);
+                        //println!("sender {}: send task {} successful", sender_id, id);
                     } 
                     Err(err) => {
                         println!("sender {}: send task {} failed {:?}", sender_id, id, err);
