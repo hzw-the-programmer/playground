@@ -28,17 +28,16 @@ func NewServer() *Server {
 }
 
 func (s *Server) routes() {
-	s.HandleFunc("/shopping-items", s.createShoppingItem()).Methods("POST")
-	s.HandleFunc("/shopping-items", s.listShoppingItems()).Methods("GET")
-	s.HandleFunc("/shopping-items/{id}", s.removeShoppingItem()).Methods("DELETE")
+	s.Handle("/shopping-items", s.createShoppingItem()).Methods("POST")
+	s.Handle("/shopping-items", s.listShoppingItems()).Methods("GET")
+	s.Handle("/shopping-items/{id}", s.removeShoppingItem()).Methods("DELETE")
 }
 
-func (s *Server) createShoppingItem() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (s *Server) createShoppingItem() appHandler {
+	return func(w http.ResponseWriter, r *http.Request) *appError {
 		var i Item
 		if err := json.NewDecoder(r.Body).Decode(&i); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
+			return &appError{err, err.Error(), http.StatusBadRequest}
 		}
 
 		i.ID = uuid.New()
@@ -46,29 +45,30 @@ func (s *Server) createShoppingItem() http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application-json")
 		if err := json.NewEncoder(w).Encode(i); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+			return &appError{err, err.Error(), http.StatusInternalServerError}
 		}
+
+		return nil
 	}
 }
 
-func (s *Server) listShoppingItems() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (s *Server) listShoppingItems() appHandler {
+	return func(w http.ResponseWriter, r *http.Request) *appError {
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(s.shoppingItems); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+			return &appError{err, err.Error(), http.StatusInternalServerError}
 		}
+
+		return nil
 	}
 }
 
-func (s *Server) removeShoppingItem() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (s *Server) removeShoppingItem() appHandler {
+	return func(w http.ResponseWriter, r *http.Request) *appError {
 		idStr, _ := mux.Vars(r)["id"]
 		id, err := uuid.Parse(idStr)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
+			return &appError{err, err.Error(), http.StatusBadRequest}
 		}
 
 		for i, item := range s.shoppingItems {
@@ -77,5 +77,7 @@ func (s *Server) removeShoppingItem() http.HandlerFunc {
 				break
 			}
 		}
+
+		return nil
 	}
 }
