@@ -20,6 +20,8 @@ import (
 	"net/http"
 
 	"github.com/spf13/cobra"
+
+	"example.com/httpserver/api"
 )
 
 var _ = fmt.Println
@@ -35,7 +37,8 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		serve()
+		srv := api.NewServer()
+		http.ListenAndServe(":8080", srv)
 	},
 }
 
