@@ -2,10 +2,13 @@
 GET http://localhost:3000/api/v1/book
 
 ### 
-GET http://localhost:3000/api/v1/book/2
+GET http://localhost:3000/api/v1/book/3
 
 ###
 POST http://localhost:3000/api/v1/book
+Content-Type: application/json
+
+{"title": "1984", "author": "George Orwell", "rating": 5}
 
 ###
-DELETE http://localhost:3000/api/v1/book/2
+DELETE http://localhost:3000/api/v1/book/4

@@ -21,12 +21,12 @@ func GetBooks(c *fiber.Ctx) error {
 	return c.JSON(books)
 }
 
-// curl -X POST http://localhost:3000/api/v1/book
+// curl -X POST -H "Content-Type: application/json" --data "{\"title\": \"Angels and Demons\", \"author\": \"Dan Brown\", \"rating\": 5}" http://localhost:3000/api/v1/book
 func NewBook(c *fiber.Ctx) error {
-	var book Book
-	book.Title = "1984"
-	book.Author = "George Orwell"
-	book.Rating = 5
+	book := Book{}
+	if err := c.BodyParser(&book); err != nil {
+		return c.Status(503).SendString(err.Error())
+	}
 	database.DB.Create(&book)
 	return c.JSON(book)
 }
