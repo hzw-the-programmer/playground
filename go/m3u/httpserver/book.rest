@@ -1,0 +1,11 @@
+### 
+GET http://localhost:3000/api/v1/book
+
+### 
+GET http://localhost:3000/api/v1/book/2
+
+###
+POST http://localhost:3000/api/v1/book
+
+###
+DELETE http://localhost:3000/api/v1/book/2

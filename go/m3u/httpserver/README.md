@@ -10,7 +10,7 @@ sudo mysql_secure_installation
 ### root login
 sudo mysql
 CREATE USER 'gorm'@'_gateway' IDENTIFIED BY 'gorM@123';
-grant create on gorm.* to 'gorm'@'_gateway';
+grant create, select, insert, delete on gorm.* to 'gorm'@'_gateway';
 // create database gorm;
 quit
 mysql -u gorm -h _gateway -p
