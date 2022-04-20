@@ -1,6 +1,32 @@
 https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04
 https://www.digitalocean.com/community/tutorials/how-to-allow-remote-access-to-mysql
 
+### install
+sudo apt update
+sudo apt install mysql-server
+// sudo systemctl start mysql.service
+sudo mysql_secure_installation
+
+### root login
+sudo mysql
+CREATE USER 'gorm'@'_gateway' IDENTIFIED BY 'gorM@123';
+grant create on gorm.* to 'gorm'@'_gateway';
+// create database gorm;
+quit
+mysql -u gorm -h _gateway -p
+create database gorm;
+
+### check mysql listen address
+netstat -tlnp
+tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN      -
+sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+bind-address            = 127.0.0.1
+bind-address            = *
+sudo systemctl restart mysql
+netstat -tlnp
+tcp6       0      0 :::3306                 :::*                    LISTEN      -
+
+### other staff
 sudo apt update
 sudo apt install mysql-server
 sudo systemctl start mysql.service
