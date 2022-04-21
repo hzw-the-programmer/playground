@@ -246,6 +246,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\history.c"
+				>
+			</File>
+			<File
+				RelativePath=".\history.h"
+				>
+			</File>
+			<File
+				RelativePath=".\history_test.c"
+				>
+			</File>
+			<File
 				RelativePath=".\hs.cpp"
 				>
 			</File>
@@ -282,6 +294,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\macro.c"
+				>
+			</File>
+			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -311,6 +327,10 @@
 			</File>
 			<File
 				RelativePath=".\param.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\pointer.c"
 				>
 			</File>
 			<File
@@ -394,6 +414,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test.c"
+				>
+			</File>
+			<File
+				RelativePath=".\test.h"
+				>
+			</File>
+			<File
+				RelativePath=".\types.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ucs2.cpp"
 				>
 			</File>
@@ -403,6 +435,10 @@
 			</File>
 			<File
 				RelativePath=".\utf8.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\utils.h"
 				>
 			</File>
 			<File
