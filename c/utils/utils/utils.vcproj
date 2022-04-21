@@ -246,18 +246,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\history.c"
-				>
-			</File>
-			<File
-				RelativePath=".\history.h"
-				>
-			</File>
-			<File
-				RelativePath=".\history_test.c"
-				>
-			</File>
-			<File
 				RelativePath=".\hs.cpp"
 				>
 			</File>
@@ -461,6 +449,22 @@
 				RelativePath=".\wsprintf.cpp"
 				>
 			</File>
+			<Filter
+				Name="history"
+				>
+				<File
+					RelativePath=".\history\history.c"
+					>
+				</File>
+				<File
+					RelativePath=".\history\history.h"
+					>
+				</File>
+				<File
+					RelativePath=".\history\history_test.c"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
