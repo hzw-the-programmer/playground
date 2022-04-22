@@ -68,16 +68,19 @@ void history_start(HistoryItem item) {
 
     if (history_item_index(item) < 0) {
         item.on_create(item.self);
-        top = history_peek();
         top.on_pause(item.self);
         if (top.flags & HISTORY_FLAG_NO_HISTORY) {
-            top.on_destroy(top.self);
             history_pop();
+            top.on_destroy(top.self);
         }
-        item.on_resume(item.self);
         history_push(item);
+        item.on_resume(item.self);
         return;
     }
+
+    top.on_pause(top.self);
+    history_pop();
+    top.on_destroy(top.self);
 
     while (!history_empty()) {
         top = history_peek();
@@ -87,9 +90,41 @@ void history_start(HistoryItem item) {
             return;
         }
 
-        top.on_pause(top.self);
-        top.on_destroy(top.self);
         history_pop();
+        top.on_destroy(top.self);
+    }
+}
+
+void history_replace_before(HistoryItem item, HistoryItem nitem) {
+    HistoryItem top = {0};
+
+    if (history_empty() || history_item_index(item) < 0) {
+        return;
+    }
+
+    top = history_peek();
+    
+    if (history_item_cmp(top, item) == 0) {
+        return;
+    }
+
+    nitem.on_create(nitem.self);
+
+    top.on_pause(top.self);
+    history_pop();
+    top.on_destroy(top.self);
+    
+    while (!history_empty()) {
+            top = history_peek();
+            
+            if (history_item_cmp(top, item) == 0) {
+                history_push(nitem);
+                nitem.on_resume(nitem.self);
+                return;
+            }
+
+            history_pop();
+            top.on_destroy(top.self);
     }
 }
 
