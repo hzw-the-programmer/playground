@@ -143,8 +143,9 @@ void history_back() {
         return;
     }
 
-    top = history_pop();
+    top = history_peek();
     top.on_pause(top.self);
+    history_pop();
     top.on_destroy(top.self);
 
     if (history_empty()) {
