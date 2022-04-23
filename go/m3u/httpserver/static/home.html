@@ -8,7 +8,10 @@
                 var log = document.getElementById("log");
 
                 function appendLog(item) {
+                    console.log(log.scrollTop, log.scrollHeight, log.clientHeight);
                     log.appendChild(item);
+                    console.log(log.scrollTop, log.scrollHeight, log.clientHeight);
+                    log.scrollTop = log.scrollHeight - log.clientHeight;
                 }
 
                 document.getElementById("form").onsubmit = function () {

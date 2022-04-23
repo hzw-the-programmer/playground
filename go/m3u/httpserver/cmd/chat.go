@@ -69,6 +69,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "static/home.html")
 }
 
+// https://github.com/gorilla/websocket/tree/master/examples/chat
 func chatCmdRun() {
 	hub := chat.NewHub()
 	go hub.Run()
