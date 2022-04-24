@@ -11,6 +11,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.11.0
+	golang.org/x/net v0.0.0-20220412020605-290c469a71a5
 	gorm.io/driver/mysql v1.3.3
 	gorm.io/gorm v1.23.4
 )
