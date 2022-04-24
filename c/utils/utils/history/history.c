@@ -55,8 +55,8 @@ void history_start(HistoryItem item) {
 
     if (history_empty()) {
         item.on_create(item.self);
-        item.on_resume(item.self);
         history_push(item);
+        item.on_resume(item.self);
         return;
     }
 
@@ -129,10 +129,20 @@ void history_replace_before(HistoryItem item, HistoryItem nitem) {
 }
 
 void history_clear() {
+    HistoryItem top = {0};
+    
+    if (history_empty()) {
+        return;
+    }
+
+    top = history_peek();
+    top.on_pause(top.self);
+    history_pop();
+    top.on_destroy(top.self);
+
     while (!history_empty()) {
-        HistoryItem item = history_pop();
-        item.on_pause(item.self);
-        item.on_destroy(item.self);
+        top = history_pop();
+        top.on_destroy(top.self);
     }
 }
 
