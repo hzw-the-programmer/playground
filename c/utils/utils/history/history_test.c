@@ -278,9 +278,9 @@ static void history_test_clear_top_1() {
                                    "a_on_pause\n"
                                    "a_on_destroy";
     
-    HistoryItem a = {&a, 0, a_on_create, a_on_resume, a_on_pause, a_on_destroy};
-    HistoryItem b = {&b, 0, b_on_create, b_on_resume, b_on_pause, b_on_destroy};
-    HistoryItem c = {&c, 0, c_on_create, c_on_resume, c_on_pause, c_on_destroy};
+    HistoryItem a = {&a, 0, a_on_create, a_on_resume, a_on_pause, a_on_destroy, a_on_data};
+    HistoryItem b = {&b, 0, b_on_create, b_on_resume, b_on_pause, b_on_destroy, b_on_data};
+    HistoryItem c = {&c, 0, c_on_create, c_on_resume, c_on_pause, c_on_destroy, c_on_data};
     
     history_start(a);
     history_start(b);
