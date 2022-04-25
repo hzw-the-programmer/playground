@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "utils", "utils\utils.vcproj", "{06E1C649-F608-4E4F-BDBE-DC3E741CC96F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tcp", "tcp\tcp.vcproj", "{D366BAEC-AE39-4D95-979A-22699676D7D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{06E1C649-F608-4E4F-BDBE-DC3E741CC96F}.Debug|Win32.Build.0 = Debug|Win32
 		{06E1C649-F608-4E4F-BDBE-DC3E741CC96F}.Release|Win32.ActiveCfg = Release|Win32
 		{06E1C649-F608-4E4F-BDBE-DC3E741CC96F}.Release|Win32.Build.0 = Release|Win32
+		{D366BAEC-AE39-4D95-979A-22699676D7D5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D366BAEC-AE39-4D95-979A-22699676D7D5}.Debug|Win32.Build.0 = Debug|Win32
+		{D366BAEC-AE39-4D95-979A-22699676D7D5}.Release|Win32.ActiveCfg = Release|Win32
+		{D366BAEC-AE39-4D95-979A-22699676D7D5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
