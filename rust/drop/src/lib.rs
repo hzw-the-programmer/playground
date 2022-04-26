@@ -8,3 +8,14 @@ impl Drop for Object {
         println!("object {} dropped", self.id);
     }
 }
+
+pub struct S {
+    pub f1: Object,
+    pub f2: Object,
+}
+
+impl Drop for S {
+    fn drop(&mut self) {
+        println!("S dropped");
+    }
+}

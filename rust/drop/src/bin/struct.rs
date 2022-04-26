@@ -1,4 +1,4 @@
-use drop::Object;
+use drop::{Object, S};
 
 fn main() {
     let tests: Vec<fn()> = vec![test0, test1, test2, test3];
@@ -51,15 +51,4 @@ fn test3() {
         println!("after assignment")
     }
     println!("end")
-}
-
-struct S {
-    f1: Object,
-    f2: Object,
-}
-
-impl Drop for S {
-    fn drop(&mut self) {
-        println!("S dropped");
-    }
 }
