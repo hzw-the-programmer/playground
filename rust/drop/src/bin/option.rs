@@ -1,3 +1,5 @@
+use drop::Object;
+
 fn main() {
     let tests: Vec<fn()> = vec![
         test1,
@@ -59,15 +61,4 @@ fn test4() {
     println!("after if let");
 
     //println!("{:?}", option);
-}
-
-#[derive(Debug)]
-struct Object {
-    id: i32,
-}
-
-impl Drop for Object {
-    fn drop(&mut self) {
-        println!("object {} dropped", self.id);
-    }
 }
