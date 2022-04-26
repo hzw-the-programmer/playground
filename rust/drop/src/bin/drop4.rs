@@ -29,9 +29,9 @@ impl Drop for Item {
 }
 
 fn main() {
-    let i0 = Item{i: 0};
+    let i0 = Item { i: 0 };
     f1(i0);
-    let i1 = &Item{i: 1};
+    let i1 = &Item { i: 1 };
     f1(i1);
     println!("main end");
 }

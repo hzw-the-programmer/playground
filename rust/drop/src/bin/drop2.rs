@@ -13,11 +13,11 @@ fn main() {
     //for i in v {
     for i in &v {
         println!("{:?}", i);
-    } 
+    }
     match &v[0] {
         //Some(ref i) => println!("{:?}", i),
         Some(i) => println!("{:?}", i),
-        None => println!("None")
+        None => println!("None"),
     }
     println!("end");
 }

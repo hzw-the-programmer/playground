@@ -35,7 +35,9 @@ fn f2<T: AsRef<Item>>(d: T) {
 
 trait Show {
     fn showr(&self);
-    fn showv(self) where Self: Sized;
+    fn showv(self)
+    where
+        Self: Sized;
 }
 
 impl Show for Item {
@@ -55,7 +57,8 @@ fn f3<T: Show>(d: T) {
 
 impl<T> Show for &T
 where
-    T: Show {
+    T: Show,
+{
     fn showr(&self) {
         println!("showr: {}, &T", std::any::type_name::<T>());
     }
@@ -66,7 +69,8 @@ where
 
 impl<T> Show for &mut T
 where
-    T: Show {
+    T: Show,
+{
     fn showr(&self) {
         println!("showr: {}, &mut T", std::any::type_name::<T>());
     }
@@ -82,13 +86,13 @@ fn f4<T: Show>(d: &T) {
 }
 
 fn test_bref_bval() {
-    let d0 = Item{i: 0};
+    let d0 = Item { i: 0 };
     println!("d0.bref/bval begin");
     d0.bref();
     d0.bval();
     println!("d0.bref/bval end");
 
-    let d1 = &Item{i: 1};
+    let d1 = &Item { i: 1 };
     println!("d1.bref/bval begin");
     d1.bref();
     //d1.bval();
@@ -96,59 +100,59 @@ fn test_bref_bval() {
 }
 
 fn test_f1() {
-    let d0 = Item{i: 0};
+    let d0 = Item { i: 0 };
     println!("f1(d0) begin");
     f1(d0);
     println!("f1(d0) end");
-    
-    let mut d1 = Item{i: 1};
+
+    let mut d1 = Item { i: 1 };
     println!("f1(&d1) begin");
     f1(&d1);
     println!("f1(&d1) end");
-    
+
     println!("f1(&mut d1) begin");
     f1(&mut d1);
     println!("f1(&mut d1) end");
 }
 
 fn test_f2() {
-    let d0 = Item{i: 0};
+    let d0 = Item { i: 0 };
     println!("f2(d0) begin");
     f2(d0);
     println!("f2(d0) end");
-    
-    let mut d1 = Item{i: 1};
+
+    let mut d1 = Item { i: 1 };
     println!("f2(&d1) begin");
     f2(&d1);
     println!("f2(&d1) end");
-    
+
     println!("f2(&mut d1) begin");
     f2(&mut d1);
     println!("f2(&mut d1) end");
 }
 
 fn test_f3() {
-    let d0 = Item{i: 0};
+    let d0 = Item { i: 0 };
     println!("f3(d0) begin");
     f3(d0);
     println!("f3(d0) end");
-    
-    let mut d1 = Item{i: 1};
+
+    let mut d1 = Item { i: 1 };
     println!("f3(&d1) begin");
     f3(&d1);
     println!("f3(&d1) end");
-    
+
     println!("f3(&mut d1) begin");
     f3(&mut d1);
     println!("f3(&mut d1) end");
 }
 
 fn test_f4() {
-    let mut d1 = Item{i: 1};
+    let mut d1 = Item { i: 1 };
     println!("f4(&d1) begin");
     f4(&d1);
     println!("f4(&d1) end");
-    
+
     println!("f4(&mut d1) begin");
     f4(&mut d1);
     println!("f4(&mut d1) end");
