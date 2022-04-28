@@ -19,3 +19,11 @@ impl Drop for S {
         println!("S dropped");
     }
 }
+
+pub fn tests(tests: &[fn()]) {
+    for (i, test) in tests.iter().enumerate() {
+        println!("/*** test {} ***/", i);
+        test();
+        println!("");
+    }
+}
