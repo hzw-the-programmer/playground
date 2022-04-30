@@ -3,9 +3,11 @@ use tokio::task::yield_now;
 
 #[tokio::main]
 async fn main() {
-    let m = Mutex::new(0);
+    //let m = Mutex::new(0);
     //increment_and_do_stuff(&m).await;
-    let handle = tokio::spawn(increment_and_do_stuff(m));
+    //let handle = tokio::spawn(increment_and_do_stuff(m));
+    let ci = CanIncrement { m: Mutex::new(0) };
+    let handle = tokio::spawn(increment_and_do_stuff_1(ci));
     handle.await.unwrap();
 }
 
@@ -15,4 +17,20 @@ async fn increment_and_do_stuff(m: Mutex<i32>) {
         *mg += 1;
     }
     yield_now().await;
+}
+
+async fn increment_and_do_stuff_1(ci: CanIncrement) {
+    ci.increment();
+    yield_now().await;
+}
+
+struct CanIncrement {
+    m: Mutex<i32>,
+}
+
+impl CanIncrement {
+    fn increment(&self) {
+        let mut mg = self.m.lock().unwrap();
+        *mg += 1;
+    }
 }
