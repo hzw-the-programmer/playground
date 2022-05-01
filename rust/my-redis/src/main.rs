@@ -15,11 +15,11 @@ async fn main() {
             match cmd {
                 Get { key, resp } => {
                     let r = client.get(&key).await;
-                    resp.send(r).unwrap();
+                    let _ = resp.send(r);
                 }
                 Set { key, val, resp } => {
                     let r = client.set(&key, val).await;
-                    resp.send(r).unwrap();
+                    let _ = resp.send(r);
                 }
             }
         }
