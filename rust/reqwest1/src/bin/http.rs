@@ -33,6 +33,12 @@ async fn hello_world(req: Request<Body>) -> Result<Response<Body>, Infallible> {
             });
             *response.body_mut() = Body::wrap_stream(mapping);
         }
+        (&Method::POST, "/echo/reverse") => {
+            if let Ok(full_body) = hyper::body::to_bytes(req.into_body()).await {
+                let reversed = full_body.iter().rev().cloned().collect::<Vec<u8>>();
+                *response.body_mut() = reversed.into();
+            }
+        }
         _ => *response.status_mut() = StatusCode::NOT_FOUND,
     }
     Ok(response)
