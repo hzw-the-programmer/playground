@@ -1,5 +1,5 @@
 use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Request, Response, Server};
+use hyper::{Body, Method, Request, Response, Server, StatusCode};
 use std::convert::Infallible;
 use std::net::SocketAddr;
 
@@ -16,6 +16,12 @@ async fn main() {
     }
 }
 
-async fn hello_world(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    Ok(Response::new("hello world".into()))
+async fn hello_world(req: Request<Body>) -> Result<Response<Body>, Infallible> {
+    let mut response = Response::new(Body::empty());
+    match (req.method(), req.uri().path()) {
+        (&Method::GET, "/") => *response.body_mut() = Body::from("Try POSTing data to /echo"),
+        (&Method::POST, "/echo") => {}
+        _ => *response.status_mut() = StatusCode::NOT_FOUND,
+    }
+    Ok(response)
 }
