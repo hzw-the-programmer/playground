@@ -12,6 +12,8 @@ fn main() -> Result<()> {
     test5();
     println!("");
     test6();
+    println!("");
+    test7();
     Ok(())
 }
 
@@ -91,6 +93,18 @@ fn test6() {
         println!("{:?}", i);
     }
     println!("finish test6");
+}
+
+fn test7() {
+    let mut a = [1u8, 2u8, 3u8];
+    let mut buf = [0; 128];
+    //a.read(&mut buf);
+    let mut ar = &a;
+    //let _: i32 = ar;
+    //ar.read(&mut buf);
+    let mut b = &a[..];
+    //let _: i32 = b;
+    b.read(&mut buf);
 }
 
 #[derive(Debug)]
