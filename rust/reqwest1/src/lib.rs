@@ -34,7 +34,7 @@ pub fn fname(url: &Url, dir: &Path) -> errors::Result<PathBuf> {
     let fname = url
         .path_segments()
         .and_then(|segments| segments.last())
-        .and_then(|name| if name.is_empty() {None} else {Some(name)})
+        .and_then(|name| if name.is_empty() { None } else { Some(name) })
         .unwrap_or("unamed");
     let fname = dir.join(fname);
 
@@ -44,7 +44,7 @@ pub fn fname(url: &Url, dir: &Path) -> errors::Result<PathBuf> {
 #[derive(Debug)]
 pub struct Task {
     name: String,
-    url: String
+    url: String,
 }
 
 pub fn parse_url<P: AsRef<Path>>(path: P) -> errors::Result<Vec<Task>> {
@@ -62,8 +62,7 @@ pub fn parse_url<P: AsRef<Path>>(path: P) -> errors::Result<Vec<Task>> {
         if size == 0 {
             break;
         }
-        tasks.push(Task{name, url});
-        
+        tasks.push(Task { name, url });
     }
     Ok(tasks)
 }

@@ -709,6 +709,7 @@ version = "0.1.0"
 dependencies = [
  "async-channel",
  "error-chain",
+ "hyper",
  "m3u",
  "reqwest",
  "tempfile",

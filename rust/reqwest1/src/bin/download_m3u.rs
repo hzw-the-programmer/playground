@@ -13,13 +13,17 @@ async fn main() -> reqwest1::errors::Result<()> {
     let fname = reqwest1::fname(&url, &dir)?;
 
     if !dir.is_dir() {
-        fs::create_dir(dir); 
+        fs::create_dir(dir);
     }
 
     if !fname.is_file() {
         match reqwest1::download(&url, &fname).await {
-            Ok(size) => println!("download {:?} successful, size={}", fname.file_name().expect("file_name"), size),
-            Err(err) => return Err(err)
+            Ok(size) => println!(
+                "download {:?} successful, size={}",
+                fname.file_name().expect("file_name"),
+                size
+            ),
+            Err(err) => return Err(err),
         }
     }
 
@@ -35,9 +39,17 @@ async fn main() -> reqwest1::errors::Result<()> {
             if !fname.is_file() {
                 let handle = tokio::spawn(async move {
                     match reqwest1::download(&url, &fname).await {
-                        Ok(size) => println!("download {:?} successful, size={}", fname.file_name().expect("file_name"), size),
+                        Ok(size) => println!(
+                            "download {:?} successful, size={}",
+                            fname.file_name().expect("file_name"),
+                            size
+                        ),
                         Err(err) => {
-                            println!("download {:?} failed, err={:?}", fname.file_name().expect("file_name"), err);
+                            println!(
+                                "download {:?} failed, err={:?}",
+                                fname.file_name().expect("file_name"),
+                                err
+                            );
                         }
                     }
                 });

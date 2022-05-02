@@ -1,6 +1,6 @@
 use reqwest1::errors;
-use tokio::time;
 use std::time::Duration;
+use tokio::time;
 
 #[derive(Debug)]
 struct Task {
@@ -16,7 +16,10 @@ impl Drop for Task {
             return;
         }
         */
-        println!("{} -> {}: {} dropped", self.sender_id, self.receiver_id, self.id);
+        println!(
+            "{} -> {}: {} dropped",
+            self.sender_id, self.receiver_id, self.id
+        );
     }
 }
 
@@ -46,7 +49,7 @@ async fn main() -> errors::Result<()> {
     }
 
     //receiver.close();
-    
+
     for i in 0..5 {
         let sender = sender.clone();
         let handle = tokio::spawn(async move {
@@ -54,23 +57,27 @@ async fn main() -> errors::Result<()> {
             let sender_id = i;
             let receiver_id = -1;
             loop {
-                let task = Task{id, sender_id, receiver_id};
+                let task = Task {
+                    id,
+                    sender_id,
+                    receiver_id,
+                };
                 id = id + 1;
                 match sender.send(task).await {
                     Ok(()) => {
                         //println!("sender {}: send task {} successful", sender_id, id);
-                    } 
+                    }
                     Err(err) => {
                         println!("sender {}: send task {} failed {:?}", sender_id, id, err);
                     }
                 }
-            } 
+            }
         });
         handles.push(handle);
     }
 
     //sender.close();
-    
+
     for handle in handles {
         handle.await?;
     }
