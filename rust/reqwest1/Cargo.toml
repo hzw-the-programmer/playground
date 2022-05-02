@@ -14,3 +14,4 @@ m3u = "1.0.0"
 url = "2.2.2"
 async-channel = "1.6.1"
 hyper = { verson = "0.4", features = ["full"] }
+futures = "0.3"
