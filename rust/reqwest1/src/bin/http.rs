@@ -12,7 +12,9 @@ async fn main() {
 
     let server = Server::bind(&addr).serve(make_svc);
 
-    if let Err(e) = server.await {
+    let graceful = server.with_graceful_shutdown(shutdown_signal());
+
+    if let Err(e) = graceful.await {
         eprintln!("server error: {}", e);
     }
 }
@@ -42,4 +44,10 @@ async fn hello_world(req: Request<Body>) -> Result<Response<Body>, Infallible> {
         _ => *response.status_mut() = StatusCode::NOT_FOUND,
     }
     Ok(response)
+}
+
+async fn shutdown_signal() {
+    tokio::signal::ctrl_c()
+        .await
+        .expect("failed to install CTRL+C signal handler");
 }
