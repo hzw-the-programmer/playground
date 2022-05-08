@@ -1,5 +1,5 @@
 error[E0502]: cannot borrow `v1` as mutable because it is also borrowed as immutable
-  --> fail/vec-push.rs:18:5
+  --> tests/ownership/vec-push.rs:18:5
    |
 16 |     let e = &v1[0];
    |              -- immutable borrow occurs here

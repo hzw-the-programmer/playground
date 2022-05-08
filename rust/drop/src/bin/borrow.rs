@@ -1,3 +1,5 @@
+#![allow(unused_variables, unused_assignments)]
+
 use drop::Object;
 use std::borrow::Borrow;
 use std::ops::Deref;
@@ -74,9 +76,9 @@ fn test2() {
         T
         Object
     */
-    println!("{}", s.Id());
-    println!("{}", r.Id());
-    println!("{}", rr.Id());
+    println!("{}", s.id());
+    println!("{}", r.id());
+    println!("{}", rr.id());
 }
 
 fn test3() {

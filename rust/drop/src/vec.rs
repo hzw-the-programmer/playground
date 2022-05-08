@@ -4,7 +4,7 @@ mod tests {
 
     #[test]
     fn iter() {
-        let mut v = vec![
+        let v = vec![
             Object { id: 0 },
             Object { id: 1 },
             Object { id: 2 },

@@ -1,0 +1,18 @@
+warning: value assigned to `x` is never read
+ --> tests/ownership/borrow.rs:4:5
+  |
+4 |     x = 2;
+  |     ^
+  |
+  = note: `#[warn(unused_assignments)]` on by default
+  = help: maybe it is overwritten before being read?
+
+error[E0506]: cannot assign to `x` because it is borrowed
+ --> tests/ownership/borrow.rs:4:5
+  |
+3 |     let xb = &x;
+  |              -- borrow of `x` occurs here
+4 |     x = 2;
+  |     ^^^^^ assignment to borrowed `x` occurs here
+5 |     println!("{}", xb);
+  |                    -- borrow later used here

@@ -30,5 +30,6 @@ mod tests {
         let o = Object { id: 1 };
         let ao = Object { id: 1 };
         assert_eq!(o, ao);
+        println!("finish");
     }
 }

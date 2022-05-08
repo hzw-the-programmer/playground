@@ -1,3 +1,5 @@
+#![allow(unused_variables)]
+
 use drop::Object;
 use std::cmp::Reverse;
 

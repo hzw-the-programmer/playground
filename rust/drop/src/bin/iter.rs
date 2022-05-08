@@ -1,3 +1,5 @@
+#![allow(dead_code, array_into_iter)]
+
 use drop::Object;
 
 fn main() {

@@ -4,7 +4,7 @@ pub struct Object {
 }
 
 impl Object {
-    pub fn Id(&self) -> i32 {
+    pub fn id(&self) -> i32 {
         self.id
     }
 }

@@ -1,3 +1,5 @@
+#![allow(unused_variables)]
+
 struct Item {
     i: i32,
 }
