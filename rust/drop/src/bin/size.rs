@@ -14,7 +14,7 @@ fn main() {
     println!("size_of(Box<String>) == {}", mem::size_of::<Box<String>>());
     println!(
         "size_of(Box<Vec<i32>>) == {}",
-        mem::size_of::<Box<Box<i32>>>()
+        mem::size_of::<Box<Vec<i32>>>()
     );
     println!("size_of(Box<&dyn H>) == {}", mem::size_of::<Box<&dyn H>>());
 

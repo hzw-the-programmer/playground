@@ -1,0 +1,43 @@
+error[E0422]: cannot find struct, variant or union type `Object` in this scope
+ --> tests/ownership/struct1.rs:2:14
+  |
+2 |     let f1 = Object { id: 1 };
+  |              ^^^^^^ not found in this scope
+  |
+help: consider importing this struct
+  |
+1 | use drop::Object;
+  |
+
+error[E0422]: cannot find struct, variant or union type `Object` in this scope
+ --> tests/ownership/struct1.rs:3:14
+  |
+3 |     let f2 = Object { id: 2 };
+  |              ^^^^^^ not found in this scope
+  |
+help: consider importing this struct
+  |
+1 | use drop::Object;
+  |
+
+error[E0422]: cannot find struct, variant or union type `S` in this scope
+ --> tests/ownership/struct1.rs:4:13
+  |
+4 |     let s = S { f1, f2 };
+  |             ^ not found in this scope
+  |
+help: consider importing this struct
+  |
+1 | use drop::S;
+  |
+
+error[E0422]: cannot find struct, variant or union type `S` in this scope
+ --> tests/ownership/struct1.rs:6:9
+  |
+6 |     let S { f1, f2 } = s;
+  |         ^ not found in this scope
+  |
+help: consider importing this struct
+  |
+1 | use drop::S;
+  |
