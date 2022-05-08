@@ -2,6 +2,7 @@ mod object;
 mod vec;
 pub use object::*;
 
+#[derive(Debug)]
 pub struct S {
     pub f1: Object,
     pub f2: Object,
