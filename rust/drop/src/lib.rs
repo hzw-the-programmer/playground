@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Object {
     pub id: i32,
 }
@@ -31,5 +31,17 @@ pub fn tests(tests: &[fn()]) {
         println!("/*** test {} ***/", i);
         test();
         println!("");
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn eq() {
+        let o = Object { id: 1 };
+        let ao = Object { id: 1 };
+        assert_eq!(o, ao);
     }
 }

@@ -1,4 +1,5 @@
 use drop::Object;
+use std::cmp::Reverse;
 
 fn main() {
     let tests: Vec<fn()> = vec![
@@ -192,4 +193,40 @@ fn test6() {
     // }
 }
 
-fn test7() {}
+fn test7() {
+    let mut v1 = vec![
+        Object { id: 0 },
+        Object { id: 1 },
+        Object { id: 2 },
+        Object { id: 3 },
+        Object { id: 4 },
+    ];
+    v1.sort_by_key(|eb| Reverse(eb.id));
+    println!(
+        "v1.len() == {}, v1.capacity() = {}",
+        v1.len(),
+        v1.capacity(),
+    );
+}
+
+#[cfg(test)]
+mod tests {
+    use drop::Object;
+
+    #[test]
+    fn iter() {
+        let mut v = vec![
+            Object { id: 0 },
+            Object { id: 1 },
+            Object { id: 2 },
+            Object { id: 3 },
+            Object { id: 4 },
+        ];
+        let mut i = v.iter();
+        println!("eq 0");
+        assert_eq!(Some(&Object { id: 0 }), i.next());
+        println!("eq 1");
+        assert_eq!(Some(&Object { id: 1 }), i.next());
+        println!("finish");
+    }
+}

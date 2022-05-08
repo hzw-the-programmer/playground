@@ -79,7 +79,12 @@ fn test2() {
     println!("{}", rr.Id());
 }
 
-fn test3() {}
+fn test3() {
+    let mut x = 42;
+    let xb = &x;
+    x = 2;
+    //println!("{}", xb);
+}
 
 #[derive(Debug)]
 struct S {
