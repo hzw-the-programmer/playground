@@ -1,11 +1,12 @@
 #![allow(unused_variables)]
 
 use drop::Object;
+use std::mem;
 
 fn main() {
     let tests: Vec<fn()> = vec![
         test0, test1, test2, test3, test4, test5, test6, test7, test8, test9, test10, test11,
-        test12, test13,
+        test12, test13, test14, test15, test16, test17, test18, test19, test20,
     ];
 
     drop::tests(&tests);
@@ -165,7 +166,72 @@ fn test12() {
     println!("finish")
 }
 
-fn test13() {}
+fn test13() {
+    let f1 = Object { id: 1 };
+    let f2 = Object { id: 2 };
+    let s = S { f1, f2 };
+
+    let g1 = s.get1();
+    println!("finish");
+}
+
+fn test14() {
+    let f1 = Object { id: 1 };
+    let f2 = Object { id: 2 };
+    let s = &mut S { f1, f2 };
+    s.f1 = Object { id: 3 };
+    println!("finish");
+}
+
+fn test15() {
+    let f1 = Object { id: 1 };
+    let f2 = Object { id: 2 };
+    // let s = &mut S { f1, f2 };
+    let s = S { f1, f2 };
+    {
+        let g1 = s.f1;
+    }
+    println!("finish");
+}
+
+fn test16() {
+    let f1 = Object { id: 1 };
+    let f2 = Object { id: 2 };
+    let mut s = S { f1, f2 };
+
+    let g1 = s.set1(Object { id: 3 });
+    println!("finish");
+}
+
+fn test17() {
+    let f1 = Object { id: 1 };
+    let f2 = Object { id: 2 };
+    let mut s = S { f1, f2 };
+
+    let g1 = s.replace(Object { id: 3 });
+    println!("finish");
+}
+
+fn test18() {
+    let f1 = Object { id: 1 };
+    let f2 = Object { id: 2 };
+    let mut s = S { f1, f2 };
+
+    let g1 = s.swap(Object { id: 3 });
+    println!("finish");
+}
+
+fn test19() {
+    let f1 = Object { id: 1 };
+    let f2 = Object { id: 2 };
+    let mut s = S { f1, f2 };
+
+    let g1 = s.take();
+    // s.take();
+    println!("finish");
+}
+
+fn test20() {}
 
 #[derive(Debug)]
 struct S {
@@ -187,4 +253,32 @@ fn func3(S { f1, ref f2 }: S) {
 
 fn func4(S { ref f1, ref f2 }: S) {
     println!("func4: {:?} {:?}", f1, f2);
+}
+
+impl S {
+    fn get1(self) -> Object {
+        self.f1
+    }
+
+    fn set1(&mut self, o: Object) {
+        self.f1 = o;
+    }
+
+    fn replace(&mut self, o: Object) -> Object {
+        mem::replace(&mut self.f2, o)
+        // let ot = self.f2;
+        // self.f2 = o;
+        // ot
+    }
+
+    fn swap(self: &mut Self, mut o: Object) {
+        mem::swap(&mut self.f1, &mut o);
+    }
+
+    fn take(self: &mut Self) -> Object {
+        mem::take(&mut self.f1)
+    }
+    // fn take(self: &mut Self) {
+    //     mem::take(&mut self.f1);
+    // }
 }
