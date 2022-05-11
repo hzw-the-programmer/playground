@@ -2,6 +2,7 @@
 
 use drop::Object;
 use std::ops::Deref;
+use std::ops::DerefMut;
 
 fn main() {
     let tests: Vec<fn()> = vec![test0, test1, test2, test3];
@@ -30,7 +31,14 @@ fn test1() {
     println!("{:?}", o);
 }
 
-fn test2() {}
+fn test2() {
+    let f1 = Object { id: 1 };
+    let f2 = Object { id: 2 };
+    let mut s = S { f1, f2 };
+
+    let o = s.as_mut_obj();
+    println!("{:?}", o);
+}
 
 fn test3() {}
 
@@ -48,6 +56,11 @@ impl S {
         println!("S::as_obj");
         self
     }
+
+    fn as_mut_obj(&mut self) -> &mut Object {
+        println!("S::as_mut_obj");
+        self
+    }
 }
 
 impl Drop for S {
@@ -61,5 +74,12 @@ impl Deref for S {
     fn deref(&self) -> &Self::Target {
         println!("S::deref");
         &self.f2
+    }
+}
+
+impl DerefMut for S {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        println!("S::deref_mut");
+        &mut self.f1
     }
 }
