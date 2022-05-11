@@ -21,7 +21,14 @@ fn test0() {
     pro_obj(&s);
 }
 
-fn test1() {}
+fn test1() {
+    let f1 = Object { id: 1 };
+    let f2 = Object { id: 2 };
+    let s = S { f1, f2 };
+
+    let o = s.as_obj();
+    println!("{:?}", o);
+}
 
 fn test2() {}
 
@@ -36,6 +43,13 @@ struct S {
     f2: Object,
 }
 
+impl S {
+    fn as_obj(&self) -> &Object {
+        println!("S::as_obj");
+        self
+    }
+}
+
 impl Drop for S {
     fn drop(&mut self) {
         println!("S dropped");
@@ -45,6 +59,7 @@ impl Drop for S {
 impl Deref for S {
     type Target = Object;
     fn deref(&self) -> &Self::Target {
-        return &self.f2;
+        println!("S::deref");
+        &self.f2
     }
 }

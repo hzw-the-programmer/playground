@@ -1,5 +1,6 @@
 mod object;
 mod size;
+mod string;
 mod vec;
 pub use object::*;
 
