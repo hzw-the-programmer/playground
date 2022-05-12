@@ -3,15 +3,6 @@
 use drop::Object;
 use std::mem;
 
-fn main() {
-    let tests: Vec<fn()> = vec![
-        test0, test1, test2, test3, test4, test5, test6, test7, test8, test9, test10, test11,
-        test12, test13, test14, test15, test16, test17, test18, test19, test20,
-    ];
-
-    drop::tests(&tests);
-}
-
 fn test0() {
     let f1 = Object { id: 1 };
     let f2 = Object { id: 2 };
@@ -222,6 +213,7 @@ fn test18() {
 }
 
 fn test19() {
+    println!("{}", mem::size_of::<S>());
     let f1 = Object { id: 1 };
     let f2 = Object { id: 2 };
     let mut s = S { f1, f2 };
@@ -281,4 +273,13 @@ impl S {
     // fn take(self: &mut Self) {
     //     mem::take(&mut self.f1);
     // }
+}
+
+fn main() {
+    let tests: Vec<fn()> = vec![
+        test0, test1, test2, test3, test4, test5, test6, test7, test8, test9, test10, test11,
+        test12, test13, test14, test15, test16, test17, test18, test19, test20,
+    ];
+
+    drop::tests(&tests);
 }
