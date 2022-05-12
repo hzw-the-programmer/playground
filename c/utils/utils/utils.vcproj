@@ -278,10 +278,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\log.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\macro.c"
 				>
 			</File>
@@ -462,6 +458,70 @@
 				</File>
 				<File
 					RelativePath=".\history\history_test.c"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="log"
+				>
+				<File
+					RelativePath=".\log\config.h"
+					>
+				</File>
+				<File
+					RelativePath=".\log\http.h"
+					>
+				</File>
+				<File
+					RelativePath=".\log\http_test.c"
+					>
+				</File>
+				<File
+					RelativePath=".\log\log.c"
+					>
+				</File>
+				<File
+					RelativePath=".\log\log.h"
+					>
+				</File>
+				<File
+					RelativePath=".\log\log_test.c"
+					>
+				</File>
+				<File
+					RelativePath=".\log\quic.h"
+					>
+				</File>
+				<File
+					RelativePath=".\log\quic_test.c"
+					>
+				</File>
+				<File
+					RelativePath=".\log\tcp.h"
+					>
+				</File>
+				<File
+					RelativePath=".\log\tcp_test.c"
+					>
+				</File>
+				<File
+					RelativePath=".\log\tests.c"
+					>
+				</File>
+				<File
+					RelativePath=".\log\udp.h"
+					>
+				</File>
+				<File
+					RelativePath=".\log\udp_test.c"
+					>
+				</File>
+				<File
+					RelativePath=".\log\ui.h"
+					>
+				</File>
+				<File
+					RelativePath=".\log\ui_test.c"
 					>
 				</File>
 			</Filter>

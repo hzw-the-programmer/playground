@@ -51,7 +51,7 @@ void test_preprocessor();
 void test_param();
 void test_shift();
 void test_align();
-void test_log();
+extern "C" void test_log();
 void test_linear_layout();
 extern "C" void test_insertion_sort();
 extern "C" void test_input();
@@ -62,6 +62,7 @@ extern "C" void test_array2d();
 extern "C" void test_macro();
 extern "C" void test_pointer();
 extern "C" void test_history();
+extern "C" void macro_test();
 
 int main(int argc, char *args) {
 	int i;
@@ -127,6 +128,7 @@ int main(int argc, char *args) {
     //test_macro();
     test_pointer();
     test_history();
+    macro_test();
 
 	MemoryCheck();
 
