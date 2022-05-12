@@ -5,10 +5,10 @@ use std::cmp::Reverse;
 
 fn main() {
     let tests: Vec<fn()> = vec![
-        test0, test1, test2, test3, test4, test5, test6, test7, test8,
-        test9, // test10, test11,
-              // test12, test13, test14, test15, test16, test17, test18, test19, test20, test21, test22,
-              // test23, test24,
+        test0, test1, test2, test3, test4, test5, test6, test7, test8, test9,
+        test10, // test11,
+               // test12, test13, test14, test15, test16, test17, test18, test19, test20, test21, test22,
+               // test23, test24,
     ];
 
     drop::tests(&tests);
@@ -241,5 +241,13 @@ fn test9() {
     v.resize(len + 1, Object { id: 5 });
     println!("mark1");
     v.resize(len + 1 + 3, Object { id: 6 });
+    println!("finish");
+}
+
+fn test10() {
+    let mut v1 = vec![Object { id: 0 }, Object { id: 1 }];
+    let v2 = vec![Object { id: 2 }, Object { id: 3 }, Object { id: 4 }];
+
+    v1.extend(v2);
     println!("finish");
 }
