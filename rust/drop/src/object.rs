@@ -1,3 +1,5 @@
+mod clone;
+
 #[derive(Debug, PartialEq, Default)]
 pub struct Object {
     pub id: i32,

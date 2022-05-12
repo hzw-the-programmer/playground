@@ -226,8 +226,8 @@ fn test19() {
     let f2 = Object { id: 2 };
     let mut s = S { f1, f2 };
 
-    let g1 = s.take();
-    // s.take();
+    // let g1 = s.take();
+    s.take();
     println!("finish");
 }
 

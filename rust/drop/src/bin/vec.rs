@@ -5,8 +5,8 @@ use std::cmp::Reverse;
 
 fn main() {
     let tests: Vec<fn()> = vec![
-        test0, test1, test2, test3, test4, test5, test6,
-        test7, // test8, test9, test10, test11,
+        test0, test1, test2, test3, test4, test5, test6, test7, test8,
+        test9, // test10, test11,
               // test12, test13, test14, test15, test16, test17, test18, test19, test20, test21, test22,
               // test23, test24,
     ];
@@ -209,4 +209,37 @@ fn test7() {
         v1.len(),
         v1.capacity(),
     );
+}
+
+fn test8() {
+    let mut v = vec![
+        Object { id: 0 },
+        Object { id: 1 },
+        Object { id: 2 },
+        Object { id: 3 },
+        Object { id: 4 },
+    ];
+
+    let len = v.len();
+    v.truncate(len);
+    println!("after truncate {}", len);
+    v.truncate(2);
+    println!("finish");
+}
+
+fn test9() {
+    let mut v = vec![
+        Object { id: 0 },
+        Object { id: 1 },
+        Object { id: 2 },
+        Object { id: 3 },
+        Object { id: 4 },
+    ];
+
+    let len = v.len();
+    v.resize(len, Object { id: 4 });
+    v.resize(len + 1, Object { id: 5 });
+    println!("mark1");
+    v.resize(len + 1 + 3, Object { id: 6 });
+    println!("finish");
 }
