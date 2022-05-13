@@ -3,6 +3,7 @@ use drop::Object;
 fn test0() {
     let f = func1();
     f();
+    println!("{}", std::mem::size_of_val(&f));
     f();
     println!("finish");
 }
@@ -11,20 +12,56 @@ fn test1() {
     {
         let f = func1();
         f();
+        println!("{}", std::mem::size_of_val(&f));
         f();
     }
     println!("finish");
 }
 
 fn test2() {
-    let f = func2();
+    let mut f = func2();
+    f();
+    println!("{}", std::mem::size_of_val(&f));
     f();
     println!("finish");
 }
-fn test3() {}
-fn test4() {}
-fn test5() {}
-fn test6() {}
+
+fn test3() {
+    let f = func3();
+    println!("{}", std::mem::size_of_val(&f));
+    f();
+    println!("finish");
+}
+
+fn test4() {
+    {
+        let f = func4();
+        println!("{}", std::mem::size_of_val(&f));
+        f();
+    }
+    println!("finish");
+}
+
+fn test5() {
+    let o = Object { id: 1 };
+    {
+        let f = || println!("{:?}", o);
+        println!("{}", std::mem::size_of_val(&f));
+        f();
+    }
+    println!("finish");
+}
+
+fn test6() {
+    let o = Object { id: 1 };
+    {
+        let f = move || println!("{:?}", o);
+        println!("{}", std::mem::size_of_val(&f));
+        f();
+    }
+    println!("finish");
+}
+
 fn test7() {}
 fn test8() {}
 fn test9() {}
@@ -48,10 +85,28 @@ fn func1() -> impl Fn() {
     }
 }
 
-fn func2() -> impl FnOnce() {
+fn func2() -> impl FnMut() {
+    let mut s = Object { id: 1 };
+    move || {
+        s.id = 2;
+        println!("{:?}", s);
+    }
+}
+
+fn func3() -> impl FnOnce() {
     let s = Object { id: 1 };
     move || {
         s.consume();
+        println!("after consume");
+    }
+}
+
+fn func4() -> impl FnOnce() {
+    let s1 = Object { id: 1 };
+    let s2 = Object { id: 2 };
+    move || {
+        s1.consume();
+        s2.consume();
         println!("after consume");
     }
 }
