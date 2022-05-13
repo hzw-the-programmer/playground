@@ -9,6 +9,10 @@ impl Object {
     pub fn id(&self) -> i32 {
         self.id
     }
+
+    pub fn consume(self) {
+        println!("Object::consume");
+    }
 }
 
 impl Drop for Object {
