@@ -1,0 +1,4 @@
+createClient
+readQueryFromClient
+processInputBuffer
+processInlineBuffer
