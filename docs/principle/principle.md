@@ -32,3 +32,11 @@ World Trade, Military Strength, Financial Centers, Reserve Currency.
 earn more than you spend and invest that money well.
 
 cultivate meaningful work and meaningful relationships.
+
+People cannot be given the privilege of receiving information and then use the information to harm the company, so rules and procedures must be in place to ensure that doesn't happen.
+For example, we provide great transparency inside Bridgewater on the condition that Bridgewater citizens do not leak it outside; if they do, they will be dismissed for cause (for unethical behavior).
+Additionally, the rules for how issues are explored and decisions are made must be maintained, and because different people have different perspectives, it's important that the paths for resolving them are followed.
+For example, some people are going to make big deals out of little deals, come up with their own wrong theories, or have problems seeing how things are evolving.
+Remind them of the risks that the company takes to give them that transparency and their responsibilities to handle the information that they get responsibly.
+I have found that people appreciating this transparency and knowing that they will lose it if it is not handled well leads them to enforce good behavior with each other.
+![alt text](./FR_ykIeWYAEFbB8.png)

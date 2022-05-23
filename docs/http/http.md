@@ -1,0 +1,9 @@
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Transfer-Encoding
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
+https://stackoverflow.com/questions/8659808/how-does-http-file-upload-work
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/HEAD
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/304
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified
