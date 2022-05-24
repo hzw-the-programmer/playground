@@ -110,3 +110,21 @@ History has shown that all species will either go extinct or evolve into other s
 To give you a quick example of nature creating incentives that lead to individuals pursuing their own interests that result in the advancement of the whole, look at sex and natural selection.
 Nature gave us one hell of an incentive to have sex in the form of the great pleasure it provides, even though the purpose of having sex is to contribute to the advancement of the DNA. That way we individually get what we want while contributing to the evolution of the whole.
 ![alt text](./FTZERpEVIAAIsU1.png)
+
+I’m at a stage in my life where my goal is to pass what I’ve learned along to others, and I often get asked for my advice for young people in particular.
+One thing that has helped me is an exercise to help put your life in perspective and to plan for the future to help you get the life you want.
+As you know, I have found that most everything happens over and over again for pretty much the same reasons, so in order to understand anything, it pays to understand how a typical case unfolds and observe the cause-effect relationships that make it unfold that way.
+In this exercise, I am going to ask you to look at both the typical life arc and your own life arc and reflect on them. This exercise will help you imagine what probably will come at you, plan for it, and deal with it when it comes.
+Not all life arcs are the same & no arc is better in any way than another—they’re each their own unique journey, reflecting the circumstances faced by & decisions of the person traveling the arc—but the archetypical life lasts about 80 years & evolves in 3 different phases.
+Even if your life arc bears little resemblance to the typical one, my hope is that you’ll find value in reflecting on your journey.
+I suggest that you get a few pieces of paper and a pen, copy the basic arc, and put a tick where you are with “me” next to it.
+Looking through these phases, note how the descriptions of what’s happening to the typical person match up with your own experiences, especially at the critical junctures. The choices you make at these junctures have big implications on the life that you will have.
+As you will see, the paths we take along the way affect the type of journey we have.
+This perspective has helped me and many people I have shared it with, and I hope it will help you too.
+![alt text](./FTd9Bk5VsAE60GU.jpg)
+![alt text](./FTd9Bk5UAAAJrvk.jpg)
+![alt text](./FTd9Bk4UUAAgT1v.jpg)
+![alt text](./FTd9Bk4UYAImkya.jpg)
+
+Contribute to the whole and you will likely be rewarded. Natural selection leads to better qualities being retained and passed along (e.g., in better genes, better abilities to nurture others, better products, etc.). The result is a constant cycle of improvement for the whole.
+![alt text](./FTdBWmEUAAIdzpg.png)
