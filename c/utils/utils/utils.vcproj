@@ -178,15 +178,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\buffer.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\buffer1.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\buffer1.h"
+				>
+			</File>
+			<File
+				RelativePath=".\buffer11.cpp"
 				>
 			</File>
 			<File
@@ -350,7 +350,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\slice.cpp"
+				RelativePath=".\slice1.cpp"
 				>
 			</File>
 			<File
@@ -419,6 +419,10 @@
 			</File>
 			<File
 				RelativePath=".\utf8.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\utils.c"
 				>
 			</File>
 			<File
@@ -522,6 +526,38 @@
 				</File>
 				<File
 					RelativePath=".\log\ui_test.c"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="ll"
+				>
+				<File
+					RelativePath=".\ll\ll.c"
+					>
+				</File>
+				<File
+					RelativePath=".\ll\ll.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ll\ll_test.c"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="buffer"
+				>
+				<File
+					RelativePath=".\buffer\slice.c"
+					>
+				</File>
+				<File
+					RelativePath=".\buffer\slice.h"
+					>
+				</File>
+				<File
+					RelativePath=".\buffer\slice_test.c"
 					>
 				</File>
 			</Filter>
