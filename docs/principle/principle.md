@@ -128,3 +128,27 @@ This perspective has helped me and many people I have shared it with, and I hope
 
 Contribute to the whole and you will likely be rewarded. Natural selection leads to better qualities being retained and passed along (e.g., in better genes, better abilities to nurture others, better products, etc.). The result is a constant cycle of improvement for the whole.
 ![alt text](./FTdBWmEUAAIdzpg.png)
+
+```
+As a global macro-investor for over 50 years, I’ve spent a lot of time studying what makes countries healthy and unhealthy, and observing how the decisions made by policymakers impact the trajectories of their countries.
+
+I like to quantitatively measure those forces so I can build systems for making decisions better. For that reason, I converted my learnings into measures and models that show each country’s strengths and weaknesses, or what I call their “powers.”
+
+I measure 18 different types of powers, in 18 different indices, which are each made up of many indicators. These power indices measure the strengths of influences such as education, innovation and technology development, the civility of the people, economic output...
+
+... reserve currency status, military, and many others. They, in turn, are combined into one overall reading of each country’s power. Because they are quantitatively measured, one can see the relative strengths of countries in all of these dimensions...
+
+... and can see whether the country is strengthening or weakening in these several ways. 
+
+I hope you will find these of interest and share your feedback with me here.
+```
+
+```
+Natural selection’s trial-and-error process allows improvement without anyone understanding or guiding it. The same can apply to how we learn.
+![alt text](./FTh27N9UUAAqGSg.png)
+```
+
+```
+When I hear the “problem of inflation” - which is rapidly rising prices - I'm struck that it’s typically spoken of by people complaining that they have to pay more, without realizing how lucky they are...
+... because they are still getting what they want by bidding it away from those who can’t get it, which is a much worse problem. For example, think about what food price inflation means for those with adequate income to still buy food vs. those who don’t get it.
+```
