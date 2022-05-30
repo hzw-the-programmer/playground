@@ -78,16 +78,15 @@ int h_buf_delete_header(h_buf *buf, const char *key) {
         header = h_slice_split_new(line, ':');
         k = h_slice_trim(h_slice_split_next(&header));
         if (k.len == l && strncmp(k.data, key, k.len) == 0) {
-            if (line.data + line.len < buf->data + buf->len) {
+            if (lines.s.len != 0) {
+                memmove(line.data, lines.s.data, lines.s.len);
+                line.len = lines.s.data - line.data;
+                lines.s.data -= line.len;
+            } else if (lines.s.data != 0) {
                 line.len++;
-            }
-
-            if (line.data + line.len < buf->data + buf->len) {
-                memmove(line.data, line.data + line.len, buf->data + buf->len - (line.data + line.len));
             }
             buf->len -= line.len;
             buf->data[buf->len] = 0;
-            lines = h_slice_split_new(h_slice_new(buf->data, buf->len), '\n');
         }
     }
 }
