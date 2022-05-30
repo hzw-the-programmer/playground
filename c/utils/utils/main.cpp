@@ -65,6 +65,7 @@ extern "C" void test_history();
 extern "C" void macro_test();
 extern "C" void ll_test();
 extern "C" void slice_test();
+extern "C" void buffer_test();
 
 int main(int argc, char *args) {
 	int i;
@@ -133,6 +134,7 @@ int main(int argc, char *args) {
     macro_test();
     ll_test();
     slice_test();
+    buffer_test();
 
 	MemoryCheck();
 

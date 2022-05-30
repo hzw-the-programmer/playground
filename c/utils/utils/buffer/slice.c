@@ -1,26 +1,26 @@
 #include "slice.h"
 #include "../utils.h"
 
-Slice slice_new(char *buf, int len) {
-    Slice s;
+h_slice h_slice_new(char *data, int len) {
+    h_slice s;
 
-    s.buf = buf;
+    s.data = data;
     s.len = len;
     
     return s;
 }
 
-Slice slice_sub(Slice in, int begin, int end) {
-    Slice out;
+h_slice h_slice_sub(h_slice in, int begin, int end) {
+    h_slice out;
 
-    out.buf = in.buf + begin;
+    out.data = in.data + begin;
     out.len = end - begin;
 
     return out;
 }
 
-SliceSplit slice_split(Slice s, char c) {
-    SliceSplit split;
+h_slice_split h_slice_split_new(h_slice s, char c) {
+    h_slice_split split;
 
     split.s = s;
     split.c = c;
@@ -28,16 +28,16 @@ SliceSplit slice_split(Slice s, char c) {
     return split;
 }
 
-Slice slice_split_next(SliceSplit *split) {
+h_slice h_slice_split_next(h_slice_split *split) {
     int i;
-    Slice s;
+    h_slice s;
 
     s = split->s;
     
-    if (s.buf == 0) return s;
+    if (s.data == 0) return s;
 
     for (i = 0; i < s.len; i++) {
-        if (s.buf[i] == split->c) {
+        if (s.data[i] == split->c) {
             int b, e;
             
             s.len = i;
@@ -46,24 +46,24 @@ Slice slice_split_next(SliceSplit *split) {
             if (b == e) {
                 b = e = i;
             }
-            split->s = slice_sub(split->s, b, e);
+            split->s = h_slice_sub(split->s, b, e);
             return s;
         }
     }
 
-    split->s.buf = 0;
+    split->s.data = 0;
     split->s.len = 0;
 
     return s;
 }
 
-Slice slice_ltrim(Slice in) {
+h_slice h_slice_ltrim(h_slice in) {
     int i;
-    Slice out = {0};
+    h_slice out = {0};
 
     for (i = 0; i < in.len; i++) {
-        if (!is_space(in.buf[i])) {
-            out.buf = in.buf + i;
+        if (!is_space(in.data[i])) {
+            out.data = in.data + i;
             out.len = in.len - i;
             break;
         }
@@ -72,14 +72,14 @@ Slice slice_ltrim(Slice in) {
     return out;
 }
 
-Slice slice_rtrim(Slice in) {
+h_slice h_slice_rtrim(h_slice in) {
     int i;
-    Slice out = {0};
+    h_slice out = {0};
 
     for (i = 0; i < in.len; i++) {
         int j = in.len - 1 - i;
-        if (!is_space(in.buf[j])) {
-            out.buf = in.buf;
+        if (!is_space(in.data[j])) {
+            out.data = in.data;
             out.len = j + 1;
             break;
         }
@@ -88,8 +88,8 @@ Slice slice_rtrim(Slice in) {
     return out;
 }
 
-Slice slice_trim(Slice s) {
-    s = slice_ltrim(s);
-    s = slice_rtrim(s);
+h_slice h_slice_trim(h_slice s) {
+    s = h_slice_ltrim(s);
+    s = h_slice_rtrim(s);
     return s;
 }

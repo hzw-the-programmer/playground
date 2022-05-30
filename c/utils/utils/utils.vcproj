@@ -549,6 +549,18 @@
 				Name="buffer"
 				>
 				<File
+					RelativePath=".\buffer\buffer.c"
+					>
+				</File>
+				<File
+					RelativePath=".\buffer\buffer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\buffer\buffer_test.c"
+					>
+				</File>
+				<File
 					RelativePath=".\buffer\slice.c"
 					>
 				</File>

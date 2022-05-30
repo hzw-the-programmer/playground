@@ -54,9 +54,9 @@ static void deinit(char **headers, int len, char *buf) {
     free(buf);
 }
 
-void slice_ltrim_test() {
+void h_slice_ltrim_test() {
     struct {
-        char *buf;
+        char *data;
         char *want;
     } tests[] = {
         {"123   ", "123   "},
@@ -67,17 +67,17 @@ void slice_ltrim_test() {
     int i;
 
     for (i = 0; i < ARRAY_SIZE(tests); i++) {
-        Slice s;
+        h_slice s;
 
-        s = slice_new(tests[i].buf, strlen(tests[i].buf));
-        s = slice_ltrim(s);
-        assert(strncmp(s.buf, tests[i].want, s.len) == 0);
+        s = h_slice_new(tests[i].data, strlen(tests[i].data));
+        s = h_slice_ltrim(s);
+        assert(strncmp(s.data, tests[i].want, s.len) == 0);
     }
 }
 
-void slice_rtrim_test() {
+void h_slice_rtrim_test() {
     struct {
-        char *buf;
+        char *data;
         char *want;
     } tests[] = {
         {"   123", "   123"},
@@ -88,17 +88,17 @@ void slice_rtrim_test() {
     int i;
 
     for (i = 0; i < ARRAY_SIZE(tests); i++) {
-        Slice s;
+        h_slice s;
 
-        s = slice_new(tests[i].buf, strlen(tests[i].buf));
-        s = slice_rtrim(s);
-        assert(strncmp(s.buf, tests[i].want, s.len) == 0);
+        s = h_slice_new(tests[i].data, strlen(tests[i].data));
+        s = h_slice_rtrim(s);
+        assert(strncmp(s.data, tests[i].want, s.len) == 0);
     }
 }
 
-void slice_trim_test() {
+void h_slice_trim_test() {
     struct {
-        char *buf;
+        char *data;
         char *want;
     } tests[] = {
         {"123", "123"},
@@ -109,92 +109,92 @@ void slice_trim_test() {
     int i;
 
     for (i = 0; i < ARRAY_SIZE(tests); i++) {
-        Slice s;
+        h_slice s;
 
-        s = slice_new(tests[i].buf, strlen(tests[i].buf));
-        s = slice_trim(s);
-        assert(strncmp(s.buf, tests[i].want, s.len) == 0);
+        s = h_slice_new(tests[i].data, strlen(tests[i].data));
+        s = h_slice_trim(s);
+        assert(strncmp(s.data, tests[i].want, s.len) == 0);
     }
 }
 
-void slice_split_next_test_1() {
-    char *buf = "abcd";
-    Slice s;
-    SliceSplit split;
+void h_slice_split_next_test_1() {
+    char *data = "abcd";
+    h_slice s;
+    h_slice_split split;
 
-    s = slice_new(buf, strlen(buf));
-    split = slice_split(s, ':');
-    s = slice_split_next(&split);
+    s = h_slice_new(data, strlen(data));
+    split = h_slice_split_new(s, ':');
+    s = h_slice_split_next(&split);
     assert(s.len == 4);
-    assert(strncmp(s.buf, "abcd", s.len) == 0);
+    assert(strncmp(s.data, "abcd", s.len) == 0);
 
-    assert(slice_split_next(&split).buf == 0);
+    assert(h_slice_split_next(&split).data == 0);
 }
 
-void slice_split_next_test_2() {
-    char *buf = "abcd:";
-    Slice s;
-    SliceSplit split;
+void h_slice_split_next_test_2() {
+    char *data = "abcd:";
+    h_slice s;
+    h_slice_split split;
 
-    s = slice_new(buf, strlen(buf));
-    split = slice_split(s, ':');
+    s = h_slice_new(data, strlen(data));
+    split = h_slice_split_new(s, ':');
     
-    s = slice_split_next(&split);
+    s = h_slice_split_next(&split);
     assert(s.len == 4);
-    assert(strncmp(s.buf, "abcd", s.len) == 0);
+    assert(strncmp(s.data, "abcd", s.len) == 0);
 
-    s = slice_split_next(&split);
-    assert(s.buf[0] == ':');
+    s = h_slice_split_next(&split);
+    assert(s.data[0] == ':');
     assert(s.len == 0);
 
-    assert(slice_split_next(&split).buf == 0);
+    assert(h_slice_split_next(&split).data == 0);
 }
 
-void slice_headers_test() {
+void h_slice_headers_test() {
     char **headers;
     char *buf;
     int len, i;
-    Slice s;
-    SliceSplit lines;
+    h_slice s;
+    h_slice_split lines;
 
     init(keys, values, ARRAY_SIZE(keys), &headers, &buf, &len);
 
-    s = slice_new(buf, len);
-    lines = slice_split(s, '\n');
+    s = h_slice_new(buf, len);
+    lines = h_slice_split_new(s, '\n');
     for (i = 0; ;i++) {
-        Slice line, s;
-        SliceSplit kvs;
+        h_slice line, s;
+        h_slice_split kvs;
 
-        line = slice_split_next(&lines);
+        line = h_slice_split_next(&lines);
 
         if (line.len == 0) {
             break;
         }
 
-        line = slice_trim(line);
+        line = h_slice_trim(line);
         assert(line.len == strlen(headers[i]));
-        assert(strncmp(line.buf, headers[i], line.len) == 0);
+        assert(strncmp(line.data, headers[i], line.len) == 0);
 
-        kvs = slice_split(line, ':');
-        s = slice_split_next(&kvs);
-        s = slice_trim(s);
+        kvs = h_slice_split_new(line, ':');
+        s = h_slice_split_next(&kvs);
+        s = h_slice_trim(s);
         assert(s.len == strlen(keys[i]));
-        assert(strncmp(s.buf, keys[i], s.len) == 0);
+        assert(strncmp(s.data, keys[i], s.len) == 0);
 
-        s = slice_split_next(&kvs);
-        s = slice_trim(s);
+        s = h_slice_split_next(&kvs);
+        s = h_slice_trim(s);
         assert(s.len == strlen(values[i]));
-        assert(strncmp(s.buf, values[i], s.len) == 0);
+        assert(strncmp(s.data, values[i], s.len) == 0);
     }
 
     deinit(headers, ARRAY_SIZE(keys), buf);
 }
 
 void slice_test() {
-    slice_ltrim_test();
-    slice_rtrim_test();
-    slice_trim_test();
-    slice_split_next_test_1();
-    slice_split_next_test_2();
-    slice_headers_test();
+    h_slice_ltrim_test();
+    h_slice_rtrim_test();
+    h_slice_trim_test();
+    h_slice_split_next_test_1();
+    h_slice_split_next_test_2();
+    h_slice_headers_test();
 }
