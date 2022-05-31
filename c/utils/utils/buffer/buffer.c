@@ -76,7 +76,7 @@ int h_buf_delete_header(h_buf *buf, const char *key) {
             return 0;
         }
         header = h_slice_split_new(line, ':');
-        k = h_slice_trim(h_slice_split_next(&header));
+        k = h_slice_trim_space(h_slice_split_next(&header));
         if (k.len == l && strncmp(k.data, key, k.len) == 0) {
             if (lines.s.len != 0) {
                 memmove(line.data, lines.s.data, lines.s.len);

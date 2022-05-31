@@ -57,39 +57,53 @@ h_slice h_slice_split_next(h_slice_split *split) {
     return s;
 }
 
-h_slice h_slice_ltrim(h_slice in) {
+int h_slice_search(h_slice s, char b) {
     int i;
-    h_slice out = {0};
 
-    for (i = 0; i < in.len; i++) {
-        if (!is_space(in.data[i])) {
-            out.data = in.data + i;
-            out.len = in.len - i;
-            break;
+    for (i = 0; i < s.len; i++) {
+        if (s.data[i] == b) {
+            return i;
         }
     }
 
-    return out;
+    return -1;
 }
 
-h_slice h_slice_rtrim(h_slice in) {
-    int i;
-    h_slice out = {0};
-
-    for (i = 0; i < in.len; i++) {
-        int j = in.len - 1 - i;
-        if (!is_space(in.data[j])) {
-            out.data = in.data;
-            out.len = j + 1;
-            break;
+h_slice h_slice_ltrim(h_slice s, h_slice cutset) {
+    while (s.len > 0) {
+        if (h_slice_search(cutset, *s.data) == -1) {
+            return s;
         }
+        s.len--;
+        if (s.len) s.data++;
     }
 
-    return out;
-}
-
-h_slice h_slice_trim(h_slice s) {
-    s = h_slice_ltrim(s);
-    s = h_slice_rtrim(s);
     return s;
+}
+
+h_slice h_slice_rtrim(h_slice s, h_slice cutset) {
+    while (s.len > 0) {
+        if (h_slice_search(cutset, s.data[s.len - 1]) == -1) {
+            return s;
+        }
+        s.len--;
+    }
+
+    return s;
+}
+
+h_slice h_slice_trim(h_slice s, h_slice cutset) {
+    return h_slice_rtrim(h_slice_ltrim(s, cutset), cutset);
+}
+
+h_slice h_slice_ltrim_space(h_slice s) {
+    return h_slice_ltrim(s, h_slice_new(SPACES, SPACES_LEN));
+}
+
+h_slice h_slice_rtrim_space(h_slice s) {
+    return h_slice_rtrim(s, h_slice_new(SPACES, SPACES_LEN));
+}
+
+h_slice h_slice_trim_space(h_slice s) {
+    return h_slice_trim(s, h_slice_new(SPACES, SPACES_LEN));
 }

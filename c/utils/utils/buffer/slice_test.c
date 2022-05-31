@@ -70,7 +70,7 @@ void h_slice_ltrim_test() {
         h_slice s;
 
         s = h_slice_new(tests[i].data, strlen(tests[i].data));
-        s = h_slice_ltrim(s);
+        s = h_slice_ltrim_space(s);
         assert(strncmp(s.data, tests[i].want, s.len) == 0);
     }
 }
@@ -91,7 +91,7 @@ void h_slice_rtrim_test() {
         h_slice s;
 
         s = h_slice_new(tests[i].data, strlen(tests[i].data));
-        s = h_slice_rtrim(s);
+        s = h_slice_rtrim_space(s);
         assert(strncmp(s.data, tests[i].want, s.len) == 0);
     }
 }
@@ -112,7 +112,7 @@ void h_slice_trim_test() {
         h_slice s;
 
         s = h_slice_new(tests[i].data, strlen(tests[i].data));
-        s = h_slice_trim(s);
+        s = h_slice_trim_space(s);
         assert(strncmp(s.data, tests[i].want, s.len) == 0);
     }
 }
@@ -308,18 +308,18 @@ void h_slice_headers_test() {
             break;
         }
 
-        line = h_slice_trim(line);
+        line = h_slice_trim_space(line);
         assert(line.len == strlen(headers[i]));
         assert(strncmp(line.data, headers[i], line.len) == 0);
 
         kvs = h_slice_split_new(line, ':');
         s = h_slice_split_next(&kvs);
-        s = h_slice_trim(s);
+        s = h_slice_trim_space(s);
         assert(s.len == strlen(keys[i]));
         assert(strncmp(s.data, keys[i], s.len) == 0);
 
         s = h_slice_split_next(&kvs);
-        s = h_slice_trim(s);
+        s = h_slice_trim_space(s);
         assert(s.len == strlen(values[i]));
         assert(strncmp(s.data, values[i], s.len) == 0);
     }
