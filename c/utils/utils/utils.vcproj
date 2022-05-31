@@ -572,6 +572,18 @@
 					RelativePath=".\buffer\slice_test.c"
 					>
 				</File>
+				<File
+					RelativePath=".\buffer\split.c"
+					>
+				</File>
+				<File
+					RelativePath=".\buffer\split.h"
+					>
+				</File>
+				<File
+					RelativePath=".\buffer\split_test.c"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

@@ -2,6 +2,7 @@
 #include <string.h> // memcpy
 #include "buffer.h"
 #include "slice.h"
+#include "split.h"
 #include "../utils.h"
 
 int h_buf_reserve(h_buf *buf, int len) {
@@ -64,19 +65,19 @@ int h_buf_append_header(h_buf *buf, const char *key, const char *value) {
 
 int h_buf_delete_header(h_buf *buf, const char *key) {
     h_slice line, k;
-    h_slice_split lines, header;
+    h_split lines, header;
     int l;
 
     l = strlen(key);
 
-    lines = h_slice_split_new(h_slice_new(buf->data, buf->len), '\n');
+    lines = h_split_new(h_slice_new(buf->data, buf->len), '\n');
     while (1) {
-        line = h_slice_split_next(&lines);
+        line = h_split_next(&lines);
         if (line.len == 0) {
             return 0;
         }
-        header = h_slice_split_new(line, ':');
-        k = h_slice_trim_space(h_slice_split_next(&header));
+        header = h_split_new(line, ':');
+        k = h_slice_trim_space(h_split_next(&header));
         if (k.len == l && strncmp(k.data, key, k.len) == 0) {
             if (lines.s.len != 0) {
                 memmove(line.data, lines.s.data, lines.s.len);
