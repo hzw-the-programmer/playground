@@ -285,82 +285,64 @@ void h_split_next_test_9() {
     assert(split.s.data == 0);
 }
 
+void h_split_next_test_helper(char *data, char **want) {
+    h_slice s;
+    h_split split;
+    int i;
+
+    s = h_slice_new(data, strlen(data));
+    split = h_split_new(s, '\n');
+
+    while (*want) {
+        s = h_split_next(&split);
+        assert(s.len == strlen(*want));
+        assert(s.data != 0);
+        assert(strncmp(s.data, *want, s.len) == 0);
+        want++;
+    }
+
+    s = h_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data == 0);
+    assert(split.s.len == 0);
+    assert(split.s.data == 0);
+}
+
 void h_split_next_test_10() {
-    char *data = "ab\nc\nde";
-    char *want[] = {
-        "ab", "c", "de",
+    struct {
+        char *data;
+        char *want[100];
+    } tests[] = {
+        {
+            "ab\nc\nde",
+            {
+                "ab", "c", "de",
+            }
+        },
+        {
+            "ab\nc\nde\n",
+            {
+                "ab", "c", "de", "",
+            }
+        },
+        {
+            "\nab\nc\nde",
+            {
+                "", "ab", "c", "de",
+            }
+        },
+        {
+            "\n\nabcd\n\n\nefg\nhijk\n\nl\n",
+            {
+                "", "", "abcd", "", "", "efg", "hijk", "", "l", "",
+            }
+        },
     };
-    h_slice s;
-    h_split split;
     int i;
 
-    s = h_slice_new(data, strlen(data));
-    split = h_split_new(s, '\n');
-
-    for (i = 0; i < ARRAY_SIZE(want); i++) {
-        s = h_split_next(&split);
-        assert(s.len == strlen(want[i]));
-        assert(s.data != 0);
-        assert(strncmp(s.data, want[i], s.len) == 0);
+    for (i = 0; i < ARRAY_SIZE(tests); i++) {
+        h_split_next_test_helper(tests[i].data, tests[i].want);
     }
-
-    s = h_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
-}
-
-void h_split_next_test_11() {
-    char *data = "ab\nc\nde\n";
-    char *want[] = {
-        "ab", "c", "de", "",
-    };
-    h_slice s;
-    h_split split;
-    int i;
-
-    s = h_slice_new(data, strlen(data));
-    split = h_split_new(s, '\n');
-
-    for (i = 0; i < ARRAY_SIZE(want); i++) {
-        s = h_split_next(&split);
-        assert(s.len == strlen(want[i]));
-        assert(s.data != 0);
-        assert(strncmp(s.data, want[i], s.len) == 0);
-    }
-
-    s = h_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
-}
-
-void h_split_next_test_12() {
-    char *data = "\nab\nc\nde";
-    char *want[] = {
-        "", "ab", "c", "de",
-    };
-    h_slice s;
-    h_split split;
-    int i;
-
-    s = h_slice_new(data, strlen(data));
-    split = h_split_new(s, '\n');
-
-    for (i = 0; i < ARRAY_SIZE(want); i++) {
-        s = h_split_next(&split);
-        assert(s.len == strlen(want[i]));
-        assert(s.data != 0);
-        assert(strncmp(s.data, want[i], s.len) == 0);
-    }
-
-    s = h_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
 }
 
 void split_test() {
@@ -374,8 +356,6 @@ void split_test() {
     h_split_next_test_8();
     h_split_next_test_9();
     h_split_next_test_10();
-    h_split_next_test_11();
-    h_split_next_test_12();
 }
 
 #if 0
