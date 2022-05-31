@@ -10,6 +10,29 @@ h_split h_split_new(h_slice s, char c) {
 }
 
 h_slice h_split_next(h_split *split) {
+#if 1
+    h_slice s;
+
+    s = split->s;
+
+    if (s.data == 0) return s;
+
+    while (split->s.len > 0) {
+        if (*split->s.data == split->c) {
+            s.len = split->s.data - s.data;
+            split->s.len--;
+            split->s.data += split->s.len > 0;
+            return s;
+        }
+        split->s.len--;
+        split->s.data++;
+    }
+
+    split->s.data = 0;
+    split->s.len = 0;
+
+    return s;
+#else
     int i;
     h_slice s;
 
@@ -36,4 +59,5 @@ h_slice h_split_next(h_split *split) {
     split->s.len = 0;
 
     return s;
+#endif
 }
