@@ -75,7 +75,7 @@ h_slice h_slice_ltrim(h_slice s, h_slice cutset) {
             return s;
         }
         s.len--;
-        if (s.len) s.data++;
+        s.data += s.len > 0;
     }
 
     return s;
