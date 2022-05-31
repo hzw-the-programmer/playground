@@ -150,6 +150,143 @@ void h_slice_split_next_test_2() {
     assert(h_slice_split_next(&split).data == 0);
 }
 
+void h_slice_split_next_test_3() {
+    char *data = ":a:b:c:";
+    h_slice s;
+    h_slice_split split;
+
+    s = h_slice_new(data, strlen(data));
+    split = h_slice_split_new(s, ':');
+    
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data[s.len] == ':');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 1);
+    assert(s.data[0] == 'a');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 1);
+    assert(s.data[0] == 'b');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 1);
+    assert(s.data[0] == 'c');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data[s.len] == ':');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data == 0);
+}
+
+void h_slice_split_next_test_4() {
+    char *data = "a:b:c:";
+    h_slice s;
+    h_slice_split split;
+
+    s = h_slice_new(data, strlen(data));
+    split = h_slice_split_new(s, ':');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 1);
+    assert(s.data[0] == 'a');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 1);
+    assert(s.data[0] == 'b');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 1);
+    assert(s.data[0] == 'c');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data[s.len] == ':');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data == 0);
+}
+
+void h_slice_split_next_test_5() {
+    char *data = "a:b:c";
+    h_slice s;
+    h_slice_split split;
+
+    s = h_slice_new(data, strlen(data));
+    split = h_slice_split_new(s, ':');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 1);
+    assert(s.data[0] == 'a');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 1);
+    assert(s.data[0] == 'b');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 1);
+    assert(s.data[0] == 'c');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data == 0);
+}
+
+void h_slice_split_next_test_6() {
+    char *data = ":";
+    h_slice s;
+    h_slice_split split;
+
+    s = h_slice_new(data, strlen(data));
+    split = h_slice_split_new(s, ':');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data[0] == ':');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data[0] == ':');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data == 0);
+}
+
+void h_slice_split_next_test_7() {
+    char *data = "   ";
+    h_slice s;
+    h_slice_split split;
+
+    s = h_slice_new(data, strlen(data));
+    split = h_slice_split_new(s, ' ');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data[0] == ' ');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data[0] == ' ');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data[0] == ' ');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data[0] == ' ');
+
+    s = h_slice_split_next(&split);
+    assert(s.len == 0);
+    assert(s.data == 0);
+}
+
 void h_slice_headers_test() {
     char **headers;
     char *buf;
@@ -196,5 +333,10 @@ void slice_test() {
     h_slice_trim_test();
     h_slice_split_next_test_1();
     h_slice_split_next_test_2();
+    h_slice_split_next_test_3();
+    h_slice_split_next_test_4();
+    h_slice_split_next_test_5();
+    h_slice_split_next_test_6();
+    h_slice_split_next_test_7();
     h_slice_headers_test();
 }
