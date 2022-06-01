@@ -67,6 +67,7 @@ extern "C" void ll_test();
 extern "C" void slice_test();
 extern "C" void split_test();
 extern "C" void buffer_test();
+extern "C" void grid_test();
 
 int main(int argc, char *args) {
 	int i;
@@ -137,6 +138,7 @@ int main(int argc, char *args) {
     slice_test();
     split_test();
     buffer_test();
+    grid_test();
 
 	MemoryCheck();
 

@@ -533,6 +533,18 @@
 				Name="ll"
 				>
 				<File
+					RelativePath=".\ll\grid.c"
+					>
+				</File>
+				<File
+					RelativePath=".\ll\grid.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ll\grid_test.c"
+					>
+				</File>
+				<File
 					RelativePath=".\ll\ll.c"
 					>
 				</File>
@@ -542,6 +554,14 @@
 				</File>
 				<File
 					RelativePath=".\ll\ll_test.c"
+					>
+				</File>
+				<File
+					RelativePath=".\ll\rect.c"
+					>
+				</File>
+				<File
+					RelativePath=".\ll\rect.h"
 					>
 				</File>
 			</Filter>
