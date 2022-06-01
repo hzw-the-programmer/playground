@@ -45,3 +45,46 @@ void grid_displayed_range(const grid_t *grid, int *start, int *end) {
         *end = grid->start + MIN(grid->rows * grid->columns, grid->len - grid->start);
     }
 }
+
+int grid_max_start(const grid_t *grid) {
+    int lcs, nl;
+
+    nl = grid->len;
+    lcs = nl % grid->columns;
+    if (lcs != 0) {
+        nl += grid->columns - lcs;
+    }
+
+    return nl - (grid->rows * grid->columns);
+}
+
+int grid_next_column(int i, int columns) {
+    int cl;
+
+    cl = i % columns;
+    cl++;
+    cl %= columns;
+
+    return cl;
+}
+
+void grid_down(grid_t *grid) {
+    int ns, nc, s, e;
+
+    ns = grid->start;
+    nc = grid->cur + grid->columns;
+    grid_displayed_range(grid, &s, &e);
+    if (nc >= e) {
+        ns += grid->columns;
+        if (ns > grid_max_start(grid)
+            || nc >= grid->len) {
+            ns = 0;
+            nc = grid_next_column(nc, grid->columns);
+            if (nc >= grid->len) {
+                nc = 0;
+            }
+        }
+    }
+    grid->start = ns;
+    grid->cur = nc;
+}

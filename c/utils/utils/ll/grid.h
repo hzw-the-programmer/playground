@@ -17,5 +17,6 @@ typedef struct {
 void grid_measure(grid_t *grid, const rect_t *rect, int *width, int *height);
 void grid_layout(grid_t *grid, const rect_t *rect);
 void grid_displayed_range(const grid_t *grid, int *start, int *end);
+void grid_down(grid_t *grid);
 
 #endif // __GRID_H__
