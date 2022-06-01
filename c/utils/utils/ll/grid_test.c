@@ -18,13 +18,20 @@ void grid_layout_test_helper(grid_t *grid, const rect_t *rect, const grid_item_t
     }
 }
 
-void grid_down_test_helper(grid_t *grid, int *wanted, int len) {
-    int i;
+void grid_down_test_helper(int len, int *wanted, int count) {
+    grid_t grid = {3, 3, 0, 0, 0, 0};
+    int i, j;
 
-    for (i = 0; i < len; i+=2) {
-        grid_down(grid);
-        assert(grid->start == wanted[i]);
-        assert(grid->cur == wanted[i+1]);
+    if (!wanted) return;
+
+    grid.len = len;
+    for (i = 0; i < count; i++) {
+        j = 0;
+        for (; wanted[j] != -1 && wanted[j + 1] != -1; j += 2) {
+            grid_down(&grid);
+            assert(grid.start == wanted[j]);
+            assert(grid.cur == wanted[j + 1]);
+        }
     }
 }
 
@@ -51,85 +58,27 @@ void grid_layout_test_1() {
     }
 }
 
-void grid_down_test_1() {
-    grid_t grid = {3, 3, 0, 0, 0, 0};
-    int wanted[] = {
+void grid_down_test() {
+    int wanted_0[] = {
         0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
+        -1, -1,
     };
-
-    grid_down_test_helper(&grid, wanted, ARRAY_SIZE(wanted));
-}
-
-void grid_down_test_2() {
-    grid_item_t items[1];
-    grid_t grid = {3, 3, items, 1, 0, 0};
-    int wanted[] = {
+    int wanted_1[] = {
         0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
-        0, 0,
+        -1, -1,
     };
-
-    grid_down_test_helper(&grid, wanted, ARRAY_SIZE(wanted));
-}
-
-void grid_down_test_3() {
-    grid_item_t items[2];
-    grid_t grid = {3, 3, items, 2, 0, 0};
-    int wanted[] = {
+    int wanted_2[] = {
         0, 1,
         0, 0,
-        0, 1,
-        0, 0,
-        0, 1,
-        0, 0,
-        0, 1,
-        0, 0,
-        0, 1,
-        0, 0,
+        -1, -1,
     };
-
-    grid_down_test_helper(&grid, wanted, ARRAY_SIZE(wanted));
-}
-
-void grid_down_test_4() {
-    grid_item_t items[3];
-    grid_t grid = {3, 3, items, 3, 0, 0};
-    int wanted[] = {
+    int wanted_3[] = {
         0, 1,
         0, 2,
         0, 0,
-        0, 1,
-        0, 2,
-        0, 0,
-        0, 1,
-        0, 2,
-        0, 0,
-        0, 1,
+        -1, -1,
     };
-
-    grid_down_test_helper(&grid, wanted, ARRAY_SIZE(wanted));
-}
-
-void grid_down_test_5() {
-    grid_item_t items[7];
-    grid_t grid = {3, 3, items, 7, 0, 0};
-    int wanted[] = {
+    int wanted_7[] = {
         0, 3,
         0, 6,
 
@@ -140,25 +89,9 @@ void grid_down_test_5() {
         0, 5,
 
         0, 0,
-        0, 3,
-        0, 6,
-
-        0, 1,
-        0, 4,
-
-        0, 2,
-        0, 5,
-
-        0, 0,
+        -1, -1,
     };
-
-    grid_down_test_helper(&grid, wanted, ARRAY_SIZE(wanted));
-}
-
-void grid_down_test_6() {
-    grid_item_t items[20];
-    grid_t grid = {3, 3, items, 20, 0, 0};
-    int wanted[] = {
+    int wanted_20[] = {
         0, 3,
         0, 6,
         3, 9,
@@ -182,40 +115,25 @@ void grid_down_test_6() {
         9, 17,
 
         0, 0,
-        0, 3,
-        0, 6,
-        3, 9,
-        6, 12,
-        9, 15,
-        12, 18,
-        
-        0, 1,
-        0, 4,
-        0, 7,
-        3, 10,
-        6, 13,
-        9, 16,
-        12, 19,
-
-        0, 2,
-        0, 5,
-        0, 8,
-        3, 11,
-        6, 14,
-        9, 17,
-
-        0, 0,
+        -1, -1,
     };
+    int* tests[100];
+    int i;
+    
+    memset(tests, 0, sizeof(tests));
+    tests[0] = wanted_0;
+    tests[1] = wanted_1;
+    tests[2] = wanted_2;
+    tests[3] = wanted_3;
+    tests[7] = wanted_7;
+    tests[20] = wanted_20;
 
-    grid_down_test_helper(&grid, wanted, ARRAY_SIZE(wanted));
+    for (i = 0; i < ARRAY_SIZE(tests); i++) {
+        grid_down_test_helper(i, tests[i], 2);
+    }
 }
 
 void grid_test() {
     grid_layout_test_1();
-    grid_down_test_1();
-    grid_down_test_2();
-    grid_down_test_3();
-    grid_down_test_4();
-    grid_down_test_5();
-    grid_down_test_6();
+    grid_down_test();
 }

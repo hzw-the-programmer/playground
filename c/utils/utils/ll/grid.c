@@ -92,5 +92,25 @@ void grid_down(grid_t *grid) {
 }
 
 void grid_up(grid_t *grid) {
+    int s, c;
 
+    if (grid->len == 0) return;
+
+    s = grid->start;
+    c = grid->cur;
+
+    c -= grid->columns;
+    if (c < s) {
+        s -= grid->columns;
+        if (c < 0) {
+            int l = (grid->len + (grid->columns - 1)) / grid->columns * grid->columns;
+            s = l - (grid->rows * grid->columns);
+            c %= grid->columns;
+            c--;
+
+        }
+    }
+
+    grid->start = s;
+    grid->cur = c;
 }
