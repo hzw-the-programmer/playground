@@ -288,7 +288,6 @@ void h_split_next_test_9() {
 void h_split_next_test_helper(char *data, char **want) {
     h_slice s;
     h_split split;
-    int i;
 
     s = h_slice_new(data, strlen(data));
     split = h_split_new(s, '\n');
