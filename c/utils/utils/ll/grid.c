@@ -121,3 +121,48 @@ void grid_up(grid_t *grid) {
     grid->start = s;
     grid->cur = c;
 }
+
+void grid_right(grid_t *grid) {
+    int s, c, e;
+
+    if (grid->len == 0) return;
+
+    s = grid->start;
+    c = grid->cur;
+    e = grid->start + MIN(grid->rows * grid->columns, grid->len - grid->start);
+
+    c++;
+    if (c >= e) {
+        s += grid->columns;
+    }
+    if (c >= grid->len) {
+        s = c = 0;
+    }
+
+    grid->start = s;
+    grid->cur = c;
+}
+
+void grid_left(grid_t *grid) {
+    int s, c;
+
+    if (grid->len == 0) return;
+
+    s = grid->start;
+    c = grid->cur;
+
+    c--;
+    if (c < s) {
+        s -= grid->columns;
+    }
+    if (c < 0) {
+        int l = (grid->len + (grid->columns - 1)) / grid->columns * grid->columns;
+        int size = grid->rows * grid->columns;
+        if (size > l) size = l;
+        s = l - size;
+        c = grid->len - 1;
+    }
+
+    grid->start = s;
+    grid->cur = c;
+}
