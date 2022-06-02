@@ -1,3 +1,4 @@
+#include <string.h>
 #include <assert.h>
 #include "grid.h"
 #include "../utils.h"
@@ -18,7 +19,7 @@ void grid_layout_test_helper(grid_t *grid, const rect_t *rect, const grid_item_t
     }
 }
 
-void grid_down_test_helper(int len, int *wanted, int count) {
+void grid_test_helper(int len, int *wanted, int count, void (*func)(grid_t*)) {
     grid_t grid = {3, 3, 0, 0, 0, 0};
     int i, j;
 
@@ -28,7 +29,7 @@ void grid_down_test_helper(int len, int *wanted, int count) {
     for (i = 0; i < count; i++) {
         j = 0;
         for (; wanted[j] != -1 && wanted[j + 1] != -1; j += 2) {
-            grid_down(&grid);
+            func(&grid);
             assert(grid.start == wanted[j]);
             assert(grid.cur == wanted[j + 1]);
         }
@@ -129,11 +130,156 @@ void grid_down_test() {
     tests[20] = wanted_20;
 
     for (i = 0; i < ARRAY_SIZE(tests); i++) {
-        grid_down_test_helper(i, tests[i], 2);
+        grid_test_helper(i, tests[i], 2, grid_down);
+    }
+}
+
+void grid_up_test() {
+    int wanted_0[] = {
+        0, 0,
+        -1, -1,
+    };
+    int wanted_1[] = {
+        0, 0,
+        -1, -1,
+    };
+    int wanted_2[] = {
+        0, 1,
+        0, 0,
+        -1, -1,
+    };
+    int wanted_3[] = {
+        0, 2,
+        0, 1,
+        
+        0, 0,
+        
+        -1, -1,
+    };
+    int wanted_4[] = {
+        0, 2,
+        
+        0, 1,
+        
+        0, 3,
+        0, 0,
+        
+        -1, -1,
+    };
+    int wanted_5[] = {
+        0, 2,
+        
+        0, 4,
+        0, 1,
+
+        0, 3,
+        0, 0,
+        
+        -1, -1,
+    };
+    int wanted_6[] = {
+        0, 5,
+        0, 2,
+        
+        0, 4,
+        0, 1,
+        
+        0, 3,
+        0, 0,
+        
+        -1, -1,
+    };
+    int wanted_7[] = {
+        0, 5,
+        0, 2,
+
+        0, 4,
+        0, 1,
+
+        0, 6,
+        0, 3,
+        0, 0,
+
+        -1, -1,
+    };
+    int wanted_8[] = {
+        0, 5,
+        0, 2,
+
+        0, 7,
+        0, 4,
+        0, 1,
+
+        0, 6,
+        0, 3,
+        0, 0,
+        
+        -1, -1,
+    };
+    int wanted_9[] = {
+        0, 8,
+        0, 5,
+        0, 2,
+
+        0, 7,
+        0, 4,
+        0, 1,
+
+        0, 6,
+        0, 3,
+        0, 0,
+
+        -1, -1,
+    };
+    int wanted_20[] = {
+        12, 17,
+        12, 14,
+        9, 11,
+        6, 8,
+        3, 5,
+        0, 2,
+        
+        12, 19,
+        12, 16,
+        12, 13,
+        9, 10,
+        6, 7,
+        3, 4,
+        0, 1,
+
+        12, 18,
+        12, 15,
+        12, 12,
+        9, 9,
+        6, 6,
+        3, 3,
+
+        0, 0,
+        -1, -1,
+    };
+    int* tests[100];
+    int i;
+    
+    memset(tests, 0, sizeof(tests));
+    tests[0] = wanted_0;
+    tests[1] = wanted_1;
+    tests[2] = wanted_2;
+    tests[3] = wanted_3;
+    tests[4] = wanted_4;
+    tests[5] = wanted_5;
+    tests[6] = wanted_6;
+    tests[7] = wanted_7;
+    tests[8] = wanted_8;
+    tests[9] = wanted_9;
+    tests[20] = wanted_20;
+
+    for (i = 0; i < ARRAY_SIZE(tests); i++) {
+        grid_test_helper(i, tests[i], 2, grid_up);
     }
 }
 
 void grid_test() {
     grid_layout_test_1();
     grid_down_test();
+    grid_up_test();
 }

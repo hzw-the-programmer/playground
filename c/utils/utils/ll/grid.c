@@ -76,17 +76,20 @@ void grid_down(grid_t *grid) {
     if (grid->len == 0) return;
 
     s = grid->start;
-    c = grid->cur + grid->columns;
+    c = grid->cur;
     e = grid->start + MIN(grid->rows * grid->columns, grid->len - grid->start);
+
+    c += grid->columns;
     if (c >= e) {
         s += grid->columns;
-        if (c >= grid->len) {
-            s = 0;
-            c %= grid->columns;
-            c++;
-            c %= MIN(grid->len, grid->columns);
-        }
     }
+    if (c >= grid->len) {
+        s = 0;
+        c = grid->cur % grid->columns;
+        c++;
+        c %= MIN(grid->len, grid->columns);
+    }
+    
     grid->start = s;
     grid->cur = c;
 }
@@ -102,13 +105,17 @@ void grid_up(grid_t *grid) {
     c -= grid->columns;
     if (c < s) {
         s -= grid->columns;
-        if (c < 0) {
+    }
+    if (c < 0) {
             int l = (grid->len + (grid->columns - 1)) / grid->columns * grid->columns;
-            s = l - (grid->rows * grid->columns);
-            c %= grid->columns;
+            int size = grid->rows * grid->columns;
+            if (size > l) size = l;
+            s = l - size;
+            c = grid->cur % grid->columns;
             c--;
-
-        }
+            if (c < 0) c = MIN(grid->len, grid->columns) - 1;
+            c = s + c + size - grid->columns;
+            if (c >= grid->len) c -= grid->columns;
     }
 
     grid->start = s;
