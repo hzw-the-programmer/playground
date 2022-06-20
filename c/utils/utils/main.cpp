@@ -69,6 +69,7 @@ extern "C" void split_test();
 extern "C" void buffer_test();
 extern "C" void grid_test();
 extern "C" void scroll_bar_test();
+extern "C" void canvas_test();
 
 int main(int argc, char *args) {
 	int i;
@@ -141,6 +142,7 @@ int main(int argc, char *args) {
     buffer_test();
     grid_test();
     scroll_bar_test();
+    canvas_test();
 
 	MemoryCheck();
 

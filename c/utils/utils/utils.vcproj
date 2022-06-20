@@ -533,6 +533,18 @@
 				Name="ll"
 				>
 				<File
+					RelativePath=".\ll\canvas.c"
+					>
+				</File>
+				<File
+					RelativePath=".\ll\canvas.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ll\canvas_test.c"
+					>
+				</File>
+				<File
 					RelativePath=".\ll\grid.c"
 					>
 				</File>
