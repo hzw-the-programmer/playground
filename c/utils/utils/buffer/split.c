@@ -1,7 +1,7 @@
 #include "split.h"
 
-h_split h_split_new(h_slice s, char c) {
-    h_split split;
+split_t split_new(slice_t s, char c) {
+    split_t split;
 
     split.s = s;
     split.c = c;
@@ -9,16 +9,16 @@ h_split h_split_new(h_slice s, char c) {
     return split;
 }
 
-h_slice h_split_next(h_split *split) {
+slice_t split_next(split_t *split) {
 #if 1
-    h_slice s;
+    slice_t s;
     int i;
 
     s = split->s;
 
     if (s.data == 0) return s;
 
-    i = h_slice_search(split->s, split->c);
+    i = slice_search(split->s, split->c);
     if (i != -1) {
         s.len = i;
         split->s.len -= i + 1;

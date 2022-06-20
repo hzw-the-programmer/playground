@@ -1,8 +1,8 @@
 #include "slice.h"
 #include "../utils.h"
 
-h_slice h_slice_new(char *data, int len) {
-    h_slice s;
+slice_t slice_new(char *data, int len) {
+    slice_t s;
 
     s.data = data;
     s.len = len;
@@ -10,8 +10,8 @@ h_slice h_slice_new(char *data, int len) {
     return s;
 }
 
-h_slice h_slice_sub(h_slice in, int begin, int end) {
-    h_slice out;
+slice_t slice_sub(slice_t in, int begin, int end) {
+    slice_t out;
 
     out.data = in.data + begin;
     out.len = end - begin;
@@ -19,7 +19,7 @@ h_slice h_slice_sub(h_slice in, int begin, int end) {
     return out;
 }
 
-int h_slice_search(h_slice s, char b) {
+int slice_search(slice_t s, char b) {
     int i;
 
     for (i = 0; i < s.len; i++) {
@@ -31,9 +31,9 @@ int h_slice_search(h_slice s, char b) {
     return -1;
 }
 
-h_slice h_slice_ltrim(h_slice s, h_slice cutset) {
+slice_t slice_ltrim(slice_t s, slice_t cutset) {
     while (s.len > 0) {
-        if (h_slice_search(cutset, *s.data) == -1) {
+        if (slice_search(cutset, *s.data) == -1) {
             return s;
         }
         s.len--;
@@ -43,9 +43,9 @@ h_slice h_slice_ltrim(h_slice s, h_slice cutset) {
     return s;
 }
 
-h_slice h_slice_rtrim(h_slice s, h_slice cutset) {
+slice_t slice_rtrim(slice_t s, slice_t cutset) {
     while (s.len > 0) {
-        if (h_slice_search(cutset, s.data[s.len - 1]) == -1) {
+        if (slice_search(cutset, s.data[s.len - 1]) == -1) {
             return s;
         }
         s.len--;
@@ -54,18 +54,34 @@ h_slice h_slice_rtrim(h_slice s, h_slice cutset) {
     return s;
 }
 
-h_slice h_slice_trim(h_slice s, h_slice cutset) {
-    return h_slice_rtrim(h_slice_ltrim(s, cutset), cutset);
+slice_t slice_trim(slice_t s, slice_t cutset) {
+    return slice_rtrim(slice_ltrim(s, cutset), cutset);
 }
 
-h_slice h_slice_ltrim_space(h_slice s) {
-    return h_slice_ltrim(s, h_slice_new(SPACES, SPACES_LEN));
+slice_t slice_ltrim_space(slice_t s) {
+    return slice_ltrim(s, slice_new(SPACES, SPACES_LEN));
 }
 
-h_slice h_slice_rtrim_space(h_slice s) {
-    return h_slice_rtrim(s, h_slice_new(SPACES, SPACES_LEN));
+slice_t slice_rtrim_space(slice_t s) {
+    return slice_rtrim(s, slice_new(SPACES, SPACES_LEN));
 }
 
-h_slice h_slice_trim_space(h_slice s) {
-    return h_slice_trim(s, h_slice_new(SPACES, SPACES_LEN));
+slice_t slice_trim_space(slice_t s) {
+    return slice_trim(s, slice_new(SPACES, SPACES_LEN));
+}
+
+uint64 slice_to_uint64(slice_t s) {
+    uint64 n = 0;
+
+    while (s.len > 0) {
+        if (*s.data < '0' || *s.data > '9') {
+            break;
+        }
+        n *= 10;
+        n += *s.data - '0';
+        s.len--;
+        s.data++;
+    }
+
+    return n;
 }

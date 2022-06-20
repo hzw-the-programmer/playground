@@ -11,4 +11,6 @@ typedef enum { false, true } bool;
 #endif
 #endif
 
+typedef unsigned long long uint64;
+
 #endif

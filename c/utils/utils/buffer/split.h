@@ -1,9 +1,14 @@
+#if !defined(__SPLIT_H__)
+#define __SPLIT_H__
+
 #include "slice.h"
 
 typedef struct {
-    h_slice s;
+    slice_t s;
     char c;
-} h_split;
+} split_t;
 
-h_split h_split_new(h_slice in, char c);
-h_slice h_split_next(h_split *split);
+split_t split_new(slice_t in, char c);
+slice_t split_next(split_t *split);
+
+#endif // __SPLIT_H__

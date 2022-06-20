@@ -557,11 +557,31 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ll\padding.c"
+					>
+				</File>
+				<File
+					RelativePath=".\ll\padding.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ll\rect.c"
 					>
 				</File>
 				<File
 					RelativePath=".\ll\rect.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ll\scroll_bar.c"
+					>
+				</File>
+				<File
+					RelativePath=".\ll\scroll_bar.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ll\scroll_bar_test.c"
 					>
 				</File>
 			</Filter>

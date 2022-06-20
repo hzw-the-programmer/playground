@@ -3,311 +3,311 @@
 #include "split.h"
 #include "../utils.h"
 
-void h_split_next_test_1() {
+void split_next_test_1() {
     char *data;
-    h_slice s;
-    h_split split;
+    slice_t s;
+    split_t split;
 
     data = "";
-    s = h_slice_new(data, strlen(data));
-    split = h_split_new(s, '\n');
+    s = slice_new(data, strlen(data));
+    split = split_new(s, '\n');
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == 0);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 }
 
-void h_split_next_test_2() {
+void split_next_test_2() {
     char *data;
-    h_slice s;
-    h_split split;
+    slice_t s;
+    split_t split;
 
     data = "\n";
-    s = h_slice_new(data, strlen(data));
-    split = h_split_new(s, '\n');
+    s = slice_new(data, strlen(data));
+    split = split_new(s, '\n');
    
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data);
     assert(split.s.len == 0);
     assert(split.s.data == data);
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == 0);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 }
 
-void h_split_next_test_3() {
+void split_next_test_3() {
     char *data;
-    h_slice s;
-    h_split split;
+    slice_t s;
+    split_t split;
 
     data = "\n\n";
-    s = h_slice_new(data, strlen(data));
-    split = h_split_new(s, '\n');
+    s = slice_new(data, strlen(data));
+    split = split_new(s, '\n');
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data);
     assert(split.s.len == 1);
     assert(split.s.data == data + 1);
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data + 1);
     assert(split.s.len == 0);
     assert(split.s.data == data + 1);
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data + 1);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == 0);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 }
 
-void h_split_next_test_4() {
+void split_next_test_4() {
     char *data;
-    h_slice s;
-    h_split split;
+    slice_t s;
+    split_t split;
 
     data = "\n\n\n";
-    s = h_slice_new(data, strlen(data));
-    split = h_split_new(s, '\n');
+    s = slice_new(data, strlen(data));
+    split = split_new(s, '\n');
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data);
     assert(split.s.len == 2);
     assert(split.s.data == data + 1);
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data + 1);
     assert(split.s.len == 1);
     assert(split.s.data == data + 2);
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data + 2);
     assert(split.s.len == 0);
     assert(split.s.data == data + 2);
 
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data + 2);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
    
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == 0);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 }
 
-void h_split_next_test_5() {
+void split_next_test_5() {
     char *data;
-    h_slice s;
-    h_split split;
+    slice_t s;
+    split_t split;
 
     data = "a";
-    s = h_slice_new(data, strlen(data));
-    split = h_split_new(s, '\n');
+    s = slice_new(data, strlen(data));
+    split = split_new(s, '\n');
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 1);
     assert(s.data == data);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == 0);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 }
 
-void h_split_next_test_6() {
+void split_next_test_6() {
     char *data;
-    h_slice s;
-    h_split split;
+    slice_t s;
+    split_t split;
 
     data = "\na";
-    s = h_slice_new(data, strlen(data));
-    split = h_split_new(s, '\n');
+    s = slice_new(data, strlen(data));
+    split = split_new(s, '\n');
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data);
     assert(split.s.len == 1);
     assert(split.s.data == data + 1);
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 1);
     assert(s.data == data + 1);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 }
 
-void h_split_next_test_7() {
+void split_next_test_7() {
     char *data;
-    h_slice s;
-    h_split split;
+    slice_t s;
+    split_t split;
 
     data = "a\n";
-    s = h_slice_new(data, strlen(data));
-    split = h_split_new(s, '\n');
+    s = slice_new(data, strlen(data));
+    split = split_new(s, '\n');
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 1);
     assert(s.data == data);
     assert(split.s.len == 0);
     assert(split.s.data == data + 1);
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data + 1);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 }
 
-void h_split_next_test_8() {
+void split_next_test_8() {
     char *data;
-    h_slice s;
-    h_split split;
+    slice_t s;
+    split_t split;
 
     data = "\na\n";
-    s = h_slice_new(data, strlen(data));
-    split = h_split_new(s, '\n');
+    s = slice_new(data, strlen(data));
+    split = split_new(s, '\n');
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data);
     assert(split.s.len == 2);
     assert(split.s.data == data + 1);
     
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 1);
     assert(s.data == data + 1);
     assert(split.s.len == 0);
     assert(split.s.data == data + 2);
 
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data + 2);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 }
 
-void h_split_next_test_9() {
+void split_next_test_9() {
     char *data;
-    h_slice s;
-    h_split split;
+    slice_t s;
+    split_t split;
 
     data = "\nab\nc\nde\n";
-    s = h_slice_new(data, strlen(data));
-    split = h_split_new(s, '\n');
+    s = slice_new(data, strlen(data));
+    split = split_new(s, '\n');
 
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data);
     assert(split.s.len == 8);
     assert(split.s.data == data + 1);
 
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 2);
     assert(s.data == data + 1);
     assert(split.s.len == 5);
     assert(split.s.data == data + 4);
 
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 1);
     assert(s.data == data + 4);
     assert(split.s.len == 3);
     assert(split.s.data == data + 6);
 
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 2);
     assert(s.data == data + 6);
     assert(split.s.len == 0);
     assert(split.s.data == data + 8);
 
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == data + 8);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == 0);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 }
 
-void h_split_next_test_helper(char *data, char **want) {
-    h_slice s;
-    h_split split;
+void split_next_test_helper(char *data, char **want) {
+    slice_t s;
+    split_t split;
 
-    s = h_slice_new(data, strlen(data));
-    split = h_split_new(s, '\n');
+    s = slice_new(data, strlen(data));
+    split = split_new(s, '\n');
 
     while (*want) {
-        s = h_split_next(&split);
+        s = split_next(&split);
         assert(s.len == strlen(*want));
         assert(s.data != 0);
         assert(strncmp(s.data, *want, s.len) == 0);
         want++;
     }
 
-    s = h_split_next(&split);
+    s = split_next(&split);
     assert(s.len == 0);
     assert(s.data == 0);
     assert(split.s.len == 0);
     assert(split.s.data == 0);
 }
 
-void h_split_next_test_10() {
+void split_next_test_10() {
     struct {
         char *data;
         char *want[100];
@@ -340,21 +340,21 @@ void h_split_next_test_10() {
     int i;
 
     for (i = 0; i < ARRAY_SIZE(tests); i++) {
-        h_split_next_test_helper(tests[i].data, tests[i].want);
+        split_next_test_helper(tests[i].data, tests[i].want);
     }
 }
 
 void split_test() {
-    h_split_next_test_1();
-    h_split_next_test_2();
-    h_split_next_test_3();
-    h_split_next_test_4();
-    h_split_next_test_5();
-    h_split_next_test_6();
-    h_split_next_test_7();
-    h_split_next_test_8();
-    h_split_next_test_9();
-    h_split_next_test_10();
+    split_next_test_1();
+    split_next_test_2();
+    split_next_test_3();
+    split_next_test_4();
+    split_next_test_5();
+    split_next_test_6();
+    split_next_test_7();
+    split_next_test_8();
+    split_next_test_9();
+    split_next_test_10();
 }
 
 #if 0

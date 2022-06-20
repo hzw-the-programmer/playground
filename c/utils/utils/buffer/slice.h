@@ -1,21 +1,24 @@
-#if !defined(__H_SLICE__)
-#define __H_SLICE__
+#if !defined(__SLICE_H__)
+#define __SLICE_H__
+
+#include "../types.h"
 
 typedef struct {
     char *data;
     int len;
-} h_slice;
+} slice_t;
 
-h_slice h_slice_new(char *data, int len);
+slice_t slice_new(char *data, int len);
 
-h_slice h_slice_sub(h_slice in, int begin, int end);
-int h_slice_search(h_slice s, char b);
+slice_t slice_sub(slice_t in, int begin, int end);
+int slice_search(slice_t s, char b);
 
-h_slice h_slice_ltrim(h_slice s, h_slice cutset);
-h_slice h_slice_rtrim(h_slice s, h_slice cutset);
-h_slice h_slice_trim(h_slice s, h_slice cutset);
-h_slice h_slice_ltrim_space(h_slice s);
-h_slice h_slice_rtrim_space(h_slice s);
-h_slice h_slice_trim_space(h_slice s);
+slice_t slice_ltrim(slice_t s, slice_t cutset);
+slice_t slice_rtrim(slice_t s, slice_t cutset);
+slice_t slice_trim(slice_t s, slice_t cutset);
+slice_t slice_ltrim_space(slice_t s);
+slice_t slice_rtrim_space(slice_t s);
+slice_t slice_trim_space(slice_t s);
+uint64 slice_to_uint64(slice_t s);
 
-#endif // __H_SLICE__
+#endif // __SLICE_H__

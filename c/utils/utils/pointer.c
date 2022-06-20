@@ -1,3 +1,5 @@
+#include <assert.h>
+
 void a_free(void **p) {
     *p = 0;
 }
@@ -16,6 +18,20 @@ void aa_m(void *p) {
     AA_FREE(p);
 }
 
+void test_pointer_1() {
+    short a[100] = {0};
+    short *b, *c;
+    char *d, *e;
+
+    b = a;
+    c = &a[10];
+    assert(c - b == 10);
+
+    d = a;
+    e = &a[10];
+    assert(e - d == 20);
+}
+
 void test_pointer() {
     int a = 10;
     int *b = &a;
@@ -27,4 +43,6 @@ void test_pointer() {
 
     b = &a;
     aa_m(b);
+
+    test_pointer_1();
 }

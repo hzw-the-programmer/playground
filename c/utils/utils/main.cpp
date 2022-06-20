@@ -68,6 +68,7 @@ extern "C" void slice_test();
 extern "C" void split_test();
 extern "C" void buffer_test();
 extern "C" void grid_test();
+extern "C" void scroll_bar_test();
 
 int main(int argc, char *args) {
 	int i;
@@ -139,6 +140,7 @@ int main(int argc, char *args) {
     split_test();
     buffer_test();
     grid_test();
+    scroll_bar_test();
 
 	MemoryCheck();
 

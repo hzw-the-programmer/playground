@@ -5,7 +5,7 @@
 #include "split.h"
 #include "../utils.h"
 
-int h_buf_reserve(h_buf *buf, int len) {
+int buf_reserve(buf_t *buf, int len) {
     int cap;
     char *data;
 
@@ -26,8 +26,8 @@ int h_buf_reserve(h_buf *buf, int len) {
     return 1;
 }
 
-int h_buf_write(h_buf *buf, const char *data, int len) {
-    if (!h_buf_reserve(buf, len)) return 0;
+int buf_write(buf_t *buf, const char *data, int len) {
+    if (!buf_reserve(buf, len)) return 0;
     
     memcpy(buf->data + buf->len, data, len);
     buf->len += len;
@@ -36,7 +36,7 @@ int h_buf_write(h_buf *buf, const char *data, int len) {
     return len;
 }
 
-int h_buf_drain(h_buf *buf, int len) {
+int buf_drain(buf_t *buf, int len) {
     if (len >= buf->len) {
         len = buf->len;
         buf->len = 0;
@@ -48,36 +48,36 @@ int h_buf_drain(h_buf *buf, int len) {
     return len;    
 }
 
-int h_buf_append_header(h_buf *buf, const char *key, const char *value) {
+int buf_append_header(buf_t *buf, const char *key, const char *value) {
     int kl, vl, l;
 
     kl = strlen(key); vl = strlen(value);
     l = kl + 1 + vl + 2;
-    if (!h_buf_reserve(buf, l)) return 0;
+    if (!buf_reserve(buf, l)) return 0;
 
-    h_buf_write(buf, key, kl);
-    h_buf_write(buf, ":", 1);
-    h_buf_write(buf, value, vl);
-    h_buf_write(buf, "\r\n", 2);
+    buf_write(buf, key, kl);
+    buf_write(buf, ":", 1);
+    buf_write(buf, value, vl);
+    buf_write(buf, "\r\n", 2);
 
     return l;
 }
 
-int h_buf_delete_header(h_buf *buf, const char *key) {
-    h_slice line, k;
-    h_split lines, header;
+int buf_delete_header(buf_t *buf, const char *key) {
+    slice_t line, k;
+    split_t lines, header;
     int l;
 
     l = strlen(key);
 
-    lines = h_split_new(h_slice_new(buf->data, buf->len), '\n');
+    lines = split_new(slice_new(buf->data, buf->len), '\n');
     while (1) {
-        line = h_split_next(&lines);
+        line = split_next(&lines);
         if (line.len == 0) {
             return 0;
         }
-        header = h_split_new(line, ':');
-        k = h_slice_trim_space(h_split_next(&header));
+        header = split_new(line, ':');
+        k = slice_trim_space(split_next(&header));
         if (k.len == l && strncmp(k.data, key, k.len) == 0) {
             if (lines.s.len != 0) {
                 memmove(line.data, lines.s.data, lines.s.len);
