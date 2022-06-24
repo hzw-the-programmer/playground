@@ -14,5 +14,5 @@ void canvas_test() {
     canvas_translate(&canvas, 0, 10);
     x = 0, y = 0;
     canvas_transform(&canvas, &x, &y);
-    assert(x == 0 && y == -10);
+    assert(x == 0 && y == 0);
 }
