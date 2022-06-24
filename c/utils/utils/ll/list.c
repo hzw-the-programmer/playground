@@ -53,18 +53,29 @@ void list_rects_in_end(list_t *list, const rect_t *rect) {
 }
 
 void list_down(list_t *list) {
-    int start, current, index;
-    rect_t rect;
+    int start, current, len, index;
     int current_y, max_y;
-
-    list->current++;
     
     start = list->start;
     current = list->current;
+    len = list->adapter.len(list->adapter.data);
+
+    current++;
+    if (current > len - 1) {
+        list->start = 0;
+        list->current = 0;
+        list_measure(list);
+        list_layout(list);
+        return;
+    }
+
+    list->current = current;
+
     index = current - start;
-    
     if (index > list->len - 1) {
         rect_t rc;
+
+        list->start++;
 
         rc.x = list->rects[list->len - 1].x;
         rc.y = list->rect.y + list->rect.h;
@@ -75,11 +86,11 @@ void list_down(list_t *list) {
 
         list_rects_in_end(list, &rc);
         list_rects_offset_y(list, -rc.h);
+
         return;
     }
 
-    rect = list->rects[index];
-    current_y = rect.y + rect.h;
+    current_y = list->rects[index].y + list->rects[index].h;
     max_y = list->rect.y + list->rect.h;
 
     if (current_y > max_y) {

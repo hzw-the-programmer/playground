@@ -93,9 +93,9 @@ void test_list_measure_layout_3() {
     test_list_measure_layout_helper(&ctx, &rect, rects, ARRAY_SIZE(rects), wanted);
 }
 
-void test_list_1() {
+void test_list_down() {
     rect_t rect = {0, 0, 60, 30};
-    list_ctx_t ctx = {10, {10, 11, 12, 13, 14}};
+    list_ctx_t ctx = {7, {10, 11, 12, 13, 14, 15, 16}};
     rect_t rects[3];
     list_adapter_t adapter = {0};
     list_t list;
@@ -126,6 +126,21 @@ void test_list_1() {
             {0, 3, 60, 13},
             {0, 16, 60, 14},
         },
+        {
+            {0, -12, 60, 13},
+            {0, 1, 60, 14},
+            {0, 15, 60, 15},
+        },
+         {
+            {0, -15, 60, 14},
+            {0, -1, 60, 15},
+            {0, 14, 60, 16},
+        },
+        {
+            {0, 0, 60, 10},
+            {0, 10, 60, 11},
+            {0, 21, 60, 12},
+        },
     };
 
     int i, j;
@@ -154,5 +169,5 @@ void test_list() {
     test_list_measure_layout_1();
     test_list_measure_layout_2();
     test_list_measure_layout_3();
-    test_list_1();
+    test_list_down();
 }
