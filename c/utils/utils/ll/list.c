@@ -133,6 +133,7 @@ void list_up(list_t *list) {
     current--;
 
     if (current < 0) {
+        list_jump_to_bottom(list);
         return;
     }
 
