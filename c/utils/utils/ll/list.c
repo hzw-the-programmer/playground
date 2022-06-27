@@ -77,6 +77,14 @@ void list_jump_to_bottom(list_t *list) {
     } 
 }
 
+void list_jump_to_top(list_t *list) {
+    list->start = 0;
+    list->current = 0;
+    
+    list_measure(list);
+    list_layout(list);
+}
+
 void list_down(list_t *list) {
     int start, current, len, index;
     int current_y, max_y;
@@ -86,35 +94,32 @@ void list_down(list_t *list) {
     len = list->adapter.len(list->adapter.data);
 
     current++;
+    
     if (current > len - 1) {
-        list->start = 0;
-        list->current = 0;
-        list_measure(list);
-        list_layout(list);
+        list_jump_to_top(list);
         return;
     }
 
     list->current = current;
 
-    index = current - start;
-    if (index > list->len - 1) {
-        rect_t rc;
-
-        list->start++;
-
-        rc.x = list->rects[list->len - 1].x;
-        rc.y = list->rect.y + list->rect.h;
+    if (current > start + list->len - 1) {
+        rect_t rect;
+        
         list->adapter.measure(
             list->adapter.data, current,
             true, &list->rect,
-            &rc.w, &rc.h);
+            &rect.w, &rect.h);
 
-        list_rects_in_end(list, &rc);
-        list_rects_offset_y(list, -rc.h);
+        rect.x = list->rects[list->len - 1].x;
+        rect.y = list->rect.y + list->rect.h;
 
-        return;
+        list_rects_in_end(list, &rect);
+
+        start++;
+        list->start = start;
     }
 
+    index = current - start;
     current_y = list->rects[index].y + list->rects[index].h;
     max_y = list->rect.y + list->rect.h;
 
