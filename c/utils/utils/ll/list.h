@@ -20,7 +20,13 @@ typedef struct {
 } list_t;
 
 list_t list_new(const rect_t *rect, rect_t *rects, int len, const list_adapter_t *adapter);
+
 void list_measure(list_t *list);
 void list_layout(list_t *list);
+
+void list_jump_to_bottom(list_t *list);
+
+void list_down(list_t *list);
+void list_up(list_t *list);
 
 #endif

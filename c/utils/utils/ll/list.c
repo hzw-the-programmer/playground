@@ -52,6 +52,31 @@ void list_rects_in_end(list_t *list, const rect_t *rect) {
     list->rects[list->len - 1] = *rect;
 }
 
+void list_rects_in_front(list_t *list, const rect_t *rect) {
+    memmove(list->rects + 1, list->rects, (list->len - 1) * sizeof(rect_t));
+    list->rects[0] = *rect;
+}
+
+void list_jump_to_bottom(list_t *list) {
+    int len, index;
+    int current_y, max_y;
+
+    len = list->adapter.len(list->adapter.data);
+    list->start = len - list->len;
+    list->current = len - 1;
+    index = list->current - list->start;
+
+    list_measure(list);
+    list_layout(list);
+
+    current_y = list->rects[index].y + list->rects[index].h;
+    max_y = list->rect.y + list->rect.h;
+
+    if (current_y > max_y) {
+        list_rects_offset_y(list, max_y - current_y);
+    } 
+}
+
 void list_down(list_t *list) {
     int start, current, len, index;
     int current_y, max_y;
@@ -96,4 +121,43 @@ void list_down(list_t *list) {
     if (current_y > max_y) {
         list_rects_offset_y(list, max_y - current_y);
     } 
+}
+
+void list_up(list_t *list) {
+    int start, current, len, index;
+
+    start = list->start;
+    current = list->current;
+    len = list->adapter.len(list->adapter.data);
+
+    current--;
+
+    if (current < 0) {
+        return;
+    }
+
+    list->current = current;
+
+    if (current < start) {
+        rect_t rect;
+
+        list->adapter.measure(
+            list->adapter.data, current,
+            true, &list->rect,
+            &rect.w, &rect.h);
+
+        rect.x = list->rects[0].x;
+        rect.y = -rect.h;
+
+        list_rects_in_front(list, &rect);
+
+        start--;
+        list->start = start;
+    }
+    
+    index = current - start;
+    if (list->rects[index].y < 0) {
+        list_rects_offset_y(list, -list->rects[index].y);
+        return;
+    }
 }

@@ -131,7 +131,7 @@ void test_list_down() {
             {0, 1, 60, 14},
             {0, 15, 60, 15},
         },
-         {
+        {
             {0, -15, 60, 14},
             {0, -1, 60, 15},
             {0, 14, 60, 16},
@@ -165,9 +165,69 @@ void test_list_down() {
     }
 }
 
+void test_list_up() {
+    rect_t rect = {0, 0, 60, 30};
+    rect_t rects[3];
+    list_ctx_t ctx = {7, {10, 11, 12, 13, 14, 15, 16}};
+    list_adapter_t adapter;
+    list_t list;
+
+    rect_t wanted[][ARRAY_SIZE(rects)] = {
+        {
+            {0, -15, 60, 14},
+            {0, -1, 60, 15},
+            {0, 14, 60, 16},
+        },
+        {
+            {0, -14, 60, 14},
+            {0, 0, 60, 15},
+            {0, 15, 60, 16},
+        },
+        {
+            {0, 0, 60, 14},
+            {0, 14, 60, 15},
+            {0, 29, 60, 16},
+        },
+        {
+            {0, 0, 60, 13},
+            {0, 13, 60, 14},
+            {0, 27, 60, 15},
+        },
+    };
+
+    int i, j;
+
+    adapter.data = &ctx;
+    adapter.len = list_ctx_len;
+    adapter.measure = list_ctx_measure;
+    
+    list.rect = rect;
+
+    list.rects = rects;
+    list.len = ARRAY_SIZE(rects);
+
+    list.adapter = adapter;
+
+    list.offset = 0;
+
+    list_jump_to_bottom(&list);
+    
+    for (i = 0; i < ARRAY_SIZE(wanted); i++) {
+        for (j = 0; j < list.len; j++) {
+            assert(list.rects[j].x == wanted[i][j].x);
+            assert(list.rects[j].y == wanted[i][j].y);
+            assert(list.rects[j].w == wanted[i][j].w);
+            assert(list.rects[j].h == wanted[i][j].h);
+        }
+
+        list_up(&list);
+    }
+}
+
 void test_list() {
     test_list_measure_layout_1();
     test_list_measure_layout_2();
     test_list_measure_layout_3();
     test_list_down();
+    test_list_up();
 }
