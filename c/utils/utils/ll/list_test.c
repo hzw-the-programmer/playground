@@ -100,46 +100,82 @@ void test_list_down() {
     list_adapter_t adapter = {0};
     list_t list;
 
-    rect_t wanted[][ARRAY_SIZE(rects)] = {
+    struct {
+        int start;
+        int current;
+        rect_t rects[3];
+    } wanted[] = {
         {
-            {0, 0, 60, 10},
-            {0, 10, 60, 11},
-            {0, 21, 60, 12},
+            0,
+            0,
+            {
+                {0, 0, 60, 10},
+                {0, 10, 60, 11},
+                {0, 21, 60, 12},
+            },
         },
         {
-            {0, 0, 60, 10},
-            {0, 10, 60, 11},
-            {0, 21, 60, 12},
+            0,
+            1,
+            {
+                {0, 0, 60, 10},
+                {0, 10, 60, 11},
+                {0, 21, 60, 12},
+            },
         },
         {
-            {0, -3, 60, 10},
-            {0, 7, 60, 11},
-            {0, 18, 60, 12},
+            0,
+            2,
+            {
+                {0, -3, 60, 10},
+                {0, 7, 60, 11},
+                {0, 18, 60, 12},
+            },
         },
         {
-            {0, -6, 60, 11},
-            {0, 5, 60, 12},
-            {0, 17, 60, 13},
+            1,
+            3,
+            {
+                {0, -6, 60, 11},
+                {0, 5, 60, 12},
+                {0, 17, 60, 13},
+            },
         },
         {
-            {0, -9, 60, 12},
-            {0, 3, 60, 13},
-            {0, 16, 60, 14},
+            2,
+            4,
+            {
+                {0, -9, 60, 12},
+                {0, 3, 60, 13},
+                {0, 16, 60, 14},
+            },
         },
         {
-            {0, -12, 60, 13},
-            {0, 1, 60, 14},
-            {0, 15, 60, 15},
+            3,
+            5,
+            {
+                {0, -12, 60, 13},
+                {0, 1, 60, 14},
+                {0, 15, 60, 15},
+            },
         },
         {
-            {0, -15, 60, 14},
-            {0, -1, 60, 15},
-            {0, 14, 60, 16},
+            4,
+            6,
+            {
+                {0, -15, 60, 14},
+                {0, -1, 60, 15},
+                {0, 14, 60, 16},
+            },
         },
         {
-            {0, 0, 60, 10},
-            {0, 10, 60, 11},
-            {0, 21, 60, 12},
+            0,
+            0,
+            {
+                {0, 0, 60, 10},
+                {0, 10, 60, 11},
+                {0, 21, 60, 12},
+            },
         },
     };
 
@@ -155,10 +191,12 @@ void test_list_down() {
 
     for (i = 0; i < ARRAY_SIZE(wanted); i++) {
         for (j = 0; j < list.len; j++) {
-            assert(list.rects[j].x == wanted[i][j].x);
-            assert(list.rects[j].y == wanted[i][j].y);
-            assert(list.rects[j].w == wanted[i][j].w);
-            assert(list.rects[j].h == wanted[i][j].h);
+            assert(list.start == wanted[i].start);
+            assert(list.current == wanted[i].current);
+            assert(list.rects[j].x == wanted[i].rects[j].x);
+            assert(list.rects[j].y == wanted[i].rects[j].y);
+            assert(list.rects[j].w == wanted[i].rects[j].w);
+            assert(list.rects[j].h == wanted[i].rects[j].h);
         }
 
         list_down(&list);
