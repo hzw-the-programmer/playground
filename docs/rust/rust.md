@@ -8,3 +8,7 @@ nc 127.0.0.1 1234
 cargo new echo-client-std
 cd echo-client-std
 ls
+
+rustup default
+rustup default nightly
+

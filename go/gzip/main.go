@@ -27,6 +27,19 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// fmt.Printf("%x\n", buf.Bytes());
+	// fmt.Printf("%v\n", buf.Bytes());
+	// fmt.Printf("%+v\n", buf.Bytes());
+
+	for i, b := range buf.Bytes() {
+		fmt.Printf("0x%02x, ", b)
+		if i % 10 == 9 {
+			fmt.Println()
+		}
+	}
+
+	fmt.Println()
+
 	/*
 		b := make([]byte, 1)
 		i := 0

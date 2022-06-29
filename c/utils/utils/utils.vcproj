@@ -649,6 +649,54 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="zlib"
+				>
+				<File
+					RelativePath=".\zlib\zconf.h"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\zlib.h"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\zlib_test.c"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\zlib_test.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="mini_gzip"
+				>
+				<File
+					RelativePath=".\mini_gzip\mini_gzip.c"
+					>
+				</File>
+				<File
+					RelativePath=".\mini_gzip\mini_gzip.h"
+					>
+				</File>
+				<File
+					RelativePath=".\mini_gzip\mini_gzip_test.c"
+					>
+				</File>
+				<File
+					RelativePath=".\mini_gzip\mini_gzip_test.h"
+					>
+				</File>
+				<File
+					RelativePath=".\mini_gzip\miniz.c"
+					>
+				</File>
+				<File
+					RelativePath=".\mini_gzip\miniz.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"

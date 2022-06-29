@@ -71,6 +71,8 @@ extern "C" void grid_test();
 extern "C" void scroll_bar_test();
 extern "C" void canvas_test();
 extern "C" void test_list();
+#include "./zlib/zlib_test.h"
+#include "./mini_gzip/mini_gzip_test.h"
 
 int main(int argc, char *args) {
 	int i;
@@ -145,6 +147,8 @@ int main(int argc, char *args) {
     scroll_bar_test();
     canvas_test();
     test_list();
+    test_zlib();
+    test_mini_gzip();
 
 	MemoryCheck();
 
