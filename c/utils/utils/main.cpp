@@ -73,6 +73,7 @@ extern "C" void canvas_test();
 extern "C" void test_list();
 #include "./zlib/zlib_test.h"
 #include "./mini_gzip/mini_gzip_test.h"
+#include "sha256/sha256_test.h"
 
 int main(int argc, char *args) {
 	int i;
@@ -149,6 +150,7 @@ int main(int argc, char *args) {
     test_list();
     test_zlib();
     test_mini_gzip();
+    test_sha256();
 
 	MemoryCheck();
 

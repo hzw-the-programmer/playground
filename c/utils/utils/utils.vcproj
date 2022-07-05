@@ -710,6 +710,26 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
+		<Filter
+			Name="sha256"
+			>
+			<File
+				RelativePath=".\sha256\sha256.c"
+				>
+			</File>
+			<File
+				RelativePath=".\sha256\sha256.h"
+				>
+			</File>
+			<File
+				RelativePath=".\sha256\sha256_test.c"
+				>
+			</File>
+			<File
+				RelativePath=".\sha256\sha256_test.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
