@@ -1,47 +1,19 @@
 package hzw
 
 func EvenlySplitInt64(array []int64, batchSize int) [][]int64 {
-	splits := [][]int64{}
-
-	if len(array) <= batchSize {
-		if len(array) == 0 {
-			return splits
-		}
-		return append(splits, array)
+	if len(array) == 0 {
+		return [][]int64{}
 	}
 
-	bs := batchSize
-	count := 0
-	remain := 0
-	for {
-		count = len(array) / bs
-		remain = len(array) % bs
-		if remain == 0 {
-			break
-		} else if remain == bs - 1 {
-			if bs != batchSize && remain == 1 {
-				break
-			}
-			count++
-			remain = 0
-			break
-		} else {
-			bs--
-		}
-	}
-
+	// count := (len(array) + batchSize - 1) / batchSize
+	count := (len(array) - 1) / batchSize + 1
+	
+	splits := make([][]int64, count)
 	for i := 0; i < count; i++ {
-		size := bs
-		if size > len(array) {
-			size = len(array)
-		}
-		if remain > 0 {
-			size++
-		}
-		remain--
-		splits = append(splits, array[:size])
+		size := (len(array) - 1) / (count - i) + 1;
+
+		splits[i] = array[:size]
 		array = array[size:]
 	}
-	
 	return splits
 }
