@@ -1,4 +1,4 @@
-package main
+package hzw
 
 // go test
 // go test -v
