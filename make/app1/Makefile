@@ -17,8 +17,12 @@
 # 	$(info $<)
 # 	cl.exe main $(objects)
 
-objects := $(patsubst %.c,%.obj,$(wildcard *.c))
+# objects := $(patsubst %.c,%.obj,$(wildcard *.c))
+objects := $(shell find . -name "*.c")
+objects := $(foreach o,$(objects),$(notdir $(o)))
+objects := $(patsubst %.c,%.obj,$(objects))
 
+VPATH = src
 # Setting environment for using Microsoft Visual Studio 2008 x86 tools.
 # echo %lib%
 # export lib=/C/'Program Files (x86)'/'Microsoft Visual Studio 9.0'/VC/ATLMFC/LIB:/C/'Program Files (x86)'/'Microsoft Visual Studio 9.0'/VC/LIB:/c/'Program Files'/'Microsoft SDKs'/Windows/v6.0A/lib
