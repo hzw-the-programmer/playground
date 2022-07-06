@@ -20,7 +20,7 @@
 objects := $(patsubst %.c,%.obj,$(wildcard *.c))
 
 main: $(objects)
-	cl.exe /nologo $(objects)
+	cl.exe /nologo /Femain $(objects)
 
 %.obj: %.c
 	cl.exe /nologo /c $<
