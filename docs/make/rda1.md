@@ -110,3 +110,36 @@ git status application | grep Makefile
 ```
 ctmake application/app CT_TARGET=target CT_RELEASE=debug
 ```
+
+```
+include ${SOFT_WORKDIR}/env/compilation/mmi_compilevars.mk
+
+LOCAL_NAME := application/app
+
+SRC_DIR := .
+
+APP_PLATFORM_PREFIX := platform_
+APP_PLATFORM := apple
+APP_PLATFORM_DIR := $(APP_PLATFORM_PREFIX)$(APP_PLATFORM)
+
+APP_SRC_FILES := $(shell find . -name "*.c" -or -name "*.h")
+$(info $(APP_SRC_FILES))
+APP_PLATFORM_SRC_FILES := $(filter ./$(APP_PLATFORM_DIR)%,$(APP_SRC_FILES))
+$(info $(APP_PLATFORM_SRC_FILES))
+APP_SRC_FILES := $(filter-out ./$(APP_PLATFORM_PREFIX)%,$(APP_SRC_FILES))
+$(info $(APP_SRC_FILES))
+APP_SRC_FILES := $(APP_SRC_FILES) $(APP_PLATFORM_SRC_FILES)
+$(info $(APP_SRC_FILES))
+APP_SRC_DIRS := $(sort $(dir $(APP_SRC_FILES)))
+$(info $(APP_SRC_DIRS))
+
+C_SRC := $(notdir $(filter %c,$(APP_SRC_FILES)))
+$(info $(C_SRC))
+VPATH := $(APP_SRC_DIRS)
+$(info $(VPATH))
+
+LOCAL_ADD_INCLUDE := $(addprefix $(LOCAL_NAME)/,$(APP_SRC_DIRS))
+$(error $(LOCAL_ADD_INCLUDE))
+
+include ${SOFT_WORKDIR}/env/compilation/compilerules.mk
+```
