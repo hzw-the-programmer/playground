@@ -106,3 +106,7 @@ include ${SOFT_WORKDIR}/env/compilation/compilerules.mk
 git status | grep Makefile
 git status application | grep Makefile
 ```
+
+```
+ctmake application/app CT_TARGET=target CT_RELEASE=debug
+```
