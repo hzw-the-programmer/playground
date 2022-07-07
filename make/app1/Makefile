@@ -26,6 +26,9 @@ objects := $(patsubst %.c,%.obj,$(objects))
 objects := $(addprefix $(BUILD_DIR)/,$(objects))
 # $(error $(objects))
 
+# https://www.gnu.org/software/make/manual/html_node/Recipes_002fSearch.html#Recipes_002fSearch
+# https://www.gnu.org/software/make/manual/html_node/General-Search.html
+# https://www.gnu.org/software/make/manual/html_node/Selective-Search.html
 VPATH = src
 
 # Setting environment for using Microsoft Visual Studio 2008 x86 tools.
