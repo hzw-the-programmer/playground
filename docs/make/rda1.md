@@ -132,6 +132,8 @@ APP_SRC_FILES := $(APP_SRC_FILES) $(APP_PLATFORM_SRC_FILES)
 $(info $(APP_SRC_FILES))
 APP_SRC_DIRS := $(sort $(dir $(APP_SRC_FILES)))
 $(info $(APP_SRC_DIRS))
+APP_SRC_DIRS  := $(APP_SRC_DIRS) $(addsuffix ../,$(APP_SRC_DIRS))
+$(info $(APP_SRC_DIRS))
 
 C_SRC := $(notdir $(filter %c,$(APP_SRC_FILES)))
 $(info $(C_SRC))
