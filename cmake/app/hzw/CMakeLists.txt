@@ -1,0 +1,1 @@
+add_library(hzwl hzw.c hzw1.c hzw2.c)
