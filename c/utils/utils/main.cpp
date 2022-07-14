@@ -75,6 +75,11 @@ extern "C" void test_list();
 #include "./mini_gzip/mini_gzip_test.h"
 #include "sha256/sha256_test.h"
 
+#include "mbedtls/bignum.h"
+#include "mbedtls/entropy.h"
+#include "mbedtls/ctr_drbg.h"
+#include "mbedtls/rsa.h"
+
 int main(int argc, char *args) {
 	int i;
 	
@@ -151,6 +156,13 @@ int main(int argc, char *args) {
     test_zlib();
     test_mini_gzip();
     test_sha256();
+    mbedtls_rsa_self_test(1);
+
+#if defined(MBEDTLS_SELF_TEST)
+    mbedtls_mpi_self_test(1);
+    mbedtls_entropy_self_test(1);
+    mbedtls_ctr_drbg_self_test(1);
+#endif
 
 	MemoryCheck();
 

@@ -40,6 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="D:\vc\utils\utils\mbedtls\include"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -697,6 +698,222 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="mbedtls"
+				>
+				<Filter
+					Name="include"
+					>
+					<Filter
+						Name="mbedtls"
+						>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\aes.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\aesni.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\asn1.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\bignum.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\bn_mul.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\check_config.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\cipher.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\config.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\ctr_drbg.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\ecdsa.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\ecp.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\entropy.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\entropy_poll.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\error.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\md.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\md2.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\md4.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\md5.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\md_internal.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\oid.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\padlock.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\pk.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\platform.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\platform_time.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\platform_util.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\ripemd160.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\rsa.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\rsa_internal.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\sha1.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\sha256.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\sha512.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\threading.h"
+							>
+						</File>
+						<File
+							RelativePath=".\mbedtls\include\mbedtls\timing.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="library"
+					>
+					<File
+						RelativePath=".\mbedtls\library\aes.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\bignum.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\ctr_drbg.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\entropy.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\entropy_poll.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\md.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\md5.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\oid.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\platform.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\platform_util.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\ripemd160.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\rsa.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\rsa_internal.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\sha1.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\sha256.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\sha512.c"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\library\timing.c"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -714,10 +931,6 @@
 			Name="sha256"
 			>
 			<File
-				RelativePath=".\sha256\sha256.c"
-				>
-			</File>
-			<File
 				RelativePath=".\sha256\sha256.h"
 				>
 			</File>
@@ -727,6 +940,10 @@
 			</File>
 			<File
 				RelativePath=".\sha256\sha256_test.h"
+				>
+			</File>
+			<File
+				RelativePath=".\sha256\sha256g.c"
 				>
 			</File>
 		</Filter>
