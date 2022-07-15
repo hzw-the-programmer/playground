@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "utils", "utils\utils.vcproj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tcp", "tcp\tcp.vcproj", "{D366BAEC-AE39-4D95-979A-22699676D7D5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rsa", "rsa\rsa.vcproj", "{32A47A92-0221-440C-9BFC-DC57348B726D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{D366BAEC-AE39-4D95-979A-22699676D7D5}.Debug|Win32.Build.0 = Debug|Win32
 		{D366BAEC-AE39-4D95-979A-22699676D7D5}.Release|Win32.ActiveCfg = Release|Win32
 		{D366BAEC-AE39-4D95-979A-22699676D7D5}.Release|Win32.Build.0 = Release|Win32
+		{32A47A92-0221-440C-9BFC-DC57348B726D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{32A47A92-0221-440C-9BFC-DC57348B726D}.Debug|Win32.Build.0 = Debug|Win32
+		{32A47A92-0221-440C-9BFC-DC57348B726D}.Release|Win32.ActiveCfg = Release|Win32
+		{32A47A92-0221-440C-9BFC-DC57348B726D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
