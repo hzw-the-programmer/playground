@@ -1892,7 +1892,7 @@ exit:
 }
 #endif /* MBEDTLS_PKCS1_V21 */
 
-#if defined(MBEDTLS_PKCS1_V15)
+#if 0 // defined(MBEDTLS_PKCS1_V15)
 /*
  * Implementation of the PKCS#1 v2.1 RSASSA-PKCS1-V1_5-SIGN function
  */
@@ -2107,6 +2107,7 @@ cleanup:
 }
 #endif /* MBEDTLS_PKCS1_V15 */
 
+#if 0
 /*
  * Do an RSA operation to sign the message digest
  */
@@ -2145,6 +2146,7 @@ int mbedtls_rsa_pkcs1_sign( mbedtls_rsa_context *ctx,
             return( MBEDTLS_ERR_RSA_INVALID_PADDING );
     }
 }
+#endif
 
 #if defined(MBEDTLS_PKCS1_V21)
 /*
@@ -2330,7 +2332,7 @@ int mbedtls_rsa_rsassa_pss_verify( mbedtls_rsa_context *ctx,
 }
 #endif /* MBEDTLS_PKCS1_V21 */
 
-#if defined(MBEDTLS_PKCS1_V15)
+#if 0 // defined(MBEDTLS_PKCS1_V15)
 /*
  * Implementation of the PKCS#1 v2.1 RSASSA-PKCS1-v1_5-VERIFY function
  */
@@ -2414,6 +2416,7 @@ cleanup:
 }
 #endif /* MBEDTLS_PKCS1_V15 */
 
+#if 0
 /*
  * Do an RSA operation and check the message digest
  */
@@ -2452,6 +2455,7 @@ int mbedtls_rsa_pkcs1_verify( mbedtls_rsa_context *ctx,
             return( MBEDTLS_ERR_RSA_INVALID_PADDING );
     }
 }
+#endif
 
 /*
  * Copy the components of an RSA key
