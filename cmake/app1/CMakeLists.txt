@@ -46,7 +46,8 @@ foreach(src IN LISTS src_list)
         get_filename_component(path "${src}" PATH)
         list(APPEND inc_list ${path})
 
-        string(REPLACE "/" "\\" msvc_path "${path}")
+        string(REPLACE "../" "" msvc_path "${path}")
+		string(REPLACE "/" "\\" msvc_path "${msvc_path}")
         source_group("${msvc_path}" FILES "${src}")
 
         if(path MATCHES ".*/.*")
