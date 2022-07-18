@@ -8,6 +8,7 @@
 
 #include "mbedtls/bignum.h"
 #include "mbedtls/rsa.h"
+#include "mbedtls/platform.h"
 
 static int myrand(void *rng_state, unsigned char *output, size_t len);
 
@@ -37,6 +38,8 @@ int _tmain(int argc, _TCHAR* argv[])
     mbedtls_mpi N, E;
     mbedtls_rsa_context rsa;
     int ret = 1;
+
+    mbedtls_platform_set_calloc_free(calloc, free);
     
     mbedtls_mpi_init(&N);
     mbedtls_mpi_init(&E);

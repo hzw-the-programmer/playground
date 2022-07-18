@@ -36,7 +36,9 @@
 
 #include "mbedtls/platform_util.h"
 #include "mbedtls/platform.h"
+#if defined(MBEDTLS_THREADING_C)
 #include "mbedtls/threading.h"
+#endif
 
 #include <stddef.h>
 #include <string.h>

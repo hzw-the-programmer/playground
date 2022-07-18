@@ -226,7 +226,51 @@
 					Name="mbedtls"
 					>
 					<File
+						RelativePath=".\mbedtls\include\mbedtls\asn1.h"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\include\mbedtls\bignum.h"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\include\mbedtls\bn_mul.h"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\include\mbedtls\check_config.h"
+						>
+					</File>
+					<File
 						RelativePath=".\mbedtls\include\mbedtls\config.h"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\include\mbedtls\error.h"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\include\mbedtls\oid.h"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\include\mbedtls\pk.h"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\include\mbedtls\platform.h"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\include\mbedtls\platform_util.h"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\include\mbedtls\rsa.h"
+						>
+					</File>
+					<File
+						RelativePath=".\mbedtls\include\mbedtls\rsa_internal.h"
 						>
 					</File>
 				</Filter>
@@ -236,6 +280,10 @@
 				>
 				<File
 					RelativePath=".\mbedtls\library\bignum.c"
+					>
+				</File>
+				<File
+					RelativePath=".\mbedtls\library\platform.c"
 					>
 				</File>
 				<File

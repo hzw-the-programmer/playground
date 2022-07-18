@@ -37,7 +37,9 @@
 #endif
 
 #include "mbedtls/bignum.h"
+#if defined(MBEDTLS_MD_C)
 #include "mbedtls/md.h"
+#endif
 
 #if defined(MBEDTLS_THREADING_C)
 #include "mbedtls/threading.h"
@@ -863,6 +865,7 @@ int mbedtls_rsa_rsaes_oaep_decrypt( mbedtls_rsa_context *ctx,
                             unsigned char *output,
                             size_t output_max_len );
 
+#if defined(MBEDTLS_MD_C)
 /**
  * \brief          This function performs a private RSA operation to sign
  *                 a message digest using PKCS#1.
@@ -1237,6 +1240,7 @@ int mbedtls_rsa_rsassa_pss_verify_ext( mbedtls_rsa_context *ctx,
                                mbedtls_md_type_t mgf1_hash_id,
                                int expected_salt_len,
                                const unsigned char *sig );
+#endif
 
 /**
  * \brief          This function copies the components of an RSA context.

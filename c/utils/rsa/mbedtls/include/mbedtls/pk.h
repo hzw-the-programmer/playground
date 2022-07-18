@@ -31,7 +31,9 @@
 #include MBEDTLS_CONFIG_FILE
 #endif
 
+#if defined(MBEDTLS_MD_C)
 #include "mbedtls/md.h"
+#endif
 
 #if defined(MBEDTLS_RSA_C)
 #include "mbedtls/rsa.h"
@@ -90,6 +92,7 @@ typedef enum {
     MBEDTLS_PK_OPAQUE,
 } mbedtls_pk_type_t;
 
+#if defined(MBEDTLS_MD_C)
 /**
  * \brief           Options for RSASSA-PSS signature verification.
  *                  See \c mbedtls_rsa_rsassa_pss_verify_ext()
@@ -100,6 +103,7 @@ typedef struct mbedtls_pk_rsassa_pss_options
     int expected_salt_len;
 
 } mbedtls_pk_rsassa_pss_options;
+#endif
 
 /**
  * \brief           Maximum size of a signature made by mbedtls_pk_sign().
@@ -237,10 +241,12 @@ static inline mbedtls_ecp_keypair *mbedtls_pk_ec( const mbedtls_pk_context pk )
 typedef int (*mbedtls_pk_rsa_alt_decrypt_func)( void *ctx, int mode, size_t *olen,
                     const unsigned char *input, unsigned char *output,
                     size_t output_max_len );
+#if defined(MBEDTLS_MD_C)
 typedef int (*mbedtls_pk_rsa_alt_sign_func)( void *ctx,
                     int (*f_rng)(void *, unsigned char *, size_t), void *p_rng,
                     int mode, mbedtls_md_type_t md_alg, unsigned int hashlen,
                     const unsigned char *hash, unsigned char *sig );
+#endif
 typedef size_t (*mbedtls_pk_rsa_alt_key_len_func)( void *ctx );
 #endif /* MBEDTLS_PK_RSA_ALT_SUPPORT */
 
@@ -398,6 +404,7 @@ static inline size_t mbedtls_pk_get_len( const mbedtls_pk_context *ctx )
  */
 int mbedtls_pk_can_do( const mbedtls_pk_context *ctx, mbedtls_pk_type_t type );
 
+#if defined(MBEDTLS_MD_C)
 /**
  * \brief           Verify signature (including padding if relevant).
  *
@@ -555,6 +562,7 @@ int mbedtls_pk_sign_restartable( mbedtls_pk_context *ctx,
              unsigned char *sig, size_t *sig_len,
              int (*f_rng)(void *, unsigned char *, size_t), void *p_rng,
              mbedtls_pk_restart_ctx *rs_ctx );
+#endif
 
 /**
  * \brief           Decrypt message (including padding if relevant).

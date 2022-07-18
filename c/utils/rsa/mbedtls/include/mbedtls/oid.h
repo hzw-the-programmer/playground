@@ -604,6 +604,7 @@ int mbedtls_oid_get_extended_key_usage( const mbedtls_asn1_buf *oid, const char 
  */
 int mbedtls_oid_get_certificate_policies( const mbedtls_asn1_buf *oid, const char **desc );
 
+#if defined(MBEDTLS_MD_C)
 /**
  * \brief          Translate md_type into hash algorithm OID
  *
@@ -614,6 +615,7 @@ int mbedtls_oid_get_certificate_policies( const mbedtls_asn1_buf *oid, const cha
  * \return         0 if successful, or MBEDTLS_ERR_OID_NOT_FOUND
  */
 int mbedtls_oid_get_oid_by_md( mbedtls_md_type_t md_alg, const char **oid, size_t *olen );
+#endif
 
 #if defined(MBEDTLS_CIPHER_C)
 /**
