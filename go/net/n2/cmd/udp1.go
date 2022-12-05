@@ -8,6 +8,8 @@ import (
 	// "fmt"
 	"log"
 	"net"
+	"bufio"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -58,14 +60,33 @@ func init() {
 	// udp1Cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-func client(conn net.PacketConn, _addr string) {
-	addr, err := net.ResolveUDPAddr("udp", _addr)
+func recv(conn net.PacketConn) {
+	var buf [1024]byte
+	for {
+		n, addr, err := conn.ReadFrom(buf[:])
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("%s: %s\n", addr, buf[:n])
+	}
+}
+
+func client(conn net.PacketConn, addrstr string) {
+	go recv(conn)
+
+	addr, err := net.ResolveUDPAddr("udp", addrstr)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println(addr)
-	msg := "hello world"
-	conn.WriteTo([]byte(msg), addr)
+
+	s := bufio.NewScanner(os.Stdin)
+	for s.Scan() {
+		_, err := conn.WriteTo(s.Bytes(), addr)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
 
 func server(conn net.PacketConn) {
@@ -76,5 +97,6 @@ func server(conn net.PacketConn) {
 			log.Fatal(err)
 		}
 		log.Printf("%s: %s\n", addr, buf[:n])
+		conn.WriteTo(buf[:n], addr)
 	}
 }
