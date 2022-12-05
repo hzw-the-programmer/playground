@@ -1,18 +1,25 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	// "fmt"
+	"bufio"
 	"log"
 	"net"
-	"bufio"
 	"os"
 
 	"github.com/spf13/cobra"
 )
+
+// go mod init n2
+// cobra-cli init
+// cobra-cli add udp1
+// go run main.go udp1 --port 6789
+// go run main.go udp1 --port 6790 localhost:6789
+// go fmt ./...
+// GOOS=windows GOARCH=amd64 go build
 
 // udp1Cmd represents the udp1 command
 var udp1Cmd = &cobra.Command{
@@ -29,8 +36,8 @@ to quickly create a Cobra application.`,
 		if len(args) > 0 {
 			addr = args[0]
 		}
-		
-		conn, err := net.ListenPacket("udp", "")
+
+		conn, err := net.ListenPacket("udp", ":"+port)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -39,15 +46,18 @@ to quickly create a Cobra application.`,
 		log.Printf("local address: %s\n", conn.LocalAddr())
 
 		if addr != "" {
-			client(conn, addr);
+			client(conn, addr)
 		} else {
-			server(conn);
+			server(conn)
 		}
 	},
 }
 
+var port string
+
 func init() {
 	rootCmd.AddCommand(udp1Cmd)
+	udp1Cmd.Flags().StringVar(&port, "port", "", "local port")
 
 	// Here you will define your flags and configuration settings.
 
