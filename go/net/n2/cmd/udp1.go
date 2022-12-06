@@ -21,6 +21,11 @@ import (
 // go fmt ./...
 // GOOS=windows GOARCH=amd64 go build
 
+// modis ok
+// go run main.go udp1 --port 6789 --rcvlen 25152
+// modis not ok
+// go run main.go udp1 --port 6789 --rcvlen 25153
+
 // udp1Cmd represents the udp1 command
 var udp1Cmd = &cobra.Command{
 	Use:   "udp1",
@@ -32,6 +37,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.Println("rcvlen =", rcvlen)
 		addr := ""
 		if len(args) > 0 {
 			addr = args[0]
@@ -54,10 +60,12 @@ to quickly create a Cobra application.`,
 }
 
 var port string
+var rcvlen int
 
 func init() {
 	rootCmd.AddCommand(udp1Cmd)
 	udp1Cmd.Flags().StringVar(&port, "port", "", "local port")
+	udp1Cmd.Flags().IntVar(&rcvlen, "rcvlen", 1024, "rcvlen")
 
 	// Here you will define your flags and configuration settings.
 
@@ -71,13 +79,14 @@ func init() {
 }
 
 func recv(conn net.PacketConn) {
-	var buf [1024]byte
+	buf := make([]byte, rcvlen)
 	for {
 		n, addr, err := conn.ReadFrom(buf[:])
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("%s: %s\n", addr, buf[:n])
+		log.Println(addr, n)
+		log.Printf("%s\n", buf[:n])
 	}
 }
 
@@ -100,13 +109,14 @@ func client(conn net.PacketConn, addrstr string) {
 }
 
 func server(conn net.PacketConn) {
-	var buf [1024]byte
+	buf := make([]byte, rcvlen)
 	for {
 		n, addr, err := conn.ReadFrom(buf[:])
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("%s: %s\n", addr, buf[:n])
+		log.Println(addr, n)
+		//log.Printf("%s\n", buf[:n])
 		conn.WriteTo(buf[:n], addr)
 	}
 }
