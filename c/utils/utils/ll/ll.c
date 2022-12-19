@@ -1,6 +1,7 @@
 #include "ll.h"
 
 void ll_measure(ll_item *items, int len, int *pw, int *ph, int *pmax_w, int *pmax_h) {
+#if 0
     int w = 0, h = 0, max_w = 0, max_h = 0;
     ll_item *item = items;
 
@@ -22,6 +23,7 @@ void ll_measure(ll_item *items, int len, int *pw, int *ph, int *pmax_w, int *pma
     if (ph) *ph = h;
     if (pmax_w) *pmax_w = max_w;
     if (pmax_h) *pmax_h = max_h;
+#endif
 }
 
 void ll_measure_group_horizontal(ll_item *item, int *w, int *h) {

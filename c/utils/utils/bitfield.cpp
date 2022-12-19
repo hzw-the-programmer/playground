@@ -1,52 +1,5 @@
 #include <stdio.h>
-
-typedef struct {
-    char c;
-    unsigned int d;
-    unsigned int m;
-    unsigned int y;
-} Date1;
-
-typedef struct {
-    char c;
-    unsigned short d : 5;
-    unsigned short m : 4;
-    unsigned int y;
-} Date3;
-
-typedef struct {
-    unsigned short d : 5;
-    unsigned short m : 4;
-    unsigned int y;
-    char c;
-} Date4;
-
-typedef struct {
-    unsigned int y;
-    unsigned short d : 5;
-    unsigned short m : 4;
-    char c;
-} Date5;
-
-typedef struct {
-    int f1 : 1;
-    int f2 : 31;
-} Test6;
-
-typedef struct {
-    int f1 : 16;
-    int f2 : 17;
-} Test7;
-
-typedef struct {
-    int f1 : 1;
-    char f2 : 2;
-} Test8;
-
-typedef struct {
-    int f1 : 1;
-    int f2 : 2;
-} Test9;
+#include <assert.h>
 
 void print_bit(unsigned char *buf, int len) {
     int i, j;
@@ -60,9 +13,18 @@ void print_bit(unsigned char *buf, int len) {
     }
 }
 
+typedef struct {
+    char c;
+    unsigned int d;
+    unsigned int m;
+    unsigned int y;
+} Date1;
+
 void test_date1() {
     printf("test_date1\n");
     printf("%d, %d\n", sizeof(unsigned int), sizeof(Date1));
+    
+    assert(sizeof(Date1) == 16);
 }
 
 typedef struct {
@@ -85,6 +47,13 @@ void test_date2() {
     print_bit((unsigned char*)&d, sizeof(Date2));
 }
 
+typedef struct {
+    char c;
+    unsigned short d : 5;
+    unsigned short m : 4;
+    unsigned int y;
+} Date3;
+
 void test_date3() {
     Date3 d = {0};
 
@@ -97,6 +66,13 @@ void test_date3() {
     printf("%d, %d\n", sizeof(unsigned int), sizeof(Date3));
     print_bit((unsigned char*)&d, sizeof(Date3));
 }
+
+typedef struct {
+    unsigned short d : 5;
+    unsigned short m : 4;
+    unsigned int y;
+    char c;
+} Date4;
 
 void test_date4() {
     Date4 d = {0};
@@ -111,6 +87,13 @@ void test_date4() {
     print_bit((unsigned char*)&d, sizeof(Date4));
 }
 
+typedef struct {
+    unsigned int y;
+    unsigned short d : 5;
+    unsigned short m : 4;
+    char c;
+} Date5;
+
 void test_date5() {
     Date5 d = {0};
 
@@ -124,6 +107,11 @@ void test_date5() {
     print_bit((unsigned char*)&d, sizeof(Date5));
 }
 
+typedef struct {
+    int f1 : 1;
+    int f2 : 31;
+} Test6;
+
 void test6() {
     Test6 t = {0};
 
@@ -135,6 +123,11 @@ void test6() {
     printf("%d, %d\n", sizeof(unsigned int), sizeof(Test6));
     print_bit((unsigned char*)&t, sizeof(Test6));
 }
+
+typedef struct {
+    int f1 : 16;
+    int f2 : 17;
+} Test7;
 
 void test7() {
     Test7 t = {0};
@@ -148,6 +141,11 @@ void test7() {
     print_bit((unsigned char*)&t, sizeof(Test7));
 }
 
+typedef struct {
+    int f1 : 1;
+    char f2 : 2;
+} Test8;
+
 void test8() {
     Test8 t = {0};
 
@@ -159,6 +157,11 @@ void test8() {
     printf("%d, %d\n", sizeof(unsigned int), sizeof(Test8));
     print_bit((unsigned char*)&t, sizeof(Test8));
 }
+
+typedef struct {
+    int f1 : 1;
+    int f2 : 2;
+} Test9;
 
 void test9() {
     Test9 t = {0};

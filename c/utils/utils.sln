@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tcp", "tcp\tcp.vcproj", "{D
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rsa", "rsa\rsa.vcproj", "{32A47A92-0221-440C-9BFC-DC57348B726D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "quictls_openssl", "quictls_openssl\quictls_openssl.vcproj", "{94174690-DB03-4A9D-8D4E-FAD6A31A3139}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +27,10 @@ Global
 		{32A47A92-0221-440C-9BFC-DC57348B726D}.Debug|Win32.Build.0 = Debug|Win32
 		{32A47A92-0221-440C-9BFC-DC57348B726D}.Release|Win32.ActiveCfg = Release|Win32
 		{32A47A92-0221-440C-9BFC-DC57348B726D}.Release|Win32.Build.0 = Release|Win32
+		{94174690-DB03-4A9D-8D4E-FAD6A31A3139}.Debug|Win32.ActiveCfg = Debug|Win32
+		{94174690-DB03-4A9D-8D4E-FAD6A31A3139}.Debug|Win32.Build.0 = Debug|Win32
+		{94174690-DB03-4A9D-8D4E-FAD6A31A3139}.Release|Win32.ActiveCfg = Release|Win32
+		{94174690-DB03-4A9D-8D4E-FAD6A31A3139}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

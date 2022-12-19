@@ -626,6 +626,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\buffer\circular_buffer.c"
+					>
+				</File>
+				<File
+					RelativePath=".\buffer\circular_buffer.h"
+					>
+				</File>
+				<File
 					RelativePath=".\buffer\slice.c"
 					>
 				</File>
@@ -913,6 +921,22 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="ds"
+				>
+				<File
+					RelativePath=".\ds\min_heap.c"
+					>
+				</File>
+				<File
+					RelativePath=".\ds\min_heap.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ds\min_heap_test.c"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

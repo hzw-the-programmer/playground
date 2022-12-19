@@ -1,5 +1,7 @@
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
+#include <errno.h>
 
 #define C1 0x01
 #define C2 0x02
@@ -12,7 +14,7 @@
 
 #define C (C7 | C8)
 
-void macro_test() {
+static void test_1() {
 #if C & C1
     printf("C & C1\n");
 #elif C & C2
@@ -32,4 +34,20 @@ void macro_test() {
 #else
     printf("no match\n");
 #endif
+}
+
+static void test_2() {
+    printf("_MSC_VER=%d\n", _MSC_VER);
+    //printf("__STDC_VERSION__=%d\n", __STDC_VERSION__);
+}
+
+//#define static_assert
+#define static_assert(exp, msg)
+
+static_assert(1==1, "msg")
+
+void macro_test() {
+    test_1();
+    test_2();
+    static_assert(1==1, "msg");
 }
