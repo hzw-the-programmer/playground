@@ -876,6 +876,211 @@ foreach(src IN LISTS ssl_srcs)
     endif()
 endforeach()
 
+set (providers_srcs
+    providers/baseprov.c
+    providers/common/bio_prov.c
+    providers/common/capabilities.c
+    providers/common/der/der_digests_gen.c
+    providers/common/der/der_dsa_gen.c
+    providers/common/der/der_dsa_key.c
+    providers/common/der/der_dsa_sig.c
+    providers/common/der/der_ecx_gen.c
+    providers/common/der/der_ecx_key.c
+    providers/common/der/der_ec_gen.c
+    providers/common/der/der_ec_key.c
+    providers/common/der/der_ec_sig.c
+    providers/common/der/der_rsa_gen.c
+    providers/common/der/der_rsa_key.c
+    providers/common/der/der_rsa_sig.c
+    providers/common/der/der_sm2_gen.c
+    providers/common/der/der_sm2_key.c
+    providers/common/der/der_sm2_sig.c
+    providers/common/der/der_wrap_gen.c
+    providers/common/digest_to_nid.c
+    providers/common/provider_ctx.c
+    providers/common/provider_err.c
+    providers/common/provider_seeding.c
+    providers/common/provider_util.c
+    providers/common/securitycheck.c
+    providers/common/securitycheck_default.c
+    providers/common/securitycheck_fips.c
+    providers/defltprov.c
+    providers/fips/fipsprov.c
+    providers/fips/fips_entry.c
+    providers/fips/self_test.c
+    providers/fips/self_test_kats.c
+    providers/implementations/asymciphers/rsa_enc.c
+    providers/implementations/asymciphers/sm2_enc.c
+    providers/implementations/ciphers/ciphercommon.c
+    providers/implementations/ciphers/ciphercommon_block.c
+    providers/implementations/ciphers/ciphercommon_ccm.c
+    providers/implementations/ciphers/ciphercommon_ccm_hw.c
+    providers/implementations/ciphers/ciphercommon_gcm.c
+    providers/implementations/ciphers/ciphercommon_gcm_hw.c
+    providers/implementations/ciphers/ciphercommon_hw.c
+    providers/implementations/ciphers/cipher_aes.c
+    providers/implementations/ciphers/cipher_aes_cbc_hmac_sha.c
+    providers/implementations/ciphers/cipher_aes_cbc_hmac_sha1_hw.c
+    providers/implementations/ciphers/cipher_aes_cbc_hmac_sha256_hw.c
+    providers/implementations/ciphers/cipher_aes_ccm.c
+    providers/implementations/ciphers/cipher_aes_ccm_hw.c
+    providers/implementations/ciphers/cipher_aes_gcm.c
+    providers/implementations/ciphers/cipher_aes_gcm_hw.c
+    providers/implementations/ciphers/cipher_aes_hw.c
+    providers/implementations/ciphers/cipher_aes_ocb.c
+    providers/implementations/ciphers/cipher_aes_ocb_hw.c
+    providers/implementations/ciphers/cipher_aes_siv.c
+    providers/implementations/ciphers/cipher_aes_siv_hw.c
+    providers/implementations/ciphers/cipher_aes_wrp.c
+    providers/implementations/ciphers/cipher_aes_xts.c
+    providers/implementations/ciphers/cipher_aes_xts_fips.c
+    providers/implementations/ciphers/cipher_aes_xts_hw.c
+    providers/implementations/ciphers/cipher_aria.c
+    providers/implementations/ciphers/cipher_aria_ccm.c
+    providers/implementations/ciphers/cipher_aria_ccm_hw.c
+    providers/implementations/ciphers/cipher_aria_gcm.c
+    providers/implementations/ciphers/cipher_aria_gcm_hw.c
+    providers/implementations/ciphers/cipher_aria_hw.c
+    providers/implementations/ciphers/cipher_blowfish.c
+    providers/implementations/ciphers/cipher_blowfish_hw.c
+    providers/implementations/ciphers/cipher_camellia.c
+    providers/implementations/ciphers/cipher_camellia_hw.c
+    providers/implementations/ciphers/cipher_cast5.c
+    providers/implementations/ciphers/cipher_cast5_hw.c
+    providers/implementations/ciphers/cipher_chacha20.c
+    providers/implementations/ciphers/cipher_chacha20_hw.c
+    providers/implementations/ciphers/cipher_chacha20_poly1305.c
+    providers/implementations/ciphers/cipher_chacha20_poly1305_hw.c
+    providers/implementations/ciphers/cipher_cts.c
+    providers/implementations/ciphers/cipher_des.c
+    providers/implementations/ciphers/cipher_desx.c
+    providers/implementations/ciphers/cipher_desx_hw.c
+    providers/implementations/ciphers/cipher_des_hw.c
+    providers/implementations/ciphers/cipher_idea.c
+    providers/implementations/ciphers/cipher_idea_hw.c
+    providers/implementations/ciphers/cipher_null.c
+    providers/implementations/ciphers/cipher_rc2.c
+    providers/implementations/ciphers/cipher_rc2_hw.c
+    providers/implementations/ciphers/cipher_rc4.c
+    providers/implementations/ciphers/cipher_rc4_hmac_md5.c
+    providers/implementations/ciphers/cipher_rc4_hmac_md5_hw.c
+    providers/implementations/ciphers/cipher_rc4_hw.c
+    #providers/implementations/ciphers/cipher_rc5.c
+    #providers/implementations/ciphers/cipher_rc5_hw.c
+    providers/implementations/ciphers/cipher_seed.c
+    providers/implementations/ciphers/cipher_seed_hw.c
+    providers/implementations/ciphers/cipher_sm4.c
+    providers/implementations/ciphers/cipher_sm4_hw.c
+    providers/implementations/ciphers/cipher_tdes.c
+    providers/implementations/ciphers/cipher_tdes_common.c
+    providers/implementations/ciphers/cipher_tdes_default.c
+    providers/implementations/ciphers/cipher_tdes_default_hw.c
+    providers/implementations/ciphers/cipher_tdes_hw.c
+    providers/implementations/ciphers/cipher_tdes_wrap.c
+    providers/implementations/ciphers/cipher_tdes_wrap_hw.c
+    providers/implementations/digests/blake2b_prov.c
+    providers/implementations/digests/blake2s_prov.c
+    providers/implementations/digests/blake2_prov.c
+    providers/implementations/digests/digestcommon.c
+    #providers/implementations/digests/md2_prov.c
+    providers/implementations/digests/md4_prov.c
+    providers/implementations/digests/md5_prov.c
+    providers/implementations/digests/md5_sha1_prov.c
+    providers/implementations/digests/mdc2_prov.c
+    providers/implementations/digests/null_prov.c
+    providers/implementations/digests/ripemd_prov.c
+    providers/implementations/digests/sha2_prov.c
+    providers/implementations/digests/sha3_prov.c
+    providers/implementations/digests/sm3_prov.c
+    providers/implementations/digests/wp_prov.c
+    providers/implementations/encode_decode/decode_der2key.c
+    providers/implementations/encode_decode/decode_epki2pki.c
+    providers/implementations/encode_decode/decode_msblob2key.c
+    providers/implementations/encode_decode/decode_pem2der.c
+    providers/implementations/encode_decode/decode_pvk2key.c
+    providers/implementations/encode_decode/decode_spki2typespki.c
+    providers/implementations/encode_decode/encode_key2any.c
+    providers/implementations/encode_decode/encode_key2blob.c
+    providers/implementations/encode_decode/encode_key2ms.c
+    providers/implementations/encode_decode/encode_key2text.c
+    providers/implementations/encode_decode/endecoder_common.c
+    providers/implementations/exchange/dh_exch.c
+    providers/implementations/exchange/ecdh_exch.c
+    providers/implementations/exchange/ecx_exch.c
+    providers/implementations/exchange/kdf_exch.c
+    providers/implementations/kdfs/hkdf.c
+    providers/implementations/kdfs/kbkdf.c
+    providers/implementations/kdfs/krb5kdf.c
+    providers/implementations/kdfs/pbkdf1.c
+    providers/implementations/kdfs/pbkdf2.c
+    providers/implementations/kdfs/pbkdf2_fips.c
+    providers/implementations/kdfs/pkcs12kdf.c
+    providers/implementations/kdfs/scrypt.c
+    providers/implementations/kdfs/sshkdf.c
+    providers/implementations/kdfs/sskdf.c
+    providers/implementations/kdfs/tls1_prf.c
+    providers/implementations/kdfs/x942kdf.c
+    providers/implementations/kem/rsa_kem.c
+    providers/implementations/keymgmt/dh_kmgmt.c
+    providers/implementations/keymgmt/dsa_kmgmt.c
+    providers/implementations/keymgmt/ecx_kmgmt.c
+    providers/implementations/keymgmt/ec_kmgmt.c
+    providers/implementations/keymgmt/kdf_legacy_kmgmt.c
+    providers/implementations/keymgmt/mac_legacy_kmgmt.c
+    providers/implementations/keymgmt/rsa_kmgmt.c
+    providers/implementations/macs/blake2b_mac.c
+    providers/implementations/macs/blake2s_mac.c
+    #providers/implementations/macs/blake2_mac_impl.c
+    providers/implementations/macs/cmac_prov.c
+    providers/implementations/macs/gmac_prov.c
+    providers/implementations/macs/hmac_prov.c
+    providers/implementations/macs/kmac_prov.c
+    providers/implementations/macs/poly1305_prov.c
+    providers/implementations/macs/siphash_prov.c
+    providers/implementations/rands/crngt.c
+    providers/implementations/rands/drbg.c
+    providers/implementations/rands/drbg_ctr.c
+    providers/implementations/rands/drbg_hash.c
+    providers/implementations/rands/drbg_hmac.c
+    providers/implementations/rands/seeding/rand_cpu_x86.c
+    providers/implementations/rands/seeding/rand_tsc.c
+    providers/implementations/rands/seeding/rand_unix.c
+    #providers/implementations/rands/seeding/rand_vms.c
+    #providers/implementations/rands/seeding/rand_vxworks.c
+    providers/implementations/rands/seeding/rand_win.c
+    providers/implementations/rands/seed_src.c
+    providers/implementations/rands/test_rng.c
+    providers/implementations/signature/dsa_sig.c
+    providers/implementations/signature/ecdsa_sig.c
+    providers/implementations/signature/eddsa_sig.c
+    providers/implementations/signature/mac_legacy_sig.c
+    providers/implementations/signature/rsa_sig.c
+    providers/implementations/signature/sm2_sig.c
+    providers/implementations/storemgmt/file_store.c
+    providers/implementations/storemgmt/file_store_any2obj.c
+    providers/legacyprov.c
+    providers/nullprov.c
+    providers/prov_running.c
+)
+
+add_library(
+    providers
+
+    ${providers_srcs}
+)
+
+foreach(src IN LISTS providers_srcs)
+    message(${src})
+    if(src MATCHES ".*/.*")
+        get_filename_component(path "${src}" PATH)
+
+		string(REPLACE "/" "\\" msvc_path "${path}")
+        source_group("${msvc_path}" FILES "${src}")
+    else()
+        source_group("" FILES "${src}")
+    endif()
+endforeach()
+
 set(demos_srcs
     #demos/bio/client-arg.c
     #demos/bio/client-conf.c
@@ -926,7 +1131,7 @@ set(demos_srcs
 )
 
 add_executable(demos ${demos_srcs})
-target_link_libraries(demos crypto ssl)
+target_link_libraries(demos crypto ssl providers)
 
 foreach(src IN LISTS demos_srcs)
     message(${src})
