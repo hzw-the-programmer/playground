@@ -1132,6 +1132,7 @@ set(demos_srcs
 
 add_executable(demos ${demos_srcs})
 target_link_libraries(demos crypto ssl providers)
+target_link_libraries(demos ws2_32)
 
 foreach(src IN LISTS demos_srcs)
     message(${src})
