@@ -905,10 +905,10 @@ set (providers_srcs
     providers/common/securitycheck_default.c
     providers/common/securitycheck_fips.c
     providers/defltprov.c
-    providers/fips/fipsprov.c
-    providers/fips/fips_entry.c
-    providers/fips/self_test.c
-    providers/fips/self_test_kats.c
+    #providers/fips/fipsprov.c
+    #providers/fips/fips_entry.c
+    #providers/fips/self_test.c
+    #providers/fips/self_test_kats.c
     providers/implementations/asymciphers/rsa_enc.c
     providers/implementations/asymciphers/sm2_enc.c
     providers/implementations/ciphers/ciphercommon.c
