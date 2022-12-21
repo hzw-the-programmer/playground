@@ -173,7 +173,7 @@ set(
     crypto/cast/c_ofb64.c
     crypto/cast/c_skey.c
     crypto/chacha/chacha_enc.c
-    crypto/chacha/chacha_ppc.c
+    #crypto/chacha/chacha_ppc.c
     crypto/cmac/cmac.c
     crypto/cmp/cmp_asn.c
     crypto/cmp/cmp_client.c
