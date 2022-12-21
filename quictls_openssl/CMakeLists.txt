@@ -1088,9 +1088,9 @@ set(demos_srcs
     #demos/bio/sconnect.c
     #demos/bio/server-arg.c
     #demos/bio/server-cmod.c
-    #demos/bio/server-conf.c
+    demos/bio/server-conf.c
     #demos/cipher/aesccm.c
-    demos/cipher/aesgcm.c
+    #demos/cipher/aesgcm.c
     #demos/cipher/aeskeywrap.c
     #demos/cipher/ariacbc.c
     #demos/cms/cms_comp.c
@@ -1129,6 +1129,14 @@ set(demos_srcs
     #demos/smime/smsign2.c
     #demos/smime/smver.c
 )
+
+# demos/bio/server-conf.c
+configure_file(demos/bio/accept.cnf accept.cnf COPYONLY)
+configure_file(demos/bio/server.pem server.pem COPYONLY)
+configure_file(demos/bio/root.pem root.pem COPYONLY)
+
+# demos/bio/client-conf.c
+# configure_file(demos/bio/connect.cnf connect.cnf COPYONLY)
 
 add_executable(demos ${demos_srcs})
 target_link_libraries(demos crypto ssl providers)
