@@ -1,0 +1,9 @@
+ossl_pvk_to_rsa_decoder_functions
+providers\implementations\encode_decode\decode_pvk2key.c
+grep "##pvk" -r providers/
+
+ossl_msblob_to_rsa_decoder_functions
+providers\implementations\encode_decode\decode_msblob2key.c
+
+ossl_SubjectPublicKeyInfo_der_to_rsapss_decoder_functions
+providers\implementations\encode_decode\decode_der2key.c

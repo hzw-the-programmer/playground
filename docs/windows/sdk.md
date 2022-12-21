@@ -11,3 +11,9 @@ C:\Program Files\Microsoft SDKs\Windows\v6.0A\Include\WinDef.h
 
 C:\Program Files\Microsoft SDKs\Windows\v6.0A\include\ws2ipdef.h
 C:\Program Files\Microsoft SDKs\Windows\v6.0A\include\in6addr.h
+
+C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib\x64\User32.Lib
+C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib\x64\Kernel32.Lib
+C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib\x64\Gdi32.Lib
+C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib\x64\WinSpool.Lib
+C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib\x64\WS2_32.Lib

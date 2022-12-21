@@ -1,0 +1,2 @@
+ossl_mac_legacy_cmac_signature_functions
+providers/implementations/signature/mac_legacy_sig.c

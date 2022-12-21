@@ -1,0 +1,11 @@
+ossl_ec_to_X9_62_pem_encoder_functions
+providers\implementations\encode_decode\encode_key2any.c
+
+ossl_dsa_to_pvk_encoder_functions
+providers\implementations\encode_decode\encode_key2ms.c
+
+ossl_sm2_to_blob_encoder_functions
+providers\implementations\encode_decode\encode_key2blob.c
+
+ossl_sm2_to_text_encoder_functions
+providers\implementations\encode_decode\encode_key2text.c
