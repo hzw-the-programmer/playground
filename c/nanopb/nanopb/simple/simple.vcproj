@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;F:\github\hzw-the-programmer\playground\c\nanopb\nanopb\nanopb&quot;"
+				AdditionalIncludeDirectories="..\nanopb"
 				PreprocessorDefinitions="PB_C99_STATIC_ASSERT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -59,6 +59,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="..\Debug\nanopb.lib"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -160,6 +161,10 @@
 	<Files>
 		<File
 			RelativePath=".\simple.c"
+			>
+		</File>
+		<File
+			RelativePath=".\simple.pb.c"
 			>
 		</File>
 	</Files>

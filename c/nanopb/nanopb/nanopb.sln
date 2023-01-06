@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simple", "simple\simple.vcproj", "{24A6A6FA-4980-40EB-BE30-D10129E5B8B3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{203DF505-12DA-4399-9405-E3C5422CE4E6} = {203DF505-12DA-4399-9405-E3C5422CE4E6}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nanopb", "nanopb\nanopb.vcproj", "{203DF505-12DA-4399-9405-E3C5422CE4E6}"
 EndProject
