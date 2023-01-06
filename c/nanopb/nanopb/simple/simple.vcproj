@@ -40,6 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;F:\github\hzw-the-programmer\playground\c\nanopb\nanopb\nanopb&quot;"
+				PreprocessorDefinitions="PB_C99_STATIC_ASSERT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -156,6 +158,10 @@
 	<References>
 	</References>
 	<Files>
+		<File
+			RelativePath=".\simple.c"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
