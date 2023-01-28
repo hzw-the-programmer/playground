@@ -202,6 +202,29 @@ void test10() {
     print_bit((unsigned char*)&t, sizeof(Test9));
 }
 
+void test11() {
+    short s = -2;
+    unsigned short us = -2;
+    int i = 0;
+    printf("    test11\n");
+    printf("        %x\n", s);
+    print_bit((unsigned char*)&s, sizeof(short));
+    printf("\n");
+    
+    print_bit((unsigned char*)&i, sizeof(int));
+    printf("\n");
+
+    i = 0;
+    i |= s;
+    print_bit((unsigned char*)&i, sizeof(int));
+    printf("\n");
+
+    i = 0;
+    i |= us;
+    print_bit((unsigned char*)&i, sizeof(int));
+    printf("\n");
+}
+
 void test_bitfield() {
     printf("test_bitfield\n");
     test_date1();
@@ -214,4 +237,5 @@ void test_bitfield() {
     test8();
     test9();
     test10();
+    test11();
 }
