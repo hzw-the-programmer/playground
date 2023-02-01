@@ -33,6 +33,7 @@ func main() {
 	libname := flag.String("libname", "app", ".a name")
 	liboutdir := flag.String("liboutdir", "", "directory to store .a")
 	provideoutdir := flag.String("provideoutdir", "", "directory to store provide files")
+	ar := flag.String("ar", "armar", "armar or mips-elf-ar")
 
 	flag.Parse()
 
@@ -63,7 +64,7 @@ func main() {
 	objs := findObjs(*appdir, exobjs)
 
 	paths := objsToPaths(objs, *objdir)
-	run("armar", liboutfn, paths...)
+	run(*ar, liboutfn, paths...)
 
 	paths = objsToPaths(objs, *mobjdir)
 	run("lib", liboutfn, paths...)
@@ -192,7 +193,7 @@ func objsToPaths(objs []string, dir string) (paths []string) {
 	for _, p := range all {
 		base := filepath.Base(p)
 		ext := filepath.Ext(p)
-		if strInSlice(base[:len(base)-len(ext)], objs) {
+		if strInSlice(base[:len(base)-len(ext)], objs) && (ext == ".obj" || ext == ".o") {
 			paths = append(paths, p)
 		}
 	}
@@ -216,6 +217,8 @@ func run(name, fn string, args ...string) {
 	} else if name == "lib" {
 		args = append(args, "/out:"+fn+".lib")
 		newArgs = append(newArgs, name)
+	} else if name == "mips-elf-ar" {
+		newArgs = append(newArgs, name, "cru", fn+".a")
 	}
 
 	newArgs = append(newArgs, args...)

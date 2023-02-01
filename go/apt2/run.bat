@@ -11,6 +11,13 @@ SET exclude=exclude\exclude.txt
 SET libout=
 SET provideout=
 
+rem for lib.exe
+rem SET PATH=C:\Program Files (x86)\Microsoft Visual Studio\VC98\bin;%PATH%
+SET PATH=C:\CSDTK\cygwin\crosscompiler\bin;%PATH%
+rem for dll
+rem SET PATH=C:\Program Files (x86)\Microsoft Visual Studio\Common\MSDev98\Bin;%PATH%
+SET PATH=C:\CSDTK\cygwin\bin;%PATH%
+
 bin\apppkg.exe ^
          -prjdir=%prj% ^
          -appdir=%app% ^
