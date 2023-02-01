@@ -1,0 +1,17 @@
+WinMainCRTStartup
+__tmainCRTStartup
+WinMain
+AfxWinMain
+CCoolSimulatorApp::InitInstance
+CDialog::DoModal
+CWnd::RunModalLoop
+AfxPumpMessage
+CWinThread::PumpMessage
+AfxInternalPumpMessage
+AfxWndProcBase
+AfxWndProc
+AfxCallWndProc
+CWnd::WindowProc
+CWnd::OnWndMsg
+CCoolSimulatorDlg::OnTimer
+TimerCallBack

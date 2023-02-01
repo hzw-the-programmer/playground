@@ -1,0 +1,2 @@
+HasValidSIM
+MTPNP_PFAL_Has_CardValid
