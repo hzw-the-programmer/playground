@@ -1,0 +1,1 @@
+https://www.gsmfavorites.com/documents/sms/

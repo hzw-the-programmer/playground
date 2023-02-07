@@ -41,3 +41,6 @@ within the command, and it must appear at the end,
 immediately before the `+'; it needs to be escaped (with a
 `\') or quoted to protect it from interpretation by the
 shell.
+
+### --exclude
+grep "word" -r --color --exclude={*.obj,*.pdb,*.sdf,*.pch,*.idb,*.lib} .
