@@ -46,8 +46,26 @@ static void test_2() {
 
 static_assert(1==1, "msg")
 
+static void log(const char *file, int line, const char *format, ...) {
+}
+
+#if 0
+#define LOG(format, ...) log(__FILE__, __LINE__, format, ##__VA_ARGS__)
+#else
+#define LOG(format, ...)
+#endif
+
+static void test_3() {
+#if LOG + 1 == 1
+    LOG("hello %s", "hzw");
+#else
+    LOG("hello %s", "hzw");
+#endif
+}
+
 void macro_test() {
     test_1();
     test_2();
+    //test_3();
     static_assert(1==1, "msg");
 }

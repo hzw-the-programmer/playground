@@ -303,6 +303,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\msg.c"
+				>
+			</File>
+			<File
 				RelativePath=".\mw.c"
 				>
 			</File>

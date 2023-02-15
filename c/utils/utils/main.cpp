@@ -80,6 +80,8 @@ extern "C" void test_list();
 #include "mbedtls/ctr_drbg.h"
 #include "mbedtls/rsa.h"
 
+extern "C" void test_msg();
+
 int main(int argc, char *args) {
 	int i;
 	
@@ -163,6 +165,8 @@ int main(int argc, char *args) {
     mbedtls_entropy_self_test(1);
     mbedtls_ctr_drbg_self_test(1);
 #endif
+
+    test_msg();
 
 	MemoryCheck();
 
