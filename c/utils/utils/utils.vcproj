@@ -303,10 +303,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\msg.c"
-				>
-			</File>
-			<File
 				RelativePath=".\mw.c"
 				>
 			</File>
@@ -972,6 +968,18 @@
 			</File>
 			<File
 				RelativePath=".\sha256\sha256g.c"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="msg"
+			>
+			<File
+				RelativePath=".\msg\msg.c"
+				>
+			</File>
+			<File
+				RelativePath=".\msg\msg2.c"
 				>
 			</File>
 		</Filter>

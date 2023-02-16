@@ -81,6 +81,7 @@ extern "C" void test_list();
 #include "mbedtls/rsa.h"
 
 extern "C" void test_msg();
+extern "C" void test_msg2();
 
 int main(int argc, char *args) {
 	int i;
@@ -167,6 +168,7 @@ int main(int argc, char *args) {
 #endif
 
     test_msg();
+    test_msg2();
 
 	MemoryCheck();
 
