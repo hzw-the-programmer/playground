@@ -62,20 +62,28 @@ func server() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	clients := make(map[string]net.Addr)
+	bs := make([]byte, 1024)
 	for {
-		bs := make([]byte, 1024)
 		rn, raddr, err := conn.ReadFrom(bs)
 		if err != nil {
 			log.Fatal(err)
 		}
 		log.Printf("ReadFrom: %s: %s", raddr, string(bs[:rn]))
+		clients[raddr.String()] = raddr
 
-		wn, err := conn.WriteTo(bs[:rn], raddr)
-		if err != nil {
-			log.Fatal(err)
-		}
-		if wn != rn {
-			log.Fatal("short write")
+		for rs, r := range clients {
+			//log.Printf("send to: %s", r)
+			if rs == raddr.String() {
+				continue
+			}
+			wn, err := conn.WriteTo(bs[:rn], r)
+			if err != nil {
+				log.Fatal(err)
+			}
+			if wn != rn {
+				log.Fatal("short write")
+			}
 		}
 	}
 }
