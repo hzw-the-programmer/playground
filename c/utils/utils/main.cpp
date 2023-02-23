@@ -80,8 +80,12 @@ extern "C" void test_list();
 #include "mbedtls/ctr_drbg.h"
 #include "mbedtls/rsa.h"
 
-extern "C" void test_msg();
-extern "C" void test_msg2();
+extern "C" {
+void test_msg();
+void test_msg2();
+void test_queue_1();
+void test_heap();
+}
 
 int main(int argc, char *args) {
 	int i;
@@ -169,6 +173,8 @@ int main(int argc, char *args) {
 
     test_msg();
     test_msg2();
+    test_queue_1();
+    test_heap();
 
 	MemoryCheck();
 

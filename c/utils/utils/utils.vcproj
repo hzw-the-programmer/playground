@@ -983,6 +983,30 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="src"
+			>
+			<Filter
+				Name="queue"
+				>
+				<File
+					RelativePath="..\src\queue\queue.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\queue\queue_test_1.c"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="heap"
+				>
+				<File
+					RelativePath="..\src\heap\heap.c"
+					>
+				</File>
+			</Filter>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
