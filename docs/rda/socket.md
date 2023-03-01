@@ -82,6 +82,22 @@ char* status_str(CFW_SIM_STATUS status)
 	}
 }
 
+// sxr_GetCurrentTaskId sxs_tksd.c
+// sxr_StartTask sxr_tksd.c
+// COS_CreateTask cos_task.c
+void print_task(UINT8 *func)
+{
+	UINT8 id, state;
+	UINT8 *name;
+
+	id = sxr_GetCurrentTaskId();
+	name = sxr_GetTaskNameById(id);
+	state = sxr_GetTaskState(id);
+
+	mmi_trace(MMI_TRACE_LEVEL_1, "hzw:%s run in task:id=%d,name=%s,state=%d",
+		func, id, name, state);
+}
+
 void http_get(SOCKET sock)
 {
 	UINT8 *buf = "GET / HTTP/1.1\r\n"
@@ -89,6 +105,8 @@ void http_get(SOCKET sock)
 	UINT16 avail, len;
 	INT32 ret;
 	UINT32 err;
+
+	print_task(__FUNCTION__);
 
 	avail = CFW_TcpipAvailableBuffer(sock);
 	len = strlen(buf);
@@ -105,6 +123,8 @@ void http_res(SOCKET sock)
 	INT32 ret;
 	UINT32 err;
 	UINT16 avail;
+
+	print_task(__FUNCTION__);
 
 	avail = CFW_TcpipGetRecvAvailable(sock);
 	mmi_trace(MMI_TRACE_LEVEL_1, "hzw:http_res,avail=%d", avail);
@@ -124,11 +144,14 @@ void http_res(SOCKET sock)
 
 // MmiNetAttachGPRS AppNetWork.c
 // MmiNetGPRSConnect AppNetWork.c
+// soc_create adp_soc.c
 // app_SocketEventcb adp_GPRS_Event.c
 BOOL sock_cb(COS_EVENT *ev)
 {
 	UINT32 id = ev->nEventId;
 	in_addr temp;
+
+	print_task(__FUNCTION__);
 
 	mmi_trace(MMI_TRACE_LEVEL_1, "hzw:sock_cb,ev=%s", event_str(id));
 	switch (id)
@@ -180,6 +203,8 @@ void dns(nw_ctx_t *ctx)
 	struct ip_addr addr = {0};
 	UINT32 ret;
 
+	print_task(__FUNCTION__);
+
 	CFW_SetTCPIPCallBackEx(sock_cb, MEMP_NUM_NETCONN);
 	ret = CFW_Gethostbyname("www.baidu.com", &addr, ctx->cid, CFW_SIM_0);
 	mmi_trace(MMI_TRACE_LEVEL_1, "hzw:CFW_Gethostbyname,ret=%d", ret);
@@ -193,6 +218,8 @@ bool gprs_cb(COS_EVENT *ev)
 	UINT32 ret;
 	UINT8 state;
 	bool processed = FALSE;
+	
+	print_task(__FUNCTION__);
 
 	id = ev->nEventId;
 	cid = (UINT8)ev->nParam1;
@@ -235,6 +262,8 @@ void activate_gprs(nw_ctx_t *ctx)
 	char *apnAddr = "CMWAP";
 	UINT8 cid, uti;
 
+	print_task(__FUNCTION__);
+
 	ret = CFW_GetFreeCID(&cid, CFW_SIM_0);
 	ctx->cid = cid;
 
@@ -268,6 +297,8 @@ void attach_gprs()
 {
 	UINT32 ret;
 	UINT8 uti;
+
+	print_task(__FUNCTION__);
 
 	CFW_SetDataConnFunEx(gprs_cb, CFW_SIM_0, 0);
 	CFW_GetFreeUTI(0, &uti);
