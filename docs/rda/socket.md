@@ -112,12 +112,12 @@ void http_res(SOCKET sock)
 	{
 	    ret =  CFW_TcpipSocketRecv(sock, buf, BUF_LEN-1, 0);
 	    err = CFW_TcpipGetLastError();
+	    mmi_trace(MMI_TRACE_LEVEL_1, "hzw:http_res,ret=%d,err=%d", ret, err);
 	    if (ret <= 0)
 	    {
 			break;
 	    }
 	    buf[ret] = 0;
-	    mmi_trace(MMI_TRACE_LEVEL_1, "hzw:http_res,ret=%d,err=%d", ret, err);
 	    mmi_trace(MMI_TRACE_LEVEL_1, "hzw:%s", buf);
 	}
 }
@@ -166,8 +166,8 @@ void sock_connect(UINT32 addr)
 	CFW_SetTCPIPCallBackEx(sock_cb, sock);
 
 	sock_addr.sin_family = CFW_TCPIP_AF_INET;
-	//sock_addr.sin_addr.s_addr = addr;
-	sock_addr.sin_addr.s_addr = CFW_TcpipInetAddr("36.152.44.96");
+	sock_addr.sin_addr.s_addr = addr;
+	//sock_addr.sin_addr.s_addr = CFW_TcpipInetAddr("36.152.44.96");
 	sock_addr.sin_port = htons(port);
 
 	ret = CFW_TcpipSocketConnect(sock, &sock_addr, sizeof(sock_addr));
