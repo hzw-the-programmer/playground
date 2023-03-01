@@ -159,7 +159,23 @@ static void enter_app()
 #if 1
     //pf(ascii, BUF_LEN, "xxxx%lld", num);
     //pf(ascii, BUF_LEN, "xxxx%lld", SPLIT(num));
-    pstack(ascii, 0xaaaaaaaa, 0xbbbb, 0xcc);
+    //pstack(ascii, 0xaaaaaaaa, 0xbbbb, 0xcc);
+#if 1
+    {
+		char c = -2;
+		unsigned long long ull = c;
+		unsigned long ul0 = c>>32; // 0xfffffffe
+		unsigned long ul1 = (unsigned long long)c>>32; // 0xffffffff
+		long long ll = 0xffeeffffeeffeeee;
+		unsigned long ul2 = ll>>32;
+		unsigned long ul3 = ll;
+		u642str(ascii, ull);
+		u642str(ascii+16, ul0); // 0x00000000ffffffff
+		u642str(ascii+32, ul1);
+		u642str(ascii+48, ul2);
+		u642str(ascii+64, ul3);
+    }
+#endif
     AnsiiToUnicodeString(unicode, ascii);
 #else
 	pfw(unicode, num);
@@ -177,3 +193,11 @@ static void enter_app()
 ###
 0x04BFEECB  ff cc cc cc cc cc cc cc cc ee ee cc cc cc cc cc cc cc cc cc cc dd dd dd dd cc cc cc cc 70 f1
 0x04BFEEEA  bf 04 94 c5 93 01 e0 ef bf 04 aa aa aa aa bb bb 00 00 cc 00 00 00 44 f2 bf 04 4c f2 bf 04 0b
+
+###
+warning: right shift count >= width of type
+
+###
+#define SPLIT(num) (unsigned long)((unsigned long long)(num)>>32), (unsigned long)(num)
+0xfe -> 0xfffffffffffffffe
+0x7f -> 0x000000000000007f

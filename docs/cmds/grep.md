@@ -44,3 +44,6 @@ shell.
 
 ### --exclude
 grep "word" -r --color --exclude={*.obj,*.pdb,*.sdf,*.pch,*.idb,*.lib} .
+
+### grep "word" -rl .
+### grep "word" -rn .

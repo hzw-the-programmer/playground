@@ -1,0 +1,9 @@
+application\NetworkSimulator\Simulator\Messages.cpp
+dummy_sms_text
+dummy_sms_addr
+application\NetworkSimulator\NetworkSimulator.dsw
+application\NetworkSimulator\sms_box_file
+
+application\CoolSimulator\sms_box_file
+
+mmi_msg_generate_colloquy_context
