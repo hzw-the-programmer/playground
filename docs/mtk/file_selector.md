@@ -1,0 +1,27 @@
+FileMgrCui.c
+cui_file_selector_create
+if (style == CUI_FILE_SELECTOR_STYLE_FILE_AND_PATH)
+{
+    FMGR_FILTER_SET(&(instance->filter_type), FMGR_TYPE_FOLDER);
+    instance->flag |= CUI_FILE_SELECTOR_OPT_STYLE_FILE_FOLDER;
+}
+else if (style == CUI_FILE_SELECTOR_STYLE_FILE_ONLY)
+{
+    if (!FMGR_FILTER_IS_SET(filter, FMGR_TYPE_FOLDER))
+    {
+        instance->flag |= CUI_FILE_SELECTOR_OPT_FOLDER_TRAVERSE_NONE;
+    }
+}
+
+FMGR_FILTER filter;
+FMGR_FILTER_INIT(&filter);
+FMGR_FILTER_SET(&filter, FMGR_TYPE_JPG);
+FMGR_FILTER_SET(&filter, FMGR_TYPE_JPEG);
+FMGR_FILTER_SET(&filter, FMGR_TYPE_PNG);
+FMGR_FILTER_SET(&filter, FMGR_TYPE_FOLDER);
+cui_file_selector_create(
+    APP,
+    L"root",
+    &filter,
+    CUI_FILE_SELECTOR_STYLE_FILE_ONLY,
+    CUI_FILE_SELECTOR_OPT_FIXED_PATH_ON | CUI_FILE_SELECTOR_OPT_DRM_CHECK_SET_ON | CUI_FILE_SELECTOR_OPT_ARCHIVE_AS_FOLDER);
