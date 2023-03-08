@@ -85,6 +85,7 @@ void test_msg();
 void test_msg2();
 void test_queue_1();
 void test_heap();
+void test_socket();
 }
 
 int main(int argc, char *args) {
@@ -175,6 +176,7 @@ int main(int argc, char *args) {
     test_msg2();
     test_queue_1();
     test_heap();
+    test_socket();
 
 	MemoryCheck();
 

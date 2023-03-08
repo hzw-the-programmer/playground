@@ -63,9 +63,17 @@ static void test_3() {
 #endif
 }
 
+static void test_4() {
+#define M "haha"
+    char t[128] = {0};
+    
+    sprintf(t, M "hehe");
+}
+
 void macro_test() {
     test_1();
     test_2();
     //test_3();
     static_assert(1==1, "msg");
+    test_4();
 }

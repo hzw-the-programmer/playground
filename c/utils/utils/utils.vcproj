@@ -279,10 +279,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\macro.c"
-				>
-			</File>
-			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -986,6 +982,10 @@
 		<Filter
 			Name="src"
 			>
+			<File
+				RelativePath="..\src\macro.c"
+				>
+			</File>
 			<Filter
 				Name="queue"
 				>
@@ -1003,6 +1003,14 @@
 				>
 				<File
 					RelativePath="..\src\heap\heap.c"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="socket"
+				>
+				<File
+					RelativePath="..\src\socket\socket2.c"
 					>
 				</File>
 			</Filter>

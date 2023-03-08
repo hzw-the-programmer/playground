@@ -32,7 +32,4 @@ void test_socket() {
     on_write(fd);
     on_write(fd);
 }
-#else
-void test_socket() {
-}
 #endif
