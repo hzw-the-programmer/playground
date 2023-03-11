@@ -344,40 +344,106 @@ void split_next_test_10() {
     }
 }
 
-static void split_next_ext_test() {
-    char *headers[] = {
-        "HTTP/1.1 200 OK",
-        "Accept-Ranges: bytes",
-        "Cache-Control: private, no-cache, no-store, proxy-revalidate, no-transform",
-        "Connection: keep-alive",
-        "Content-Length: 2381",
-        "Content-Type: text/html",
-        "Date: Sat, 11 Mar 2023 08:52:44 GMT",
-        "Etag: \"588604f8-94d\"",
-        "Last-Modified: Mon, 23 Jan 2017 13:28:24 GMT",
-        "Pragma: no-cache",
-        "Server: bfe/1.0.8.18",
-        "Set-Cookie: BDORZ=27315; max-age=86400; domain=.baidu.com; path=/",
-    };
-    char *sep = "\r\n";
-    int i;
-    char resp[1024] = {0};
-    split_t lines;
-    slice_t line;
+static char* headers[] = {
+    "HTTP/1.1 200 OK",
+    "Accept-Ranges: bytes",
+    "Cache-Control: private, no-cache, no-store, proxy-revalidate, no-transform",
+    "Connection: keep-alive",
+    "Content-Length: 2381",
+    "Content-Type: text/html",
+    "Date: Sat, 11 Mar 2023 08:52:44 GMT",
+    "Etag: \"588604f8-94d\"",
+    "Last-Modified: Mon, 23 Jan 2017 13:28:24 GMT",
+    "Pragma: no-cache",
+    "Server: bfe/1.0.8.18",
+    "Set-Cookie: BDORZ=27315; max-age=86400; domain=.baidu.com; path=/",
+};
+#define SEP "\r\n"
+#define MAX_BUF 1024
 
+static int buf_init(char *buf, int buf_len, char *body, int body_len) {
+    int i, len, total_len = 0;
     for (i = 0; i < ARRAY_SIZE(headers); i++) {
-        strcat(resp, headers[i]);
-        strcat(resp, sep);
+        len = strlen(headers[i]);
+        assert(total_len + len <= buf_len);
+        memcpy(buf + total_len, headers[i], len);
+        total_len += len;
+        
+        len = strlen(SEP);
+        assert(total_len + len <= buf_len);
+        memcpy(buf + total_len, SEP, len);
+        total_len += len;
     }
-    strcat(resp, sep);
+    
+    len = strlen(SEP);
+    assert(total_len + len <= buf_len);
+    memcpy(buf + total_len, SEP, len);
+    total_len += len;
 
-    lines = split_new_ext(resp, strlen(resp), sep, strlen(sep));
+    if (body_len <= 0) {
+        return total_len;
+    }
+
+    len = body_len;
+    assert(total_len + len <= buf_len);
+    memcpy(buf + total_len, body, len);
+    total_len += len;
+
+    return total_len;
+}
+
+static void split_next_ext_test_1() {
+    int i;
+    char buf[MAX_BUF];
+    split_t split;
+    slice_t line;
+    char *body = "hello world!";
+
+    // without body
+    i = buf_init(buf, MAX_BUF, NULL, 0);
+    split = split_new_ext(buf, i, SEP, strlen(SEP));
     for (i = 0; i < ARRAY_SIZE(headers); i++) {
-        line = split_next_ext(&lines);
+        line = split_next_ext(&split);
         assert(line.len == strlen(headers[i]) && !strncmp(line.data, headers[i], line.len));
     }
-    line = split_next_ext(&lines);
+    line = split_next_ext(&split);
     assert(line.len == 0 && line.data);
+    line = split_next_ext(&split);
+    assert(line.len == 0 && !line.data);
+
+    // with body
+    i = buf_init(buf, MAX_BUF, body, strlen(body));
+    split = split_new_ext(buf, i, SEP, strlen(SEP));
+    for (i = 0; i < ARRAY_SIZE(headers); i++) {
+        line = split_next_ext(&split);
+        assert(line.len == strlen(headers[i]) && !strncmp(line.data, headers[i], line.len));
+    }
+    line = split_next_ext(&split);
+    assert(line.len == 0 && line.data);
+    assert(split.s.len == strlen(body) && !strncmp(split.s.data, body, split.s.len));
+    line = split_next_ext(&split);
+    assert(line.len == 0 && !line.data);
+    assert(split.s.len == strlen(body) && !strncmp(split.s.data, body, split.s.len));
+
+    // parse
+    i = buf_init(buf, MAX_BUF, body, strlen(body));
+    split = split_new_ext(buf, i, SEP, strlen(SEP));
+    i = 0;
+    while (1) {
+        line = split_next_ext(&split);
+        if (line.len != 0) {
+            assert(line.len == strlen(headers[i]) && !strncmp(line.data, headers[i], line.len));
+            i++;
+        } else {
+            if (line.data) {
+                assert(split.s.len == strlen(body) && !strncmp(split.s.data, body, split.s.len));
+                assert(i == ARRAY_SIZE(headers));
+            } else {
+                assert(split.s.len == strlen(body) && !strncmp(split.s.data, body, split.s.len));
+                break;
+            }
+        }
+    }
 }
 
 void split_test() {
@@ -391,7 +457,8 @@ void split_test() {
     split_next_test_8();
     split_next_test_9();
     split_next_test_10();
-    split_next_ext_test();
+    
+    split_next_ext_test_1();
 }
 
 #if 0

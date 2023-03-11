@@ -99,9 +99,14 @@ slice_t split_next_ext(split_t *split) {
     slice_t r = {0}, sub;
 
     sub = slice_slice(split->s, split->sep);
+    if (!sub.data) {
+        return r;
+    }
+    
     r.data = split->s.data;
     r.len = sub.data - split->s.data;
     split->s.data = sub.data + split->sep.len;
     split->s.len = sub.len - split->sep.len;
+    
     return r;
 }
