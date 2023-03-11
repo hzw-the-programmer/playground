@@ -83,3 +83,25 @@ slice_t split_next(split_t *split) {
 #endif
 #endif
 }
+
+split_t split_new_ext(
+    uint8_t *data, int data_len,
+    uint8_t *sep, int sep_len) {
+    split_t split;
+
+    split.s = slice_new(data, data_len);
+    split.sep = slice_new(sep, sep_len);
+
+    return split;
+}
+
+slice_t split_next_ext(split_t *split) {
+    slice_t r = {0}, sub;
+
+    sub = slice_slice(split->s, split->sep);
+    r.data = split->s.data;
+    r.len = sub.data - split->s.data;
+    split->s.data = sub.data + split->sep.len;
+    split->s.len = sub.len - split->sep.len;
+    return r;
+}

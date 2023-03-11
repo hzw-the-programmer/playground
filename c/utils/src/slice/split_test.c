@@ -344,6 +344,42 @@ void split_next_test_10() {
     }
 }
 
+static void split_next_ext_test() {
+    char *headers[] = {
+        "HTTP/1.1 200 OK",
+        "Accept-Ranges: bytes",
+        "Cache-Control: private, no-cache, no-store, proxy-revalidate, no-transform",
+        "Connection: keep-alive",
+        "Content-Length: 2381",
+        "Content-Type: text/html",
+        "Date: Sat, 11 Mar 2023 08:52:44 GMT",
+        "Etag: \"588604f8-94d\"",
+        "Last-Modified: Mon, 23 Jan 2017 13:28:24 GMT",
+        "Pragma: no-cache",
+        "Server: bfe/1.0.8.18",
+        "Set-Cookie: BDORZ=27315; max-age=86400; domain=.baidu.com; path=/",
+    };
+    char *sep = "\r\n";
+    int i;
+    char resp[1024] = {0};
+    split_t lines;
+    slice_t line;
+
+    for (i = 0; i < ARRAY_SIZE(headers); i++) {
+        strcat(resp, headers[i]);
+        strcat(resp, sep);
+    }
+    strcat(resp, sep);
+
+    lines = split_new_ext(resp, strlen(resp), sep, strlen(sep));
+    for (i = 0; i < ARRAY_SIZE(headers); i++) {
+        line = split_next_ext(&lines);
+        assert(line.len == strlen(headers[i]) && !strncmp(line.data, headers[i], line.len));
+    }
+    line = split_next_ext(&lines);
+    assert(line.len == 0 && line.data);
+}
+
 void split_test() {
     split_next_test_1();
     split_next_test_2();
@@ -355,6 +391,7 @@ void split_test() {
     split_next_test_8();
     split_next_test_9();
     split_next_test_10();
+    split_next_ext_test();
 }
 
 #if 0

@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "slice.h"
 #include "utils.h"
 

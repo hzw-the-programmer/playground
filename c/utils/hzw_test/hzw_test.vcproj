@@ -162,10 +162,6 @@
 			Name="src"
 			>
 			<Filter
-				Name="slice"
-				>
-			</Filter>
-			<Filter
 				Name="test"
 				>
 				<File
