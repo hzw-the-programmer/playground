@@ -1,5 +1,5 @@
 #include "slice.h"
-#include "../utils.h"
+#include "utils.h"
 
 slice_t slice_new(char *data, int len) {
     slice_t s;
@@ -29,6 +29,39 @@ int slice_search(slice_t s, char b) {
     }
 
     return -1;
+}
+
+slice_t slice_slice(slice_t ss, slice_t s) {
+    slice_t r = {0};
+    unsigned char *p;
+
+    if (s.len <= 0 || s.len > ss.len) {
+        return r;
+    }
+    
+    while (ss.len >= s.len) {
+        p = memchr(ss.data, s.data[0], ss.len);
+        if (!p) {
+            return r;
+        }
+        
+        ss.len -= p - ss.data;
+        if (ss.len < s.len) {
+            return r;
+        }
+        ss.data = p;
+        
+        if (!memcmp(p, s.data, s.len)) {
+            r.data = p;
+            r.len = ss.len;
+            return r;
+        }
+
+        ss.data++;
+        ss.len--;
+    }
+
+    return r;
 }
 
 slice_t slice_ltrim(slice_t s, slice_t cutset) {

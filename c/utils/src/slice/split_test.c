@@ -1,7 +1,7 @@
 #include <string.h>
 #include <assert.h>
 #include "split.h"
-#include "../utils.h"
+#include "utils.h"
 
 void split_next_test_1() {
     char *data;

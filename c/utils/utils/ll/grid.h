@@ -2,7 +2,7 @@
 #define __GRID_H__
 
 #include "rect.h"
-#include "../types.h"
+#include "types.h"
 #include "../utils.h"
 
 typedef struct {

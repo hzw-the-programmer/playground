@@ -2,7 +2,7 @@
 #define __LIST_H__
 
 #include "rect.h"
-#include "../types.h"
+#include "types.h"
 
 typedef struct {
     void *data;

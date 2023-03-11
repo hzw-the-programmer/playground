@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="D:\vc\utils\utils\mbedtls\include"
+				AdditionalIncludeDirectories="&quot;F:\open_source\open_source1\github\hzw-the-programmer\playground\c\utils\inc&quot;;D:\vc\utils\utils\mbedtls\include"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -423,10 +423,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\utils.h"
-				>
-			</File>
-			<File
 				RelativePath=".\varints.cpp"
 				>
 			</File>
@@ -627,30 +623,6 @@
 				</File>
 				<File
 					RelativePath=".\buffer\circular_buffer.h"
-					>
-				</File>
-				<File
-					RelativePath=".\buffer\slice.c"
-					>
-				</File>
-				<File
-					RelativePath=".\buffer\slice.h"
-					>
-				</File>
-				<File
-					RelativePath=".\buffer\slice_test.c"
-					>
-				</File>
-				<File
-					RelativePath=".\buffer\split.c"
-					>
-				</File>
-				<File
-					RelativePath=".\buffer\split.h"
-					>
-				</File>
-				<File
-					RelativePath=".\buffer\split_test.c"
 					>
 				</File>
 			</Filter>
@@ -1011,6 +983,26 @@
 				>
 				<File
 					RelativePath="..\src\socket\socket2.c"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="slice"
+				>
+				<File
+					RelativePath="..\src\slice\slice.c"
+					>
+				</File>
+				<File
+					RelativePath="..\src\slice\slice_test.c"
+					>
+				</File>
+				<File
+					RelativePath="..\src\slice\split.c"
+					>
+				</File>
+				<File
+					RelativePath="..\src\slice\split_test.c"
 					>
 				</File>
 			</Filter>

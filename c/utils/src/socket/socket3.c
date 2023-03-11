@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "slice.h"
+#include "split.h"
+
 
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -17,15 +20,22 @@
 
 #define DEFAULT_BUFLEN 512
 
-void test_socket() 
+typedef struct {
+    int cap;
+    int len;
+    unsigned char *data;
+} buf_t;
+
+void main() 
 {
     WSADATA wsaData;
     int iResult;
     struct addrinfo *result = NULL, *ptr = NULL, hints;
     SOCKET ConnectSocket = INVALID_SOCKET;
     const char *sendbuf = "GET / HTTP/1.1\r\n\r\n";
-    char recvbuf[DEFAULT_BUFLEN];
-    int recvbuflen = DEFAULT_BUFLEN;
+    char data[DEFAULT_BUFLEN];
+    buf_t buf = {DEFAULT_BUFLEN, 0, data};
+    int len;
 
     // Initialize Winsock
     iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -97,18 +107,40 @@ void test_socket()
 
     // Receive until the peer closes the connection
     do {
-        iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
-        if ( iResult > 0 ) {
-            printf("Bytes received: %d\n", iResult);
+        len = recv(ConnectSocket, buf.data + buf.len, buf.cap - buf.len, 0);
+        if (len > 0) {
+            split_t lines;
+            
+            printf("Bytes received: %d\n", len);
 
+            lines = split_new(slice_new(buf.data, buf.len + len), '\n');
+            while (1) {
+                slice_t line = split_next(&lines);
+                if (line.len == 0) {
+                    break;
+                }
+                if (line.data[line.len] == '\n') {
+                    line.data[line.len] = 0;
+                    printf("%s\n", line.data);
+                    line.data[line.len] = '\n';
+                } else {
+                    memmove(buf.data, line.data, line.len);
+                    buf.len = line.len;
+                }
+            }
         }
-        else if ( iResult == 0 )
+        else if (len == 0)
             printf("Connection closed\n");
         else
             printf("recv failed with error: %d\n", WSAGetLastError());
-    } while( iResult > 0 );
+    } while(len > 0);
 
     // cleanup
     closesocket(ConnectSocket);
     WSACleanup();
+
+    {
+        char i;
+        scanf("%c", &i);
+    }
 }

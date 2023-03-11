@@ -1,6 +1,6 @@
 #if !defined(__HISTORY_H__)
 #define __HISTORY_H__
-#include "../types.h"
+#include "types.h"
 #include "../utils.h"
 
 #define HISTORY_FLAG_NO_HISTORY 0x01

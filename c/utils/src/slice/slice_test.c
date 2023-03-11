@@ -2,7 +2,7 @@
 #include <string.h>
 #include <assert.h>
 #include "slice.h"
-#include "../utils.h"
+#include "utils.h"
 
 void slice_ltrim_test_1() {
     struct {
@@ -292,6 +292,33 @@ void slice_to_uint64_test() {
     }
 }
 
+static void slice_slice_test() {
+    slice_t s, ss, r;
+
+    s.data = "\r\n";
+    s.len = strlen(s.data);
+    
+    ss.data = "\r";
+    ss.len = strlen(ss.data);
+    r = slice_slice(ss, s);
+    assert(!r.data && !r.len);
+
+    ss.data = "\r\n";
+    ss.len = strlen(ss.data);
+    r = slice_slice(ss, s);
+    assert(r.data == ss.data && r.len == 2);
+
+    ss.data = "\r\r\n";
+    ss.len = strlen(ss.data);
+    r = slice_slice(ss, s);
+    assert(r.data == ss.data+1 && r.len == 2);
+
+    ss.data = "\rb\r\r\n";
+    ss.len = strlen(ss.data);
+    r = slice_slice(ss, s);
+    assert(r.data == ss.data+3 && r.len == 2);
+}
+
 void slice_test() {
     slice_ltrim_test_1();
     slice_ltrim_test_2();
@@ -300,4 +327,5 @@ void slice_test() {
     slice_trim_test_1();
     slice_trim_test_2();
     slice_to_uint64_test();
+    slice_slice_test();
 }

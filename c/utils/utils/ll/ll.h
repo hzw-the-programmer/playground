@@ -1,4 +1,4 @@
-#include "../types.h"
+#include "types.h"
 #include "rect.h"
 
 typedef struct ll_item_s ll_item;
