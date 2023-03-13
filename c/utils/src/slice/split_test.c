@@ -395,13 +395,15 @@ static int buf_init(char *buf, int buf_len, char *body, int body_len) {
 static void split_next_ext_test_1() {
     int i;
     char buf[MAX_BUF];
+    int buf_len;
     split_t split;
     slice_t line;
     char *body = "hello world!";
 
     // without body
-    i = buf_init(buf, MAX_BUF, NULL, 0);
-    split = split_new_ext(buf, i, SEP, strlen(SEP));
+    buf_len = buf_init(buf, MAX_BUF, NULL, 0);
+
+    split = split_new_ext(buf, buf_len, SEP, strlen(SEP));
     for (i = 0; i < ARRAY_SIZE(headers); i++) {
         line = split_next_ext(&split);
         assert(line.len == strlen(headers[i]) && !strncmp(line.data, headers[i], line.len));
@@ -412,8 +414,9 @@ static void split_next_ext_test_1() {
     assert(line.len == 0 && !line.data);
 
     // with body
-    i = buf_init(buf, MAX_BUF, body, strlen(body));
-    split = split_new_ext(buf, i, SEP, strlen(SEP));
+    buf_len = buf_init(buf, MAX_BUF, body, strlen(body));
+
+    split = split_new_ext(buf, buf_len, SEP, strlen(SEP));
     for (i = 0; i < ARRAY_SIZE(headers); i++) {
         line = split_next_ext(&split);
         assert(line.len == strlen(headers[i]) && !strncmp(line.data, headers[i], line.len));
@@ -426,8 +429,7 @@ static void split_next_ext_test_1() {
     assert(split.s.len == strlen(body) && !strncmp(split.s.data, body, split.s.len));
 
     // parse
-    i = buf_init(buf, MAX_BUF, body, strlen(body));
-    split = split_new_ext(buf, i, SEP, strlen(SEP));
+    split = split_new_ext(buf, buf_len, SEP, strlen(SEP));
     i = 0;
     while (1) {
         line = split_next_ext(&split);
