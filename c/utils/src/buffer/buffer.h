@@ -1,0 +1,23 @@
+#if !defined(__BUFFER_H__)
+#define __BUFFER_H__
+
+#include "types.h"
+
+typedef struct {
+    int cap;
+    int w, r;
+    uint8_t *ptr;
+} buf_t;
+
+int buf_available(const buf_t *buf);
+uint8_t* buf_write_ptr(const buf_t *buf);
+void buf_write_inc(buf_t *buf, int len);
+int buf_buffered(const buf_t *buf);
+uint8_t* buf_read_ptr(const buf_t *buf);
+void buf_read_inc(buf_t *buf, int len);
+void buf_tidy(buf_t *buf);
+
+buf_t* buf_new(int cap);
+void buf_write(buf_t *buf, const uint8_t *ptr, int len);
+
+#endif
