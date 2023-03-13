@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "mem/mem.h"
 #include "buffer.h"
 
 buf_t* buf_new(int cap) {

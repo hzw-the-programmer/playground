@@ -2,6 +2,7 @@
 #include <assert.h>
 #include "split.h"
 #include "utils.h"
+#include "mem/mem.h"
 #include "buffer/buffer.h"
 #include "socket/sock_mock.h"
 
@@ -434,6 +435,8 @@ static void split_next_ext_test_1() {
             }
         }
     }
+
+    free(buf);
 }
 
 static void split_next_ext_test_2() {
@@ -445,7 +448,7 @@ static void split_next_ext_test_2() {
     sock_t *sock;
     buf_t *buf;
 
-    ctx = sock_ctx_new(1, MAX_BUF);
+    ctx = sock_ctx_new(2, MAX_BUF);
     sock = &ctx->sock[0];
     write_http(sock->buf, headers, ARRAY_SIZE(headers), body, strlen(body));
     buf = buf_new(MAX_BUF);
@@ -477,6 +480,9 @@ static void split_next_ext_test_2() {
     }
     assert(buf->w == strlen(body) && !strncmp(buf->ptr, body, buf->w));
     assert(buf_buffered(buf) == strlen(body) && !strncmp(buf_read_ptr(buf), body, buf_buffered(buf)));
+
+    sock_ctx_free(ctx);
+    free(buf);
 }
 
 void split_test() {

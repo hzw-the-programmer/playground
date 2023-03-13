@@ -184,6 +184,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="mem"
+				>
+				<File
+					RelativePath="..\src\mem\mem.c"
+					>
+				</File>
+				<File
+					RelativePath="..\src\mem\mem.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="inc"

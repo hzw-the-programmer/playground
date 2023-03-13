@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include "mem/mem.h"
+
 void slice_test();
 void split_test();
 
@@ -7,6 +10,7 @@ void main() {
     
     {
         char c;
+        hmcheck();
         printf("success\n");
         scanf("%c", &c);
     }

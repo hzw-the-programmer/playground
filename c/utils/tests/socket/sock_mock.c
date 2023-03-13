@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <assert.h>
+#include "mem/mem.h"
 #include "sock_mock.h"
 
 sock_ctx_t* sock_ctx_new(int nsock, int cap) {
