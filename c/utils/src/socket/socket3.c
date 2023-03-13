@@ -52,7 +52,9 @@ void main()
     SOCKET sock = INVALID_SOCKET;
     const char *sendbuf = "GET / HTTP/1.1\r\n\r\n";
     buf_t *buf;
-    STATE_T state = FIRSTLINE; 
+    STATE_T state = FIRSTLINE;
+    const char *fn = "2.txt";
+    FILE *f;
 
     // Initialize Winsock
     ret = WSAStartup(MAKEWORD(2,2), &wsa);
@@ -125,13 +127,21 @@ void main()
     buf = buf_new(DEFAULT_BUFLEN);
     assert(buf);
 
+    f = fopen(fn, "wb");
+    assert(f);
+
     // Receive until the peer closes the connection
     do {
         len = recv(sock, buf_write_ptr(buf), buf_available(buf), 0);
         if (len > 0) {
             printf("Bytes received: %d\n", len);
-
             buf_write_inc(buf, len);
+            
+#if 0
+            assert(fwrite(buf_read_ptr(buf), 1, buf_buffered(buf), f) == buf_buffered(buf));
+            buf_read_inc(buf, buf_buffered(buf));
+            buf_tidy(buf);
+#else
             if (state == FIRSTLINE || state == HEADERS) {
                 split_t split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), CRNL, strlen(CRNL));
                 while (1) {
@@ -140,12 +150,21 @@ void main()
                         if (state == FIRSTLINE) {
                             state = HEADERS;
                         }
+#if 1
+                        assert(fwrite(line.data, 1, line.len, f) == line.len);
+                        assert(fwrite(CRNL, 1, strlen(CRNL), f) == strlen(CRNL));
+#else
                         print_slice(&line);
                         printf("\n");
+#endif
                     } else {
                         if (line.data) {
                             state = BODY;
+#if 1
+                            assert(fwrite(CRNL, 1, strlen(CRNL), f) == strlen(CRNL));
+#else
                             printf("\n");
+#endif
                         }
                         break;
                     }
@@ -154,10 +173,15 @@ void main()
                 buf_tidy(buf);
             } else if (state == BODY) {
                 slice_t s = slice_new(buf_read_ptr(buf), buf_buffered(buf));
+#if 1
+                assert(fwrite(s.data, 1, s.len, f) == s.len);
+#else
                 print_slice(&s);
+#endif
                 buf_read_inc(buf, buf_buffered(buf));
                 buf_tidy(buf);
             }
+#endif
         }
         else if (len == 0)
             printf("Connection closed\n");
@@ -166,6 +190,7 @@ void main()
     } while(len > 0);
 
     free(buf);
+    fclose(f);
 
     // cleanup
     closesocket(sock);
