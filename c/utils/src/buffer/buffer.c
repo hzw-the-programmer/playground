@@ -62,3 +62,17 @@ void buf_write(buf_t *buf, const uint8_t *ptr, int len) {
     memmove(buf_write_ptr(buf), ptr, len);
     buf_write_inc(buf, len);
 }
+
+int buf_read(buf_t *buf, uint8_t *ptr, int len) {
+    if (len > buf_buffered(buf)) {
+        len = buf_buffered(buf);
+    }
+    if (!len) {
+        return 0;
+    }
+    
+    memmove(ptr, buf_read_ptr(buf), len);
+    buf_read_inc(buf, len);
+    
+    return len;
+}

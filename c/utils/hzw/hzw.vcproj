@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;F:\open_source\open_source1\github\hzw-the-programmer\playground\c\utils\src&quot;;&quot;F:\open_source\open_source1\github\hzw-the-programmer\playground\c\utils\inc&quot;"
+				AdditionalIncludeDirectories="&quot;F:\open_source\open_source1\github\hzw-the-programmer\playground\c\utils\tests&quot;;&quot;F:\open_source\open_source1\github\hzw-the-programmer\playground\c\utils\src&quot;;&quot;F:\open_source\open_source1\github\hzw-the-programmer\playground\c\utils\inc&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -204,6 +204,22 @@
 				RelativePath="..\inc\utils.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="tests"
+			>
+			<Filter
+				Name="socket"
+				>
+				<File
+					RelativePath="..\tests\socket\sock_mock.c"
+					>
+				</File>
+				<File
+					RelativePath="..\tests\socket\sock_mock.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

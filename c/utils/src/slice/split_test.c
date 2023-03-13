@@ -3,6 +3,7 @@
 #include "split.h"
 #include "utils.h"
 #include "buffer/buffer.h"
+#include "socket/sock_mock.h"
 
 void split_next_test_1() {
     char *data;
@@ -435,67 +436,29 @@ static void split_next_ext_test_1() {
     }
 }
 
-#if 0
-typedef struct {
-    buf_t *buf;
-    int nsock;
-} sock_ctx_t;
-
-static sock_ctx_t sock_ctx;
-
-static void sock_ctx_init(sock_ctx_t *ctx, int nsock, int cap) {
-    int i;
-
-    ctx->buf = malloc(sizeof(ctx->buf) * nsock);
-    assert(ctx->buf);
-
-    for (i = 0; i < nsock; i++) {
-        ctx->buf[i] = buf_new(cap);
-        assert(ctx->buf[i]);
-    }
-}
-
-static int recv(int sock, uint8_t *out, int len) {
-    static buf_t *buf = NULL;
-    char *body = "hello world!";
-
-    if (!buf) {
-        buf = buf_new(MAX_BUF);
-        buf_write_inc(buf, test_buf_init(buf_write_ptr(buf), buf_available(buf), body, strlen(body)));
-    }
-
-    if (len > buf_buffered(buf)) {
-        len = buf_buffered(buf);
-    }
-    if (!len) {
-        return 0;
-    }
-    
-    memcpy(out, buf_read_ptr(buf), len);
-    buf_read_inc(buf, len);
-
-    return len;
-}
-
 static void split_next_ext_test_2() {
-    uint8_t sbuf[MAX_BUF];
-    buf_t buf;
     char *body = "hello world!";
-    int n;
     split_t split;
     slice_t line;
-    int i = 0;
+    int n, i = 0;
+    sock_ctx_t *ctx;
+    sock_t *sock;
+    buf_t *buf;
 
-    buf_init(&buf, sbuf, MAX_BUF);
+    ctx = sock_ctx_new(1, MAX_BUF);
+    sock = &ctx->sock[0];
+    write_http(sock->buf, headers, ARRAY_SIZE(headers), body, strlen(body));
+    buf = buf_new(MAX_BUF);
+    assert(buf);
 
     while (1) {
-        n = recv(0, buf_write_ptr(&buf), 1);
+        n = sock_recv(sock, buf_write_ptr(buf), buf_available(buf));
+        buf_write_inc(buf, n);
         if (!n) {
             break;
         }
-        buf_write_inc(&buf, n);
         
-        split = split_new_ext(buf_read_ptr(&buf), buf_buffered(&buf), SEP, strlen(SEP));
+        split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), CRNL, strlen(CRNL));
         while (1) {
             line = split_next_ext(&split);
             if (line.len != 0) {
@@ -509,12 +472,12 @@ static void split_next_ext_test_2() {
                 }
             }
         }
-        buf_read_inc(&buf, buf_buffered(&buf) - split.s.len);
-        buf_tidy(&buf);
+        buf_read_inc(buf, buf_buffered(buf) - split.s.len);
+        buf_tidy(buf);
     }
-    assert(buf.w == strlen(body) && !strncmp(buf.ptr, body, buf.w));
+    assert(buf->w == strlen(body) && !strncmp(buf->ptr, body, buf->w));
+    assert(buf_buffered(buf) == strlen(body) && !strncmp(buf_read_ptr(buf), body, buf_buffered(buf)));
 }
-#endif
 
 void split_test() {
     split_next_test_1();
@@ -529,7 +492,7 @@ void split_test() {
     split_next_test_10();
     
     split_next_ext_test_1();
-    //split_next_ext_test_2();
+    split_next_ext_test_2();
 }
 
 #if 0

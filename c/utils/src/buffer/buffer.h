@@ -19,5 +19,6 @@ void buf_tidy(buf_t *buf);
 
 buf_t* buf_new(int cap);
 void buf_write(buf_t *buf, const uint8_t *ptr, int len);
+int buf_read(buf_t *buf, uint8_t *ptr, int len);
 
 #endif
