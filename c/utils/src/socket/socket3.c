@@ -36,12 +36,16 @@ typedef enum {
 
 #define CRNL "\r\n"
 
-static void print_slice(const slice_t *s) {
+static void print_slice(FILE *f, const slice_t *s) {
+#if 1
+    assert(fwrite(s->data, 1, s->len, f) == s->len);
+#else
     int i;
 
     for (i = 0; i < s->len; i++) {
         printf("%c", s->data[i]);
     }
+#endif
 }
 
 void main() 
@@ -55,6 +59,7 @@ void main()
     STATE_T state = FIRSTLINE;
     const char *fn = "2.txt";
     FILE *f;
+    slice_t crnl = {CRNL, strlen(CRNL)};
 
     // Initialize Winsock
     ret = WSAStartup(MAKEWORD(2,2), &wsa);
@@ -143,28 +148,19 @@ void main()
             buf_tidy(buf);
 #else
             if (state == FIRSTLINE || state == HEADERS) {
-                split_t split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), CRNL, strlen(CRNL));
+                split_t split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), crnl.data, crnl.len);
                 while (1) {
                     slice_t line = split_next_ext(&split);
                     if (line.len != 0) {
                         if (state == FIRSTLINE) {
                             state = HEADERS;
                         }
-#if 1
-                        assert(fwrite(line.data, 1, line.len, f) == line.len);
-                        assert(fwrite(CRNL, 1, strlen(CRNL), f) == strlen(CRNL));
-#else
-                        print_slice(&line);
-                        printf("\n");
-#endif
+                        print_slice(f, &line);
+                        print_slice(f, &crnl);
                     } else {
                         if (line.data) {
                             state = BODY;
-#if 1
-                            assert(fwrite(CRNL, 1, strlen(CRNL), f) == strlen(CRNL));
-#else
-                            printf("\n");
-#endif
+                            print_slice(f, &crnl);
                         }
                         break;
                     }
@@ -173,11 +169,7 @@ void main()
                 buf_tidy(buf);
             } else if (state == BODY) {
                 slice_t s = slice_new(buf_read_ptr(buf), buf_buffered(buf));
-#if 1
-                assert(fwrite(s.data, 1, s.len, f) == s.len);
-#else
-                print_slice(&s);
-#endif
+                print_slice(f, &s);
                 buf_read_inc(buf, buf_buffered(buf));
                 buf_tidy(buf);
             }
