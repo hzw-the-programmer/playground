@@ -443,7 +443,7 @@ static void split_next_ext_test_2() {
     char *body = "hello world!";
     split_t split;
     slice_t line;
-    int n, i = 0;
+    int n, i, j;
     sock_ctx_t *ctx;
     sock_t *sock;
     buf_t *buf;
@@ -454,32 +454,38 @@ static void split_next_ext_test_2() {
     buf = buf_new(MAX_BUF);
     assert(buf);
 
-    while (1) {
-        n = sock_recv(sock, buf_write_ptr(buf), buf_available(buf));
-        buf_write_inc(buf, n);
-        if (!n) {
-            break;
-        }
-        
-        split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), CRNL, strlen(CRNL));
+    for (j = 1; j <= MAX_BUF; j++) {
+        sock->buf->r = 0;
+        sock->n = j;
+        buf->w = 0;
+        i = 0;
         while (1) {
-            line = split_next_ext(&split);
-            if (line.len != 0) {
-                assert(line.len == strlen(headers[i]) && !strncmp(line.data, headers[i], line.len));
-                i++;
-            } else {
-                if (line.data) {
-                    assert(i == ARRAY_SIZE(headers));
+            n = sock_recv(sock, buf_write_ptr(buf), buf_available(buf));
+            buf_write_inc(buf, n);
+            if (!n) {
+                break;
+            }
+            
+            split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), CRNL, strlen(CRNL));
+            while (1) {
+                line = split_next_ext(&split);
+                if (line.len != 0) {
+                    assert(line.len == strlen(headers[i]) && !strncmp(line.data, headers[i], line.len));
+                    i++;
                 } else {
-                    break;
+                    if (line.data) {
+                        assert(i == ARRAY_SIZE(headers));
+                    } else {
+                        break;
+                    }
                 }
             }
+            buf_read_inc(buf, buf_buffered(buf) - split.s.len);
+            buf_tidy(buf);
         }
-        buf_read_inc(buf, buf_buffered(buf) - split.s.len);
-        buf_tidy(buf);
+        assert(buf->w == strlen(body) && !strncmp(buf->ptr, body, buf->w));
+        assert(buf_buffered(buf) == strlen(body) && !strncmp(buf_read_ptr(buf), body, buf_buffered(buf)));
     }
-    assert(buf->w == strlen(body) && !strncmp(buf->ptr, body, buf->w));
-    assert(buf_buffered(buf) == strlen(body) && !strncmp(buf_read_ptr(buf), body, buf_buffered(buf)));
 
     sock_ctx_free(ctx);
     free(buf);
