@@ -160,11 +160,19 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\slice\slice.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\slice\slice_test.c"
 					>
 				</File>
 				<File
 					RelativePath="..\src\slice\split.c"
+					>
+				</File>
+				<File
+					RelativePath="..\src\slice\split.h"
 					>
 				</File>
 				<File
@@ -200,14 +208,6 @@
 		<Filter
 			Name="inc"
 			>
-			<File
-				RelativePath="..\inc\slice.h"
-				>
-			</File>
-			<File
-				RelativePath="..\inc\split.h"
-				>
-			</File>
 			<File
 				RelativePath="..\inc\types.h"
 				>

@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;F:\open_source\open_source1\github\hzw-the-programmer\playground\c\utils\inc&quot;"
+				AdditionalIncludeDirectories="&quot;F:\open_source\open_source1\github\hzw-the-programmer\playground\c\utils\inc&quot;;&quot;F:\open_source\open_source1\github\hzw-the-programmer\playground\c\utils\src&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

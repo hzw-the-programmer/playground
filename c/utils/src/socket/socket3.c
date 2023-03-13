@@ -5,9 +5,12 @@
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 
-#include "slice.h"
-#include "split.h"
+#include "mem/mem.h"
+#include "buffer/buffer.h"
+#include "slice/slice.h"
+#include "slice/split.h"
 
 
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
@@ -20,27 +23,41 @@
 
 #define DEFAULT_BUFLEN 512
 
-typedef struct {
-    int cap;
-    int len;
-    unsigned char *data;
-} buf_t;
+typedef enum {
+    DISCONNECTED,
+    CONNECTING,
+    IDLE,
+    FIRSTLINE,
+    HEADERS,
+    BODY,
+    TRAILER,
+    WRITING,
+} STATE_T;
+
+#define CRNL "\r\n"
+
+static void print_slice(const slice_t *s) {
+    int i;
+
+    for (i = 0; i < s->len; i++) {
+        printf("%c", s->data[i]);
+    }
+}
 
 void main() 
 {
-    WSADATA wsaData;
-    int iResult;
+    WSADATA wsa;
+    int ret, len;
     struct addrinfo *result = NULL, *ptr = NULL, hints;
-    SOCKET ConnectSocket = INVALID_SOCKET;
+    SOCKET sock = INVALID_SOCKET;
     const char *sendbuf = "GET / HTTP/1.1\r\n\r\n";
-    char data[DEFAULT_BUFLEN];
-    buf_t buf = {DEFAULT_BUFLEN, 0, data};
-    int len;
+    buf_t *buf;
+    STATE_T state = FIRSTLINE; 
 
     // Initialize Winsock
-    iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
-    if (iResult != 0) {
-        printf("WSAStartup failed with error: %d\n", iResult);
+    ret = WSAStartup(MAKEWORD(2,2), &wsa);
+    if (ret != 0) {
+        printf("WSAStartup failed with error: %d\n", ret);
         return;
     }
 
@@ -50,9 +67,9 @@ void main()
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    iResult = getaddrinfo(DEFAULT_SERVER, DEFAULT_PORT, &hints, &result);
-    if ( iResult != 0 ) {
-        printf("getaddrinfo failed with error: %d\n", iResult);
+    ret = getaddrinfo(DEFAULT_SERVER, DEFAULT_PORT, &hints, &result);
+    if (ret != 0) {
+        printf("getaddrinfo failed with error: %d\n", ret);
         WSACleanup();
         return;
     }
@@ -60,18 +77,18 @@ void main()
     // Attempt to connect to an address until one succeeds
     for(ptr=result; ptr != NULL ;ptr=ptr->ai_next) {
         // Create a SOCKET for connecting to server
-        ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype,  ptr->ai_protocol);
-        if (ConnectSocket == INVALID_SOCKET) {
+        sock = socket(ptr->ai_family, ptr->ai_socktype,  ptr->ai_protocol);
+        if (sock == INVALID_SOCKET) {
             printf("socket failed with error: %ld\n", WSAGetLastError());
             WSACleanup();
             return;
         }
 
         // Connect to server.
-        iResult = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
-        if (iResult == SOCKET_ERROR) {
-            closesocket(ConnectSocket);
-            ConnectSocket = INVALID_SOCKET;
+        ret = connect(sock, ptr->ai_addr, (int)ptr->ai_addrlen);
+        if (ret == SOCKET_ERROR) {
+            closesocket(sock);
+            sock = INVALID_SOCKET;
             continue;
         }
         break;
@@ -79,54 +96,67 @@ void main()
 
     freeaddrinfo(result);
 
-    if (ConnectSocket == INVALID_SOCKET) {
+    if (sock == INVALID_SOCKET) {
         printf("Unable to connect to server!\n");
         WSACleanup();
         return;
     }
 
     // Send an initial buffer
-    iResult = send(ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);
-    if (iResult == SOCKET_ERROR) {
+    ret = send(sock, sendbuf, (int)strlen(sendbuf), 0);
+    if (ret == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
-        closesocket(ConnectSocket);
+        closesocket(sock);
         WSACleanup();
         return;
     }
 
-    printf("Bytes Sent: %ld\n", iResult);
+    printf("Bytes Sent: %ld\n", ret);
 
     // shutdown the connection since no more data will be sent
-    iResult = shutdown(ConnectSocket, SD_SEND);
-    if (iResult == SOCKET_ERROR) {
+    ret = shutdown(sock, SD_SEND);
+    if (ret == SOCKET_ERROR) {
         printf("shutdown failed with error: %d\n", WSAGetLastError());
-        closesocket(ConnectSocket);
+        closesocket(sock);
         WSACleanup();
         return;
     }
+
+    buf = buf_new(DEFAULT_BUFLEN);
+    assert(buf);
 
     // Receive until the peer closes the connection
     do {
-        len = recv(ConnectSocket, buf.data + buf.len, buf.cap - buf.len, 0);
+        len = recv(sock, buf_write_ptr(buf), buf_available(buf), 0);
         if (len > 0) {
-            split_t lines;
-            
             printf("Bytes received: %d\n", len);
 
-            lines = split_new(slice_new(buf.data, buf.len + len), '\n');
-            while (1) {
-                slice_t line = split_next(&lines);
-                if (line.len == 0) {
-                    break;
+            buf_write_inc(buf, len);
+            if (state == FIRSTLINE || state == HEADERS) {
+                split_t split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), CRNL, strlen(CRNL));
+                while (1) {
+                    slice_t line = split_next_ext(&split);
+                    if (line.len != 0) {
+                        if (state == FIRSTLINE) {
+                            state = HEADERS;
+                        }
+                        print_slice(&line);
+                        printf("\n");
+                    } else {
+                        if (line.data) {
+                            state = BODY;
+                            printf("\n");
+                        }
+                        break;
+                    }
                 }
-                if (line.data[line.len] == '\n') {
-                    line.data[line.len] = 0;
-                    printf("%s\n", line.data);
-                    line.data[line.len] = '\n';
-                } else {
-                    memmove(buf.data, line.data, line.len);
-                    buf.len = line.len;
-                }
+                buf_read_inc(buf, buf_buffered(buf) - split.s.len);
+                buf_tidy(buf);
+            } else if (state == BODY) {
+                slice_t s = slice_new(buf_read_ptr(buf), buf_buffered(buf));
+                print_slice(&s);
+                buf_read_inc(buf, buf_buffered(buf));
+                buf_tidy(buf);
             }
         }
         else if (len == 0)
@@ -135,12 +165,15 @@ void main()
             printf("recv failed with error: %d\n", WSAGetLastError());
     } while(len > 0);
 
+    free(buf);
+
     // cleanup
-    closesocket(ConnectSocket);
+    closesocket(sock);
     WSACleanup();
 
     {
         char i;
+        hmcheck();
         scanf("%c", &i);
     }
 }
