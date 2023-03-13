@@ -361,7 +361,7 @@ static char* headers[] = {
 #define SEP "\r\n"
 #define MAX_BUF 1024
 
-static int buf_init(char *buf, int buf_len, char *body, int body_len) {
+static int test_buf_init(char *buf, int buf_len, char *body, int body_len) {
     int i, len, total_len = 0;
     for (i = 0; i < ARRAY_SIZE(headers); i++) {
         len = strlen(headers[i]);
@@ -401,7 +401,7 @@ static void split_next_ext_test_1() {
     char *body = "hello world!";
 
     // without body
-    buf_len = buf_init(buf, MAX_BUF, NULL, 0);
+    buf_len = test_buf_init(buf, MAX_BUF, NULL, 0);
 
     split = split_new_ext(buf, buf_len, SEP, strlen(SEP));
     for (i = 0; i < ARRAY_SIZE(headers); i++) {
@@ -414,7 +414,7 @@ static void split_next_ext_test_1() {
     assert(line.len == 0 && !line.data);
 
     // with body
-    buf_len = buf_init(buf, MAX_BUF, body, strlen(body));
+    buf_len = test_buf_init(buf, MAX_BUF, body, strlen(body));
 
     split = split_new_ext(buf, buf_len, SEP, strlen(SEP));
     for (i = 0; i < ARRAY_SIZE(headers); i++) {
@@ -448,6 +448,122 @@ static void split_next_ext_test_1() {
     }
 }
 
+typedef struct {
+    int len;
+    int w, r;
+    uint8_t *ptr;
+} buf_t;
+
+void buf_init(buf_t *buf, uint8_t *ptr, int len) {
+    buf->ptr = ptr;
+    buf->len = len;
+    buf->w = buf->r = 0;
+}
+
+void buf_reset(buf_t *buf) {
+    buf->w = buf->r = 0;
+}
+
+int buf_available(const buf_t *buf) {
+    return buf->len - buf->w;
+}
+
+uint8_t* buf_write_ptr(const buf_t *buf) {
+    return buf->ptr + buf->w;
+}
+
+void buf_write_inc(buf_t *buf, int len) {
+    buf->w += len;
+}
+
+int buf_buffered(const buf_t *buf) {
+    return buf->w - buf->r;
+}
+
+uint8_t* buf_read_ptr(const buf_t *buf) {
+    return buf->ptr + buf->r;
+}
+
+void buf_read_inc(buf_t *buf, int len) {
+    buf->r += len;
+}
+
+void buf_tidy(buf_t *buf) {
+    if (!buf->r) {
+        return;
+    }
+
+    if (!buf_buffered(buf)) {
+        buf_reset(buf);
+        return;
+    }
+
+    memmove(buf->ptr, buf->ptr + buf->r, buf_buffered(buf));
+    buf->w -= buf->r;
+    buf->r = 0;
+}
+
+static int recv(int sock, uint8_t *out, int len) {
+    static uint8_t sbuf[MAX_BUF];
+    static buf_t buf = {0};
+    char *body = "hello world!";
+
+    if (!buf.ptr) {
+        buf_init(&buf, sbuf, MAX_BUF);
+        buf_write_inc(&buf, test_buf_init(buf_write_ptr(&buf), buf_available(&buf), body, strlen(body)));
+    }
+
+    if (len > buf_buffered(&buf)) {
+        len = buf_buffered(&buf);
+    }
+    if (!len) {
+        return 0;
+    }
+    
+    memcpy(out, buf_read_ptr(&buf), len);
+    buf_read_inc(&buf, len);
+
+    return len;
+}
+
+static void split_next_ext_test_2() {
+    uint8_t sbuf[MAX_BUF];
+    buf_t buf;
+    char *body = "hello world!";
+    int n;
+    split_t split;
+    slice_t line;
+    int i = 0;
+
+    buf_init(&buf, sbuf, MAX_BUF);
+
+    while (1) {
+        n = recv(0, buf_write_ptr(&buf), 1);
+        if (!n) {
+            break;
+        }
+        buf_write_inc(&buf, n);
+        
+        split = split_new_ext(buf_read_ptr(&buf), buf_buffered(&buf), SEP, strlen(SEP));
+        while (1) {
+            line = split_next_ext(&split);
+            if (line.len != 0) {
+                assert(line.len == strlen(headers[i]) && !strncmp(line.data, headers[i], line.len));
+                i++;
+            } else {
+                if (line.data) {
+                    assert(i == ARRAY_SIZE(headers));
+                } else {
+                    break;
+                }
+            }
+        }
+        buf_read_inc(&buf, buf_buffered(&buf) - split.s.len);
+        buf_tidy(&buf);
+    }
+    assert(buf.w == strlen(body) && !strncmp(buf.ptr, body, buf.w));
+}
+
 void split_test() {
     split_next_test_1();
     split_next_test_2();
@@ -461,6 +577,7 @@ void split_test() {
     split_next_test_10();
     
     split_next_ext_test_1();
+    split_next_ext_test_2();
 }
 
 #if 0
