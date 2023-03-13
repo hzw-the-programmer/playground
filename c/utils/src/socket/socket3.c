@@ -48,7 +48,7 @@ static void print_slice(FILE *f, const slice_t *s) {
 #endif
 }
 
-void main() 
+void main(int argc, char **argv) 
 {
     WSADATA wsa;
     int ret, len;
@@ -57,9 +57,27 @@ void main()
     const char *sendbuf = "GET / HTTP/1.1\r\n\r\n";
     buf_t *buf;
     STATE_T state = FIRSTLINE;
-    const char *fn = "2.txt";
     FILE *f;
     slice_t crnl = {CRNL, strlen(CRNL)};
+    const char *server = DEFAULT_SERVER;
+    const char *port = DEFAULT_PORT;
+    int mode = 0;
+    const char *fn;
+
+    if (argc > 1) {
+        server = argv[1];
+    }
+    if (argc > 2) {
+        port = argv[2];
+    }
+    if (argc > 3) {
+        mode = 1;
+    }
+    fn = server;
+    if (argc > 4) {
+        fn = argv[4];
+    }
+    
 
     // Initialize Winsock
     ret = WSAStartup(MAKEWORD(2,2), &wsa);
@@ -74,7 +92,7 @@ void main()
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    ret = getaddrinfo(DEFAULT_SERVER, DEFAULT_PORT, &hints, &result);
+    ret = getaddrinfo(server, port, &hints, &result);
     if (ret != 0) {
         printf("getaddrinfo failed with error: %d\n", ret);
         WSACleanup();
@@ -141,39 +159,39 @@ void main()
         if (len > 0) {
             printf("Bytes received: %d\n", len);
             buf_write_inc(buf, len);
-            
-#if 0
-            assert(fwrite(buf_read_ptr(buf), 1, buf_buffered(buf), f) == buf_buffered(buf));
-            buf_read_inc(buf, buf_buffered(buf));
-            buf_tidy(buf);
-#else
-            if (state == FIRSTLINE || state == HEADERS) {
-                split_t split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), crnl.data, crnl.len);
-                while (1) {
-                    slice_t line = split_next_ext(&split);
-                    if (line.len != 0) {
-                        if (state == FIRSTLINE) {
-                            state = HEADERS;
-                        }
-                        print_slice(f, &line);
-                        print_slice(f, &crnl);
-                    } else {
-                        if (line.data) {
-                            state = BODY;
-                            print_slice(f, &crnl);
-                        }
-                        break;
-                    }
-                }
-                buf_read_inc(buf, buf_buffered(buf) - split.s.len);
-                buf_tidy(buf);
-            } else if (state == BODY) {
-                slice_t s = slice_new(buf_read_ptr(buf), buf_buffered(buf));
-                print_slice(f, &s);
+
+            if (mode) {
+                assert(fwrite(buf_read_ptr(buf), 1, buf_buffered(buf), f) == buf_buffered(buf));
                 buf_read_inc(buf, buf_buffered(buf));
                 buf_tidy(buf);
+            } else {
+                if (state == FIRSTLINE || state == HEADERS) {
+                    split_t split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), crnl.data, crnl.len);
+                    while (1) {
+                        slice_t line = split_next_ext(&split);
+                        if (line.len != 0) {
+                            if (state == FIRSTLINE) {
+                                state = HEADERS;
+                            }
+                            print_slice(f, &line);
+                            print_slice(f, &crnl);
+                        } else {
+                            if (line.data) {
+                                state = BODY;
+                                print_slice(f, &crnl);
+                            }
+                            break;
+                        }
+                    }
+                    buf_read_inc(buf, buf_buffered(buf) - split.s.len);
+                    buf_tidy(buf);
+                } else if (state == BODY) {
+                    slice_t s = slice_new(buf_read_ptr(buf), buf_buffered(buf));
+                    print_slice(f, &s);
+                    buf_read_inc(buf, buf_buffered(buf));
+                    buf_tidy(buf);
+                }
             }
-#endif
         }
         else if (len == 0)
             printf("Connection closed\n");
