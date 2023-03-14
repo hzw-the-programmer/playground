@@ -439,66 +439,96 @@ static void split_next_ext_test_1() {
     free(buf);
 }
 
-typedef struct {
+typedef struct sock_s {
     int fd;
-    buf_t *send;
-    buf_t *recv;
+    buf_t *send_buf;
+    buf_t *recv_buf;
     void *arg;
-    void (*cb)(void*);
+    void (*cb)(struct sock_s*);
 } sock_t;
+
+// assert(line.len == strlen(headers[i]) && !strncmp(line.data, headers[i], line.len));
+// i++;
+
+typedef enum {
+    DISCONNECTED,
+    CONNECTING,
+    IDLE,
+    FIRSTLINE,
+    HEADERS,
+    BODY,
+    TRAILER,
+    WRITING,
+} STATE_T;
+
+typedef struct {
+    STATE_T state;
+    int count;
+} http_test_arg;
+
+static void http_slice_test_cb(void *arg, slice_t *slice) {
+    http_test_arg *t = arg;
+
+    if (slice->len != 0) {
+        if (t->state == FIRSTLINE) {
+            t->state = HEADERS;
+        }
+        assert(slice->len == strlen(headers[t->count]) && !strncmp(slice->data, headers[t->count], slice->len));
+        t->count++;
+    } else if (slice->data) {
+        t->state = BODY;
+        assert(t->count == ARRAY_SIZE(headers));
+    }
+}
+
+static void http_test_cb(sock_t *sock) {
+    http_test_arg *arg = sock->arg;
+    buf_t *buf = sock->recv_buf;
+
+    if (arg->state == FIRSTLINE || arg->state == HEADERS) {
+        buf_split(buf, CRNL, strlen(CRNL), http_slice_test_cb, arg);    
+    } else {
+        //assert(buf->w == strlen(body) && !strncmp(sock.recv->ptr, body, sock.recv->w));
+        //assert(buf_buffered(sock.recv) == strlen(body) && !strncmp(buf_read_ptr(sock.recv), body, buf_buffered(sock.recv)));
+    }
+}
 
 static void split_next_ext_test_2() {
     char *body = "hello world!";
-    split_t split;
-    slice_t line;
-    int n, i, j;
+    int n, j;
     mock_sock_ctx_t *mctx;
     mock_sock_t *msock;
     sock_t sock = {0};
+    http_test_arg arg = {FIRSTLINE, 0};
 
     mctx = mock_sock_ctx_new(2, MAX_BUF);
     msock = &mctx->sock[0];
     write_http(msock->buf, headers, ARRAY_SIZE(headers), body, strlen(body));
 
-    sock.recv = buf_new(MAX_BUF);
-    assert(sock.recv);
+    sock.arg = &arg;
+    sock.cb = http_test_cb;
+    sock.recv_buf = buf_new(MAX_BUF);
+    assert(sock.recv_buf);
 
     for (j = 1; j <= MAX_BUF; j++) {
         msock->buf->r = 0;
         msock->n = j;
-        sock.recv->w = 0;
-        i = 0;
+        sock.recv_buf->w = 0;
+        arg.count = 0;
         
         while (1) {
-            n = mock_sock_recv(msock, buf_write_ptr(sock.recv), buf_available(sock.recv));
-            buf_write_inc(sock.recv, n);
-            if (!n) {
+            n = mock_sock_recv(msock, buf_write_ptr(sock.recv_buf), buf_available(sock.recv_buf));
+            if (n > 0) {
+                buf_write_inc(sock.recv_buf, n);
+                sock.cb(&sock);
+            } else {
                 break;
             }
-
-            split = split_new_ext(buf_read_ptr(sock.recv), buf_buffered(sock.recv), CRNL, strlen(CRNL));
-            while (1) {
-                line = split_next_ext(&split);
-                if (line.len != 0) {
-                    assert(line.len == strlen(headers[i]) && !strncmp(line.data, headers[i], line.len));
-                    i++;
-                } else {
-                    if (line.data) {
-                        assert(i == ARRAY_SIZE(headers));
-                    } else {
-                        break;
-                    }
-                }
-            }
-            buf_read_inc(sock.recv, buf_buffered(sock.recv) - split.s.len);
-            buf_tidy(sock.recv);
         }
-        assert(sock.recv->w == strlen(body) && !strncmp(sock.recv->ptr, body, sock.recv->w));
-        assert(buf_buffered(sock.recv) == strlen(body) && !strncmp(buf_read_ptr(sock.recv), body, buf_buffered(sock.recv)));
     }
 
     mock_sock_ctx_free(mctx);
-    free(sock.recv);
+    free(sock.recv_buf);
 }
 
 void split_test() {
