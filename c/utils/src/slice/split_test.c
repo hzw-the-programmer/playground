@@ -452,29 +452,31 @@ static void split_next_ext_test_2() {
     split_t split;
     slice_t line;
     int n, i, j;
-    mock_sock_ctx_t *ctx;
-    mock_sock_t *sock;
-    buf_t *buf;
+    mock_sock_ctx_t *mctx;
+    mock_sock_t *msock;
+    sock_t sock = {0};
 
-    ctx = mock_sock_ctx_new(2, MAX_BUF);
-    sock = &ctx->sock[0];
-    write_http(sock->buf, headers, ARRAY_SIZE(headers), body, strlen(body));
-    buf = buf_new(MAX_BUF);
-    assert(buf);
+    mctx = mock_sock_ctx_new(2, MAX_BUF);
+    msock = &mctx->sock[0];
+    write_http(msock->buf, headers, ARRAY_SIZE(headers), body, strlen(body));
+
+    sock.recv = buf_new(MAX_BUF);
+    assert(sock.recv);
 
     for (j = 1; j <= MAX_BUF; j++) {
-        sock->buf->r = 0;
-        sock->n = j;
-        buf->w = 0;
+        msock->buf->r = 0;
+        msock->n = j;
+        sock.recv->w = 0;
         i = 0;
+        
         while (1) {
-            n = mock_sock_recv(sock, buf_write_ptr(buf), buf_available(buf));
-            buf_write_inc(buf, n);
+            n = mock_sock_recv(msock, buf_write_ptr(sock.recv), buf_available(sock.recv));
+            buf_write_inc(sock.recv, n);
             if (!n) {
                 break;
             }
-            
-            split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), CRNL, strlen(CRNL));
+
+            split = split_new_ext(buf_read_ptr(sock.recv), buf_buffered(sock.recv), CRNL, strlen(CRNL));
             while (1) {
                 line = split_next_ext(&split);
                 if (line.len != 0) {
@@ -488,15 +490,15 @@ static void split_next_ext_test_2() {
                     }
                 }
             }
-            buf_read_inc(buf, buf_buffered(buf) - split.s.len);
-            buf_tidy(buf);
+            buf_read_inc(sock.recv, buf_buffered(sock.recv) - split.s.len);
+            buf_tidy(sock.recv);
         }
-        assert(buf->w == strlen(body) && !strncmp(buf->ptr, body, buf->w));
-        assert(buf_buffered(buf) == strlen(body) && !strncmp(buf_read_ptr(buf), body, buf_buffered(buf)));
+        assert(sock.recv->w == strlen(body) && !strncmp(sock.recv->ptr, body, sock.recv->w));
+        assert(buf_buffered(sock.recv) == strlen(body) && !strncmp(buf_read_ptr(sock.recv), body, buf_buffered(sock.recv)));
     }
 
-    mock_sock_ctx_free(ctx);
-    free(buf);
+    mock_sock_ctx_free(mctx);
+    free(sock.recv);
 }
 
 void split_test() {
