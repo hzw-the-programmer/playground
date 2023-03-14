@@ -54,7 +54,8 @@ void main(int argc, char **argv)
     int ret, len;
     struct addrinfo *result = NULL, *ptr = NULL, hints;
     SOCKET sock = INVALID_SOCKET;
-    const char *sendbuf = "GET / HTTP/1.1\r\n\r\n";
+    const char *req = "GET / HTTP/1.1\r\n\r\n";
+    buf_t *send_buf;
     buf_t *buf;
     STATE_T state = FIRSTLINE;
     FILE *f;
@@ -127,14 +128,21 @@ void main(int argc, char **argv)
         return;
     }
 
+    send_buf = buf_new(DEFAULT_BUFLEN);
+    assert(send_buf);
+    buf_write(send_buf, req, strlen(req));
+
     // Send an initial buffer
-    ret = send(sock, sendbuf, (int)strlen(sendbuf), 0);
+    ret = send(sock, buf_read_ptr(send_buf), buf_buffered(send_buf), 0);
     if (ret == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
         closesocket(sock);
         WSACleanup();
         return;
     }
+    buf_read_inc(send_buf, ret);
+    assert(!buf_buffered(send_buf));
+    free(send_buf);
 
     printf("Bytes Sent: %ld\n", ret);
 
