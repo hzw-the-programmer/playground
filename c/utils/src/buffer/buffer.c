@@ -59,10 +59,16 @@ void buf_tidy(buf_t *buf) {
     buf->r = 0;
 }
 
-void buf_write(buf_t *buf, const uint8_t *ptr, int len) {
-    assert(len <= buf_available(buf));
+int buf_write(buf_t *buf, const uint8_t *ptr, int len) {
+    if (len > buf_available(buf)) {
+        len = buf_available(buf);
+    }
+    if (!len) {
+        return 0;
+    }
     memmove(buf_write_ptr(buf), ptr, len);
     buf_write_inc(buf, len);
+    return len;
 }
 
 int buf_read(buf_t *buf, uint8_t *ptr, int len) {

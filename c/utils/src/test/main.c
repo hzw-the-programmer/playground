@@ -3,10 +3,12 @@
 
 void slice_test();
 void split_test();
+void buffer_test();
 
 void main() {
     slice_test();
     split_test();
+    buffer_test();
     
     {
         char c;

@@ -191,6 +191,10 @@
 					RelativePath="..\src\buffer\buffer.h"
 					>
 				</File>
+				<File
+					RelativePath="..\src\buffer\buffer_test.c"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="mem"
