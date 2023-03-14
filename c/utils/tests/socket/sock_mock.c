@@ -3,8 +3,8 @@
 #include "mem/mem.h"
 #include "sock_mock.h"
 
-sock_ctx_t* sock_ctx_new(int nsock, int cap) {
-    sock_ctx_t *ctx;
+mock_sock_ctx_t* mock_sock_ctx_new(int nsock, int cap) {
+    mock_sock_ctx_t *ctx;
     int i;
 
     ctx = malloc(sizeof(*ctx));
@@ -23,7 +23,7 @@ sock_ctx_t* sock_ctx_new(int nsock, int cap) {
     return ctx;
 }
 
-void sock_ctx_free(sock_ctx_t *ctx) {
+void mock_sock_ctx_free(mock_sock_ctx_t *ctx) {
     int i;
 
     for (i = 0; i < ctx->nsock; i++) {
@@ -33,7 +33,7 @@ void sock_ctx_free(sock_ctx_t *ctx) {
     free(ctx);
 }
 
-int sock_recv(sock_t *sock, uint8_t *out, int len) {
+int mock_sock_recv(mock_sock_t *sock, uint8_t *out, int len) {
     if (len > sock->n) {
         len = sock->n;
     }

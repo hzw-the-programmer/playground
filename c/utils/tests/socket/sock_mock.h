@@ -6,16 +6,16 @@
 typedef struct {
     buf_t *buf;
     int n;
-} sock_t;
+} mock_sock_t;
 
 typedef struct {
-    sock_t *sock;
+    mock_sock_t *sock;
     int nsock;
-} sock_ctx_t;
+} mock_sock_ctx_t;
 
-sock_ctx_t* sock_ctx_new(int nsock, int cap);
-void sock_ctx_free(sock_ctx_t *ctx);
+mock_sock_ctx_t* mock_sock_ctx_new(int nsock, int cap);
+void mock_sock_ctx_free(mock_sock_ctx_t *ctx);
 
-int sock_recv(sock_t *sock, uint8_t *out, int len);
+int mock_sock_recv(mock_sock_t *sock, uint8_t *out, int len);
 
 #endif

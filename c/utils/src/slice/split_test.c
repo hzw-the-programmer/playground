@@ -439,16 +439,24 @@ static void split_next_ext_test_1() {
     free(buf);
 }
 
+typedef struct {
+    int fd;
+    buf_t *send;
+    buf_t *recv;
+    void *arg;
+    void (*cb)(void*);
+} sock_t;
+
 static void split_next_ext_test_2() {
     char *body = "hello world!";
     split_t split;
     slice_t line;
     int n, i, j;
-    sock_ctx_t *ctx;
-    sock_t *sock;
+    mock_sock_ctx_t *ctx;
+    mock_sock_t *sock;
     buf_t *buf;
 
-    ctx = sock_ctx_new(2, MAX_BUF);
+    ctx = mock_sock_ctx_new(2, MAX_BUF);
     sock = &ctx->sock[0];
     write_http(sock->buf, headers, ARRAY_SIZE(headers), body, strlen(body));
     buf = buf_new(MAX_BUF);
@@ -460,7 +468,7 @@ static void split_next_ext_test_2() {
         buf->w = 0;
         i = 0;
         while (1) {
-            n = sock_recv(sock, buf_write_ptr(buf), buf_available(buf));
+            n = mock_sock_recv(sock, buf_write_ptr(buf), buf_available(buf));
             buf_write_inc(buf, n);
             if (!n) {
                 break;
@@ -487,7 +495,7 @@ static void split_next_ext_test_2() {
         assert(buf_buffered(buf) == strlen(body) && !strncmp(buf_read_ptr(buf), body, buf_buffered(buf)));
     }
 
-    sock_ctx_free(ctx);
+    mock_sock_ctx_free(ctx);
     free(buf);
 }
 
