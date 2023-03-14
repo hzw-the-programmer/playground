@@ -22,6 +22,6 @@ buf_t* buf_new(int cap);
 void buf_write(buf_t *buf, const uint8_t *ptr, int len);
 int buf_read(buf_t *buf, uint8_t *ptr, int len);
 
-void buf_split(buf_t *buf, const uint8_t *sep, int len, void (*cb)(void*, slice_t*), void *arg);
+void buf_split(buf_t *buf, const uint8_t *sep, int len, int (*cb)(void*, slice_t*), void *arg);
 
 #endif

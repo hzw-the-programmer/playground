@@ -14,7 +14,7 @@ slice_t split_next(split_t *split);
 
 split_t split_new_ext(
     uint8_t *data, int data_len,
-    uint8_t *sep, int sep_len);
+    const uint8_t *sep, int sep_len);
 slice_t split_next_ext(split_t *split);
 
 #endif // __SPLIT_H__

@@ -79,12 +79,11 @@ int buf_read(buf_t *buf, uint8_t *ptr, int len) {
     return len;
 }
 
-void buf_split(buf_t *buf, const uint8_t *sep, int len, void (*cb)(void*, slice_t*), void *arg) {
+void buf_split(buf_t *buf, const uint8_t *sep, int len, int (*cb)(void*, slice_t*), void *arg) {
     split_t split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), sep, len);
     while (1) {
         slice_t slice = split_next_ext(&split);
-        cb(arg, &slice);
-        if (!slice.data) {
+        if (!cb(arg, &slice)) {
             break;
         }
     }

@@ -466,19 +466,26 @@ typedef struct {
     int count;
 } http_test_arg;
 
-static void http_slice_test_cb(void *arg, slice_t *slice) {
-    http_test_arg *t = arg;
+static int http_slice_test_cb(void *arg, slice_t *slice) {
+    sock_t *sock = arg;
+    http_test_arg *targ = sock->arg;
 
     if (slice->len != 0) {
-        if (t->state == FIRSTLINE) {
-            t->state = HEADERS;
+        if (targ->state == FIRSTLINE) {
+            targ->state = HEADERS;
         }
-        assert(slice->len == strlen(headers[t->count]) && !strncmp(slice->data, headers[t->count], slice->len));
-        t->count++;
-    } else if (slice->data) {
-        t->state = BODY;
-        assert(t->count == ARRAY_SIZE(headers));
+        assert(slice->len == strlen(headers[targ->count]) && !strncmp(slice->data, headers[targ->count], slice->len));
+        targ->count++;
+        return 1;
     }
+    
+    if (slice->data) {
+        targ->state = BODY;
+        assert(targ->count == ARRAY_SIZE(headers));
+        return 0;
+    }
+
+    return 0;
 }
 
 static void http_test_cb(sock_t *sock) {
@@ -486,7 +493,7 @@ static void http_test_cb(sock_t *sock) {
     buf_t *buf = sock->recv_buf;
 
     if (arg->state == FIRSTLINE || arg->state == HEADERS) {
-        buf_split(buf, CRNL, strlen(CRNL), http_slice_test_cb, arg);    
+        buf_split(buf, CRNL, strlen(CRNL), http_slice_test_cb, sock);    
     } else {
         //assert(buf->w == strlen(body) && !strncmp(sock.recv->ptr, body, sock.recv->w));
         //assert(buf_buffered(sock.recv) == strlen(body) && !strncmp(buf_read_ptr(sock.recv), body, buf_buffered(sock.recv)));
@@ -494,7 +501,7 @@ static void http_test_cb(sock_t *sock) {
 }
 
 static void split_next_ext_test_2() {
-    char *body = "hello world!";
+    char *body = "hello\r\n world!";
     int n, j;
     mock_sock_ctx_t *mctx;
     mock_sock_t *msock;
@@ -514,6 +521,7 @@ static void split_next_ext_test_2() {
         msock->buf->r = 0;
         msock->n = j;
         sock.recv_buf->w = 0;
+        arg.state = FIRSTLINE;
         arg.count = 0;
         
         while (1) {
