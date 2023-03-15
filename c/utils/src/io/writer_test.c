@@ -13,26 +13,26 @@ static void writer_test_1() {
 
     w.buf = buf_static((uint8_t*)pool, sizeof(pool));
 
-    w.len = 1;
+    w.flags = LEN_SIZE_1;
     ret = len_writer_write(&w, "hzw", 3, &len);
     assert(ret == 0);
     assert(len == 3);
-    assert(memcmp(want_0, buf_read_ptr(w.buf), 3 + w.len) == 0);
-    buf_read_inc(w.buf, 3 + w.len);
+    assert(memcmp(want_0, buf_read_ptr(w.buf), 3 + LEN_SIZE(&w)) == 0);
+    buf_read_inc(w.buf, 3 + LEN_SIZE(&w));
 
-    w.len = 2;
+    w.flags = LEN_SIZE_2;
     ret = len_writer_write(&w, "bj&tj", 5, &len);
     assert(ret == 0);
     assert(len == 5);
-    assert(memcmp(want_1, buf_read_ptr(w.buf), 5 + w.len) == 0);
-    buf_read_inc(w.buf, 5 + w.len);
+    assert(memcmp(want_1, buf_read_ptr(w.buf), 5 + LEN_SIZE(&w)) == 0);
+    buf_read_inc(w.buf, 5 + LEN_SIZE(&w));
 
-    w.len = 4;
+    w.flags = LEN_SIZE_4;
     ret = len_writer_write(&w, "bj&tj", 5, &len);
     assert(ret == 0);
     assert(len == 5);
-    assert(memcmp(want_2, buf_read_ptr(w.buf), 5 + w.len) == 0);
-    buf_read_inc(w.buf, 5 + w.len);
+    assert(memcmp(want_2, buf_read_ptr(w.buf), 5 + LEN_SIZE(&w)) == 0);
+    buf_read_inc(w.buf, 5 + LEN_SIZE(&w));
 }
 
 void writer_test() {
