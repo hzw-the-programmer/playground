@@ -96,3 +96,14 @@ void buf_split(buf_t *buf, const uint8_t *sep, int len, int (*cb)(void*, slice_t
     buf_read_inc(buf, buf_buffered(buf) - split.s.len);
     buf_tidy(buf);
 }
+
+buf_t* buf_static(uint8_t *ptr, int len) {
+    buf_t *buf = NULL;
+
+    buf = (buf_t*)ptr;
+    buf->cap = len - sizeof(*buf);
+    buf->w = buf->r = 0;
+    buf->ptr = ptr + sizeof(*buf);
+
+    return buf;
+}

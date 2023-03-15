@@ -208,6 +208,34 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="io"
+				>
+				<File
+					RelativePath="..\src\io\reader.c"
+					>
+				</File>
+				<File
+					RelativePath="..\src\io\reader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\io\reader_test.c"
+					>
+				</File>
+				<File
+					RelativePath="..\src\io\writer.c"
+					>
+				</File>
+				<File
+					RelativePath="..\src\io\writer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\io\writer_test.c"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="inc"

@@ -1,17 +1,6 @@
 #include <assert.h>
 #include "buffer/buffer.h"
 
-static buf_t* buf_static(uint8_t *ptr, int len) {
-    buf_t *buf = NULL;
-
-    buf = (buf_t*)ptr;
-    buf->cap = len - sizeof(*buf);
-    buf->w = buf->r = 0;
-    buf->ptr = ptr + sizeof(*buf);
-
-    return buf;
-}
-
 static void buf_test() {
     int pool[(sizeof(buf_t)+16)/sizeof(int)];
     buf_t *buf = buf_static((uint8_t*)pool, sizeof(pool));
