@@ -6,6 +6,7 @@ void split_test();
 void buffer_test();
 void writer_test();
 void reader_test();
+void len_reader_writer_test();
 
 void main() {
     slice_test();
@@ -13,6 +14,7 @@ void main() {
     buffer_test();
     writer_test();
     reader_test();
+    len_reader_writer_test();
     
     {
         char c;

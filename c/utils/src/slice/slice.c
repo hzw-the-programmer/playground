@@ -105,8 +105,8 @@ slice_t slice_trim_space(slice_t s) {
     return slice_trim(s, slice_new(SPACES, SPACES_LEN));
 }
 
-uint64 slice_to_uint64(slice_t s) {
-    uint64 n = 0;
+uint64_t slice_to_uint64(slice_t s) {
+    uint64_t n = 0;
 
     while (s.len > 0) {
         if (*s.data < '0' || *s.data > '9') {

@@ -20,6 +20,6 @@ slice_t slice_trim(slice_t s, slice_t cutset);
 slice_t slice_ltrim_space(slice_t s);
 slice_t slice_rtrim_space(slice_t s);
 slice_t slice_trim_space(slice_t s);
-uint64 slice_to_uint64(slice_t s);
+uint64_t slice_to_uint64(slice_t s);
 
 #endif // __SLICE_H__

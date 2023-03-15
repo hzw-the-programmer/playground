@@ -71,6 +71,10 @@ int buf_write(buf_t *buf, const uint8_t *ptr, int len) {
     return len;
 }
 
+int buf_write_slice(buf_t *buf, const slice_t *slice) {
+    return buf_write(buf, slice->data, slice->len);
+}
+
 int buf_read(buf_t *buf, uint8_t *ptr, int len) {
     if (len > buf_buffered(buf)) {
         len = buf_buffered(buf);

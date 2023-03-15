@@ -274,7 +274,7 @@ void slice_trim_test_2() {
 void slice_to_uint64_test() {
     struct {
         char *str;
-        uint64 n;
+        uint64_t n;
     } tests[] = {
         {
             "1234",
