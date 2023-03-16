@@ -6,24 +6,24 @@
 typedef struct {
     uint32_t flags;
     slice_t in;
-    slice_t out;
+    uint8_t *header;
 } fixture_t;
 
 fixture_t fixtures_1[] = {
     {
         LEN_SIZE_1,
         {"hzw", 3},
-        {"\3hzw", 4},
+        "\3",
     },
     {
         LEN_SIZE_2,
         {"bj&tj", 5},
-        {"\0\5bj&tj", 7},
+        "\0\5",
     },
     {
         LEN_SIZE_4,
         {"bj&tj", 5},
-        {"\0\0\0\5bj&tj", 9},
+        "\0\0\0\5",
     },
     {
         LEN_SIZE_2,
@@ -40,20 +40,7 @@ fixture_t fixtures_1[] = {
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
             260
         },
-        {
-            "\1\4"
-            "abcdefghijklmnopqrstuvwxyz"
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            "abcdefghijklmnopqrstuvwxyz"
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            "abcdefghijklmnopqrstuvwxyz"
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            "abcdefghijklmnopqrstuvwxyz"
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            "abcdefghijklmnopqrstuvwxyz"
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-            262
-        },
+        "\1\4",
     },
 };
 
@@ -64,9 +51,11 @@ static void fixtures_1_len_writer_test(len_writer_t *w) {
         fixture_t *fixture = &fixtures_1[i];
         w->flags = fixture->flags;
         assert(len_writer_write(w, &fixture->in) == fixture->in.len);
-        assert(buf_buffered(w->buf) == fixture->out.len);
-        assert(memcmp(fixture->out.data, buf_read_ptr(w->buf), fixture->out.len) == 0);
-        buf_read_inc(w->buf, fixture->out.len);
+        assert(buf_buffered(w->buf) == LEN_SIZE(w) + fixture->in.len);
+        assert(memcmp(buf_read_ptr(w->buf), fixture->header, LEN_SIZE(w)) == 0);
+        buf_read_inc(w->buf, LEN_SIZE(w));
+        assert(memcmp(buf_read_ptr(w->buf), fixture->in.data, fixture->in.len) == 0);
+        buf_read_inc(w->buf, fixture->in.len);
     }
     assert(buf_buffered(w->buf) == 0);
 }
