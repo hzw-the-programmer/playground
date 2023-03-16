@@ -347,6 +347,8 @@ void split_next_test_10() {
     }
 }
 
+#include "io/sep_reader_writer.h"
+
 static char* headers[] = {
     "HTTP/1.1 200 OK",
     "Accept-Ranges: bytes",
@@ -468,43 +470,48 @@ typedef enum {
     WRITING,
 } STATE_T;
 
+#define FIRST_LINE_READED 0x01
+
 typedef struct {
-    STATE_T state;
+    void (*cb)(void*);
+    uint32_t flags;
     int count;
 } http_test_arg;
 
-static int http_slice_test_cb(void *arg, slice_t *slice) {
-    sock_t *sock = arg;
-    http_test_arg *targ = sock->arg;
+static void parse_body(void *arg) {
 
-    if (slice->len != 0) {
-        if (targ->state == FIRSTLINE) {
-            targ->state = HEADERS;
-        }
-        assert(slice->len == strlen(headers[targ->count]) && !strncmp(slice->data, headers[targ->count], slice->len));
-        targ->count++;
-        return 1;
-    }
+}
+
+static void parse_headers(void *p) {
+    sock_t *sock = p;
+    http_test_arg *arg = sock->arg;
+    buf_t *buf = sock->recv_buf;
+    sep_reader_t r;
+    slice_t slice;
     
-    if (slice->data) {
-        targ->state = BODY;
-        assert(targ->count == ARRAY_SIZE(headers));
-        return 0;
+    r.buf = buf;
+    r.sep.data = CRNL;
+    r.sep.len = 2;
+    while (1) {
+        sep_reader_read(&r, &slice);
+        if (slice.len) {
+            assert(slice.len == strlen(headers[arg->count]) && !strncmp(slice.data, headers[arg->count], slice.len));
+            arg->count++;
+        } else {
+            if (slice.data) {
+                arg->cb = parse_body;
+                assert(arg->count == ARRAY_SIZE(headers));
+            }
+            buf_tidy(buf);
+            break;
+        }
     }
-
-    return 0;
 }
 
 static void http_test_cb(sock_t *sock) {
     http_test_arg *arg = sock->arg;
-    buf_t *buf = sock->recv_buf;
 
-    if (arg->state == FIRSTLINE || arg->state == HEADERS) {
-        buf_split(buf, CRNL, strlen(CRNL), http_slice_test_cb, sock);    
-    } else {
-        //assert(buf->w == strlen(body) && !strncmp(sock.recv->ptr, body, sock.recv->w));
-        //assert(buf_buffered(sock.recv) == strlen(body) && !strncmp(buf_read_ptr(sock.recv), body, buf_buffered(sock.recv)));
-    }
+    arg->cb(sock);
 }
 
 static void split_next_ext_test_2() {
@@ -513,7 +520,7 @@ static void split_next_ext_test_2() {
     mock_sock_ctx_t *mctx;
     mock_sock_t *msock;
     sock_t sock = {0};
-    http_test_arg arg = {FIRSTLINE, 0};
+    http_test_arg arg;
 
     mctx = mock_sock_ctx_new(2, MAX_BUF);
     msock = &mctx->sock[0];
@@ -528,7 +535,8 @@ static void split_next_ext_test_2() {
         msock->buf->r = 0;
         msock->n = j;
         sock.recv_buf->w = 0;
-        arg.state = FIRSTLINE;
+        arg.cb = parse_headers;
+        arg.flags = 0;
         arg.count = 0;
         
         while (1) {
