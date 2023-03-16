@@ -12,7 +12,7 @@ typedef struct {
     uint8_t *header;
 } fixture_t;
 
-fixture_t fixtures_1[] = {
+static fixture_t fixtures_1[] = {
     {
         LEN_SIZE_1,
         {"hzw", 3},
