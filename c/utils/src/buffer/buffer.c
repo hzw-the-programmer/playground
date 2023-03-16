@@ -66,7 +66,9 @@ int buf_write(buf_t *buf, const uint8_t *ptr, int len) {
     if (!len) {
         return 0;
     }
-    memmove(buf_write_ptr(buf), ptr, len);
+    if (ptr) {
+        memmove(buf_write_ptr(buf), ptr, len);    
+    }
     buf_write_inc(buf, len);
     return len;
 }
