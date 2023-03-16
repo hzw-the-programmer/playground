@@ -224,27 +224,23 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\io\reader.c"
+					RelativePath="..\src\io\reader_writer.c"
 					>
 				</File>
 				<File
-					RelativePath="..\src\io\reader.h"
+					RelativePath="..\src\io\reader_writer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\src\io\reader_test.c"
+					RelativePath="..\src\io\sep_reader_writer.c"
 					>
 				</File>
 				<File
-					RelativePath="..\src\io\writer.c"
+					RelativePath="..\src\io\sep_reader_writer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\src\io\writer.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\io\writer_test.c"
+					RelativePath="..\src\io\sep_reader_writer_test.c"
 					>
 				</File>
 			</Filter>

@@ -366,24 +366,31 @@ static char* headers[] = {
 
 static void write_http(buf_t *buf, char **headers, int headers_len, char *body, int body_len) {
     int i;
-    
+    slice_t sep = {CRNL, strlen(CRNL)};
+    slice_t slice;
+
     for (i = 0; i < headers_len; i++) {
-        buf_write(buf, headers[i], strlen(headers[i]));
-        buf_write(buf, CRNL, strlen(CRNL));
+        slice.data = headers[i];
+        slice.len = strlen(headers[i]);
+        buf_write(buf, &slice);
+        buf_write(buf, &sep);
     }
-    buf_write(buf, CRNL, strlen(CRNL));
+    buf_write(buf, &sep);
 
     if (body_len <= 0) {
         return;
     }
-    buf_write(buf, body, body_len);
+    slice.data = body;
+    slice.len = body_len;
+    buf_write(buf, &slice);
 }
 
 static void split_next_ext_test_1() {
     int i;
     split_t split;
     slice_t line;
-    char *body = "hello world!";
+    char *t = "hello world!";
+    slice_t body = {t, strlen(t)};
     buf_t *buf;
 
     buf = buf_new(MAX_BUF);
@@ -403,7 +410,7 @@ static void split_next_ext_test_1() {
     assert(line.len == 0 && !line.data);
 
     // with body
-    buf_write(buf, body, strlen(body));
+    buf_write(buf, &body);
 
     split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), CRNL, strlen(CRNL));
     for (i = 0; i < ARRAY_SIZE(headers); i++) {
@@ -412,10 +419,10 @@ static void split_next_ext_test_1() {
     }
     line = split_next_ext(&split);
     assert(line.len == 0 && line.data);
-    assert(split.s.len == strlen(body) && !strncmp(split.s.data, body, split.s.len));
+    assert(split.s.len == body.len && !strncmp(split.s.data, body.data, split.s.len));
     line = split_next_ext(&split);
     assert(line.len == 0 && !line.data);
-    assert(split.s.len == strlen(body) && !strncmp(split.s.data, body, split.s.len));
+    assert(split.s.len == body.len && !strncmp(split.s.data, body.data, split.s.len));
 
     // parse
     split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), CRNL, strlen(CRNL));
@@ -427,10 +434,10 @@ static void split_next_ext_test_1() {
             i++;
         } else {
             if (line.data) {
-                assert(split.s.len == strlen(body) && !strncmp(split.s.data, body, split.s.len));
+                assert(split.s.len == body.len && !strncmp(split.s.data, body.data, split.s.len));
                 assert(i == ARRAY_SIZE(headers));
             } else {
-                assert(split.s.len == strlen(body) && !strncmp(split.s.data, body, split.s.len));
+                assert(split.s.len == body.len && !strncmp(split.s.data, body.data, split.s.len));
                 break;
             }
         }

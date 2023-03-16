@@ -11,7 +11,7 @@ int len_writer_write(void *arg, const slice_t *slice) {
     header = buf_write_ptr(w->buf);
 
     buf_write_inc(w->buf, LEN_SIZE(w));
-    buf_write_slice(w->buf, slice);
+    buf_write(w->buf, slice);
 
     if (LEN_SIZE(w) == 1) {
         *header = slice->len;
