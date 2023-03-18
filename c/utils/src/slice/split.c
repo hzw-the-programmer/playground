@@ -98,15 +98,18 @@ split_t split_new_ext(
 slice_t split_next_ext(split_t *split) {
     slice_t r = {0}, sub;
 
+    r = split->s;
     sub = slice_slice(split->s, split->sep);
-    if (!sub.data) {
+    if (sub.data) {
+        r.data = split->s.data;
+        r.len = sub.data - split->s.data;
+        split->s.data = sub.data + split->sep.len;
+        split->s.len = sub.len - split->sep.len;
         return r;
     }
-    
-    r.data = split->s.data;
-    r.len = sub.data - split->s.data;
-    split->s.data = sub.data + split->sep.len;
-    split->s.len = sub.len - split->sep.len;
+
+    split->s.data = NULL;
+    split->s.len = 0;
     
     return r;
 }

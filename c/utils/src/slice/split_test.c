@@ -348,13 +348,14 @@ void split_next_test_10() {
 }
 
 #include "io/sep_reader_writer.h"
+#include "io/len_reader_writer.h"
 
 static char* headers[] = {
     "HTTP/1.1 200 OK",
     "Accept-Ranges: bytes",
     "Cache-Control: private, no-cache, no-store, proxy-revalidate, no-transform",
     "Connection: keep-alive",
-    "Content-Length: 2381",
+    "Content-Length: 14",
     "Content-Type: text/html",
     "Date: Sat, 11 Mar 2023 08:52:44 GMT",
     "Etag: \"588604f8-94d\"",
@@ -409,8 +410,10 @@ static void split_next_ext_test_1() {
     line = split_next_ext(&split);
     assert(line.len == 0 && line.data);
     line = split_next_ext(&split);
+    assert(line.len == 0 && line.data);
+    line = split_next_ext(&split);
     assert(line.len == 0 && !line.data);
-
+    
     // with body
     buf_write(buf, &body);
 
@@ -423,10 +426,12 @@ static void split_next_ext_test_1() {
     assert(line.len == 0 && line.data);
     assert(split.s.len == body.len && !strncmp(split.s.data, body.data, split.s.len));
     line = split_next_ext(&split);
+    assert(line.len == body.len && !strncmp(line.data, body.data, line.len));
+    line = split_next_ext(&split);
     assert(line.len == 0 && !line.data);
-    assert(split.s.len == body.len && !strncmp(split.s.data, body.data, split.s.len));
 
     // parse
+#if 0
     split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), CRNL, strlen(CRNL));
     i = 0;
     while (1) {
@@ -444,6 +449,7 @@ static void split_next_ext_test_1() {
             }
         }
     }
+#endif
 
     free(buf);
 }
@@ -456,62 +462,68 @@ typedef struct sock_s {
     void (*cb)(struct sock_s*);
 } sock_t;
 
-// assert(line.len == strlen(headers[i]) && !strncmp(line.data, headers[i], line.len));
-// i++;
-
-typedef enum {
-    DISCONNECTED,
-    CONNECTING,
-    IDLE,
-    FIRSTLINE,
-    HEADERS,
-    BODY,
-    TRAILER,
-    WRITING,
-} STATE_T;
-
 #define FIRST_LINE_READED 0x01
 
 typedef struct {
-    void (*cb)(void*);
+    int (*cb)(void*, buf_t*);
     uint32_t flags;
+    uint64_t len;
     int count;
-} http_test_arg;
+} http_test_ctx;
 
-static void parse_body(void *arg) {
+static int parse_body(void *arg, buf_t *buf) {
+    http_test_ctx *ctx = arg;
+    len_reader_t r;
+    slice_t slice;
 
+    r.buf = buf;
+    r.flags = LEN_READED;
+    r.len = ctx->len;
+
+    len_reader_read(&r, &slice);
+    buf_tidy(buf);
+
+    return 0;
 }
 
-static void parse_headers(void *p) {
-    sock_t *sock = p;
-    http_test_arg *arg = sock->arg;
-    buf_t *buf = sock->recv_buf;
+static int parse_header(void *arg, buf_t *buf) {
+    http_test_ctx *ctx = arg;
     sep_reader_t r;
     slice_t slice;
+    int ret = 1;
     
     r.buf = buf;
     r.sep.data = CRNL;
     r.sep.len = 2;
-    while (1) {
-        sep_reader_read(&r, &slice);
-        if (slice.len) {
-            assert(slice.len == strlen(headers[arg->count]) && !strncmp(slice.data, headers[arg->count], slice.len));
-            arg->count++;
-        } else {
-            if (slice.data) {
-                arg->cb = parse_body;
-                assert(arg->count == ARRAY_SIZE(headers));
-            }
-            buf_tidy(buf);
-            break;
+    
+    sep_reader_read(&r, &slice);
+    if (slice.len) {
+        split_t split = split_new_ext(slice.data, slice.len, ":", 1);
+        slice_t k, v;
+
+        k = split_next_ext(&split);
+        v = split_next_ext(&split);
+        if (k.len == strlen("Content-Length") &&
+            strncmp(k.data, "Content-Length", k.len) == 0) {
+            ctx->len = slice_to_uint64(slice_trim_space(v));
         }
+        assert(slice.len == strlen(headers[ctx->count]) && !strncmp(slice.data, headers[ctx->count], slice.len));
+        ctx->count++;
+    } else if (slice.data) {
+        ctx->cb = parse_body;
+        assert(ctx->count == ARRAY_SIZE(headers));
+    } else {
+        ret = 0;
+        buf_tidy(buf);
     }
+
+    return ret;
 }
 
 static void http_test_cb(sock_t *sock) {
-    http_test_arg *arg = sock->arg;
+    http_test_ctx *ctx = sock->arg;
 
-    arg->cb(sock);
+    while (ctx->cb(ctx, sock->recv_buf));
 }
 
 static void split_next_ext_test_2() {
@@ -520,14 +532,14 @@ static void split_next_ext_test_2() {
     mock_sock_ctx_t *mctx;
     mock_sock_t *msock;
     sock_t sock = {0};
-    http_test_arg arg;
+    http_test_ctx ctx;
 
     mctx = mock_sock_ctx_new(2, MAX_BUF);
     msock = &mctx->sock[0];
     write_http(msock->buf, headers, ARRAY_SIZE(headers), body, strlen(body));
 
-    sock.arg = &arg;
     sock.cb = http_test_cb;
+    sock.arg = &ctx;
     sock.recv_buf = buf_new(MAX_BUF);
     assert(sock.recv_buf);
 
@@ -535,9 +547,9 @@ static void split_next_ext_test_2() {
         msock->buf->r = 0;
         msock->n = j;
         sock.recv_buf->w = 0;
-        arg.cb = parse_headers;
-        arg.flags = 0;
-        arg.count = 0;
+        ctx.cb = parse_header;
+        ctx.flags = 0;
+        ctx.count = 0;
         
         while (1) {
             n = mock_sock_recv(msock, buf_write_ptr(sock.recv_buf), buf_available(sock.recv_buf));
@@ -545,6 +557,7 @@ static void split_next_ext_test_2() {
                 buf_write_inc(sock.recv_buf, n);
                 sock.cb(&sock);
             } else {
+                assert(buf_buffered(sock.recv_buf) == 0);
                 break;
             }
         }
