@@ -6,6 +6,7 @@ void split_test();
 void buffer_test();
 void len_reader_writer_test();
 void sep_reader_writer_test();
+void http_test();
 
 void main() {
     slice_test();
@@ -13,6 +14,7 @@ void main() {
     buffer_test();
     len_reader_writer_test();
     sep_reader_writer_test();
+    http_test();
     
     {
         char c;

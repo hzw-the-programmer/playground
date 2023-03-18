@@ -41,6 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;F:\open_source\open_source1\github\hzw-the-programmer\playground\c\utils\tests&quot;;&quot;F:\open_source\open_source1\github\hzw-the-programmer\playground\c\utils\src&quot;;&quot;F:\open_source\open_source1\github\hzw-the-programmer\playground\c\utils\inc&quot;"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -241,6 +242,34 @@
 				</File>
 				<File
 					RelativePath="..\src\io\sep_reader_writer_test.c"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="socket"
+				>
+				<File
+					RelativePath="..\src\socket\sock.c"
+					>
+				</File>
+				<File
+					RelativePath="..\src\socket\sock.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="http"
+				>
+				<File
+					RelativePath="..\src\http\http.c"
+					>
+				</File>
+				<File
+					RelativePath="..\src\http\http.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\http\http_test.c"
 					>
 				</File>
 			</Filter>
