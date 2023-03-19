@@ -62,8 +62,8 @@ static void fixtures_1_len_writer_test(len_writer_t *w) {
         assert(buf_buffered(w->buf) == LEN_SIZE(w) + fixture->in.len);
         assert(memcmp(buf_read_ptr(w->buf), fixture->header, LEN_SIZE(w)) == 0);
         buf_read_inc(w->buf, LEN_SIZE(w));
-        if (fixture->in.data) {
-            assert(memcmp(buf_read_ptr(w->buf), fixture->in.data, fixture->in.len) == 0);
+        if (fixture->in.ptr) {
+            assert(memcmp(buf_read_ptr(w->buf), fixture->in.ptr, fixture->in.len) == 0);
         }
         buf_read_inc(w->buf, fixture->in.len);
     }

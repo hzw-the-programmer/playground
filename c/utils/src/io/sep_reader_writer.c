@@ -17,13 +17,13 @@ int sep_reader_read(void *arg, slice_t *slice) {
     sep_reader_t *r = arg;
     slice_t m;
 
-    m.data = buf_read_ptr(r->buf);
+    m.ptr = buf_read_ptr(r->buf);
     m.len = buf_buffered(r->buf);
     *slice = slice_slice(m, r->sep);
-    if (!slice->data) {
+    if (!slice->ptr) {
         return -1;
     }
-    slice->data = m.data;
+    slice->ptr = m.ptr;
     slice->len = m.len - slice->len;
     buf_read_inc(r->buf, slice->len + r->sep.len);
 

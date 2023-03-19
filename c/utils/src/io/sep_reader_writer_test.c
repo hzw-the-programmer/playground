@@ -31,9 +31,9 @@ static void sep_writer_fixtures_1_test(sep_writer_t *w, write_t func) {
         w->sep = fixture->sep;
         assert(func(w, &fixture->in) == fixture->in.len);
         assert(buf_buffered(w->buf) == fixture->in.len + fixture->sep.len);
-        assert(memcmp(buf_read_ptr(w->buf), fixture->in.data, fixture->in.len) == 0);
+        assert(memcmp(buf_read_ptr(w->buf), fixture->in.ptr, fixture->in.len) == 0);
         buf_read_inc(w->buf, fixture->in.len);
-        assert(memcmp(buf_read_ptr(w->buf), fixture->sep.data, fixture->sep.len) == 0);
+        assert(memcmp(buf_read_ptr(w->buf), fixture->sep.ptr, fixture->sep.len) == 0);
         buf_read_inc(w->buf, fixture->sep.len);
     }
     assert(buf_buffered(w->buf) == 0);
@@ -65,7 +65,7 @@ static void sep_reader_test() {
         r.sep = fixture->sep;
         assert(func(&r, &slice) == fixture->in.len);
         assert(slice.len = fixture->in.len);
-        assert(memcmp(slice.data, fixture->in.data, fixture->in.len) == 0);
+        assert(memcmp(slice.ptr, fixture->in.ptr, fixture->in.len) == 0);
     }
     assert(buf_buffered(r.buf) == 0);
 }

@@ -22,7 +22,7 @@ buf_t* buf_new(int cap);
 int buf_write(buf_t *buf, const slice_t *slice);
 int buf_read(buf_t *buf, uint8_t *ptr, int len);
 
-void buf_split(buf_t *buf, const slice_t *sep, int (*cb)(void*, slice_t*), void *arg);
+void buf_split(buf_t *buf, slice_t sep, int (*cb)(void*, slice_t*), void *arg);
 buf_t* buf_static(uint8_t *ptr, int len);
 
 slice_t buf_buffered_slice(const buf_t *buf);

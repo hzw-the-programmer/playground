@@ -39,22 +39,22 @@ static void resp_write(buf_t *buf,
 
     w.buf = buf;
 
-    w.sep.data = CRNL;
+    w.sep.ptr = CRNL;
     w.sep.len = CRNL_LEN;
-    slice.data = (uint8_t*)first_line;
+    slice.ptr = (uint8_t*)first_line;
     slice.len = strlen(first_line);
     sep_writer_write(&w, &slice);
 
     for (i = 0; i < kvs_len; i+=2) {
-        w.sep.data = KV_SEP;
+        w.sep.ptr = KV_SEP;
         w.sep.len = KV_SEP_LEN;
-        slice.data = (uint8_t*)kvs[i];
+        slice.ptr = (uint8_t*)kvs[i];
         slice.len = strlen(kvs[i]);
         sep_writer_write(&w, &slice);
 
-        w.sep.data = CRNL;
+        w.sep.ptr = CRNL;
         w.sep.len = CRNL_LEN;
-        slice.data = (uint8_t*)kvs[i+1];
+        slice.ptr = (uint8_t*)kvs[i+1];
         slice.len = strlen(kvs[i+1]);
         sep_writer_write(&w, &slice);
     }
@@ -66,14 +66,14 @@ static void resp_write(buf_t *buf,
     }
     
     sprintf(content_len, CONTENT_LENGTH ": %d", body_len);
-    slice.data = content_len;
+    slice.ptr = content_len;
     slice.len = strlen(content_len);
     sep_writer_write(&w, &slice);
 
     slice.len = 0;
     sep_writer_write(&w, &slice);
 
-    slice.data = (uint8_t*)body;
+    slice.ptr = (uint8_t*)body;
     slice.len = body_len;
     buf_write(buf, &slice);
 }
@@ -113,15 +113,15 @@ void header_test_cb(http_ctx_t *ctx, slice_t *k, slice_t *v) {
     char *key = kvs_1[tctx->count++];
     char *value = kvs_1[tctx->count++];
 
-    assert(!strncmp(key, k->data, strlen(key)));
-    assert(!strncmp(value, v->data, strlen(value)));
+    assert(!strncmp(key, k->ptr, strlen(key)));
+    assert(!strncmp(value, v->ptr, strlen(value)));
 }
 
 void body_test_cb(http_ctx_t *ctx, slice_t *slice) {
     http_test_ctx_t *tctx = (http_test_ctx_t*)ctx;
 
     assert(tctx->count == ARRAY_SIZE(kvs_1));
-    assert(!strncmp(body_1, slice->data, strlen(body_1)));
+    assert(!strncmp(body_1, slice->ptr, strlen(body_1)));
 }
 
 static void http_test_1() {

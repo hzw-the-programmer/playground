@@ -51,7 +51,7 @@ int len_reader_read(void *arg, slice_t *slice) {
     if (buf_buffered(r->buf) < r->len) {
         return -1;
     }
-    slice->data = buf_read_ptr(r->buf);
+    slice->ptr = buf_read_ptr(r->buf);
     slice->len = r->len;
     buf_read_inc(r->buf, r->len);
 

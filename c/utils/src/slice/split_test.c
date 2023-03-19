@@ -21,15 +21,15 @@ void split_next_test_1() {
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data);
+    assert(slice.ptr == data);
     assert(split.slice.len == 0);
-    assert(split.slice.data == NULL);
+    assert(split.slice.ptr == NULL);
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == NULL);
+    assert(slice.ptr == NULL);
     assert(split.slice.len == 0);
-    assert(split.slice.data == NULL);
+    assert(split.slice.ptr == NULL);
 }
 
 void split_next_test_2() {
@@ -47,21 +47,21 @@ void split_next_test_2() {
    
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data);
+    assert(slice.ptr == data);
     assert(split.slice.len == 0);
-    assert(split.slice.data == data + 1);
+    assert(split.slice.ptr == data + 1);
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data + 1);
+    assert(slice.ptr == data + 1);
     assert(split.slice.len == 0);
-    assert(split.slice.data == NULL);
+    assert(split.slice.ptr == NULL);
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == NULL);
+    assert(slice.ptr == NULL);
     assert(split.slice.len == 0);
-    assert(split.slice.data == NULL);
+    assert(split.slice.ptr == NULL);
 }
 
 void split_next_test_3() {
@@ -79,27 +79,27 @@ void split_next_test_3() {
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data);
+    assert(slice.ptr == data);
     assert(split.slice.len == 1);
-    assert(split.slice.data == data + 1);
+    assert(split.slice.ptr == data + 1);
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data + 1);
+    assert(slice.ptr == data + 1);
     assert(split.slice.len == 0);
-    assert(split.slice.data == data + 2);
+    assert(split.slice.ptr == data + 2);
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data + 2);
+    assert(slice.ptr == data + 2);
     assert(split.slice.len == 0);
-    assert(split.slice.data == NULL);
+    assert(split.slice.ptr == NULL);
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == 0);
+    assert(slice.ptr == NULL);
     assert(split.slice.len == 0);
-    assert(split.slice.data == 0);
+    assert(split.slice.ptr == NULL);
 }
 
 void split_next_test_4() {
@@ -117,33 +117,33 @@ void split_next_test_4() {
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data);
+    assert(slice.ptr == data);
     assert(split.slice.len == 2);
-    assert(split.slice.data == data + 1);
+    assert(split.slice.ptr == data + 1);
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data + 1);
+    assert(slice.ptr == data + 1);
     assert(split.slice.len == 1);
-    assert(split.slice.data == data + 2);
+    assert(split.slice.ptr == data + 2);
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data + 2);
+    assert(slice.ptr == data + 2);
     assert(split.slice.len == 0);
-    assert(split.slice.data == data + 3);
+    assert(split.slice.ptr == data + 3);
 
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data + 3);
+    assert(slice.ptr == data + 3);
     assert(split.slice.len == 0);
-    assert(split.slice.data == 0);
+    assert(split.slice.ptr == NULL);
    
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == NULL);
+    assert(slice.ptr == NULL);
     assert(split.slice.len == 0);
-    assert(split.slice.data == NULL);
+    assert(split.slice.ptr == NULL);
 }
 
 void split_next_test_5() {
@@ -161,15 +161,15 @@ void split_next_test_5() {
     
     slice = split_next(&split);
     assert(slice.len == 1);
-    assert(slice.data == data);
+    assert(slice.ptr == data);
     assert(split.slice.len == 0);
-    assert(split.slice.data == 0);
+    assert(split.slice.ptr == NULL);
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == NULL);
+    assert(slice.ptr == NULL);
     assert(split.slice.len == 0);
-    assert(split.slice.data == NULL);
+    assert(split.slice.ptr == NULL);
 }
 
 void split_next_test_6() {
@@ -187,21 +187,21 @@ void split_next_test_6() {
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data);
+    assert(slice.ptr == data);
     assert(split.slice.len == 1);
-    assert(split.slice.data == data + 1);
+    assert(split.slice.ptr == data + 1);
     
     slice = split_next(&split);
     assert(slice.len == 1);
-    assert(slice.data == data + 1);
+    assert(slice.ptr == data + 1);
     assert(split.slice.len == 0);
-    assert(split.slice.data == 0);
+    assert(split.slice.ptr == NULL);
 
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == NULL);
+    assert(slice.ptr == NULL);
     assert(split.slice.len == 0);
-    assert(split.slice.data == NULL);
+    assert(split.slice.ptr == NULL);
 }
 
 void split_next_test_7() {
@@ -219,21 +219,21 @@ void split_next_test_7() {
     
     slice = split_next(&split);
     assert(slice.len == 1);
-    assert(slice.data == data);
+    assert(slice.ptr == data);
     assert(split.slice.len == 0);
-    assert(split.slice.data == data + 2);
+    assert(split.slice.ptr == data + 2);
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data + 2);
+    assert(slice.ptr == data + 2);
     assert(split.slice.len == 0);
-    assert(split.slice.data == 0);
+    assert(split.slice.ptr == NULL);
 
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == NULL);
+    assert(slice.ptr == NULL);
     assert(split.slice.len == 0);
-    assert(split.slice.data == NULL);
+    assert(split.slice.ptr == NULL);
 }
 
 void split_next_test_8() {
@@ -251,27 +251,27 @@ void split_next_test_8() {
     
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data);
+    assert(slice.ptr == data);
     assert(split.slice.len == 2);
-    assert(split.slice.data == data + 1);
+    assert(split.slice.ptr == data + 1);
     
     slice = split_next(&split);
     assert(slice.len == 1);
-    assert(slice.data == data + 1);
+    assert(slice.ptr == data + 1);
     assert(split.slice.len == 0);
-    assert(split.slice.data == data + 3);
+    assert(split.slice.ptr == data + 3);
 
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data + 3);
+    assert(slice.ptr == data + 3);
     assert(split.slice.len == 0);
-    assert(split.slice.data == 0);
+    assert(split.slice.ptr == NULL);
 
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == NULL);
+    assert(slice.ptr == NULL);
     assert(split.slice.len == 0);
-    assert(split.slice.data == NULL);
+    assert(split.slice.ptr == NULL);
 }
 
 void split_next_test_9() {
@@ -289,39 +289,39 @@ void split_next_test_9() {
 
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data);
+    assert(slice.ptr == data);
     assert(split.slice.len == 8);
-    assert(split.slice.data == data + 1);
+    assert(split.slice.ptr == data + 1);
 
     slice = split_next(&split);
     assert(slice.len == 2);
-    assert(slice.data == data + 1);
+    assert(slice.ptr == data + 1);
     assert(split.slice.len == 5);
-    assert(split.slice.data == data + 4);
+    assert(split.slice.ptr == data + 4);
 
     slice = split_next(&split);
     assert(slice.len == 1);
-    assert(slice.data == data + 4);
+    assert(slice.ptr == data + 4);
     assert(split.slice.len == 3);
-    assert(split.slice.data == data + 6);
+    assert(split.slice.ptr == data + 6);
 
     slice = split_next(&split);
     assert(slice.len == 2);
-    assert(slice.data == data + 6);
+    assert(slice.ptr == data + 6);
     assert(split.slice.len == 0);
-    assert(split.slice.data == data + 9);
+    assert(split.slice.ptr == data + 9);
 
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == data + 9);
+    assert(slice.ptr == data + 9);
     assert(split.slice.len == 0);
-    assert(split.slice.data == NULL);
+    assert(split.slice.ptr == NULL);
 
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == NULL);
+    assert(slice.ptr == NULL);
     assert(split.slice.len == 0);
-    assert(split.slice.data == NULL);
+    assert(split.slice.ptr == NULL);
 }
 
 void split_next_test_helper(char *data, char **want) {
@@ -333,16 +333,16 @@ void split_next_test_helper(char *data, char **want) {
     while (*want) {
         slice = split_next(&split);
         assert(slice.len == strlen(*want));
-        assert(slice.data != NULL);
-        assert(strncmp(slice.data, *want, slice.len) == 0);
+        assert(slice.ptr != NULL);
+        assert(strncmp(slice.ptr, *want, slice.len) == 0);
         want++;
     }
 
     slice = split_next(&split);
     assert(slice.len == 0);
-    assert(slice.data == NULL);
+    assert(slice.ptr == NULL);
     assert(split.slice.len == 0);
-    assert(split.slice.data == NULL);
+    assert(split.slice.ptr == NULL);
 }
 
 void split_next_test_10() {

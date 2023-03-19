@@ -67,8 +67,8 @@ int buf_write(buf_t *buf, const slice_t *slice) {
     if (!len) {
         return 0;
     }
-    if (slice->data) {
-        memmove(buf_write_ptr(buf), slice->data, len);    
+    if (slice->ptr) {
+        memmove(buf_write_ptr(buf), slice->ptr, len);    
     }
     buf_write_inc(buf, len);
     return len;
@@ -114,7 +114,7 @@ buf_t* buf_static(uint8_t *ptr, int len) {
 slice_t buf_buffered_slice(const buf_t *buf) {
     slice_t slice;
 
-    slice.data = buf_read_ptr(buf);
+    slice.ptr = buf_read_ptr(buf);
     slice.len = buf_buffered(buf);
 
     return slice;

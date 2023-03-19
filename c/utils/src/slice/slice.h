@@ -4,11 +4,11 @@
 #include "types.h"
 
 typedef struct {
-    char *data;
+    char *ptr;
     int len;
 } slice_t;
 
-slice_t slice_new(char *data, int len);
+slice_t slice_new(char *ptr, int len);
 
 slice_t slice_sub(slice_t in, int begin, int end);
 int slice_search(slice_t s, char b);

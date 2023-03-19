@@ -11,7 +11,7 @@ static int parse_header(http_ctx_t *ctx, buf_t *buf) {
     slice_t slice;
 
     r.buf = buf;
-    r.sep.data = CRNL;
+    r.sep.ptr = CRNL;
     r.sep.len = CRNL_LEN;
 
     sep_reader_read(&r, &slice);
@@ -29,7 +29,7 @@ static int parse_header(http_ctx_t *ctx, buf_t *buf) {
             v = slice_trim_space(split_next(&split));
 
             if (k.len == CONTENT_LENGTH_LEN &&
-                !strncmp(k.data, CONTENT_LENGTH, k.len)) {
+                !strncmp(k.ptr, CONTENT_LENGTH, k.len)) {
                 ctx->len = slice_to_uint64(v);
             } else if (ctx->header_cb) {
                 ctx->header_cb(ctx, &k, &v);
@@ -39,7 +39,7 @@ static int parse_header(http_ctx_t *ctx, buf_t *buf) {
         return 1;
     }
     
-    if (slice.data) {
+    if (slice.ptr) {
         ctx->flags = BODY;
         return 1;
     }
