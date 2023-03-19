@@ -7,307 +7,342 @@
 #include "socket/sock_mock.h"
 
 void split_next_test_1() {
-    char *data;
-    slice_t s;
+    char *data, *sep;
+    int data_len, sep_len;
     split_t split;
+    slice_t slice;
 
     data = "";
-    s = slice_new(data, strlen(data));
-    split = split_new(s, '\n');
+    data_len = 0;
+    sep = "\r";
+    sep_len = 1;
+
+    split = split_new(slice_new(data, data_len), slice_new(sep, sep_len));
     
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == NULL);
     
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == NULL);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == NULL);
 }
 
 void split_next_test_2() {
-    char *data;
-    slice_t s;
+    char *data, *sep;
+    int data_len, sep_len;
     split_t split;
+    slice_t slice;
 
     data = "\n";
-    s = slice_new(data, strlen(data));
-    split = split_new(s, '\n');
+    data_len = 1;
+    sep = "\n";
+    sep_len = 1;
+
+    split = split_new(slice_new(data, data_len), slice_new(sep, sep_len));
    
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data);
-    assert(split.s.len == 0);
-    assert(split.s.data == data);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == data + 1);
     
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data + 1);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == NULL);
     
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == NULL);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == NULL);
 }
 
 void split_next_test_3() {
-    char *data;
-    slice_t s;
+    char *data, *sep;
+    int data_len, sep_len;
     split_t split;
+    slice_t slice;
 
     data = "\n\n";
-    s = slice_new(data, strlen(data));
-    split = split_new(s, '\n');
+    data_len = 2;
+    sep = "\n";
+    sep_len = 1;
+
+    split = split_new(slice_new(data, data_len), slice_new(sep, sep_len));
     
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data);
-    assert(split.s.len == 1);
-    assert(split.s.data == data + 1);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data);
+    assert(split.slice.len == 1);
+    assert(split.slice.data == data + 1);
     
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data + 1);
-    assert(split.s.len == 0);
-    assert(split.s.data == data + 1);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data + 1);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == data + 2);
     
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data + 1);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data + 2);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == NULL);
     
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == 0);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == 0);
 }
 
 void split_next_test_4() {
-    char *data;
-    slice_t s;
+    char *data, *sep;
+    int data_len, sep_len;
     split_t split;
+    slice_t slice;
 
     data = "\n\n\n";
-    s = slice_new(data, strlen(data));
-    split = split_new(s, '\n');
-    
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data);
-    assert(split.s.len == 2);
-    assert(split.s.data == data + 1);
-    
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data + 1);
-    assert(split.s.len == 1);
-    assert(split.s.data == data + 2);
-    
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data + 2);
-    assert(split.s.len == 0);
-    assert(split.s.data == data + 2);
+    data_len = 3;
+    sep = "\n";
+    sep_len = 1;
 
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data + 2);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    split = split_new(slice_new(data, data_len), slice_new(sep, sep_len));
+    
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data);
+    assert(split.slice.len == 2);
+    assert(split.slice.data == data + 1);
+    
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data + 1);
+    assert(split.slice.len == 1);
+    assert(split.slice.data == data + 2);
+    
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data + 2);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == data + 3);
+
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data + 3);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == 0);
    
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == NULL);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == NULL);
 }
 
 void split_next_test_5() {
-    char *data;
-    slice_t s;
+    char *data, *sep;
+    int data_len, sep_len;
     split_t split;
+    slice_t slice;
 
     data = "a";
-    s = slice_new(data, strlen(data));
-    split = split_new(s, '\n');
+    data_len = 1;
+    sep = "\n";
+    sep_len = 1;
+
+    split = split_new(slice_new(data, data_len), slice_new(sep, sep_len));
     
-    s = split_next(&split);
-    assert(s.len == 1);
-    assert(s.data == data);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    slice = split_next(&split);
+    assert(slice.len == 1);
+    assert(slice.data == data);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == 0);
     
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == NULL);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == NULL);
 }
 
 void split_next_test_6() {
-    char *data;
-    slice_t s;
+    char *data, *sep;
+    int data_len, sep_len;
     split_t split;
+    slice_t slice;
 
     data = "\na";
-    s = slice_new(data, strlen(data));
-    split = split_new(s, '\n');
-    
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data);
-    assert(split.s.len == 1);
-    assert(split.s.data == data + 1);
-    
-    s = split_next(&split);
-    assert(s.len == 1);
-    assert(s.data == data + 1);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    data_len = 2;
+    sep = "\n";
+    sep_len = 1;
 
-    s = split_next(&split);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    split = split_new(slice_new(data, data_len), slice_new(sep, sep_len));
+    
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data);
+    assert(split.slice.len == 1);
+    assert(split.slice.data == data + 1);
+    
+    slice = split_next(&split);
+    assert(slice.len == 1);
+    assert(slice.data == data + 1);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == 0);
+
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == NULL);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == NULL);
 }
 
 void split_next_test_7() {
-    char *data;
-    slice_t s;
+    char *data, *sep;
+    int data_len, sep_len;
     split_t split;
+    slice_t slice;
 
     data = "a\n";
-    s = slice_new(data, strlen(data));
-    split = split_new(s, '\n');
-    
-    s = split_next(&split);
-    assert(s.len == 1);
-    assert(s.data == data);
-    assert(split.s.len == 0);
-    assert(split.s.data == data + 1);
-    
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data + 1);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    data_len = 2;
+    sep = "\n";
+    sep_len = 1;
 
-    s = split_next(&split);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    split = split_new(slice_new(data, data_len), slice_new(sep, sep_len));
+    
+    slice = split_next(&split);
+    assert(slice.len == 1);
+    assert(slice.data == data);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == data + 2);
+    
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data + 2);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == 0);
+
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == NULL);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == NULL);
 }
 
 void split_next_test_8() {
-    char *data;
-    slice_t s;
+    char *data, *sep;
+    int data_len, sep_len;
     split_t split;
+    slice_t slice;
 
     data = "\na\n";
-    s = slice_new(data, strlen(data));
-    split = split_new(s, '\n');
-    
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data);
-    assert(split.s.len == 2);
-    assert(split.s.data == data + 1);
-    
-    s = split_next(&split);
-    assert(s.len == 1);
-    assert(s.data == data + 1);
-    assert(split.s.len == 0);
-    assert(split.s.data == data + 2);
+    data_len = 3;
+    sep = "\n";
+    sep_len = 1;
 
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data + 2);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    split = split_new(slice_new(data, data_len), slice_new(sep, sep_len));
+    
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data);
+    assert(split.slice.len == 2);
+    assert(split.slice.data == data + 1);
+    
+    slice = split_next(&split);
+    assert(slice.len == 1);
+    assert(slice.data == data + 1);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == data + 3);
 
-    s = split_next(&split);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data + 3);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == 0);
+
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == NULL);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == NULL);
 }
 
 void split_next_test_9() {
-    char *data;
-    slice_t s;
+    char *data, *sep;
+    int data_len, sep_len;
     split_t split;
+    slice_t slice;
 
     data = "\nab\nc\nde\n";
-    s = slice_new(data, strlen(data));
-    split = split_new(s, '\n');
+    data_len = 9;
+    sep = "\n";
+    sep_len = 1;
 
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data);
-    assert(split.s.len == 8);
-    assert(split.s.data == data + 1);
+    split = split_new(slice_new(data, data_len), slice_new(sep, sep_len));
 
-    s = split_next(&split);
-    assert(s.len == 2);
-    assert(s.data == data + 1);
-    assert(split.s.len == 5);
-    assert(split.s.data == data + 4);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data);
+    assert(split.slice.len == 8);
+    assert(split.slice.data == data + 1);
 
-    s = split_next(&split);
-    assert(s.len == 1);
-    assert(s.data == data + 4);
-    assert(split.s.len == 3);
-    assert(split.s.data == data + 6);
+    slice = split_next(&split);
+    assert(slice.len == 2);
+    assert(slice.data == data + 1);
+    assert(split.slice.len == 5);
+    assert(split.slice.data == data + 4);
 
-    s = split_next(&split);
-    assert(s.len == 2);
-    assert(s.data == data + 6);
-    assert(split.s.len == 0);
-    assert(split.s.data == data + 8);
+    slice = split_next(&split);
+    assert(slice.len == 1);
+    assert(slice.data == data + 4);
+    assert(split.slice.len == 3);
+    assert(split.slice.data == data + 6);
 
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == data + 8);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    slice = split_next(&split);
+    assert(slice.len == 2);
+    assert(slice.data == data + 6);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == data + 9);
 
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == data + 9);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == NULL);
+
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == NULL);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == NULL);
 }
 
 void split_next_test_helper(char *data, char **want) {
-    slice_t s;
     split_t split;
+    slice_t slice;
 
-    s = slice_new(data, strlen(data));
-    split = split_new(s, '\n');
+    split = split_new(slice_new(data, strlen(data)), slice_new("\n", 1));
 
     while (*want) {
-        s = split_next(&split);
-        assert(s.len == strlen(*want));
-        assert(s.data != 0);
-        assert(strncmp(s.data, *want, s.len) == 0);
+        slice = split_next(&split);
+        assert(slice.len == strlen(*want));
+        assert(slice.data != NULL);
+        assert(strncmp(slice.data, *want, slice.len) == 0);
         want++;
     }
 
-    s = split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-    assert(split.s.len == 0);
-    assert(split.s.data == 0);
+    slice = split_next(&split);
+    assert(slice.len == 0);
+    assert(slice.data == NULL);
+    assert(split.slice.len == 0);
+    assert(split.slice.data == NULL);
 }
 
 void split_next_test_10() {
@@ -359,251 +394,3 @@ void split_test() {
     split_next_test_9();
     split_next_test_10();
 }
-
-#if 0
-void h_split_next_test_2() {
-    char *data = "abcd:";
-    h_slice s;
-    h_slice_split split;
-
-    s = h_slice_new(data, strlen(data));
-    split = h_slice_split_new(s, ':');
-    
-    s = h_slice_split_next(&split);
-    assert(s.len == 4);
-    assert(strncmp(s.data, "abcd", s.len) == 0);
-
-    s = h_slice_split_next(&split);
-    assert(s.data[0] == ':');
-    assert(s.len == 0);
-
-    assert(h_slice_split_next(&split).data == 0);
-}
-
-void h_slice_split_next_test_3() {
-    char *data = ":a:b:c:";
-    h_slice s;
-    h_slice_split split;
-
-    s = h_slice_new(data, strlen(data));
-    split = h_slice_split_new(s, ':');
-    
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data[s.len] == ':');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 1);
-    assert(s.data[0] == 'a');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 1);
-    assert(s.data[0] == 'b');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 1);
-    assert(s.data[0] == 'c');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data[s.len] == ':');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-}
-
-void h_slice_split_next_test_4() {
-    char *data = "a:b:c:";
-    h_slice s;
-    h_slice_split split;
-
-    s = h_slice_new(data, strlen(data));
-    split = h_slice_split_new(s, ':');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 1);
-    assert(s.data[0] == 'a');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 1);
-    assert(s.data[0] == 'b');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 1);
-    assert(s.data[0] == 'c');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data[s.len] == ':');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-}
-
-void h_slice_split_next_test_5() {
-    char *data = "a:b:c";
-    h_slice s;
-    h_slice_split split;
-
-    s = h_slice_new(data, strlen(data));
-    split = h_slice_split_new(s, ':');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 1);
-    assert(s.data[0] == 'a');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 1);
-    assert(s.data[0] == 'b');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 1);
-    assert(s.data[0] == 'c');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-}
-
-void h_slice_split_next_test_6() {
-    char *data = ":";
-    h_slice s;
-    h_slice_split split;
-
-    s = h_slice_new(data, strlen(data));
-    split = h_slice_split_new(s, ':');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data[0] == ':');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data[0] == ':');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-}
-
-void h_slice_split_next_test_7() {
-    char *data = "   ";
-    h_slice s;
-    h_slice_split split;
-
-    s = h_slice_new(data, strlen(data));
-    split = h_slice_split_new(s, ' ');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data[0] == ' ');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data[0] == ' ');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data[0] == ' ');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data[0] == ' ');
-
-    s = h_slice_split_next(&split);
-    assert(s.len == 0);
-    assert(s.data == 0);
-}
-
-void h_slice_headers_test() {
-    char **headers;
-    char *buf;
-    int len, i;
-    h_slice s;
-    h_split lines;
-
-    init(keys, values, ARRAY_SIZE(keys), &headers, &buf, &len);
-
-    s = h_slice_new(buf, len);
-    lines = h_slice_split_new(s, '\n');
-    for (i = 0; ;i++) {
-        h_slice line, s;
-        h_slice_split kvs;
-
-        line = h_slice_split_next(&lines);
-
-        if (line.len == 0) {
-            break;
-        }
-
-        line = h_slice_trim_space(line);
-        assert(line.len == strlen(headers[i]));
-        assert(strncmp(line.data, headers[i], line.len) == 0);
-
-        kvs = h_slice_split_new(line, ':');
-        s = h_slice_split_next(&kvs);
-        s = h_slice_trim_space(s);
-        assert(s.len == strlen(keys[i]));
-        assert(strncmp(s.data, keys[i], s.len) == 0);
-
-        s = h_slice_split_next(&kvs);
-        s = h_slice_trim_space(s);
-        assert(s.len == strlen(values[i]));
-        assert(strncmp(s.data, values[i], s.len) == 0);
-    }
-
-    deinit(headers, ARRAY_SIZE(keys), buf);
-}
-
-#define KVS ": "
-#define CRLF "\r\n"
-
-char* keys[] = {
-    "Host",
-    "Upgrade",
-};
-
-char* values[] = {
-    "www.example.com",
-    "websocket",
-};
-
-static void init(char **keys, char **values, int len, char ***pheaders, char **pbuf, int *plen) {
-    char *buf;
-    int i, buf_len = 0;
-
-    *pheaders = malloc(sizeof(char*) * len);
-    for (i = 0; i < len; i++) {
-        int header_len = strlen(keys[i]) + strlen(KVS) + strlen(values[i]);
-        (*pheaders)[i] = malloc(header_len + 1);
-        (*pheaders)[i][0] = 0;
-        strcat((*pheaders)[i], keys[i]);
-        strcat((*pheaders)[i], KVS);
-        strcat((*pheaders)[i], values[i]);
-        
-        buf_len += header_len + strlen(KVS);
-    }
-    
-    buf = malloc(buf_len+1);
-    buf[0] = 0;
-    for (i = 0; i < len; i++) {
-        strcat(buf, (*pheaders)[i]);
-        strcat(buf, CRLF);
-    }
-
-    *pbuf = buf;
-    *plen = buf_len;
-}
-
-static void deinit(char **headers, int len, char *buf) {
-    int i;
-
-    for (i = 0; i < len; i++) {
-        free(headers[i]);
-    }
-    free(headers);
-    free(buf);
-}
-#endif

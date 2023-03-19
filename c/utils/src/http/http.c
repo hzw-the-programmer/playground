@@ -23,10 +23,10 @@ static int parse_header(http_ctx_t *ctx, buf_t *buf) {
             split_t split;
             slice_t k, v;
 
-            split = split_new_ext(slice.data, slice.len, COLON, COLON_LEN);
+            split = split_new(slice, slice_new(COLON, COLON_LEN));
             
-            k = slice_trim_space(split_next_ext(&split));
-            v = slice_trim_space(split_next_ext(&split));
+            k = slice_trim_space(split_next(&split));
+            v = slice_trim_space(split_next(&split));
 
             if (k.len == CONTENT_LENGTH_LEN &&
                 !strncmp(k.data, CONTENT_LENGTH, k.len)) {

@@ -88,15 +88,15 @@ int buf_read(buf_t *buf, uint8_t *ptr, int len) {
     return len;
 }
 
-void buf_split(buf_t *buf, const uint8_t *sep, int len, int (*cb)(void*, slice_t*), void *arg) {
-    split_t split = split_new_ext(buf_read_ptr(buf), buf_buffered(buf), sep, len);
+void buf_split(buf_t *buf, slice_t sep, int (*cb)(void*, slice_t*), void *arg) {
+    split_t split = split_new(buf_buffered_slice(buf), sep);
     while (1) {
-        slice_t slice = split_next_ext(&split);
+        slice_t slice = split_next(&split);
         if (!cb(arg, &slice)) {
             break;
         }
     }
-    buf_read_inc(buf, buf_buffered(buf) - split.s.len);
+    buf_read_inc(buf, buf_buffered(buf) - split.slice.len);
     buf_tidy(buf);
 }
 
@@ -109,4 +109,13 @@ buf_t* buf_static(uint8_t *ptr, int len) {
     buf->ptr = ptr + sizeof(*buf);
 
     return buf;
+}
+
+slice_t buf_buffered_slice(const buf_t *buf) {
+    slice_t slice;
+
+    slice.data = buf_read_ptr(buf);
+    slice.len = buf_buffered(buf);
+
+    return slice;
 }
