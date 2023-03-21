@@ -74,20 +74,6 @@ int buf_write(buf_t *buf, slice_t slice) {
     return len;
 }
 
-int buf_read(buf_t *buf, uint8_t *ptr, int len) {
-    if (len > buf_buffered(buf)) {
-        len = buf_buffered(buf);
-    }
-    if (!len) {
-        return 0;
-    }
-    
-    memmove(ptr, buf_read_ptr(buf), len);
-    buf_read_inc(buf, len);
-    
-    return len;
-}
-
 void buf_split(buf_t *buf, slice_t sep, int (*cb)(void*, slice_t*), void *arg) {
     split_t split = split_new(buf_buffered_slice(buf), sep);
     while (1) {
@@ -118,4 +104,23 @@ slice_t buf_buffered_slice(const buf_t *buf) {
     slice.len = buf_buffered(buf);
 
     return slice;
+}
+
+int buf_read(buf_t *buf, slice_t *slice) {
+    slice->ptr = buf_read_ptr(buf);
+    if (slice->len > buf_buffered(buf)) {
+        slice->len = buf_buffered(buf);
+    }
+    buf_read_inc(buf, slice->len);
+    return slice->len;
+}
+
+int buf_read_out(buf_t *buf, slice_t *out) {
+    slice_t slice;
+
+    slice.len = out->len;
+    if (buf_read(buf, &slice)) {
+        memmove(out->ptr, slice.ptr, slice.len);
+    }    
+    return slice.len;
 }

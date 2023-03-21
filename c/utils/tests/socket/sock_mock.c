@@ -33,9 +33,10 @@ void mock_sock_ctx_free(mock_sock_ctx_t *ctx) {
     free(ctx);
 }
 
-int mock_sock_recv(mock_sock_t *sock, uint8_t *out, int len) {
-    if (len > sock->n) {
-        len = sock->n;
+int mock_sock_recv(mock_sock_t *sock, uint8_t *ptr, int len) {
+    slice_t slice = {ptr, len};
+    if (slice.len > sock->n) {
+         slice.len = sock->n;
     }
-    return buf_read(sock->buf, out, len);
+    return buf_read_out(sock->buf, &slice);
 }

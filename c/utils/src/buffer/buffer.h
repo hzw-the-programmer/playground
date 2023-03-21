@@ -20,7 +20,8 @@ void buf_tidy(buf_t *buf);
 
 buf_t* buf_new(int cap);
 int buf_write(buf_t *buf, slice_t slice);
-int buf_read(buf_t *buf, uint8_t *ptr, int len);
+int buf_read(buf_t *buf, slice_t *slice);
+int buf_read_out(buf_t *buf, slice_t *out);
 
 void buf_split(buf_t *buf, slice_t sep, int (*cb)(void*, slice_t*), void *arg);
 buf_t* buf_static(uint8_t *ptr, int len);
