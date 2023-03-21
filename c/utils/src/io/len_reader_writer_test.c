@@ -58,7 +58,7 @@ static void fixtures_1_len_writer_test(len_writer_t *w) {
     for (i = 0; i < ARRAY_SIZE(fixtures_1); i++) {
         fixture_t *fixture = &fixtures_1[i];
         w->flags = fixture->flags;
-        assert(len_writer_write(w, &fixture->in) == fixture->in.len);
+        assert(len_writer_write(w, fixture->in) == fixture->in.len);
         assert(buf_buffered(w->buf) == LEN_SIZE(w) + fixture->in.len);
         assert(memcmp(buf_read_ptr(w->buf), fixture->header, LEN_SIZE(w)) == 0);
         buf_read_inc(w->buf, LEN_SIZE(w));

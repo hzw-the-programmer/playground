@@ -1,6 +1,8 @@
 #if !defined(__MEM_H__)
 #define __MEM_H__
 
+#include "types.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

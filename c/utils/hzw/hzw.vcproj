@@ -225,6 +225,18 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\io\limited_reader.c"
+					>
+				</File>
+				<File
+					RelativePath="..\src\io\limited_reader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\io\limited_reader_test.c"
+					>
+				</File>
+				<File
 					RelativePath="..\src\io\reader_writer.c"
 					>
 				</File>

@@ -29,7 +29,7 @@ static void sep_writer_fixtures_1_test(sep_writer_t *w, write_t func) {
     for (i = 0; i < ARRAY_SIZE(fixtures_1); i++) {
         fixture_t *fixture = &fixtures_1[i];
         w->sep = fixture->sep;
-        assert(func(w, &fixture->in) == fixture->in.len);
+        assert(func(w, fixture->in) == fixture->in.len);
         assert(buf_buffered(w->buf) == fixture->in.len + fixture->sep.len);
         assert(memcmp(buf_read_ptr(w->buf), fixture->in.ptr, fixture->in.len) == 0);
         buf_read_inc(w->buf, fixture->in.len);

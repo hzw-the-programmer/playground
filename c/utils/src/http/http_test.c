@@ -43,39 +43,39 @@ static void resp_write(buf_t *buf,
     w.sep.len = CRNL_LEN;
     slice.ptr = (uint8_t*)first_line;
     slice.len = strlen(first_line);
-    sep_writer_write(&w, &slice);
+    sep_writer_write(&w, slice);
 
     for (i = 0; i < kvs_len; i+=2) {
         w.sep.ptr = KV_SEP;
         w.sep.len = KV_SEP_LEN;
         slice.ptr = (uint8_t*)kvs[i];
         slice.len = strlen(kvs[i]);
-        sep_writer_write(&w, &slice);
+        sep_writer_write(&w, slice);
 
         w.sep.ptr = CRNL;
         w.sep.len = CRNL_LEN;
         slice.ptr = (uint8_t*)kvs[i+1];
         slice.len = strlen(kvs[i+1]);
-        sep_writer_write(&w, &slice);
+        sep_writer_write(&w, slice);
     }
 
     if (!body) {
         slice.len = 0;
-        sep_writer_write(&w, &slice);
+        sep_writer_write(&w, slice);
         return;
     }
     
     sprintf(content_len, CONTENT_LENGTH ": %d", body_len);
     slice.ptr = content_len;
     slice.len = strlen(content_len);
-    sep_writer_write(&w, &slice);
+    sep_writer_write(&w, slice);
 
     slice.len = 0;
-    sep_writer_write(&w, &slice);
+    sep_writer_write(&w, slice);
 
     slice.ptr = (uint8_t*)body;
     slice.len = body_len;
-    buf_write(buf, &slice);
+    buf_write(buf, slice);
 }
 
 static void resp_write_test() {

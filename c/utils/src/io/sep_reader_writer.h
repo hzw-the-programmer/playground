@@ -14,7 +14,7 @@ typedef struct {
     slice_t sep;
 } sep_reader_t;
 
-int sep_writer_write(void *arg, const slice_t *slice);
+int sep_writer_write(void *arg, slice_t slice);
 int sep_reader_read(void *arg, slice_t *slice);
 
 #endif

@@ -7,6 +7,7 @@ void buffer_test();
 void len_reader_writer_test();
 void sep_reader_writer_test();
 void http_test();
+void limited_reader_test();
 
 void main() {
     slice_test();
@@ -15,6 +16,7 @@ void main() {
     len_reader_writer_test();
     sep_reader_writer_test();
     http_test();
+    limited_reader_test();
     
     {
         char c;

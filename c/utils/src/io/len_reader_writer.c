@@ -1,10 +1,10 @@
 #include "len_reader_writer.h"
 
-int len_writer_write(void *arg, const slice_t *slice) {
+int len_writer_write(void *arg, slice_t slice) {
     len_writer_t *w = arg;
     uint8_t *header;
 
-    if ( LEN_SIZE(w) + slice->len > buf_available(w->buf)) {
+    if ( LEN_SIZE(w) + slice.len > buf_available(w->buf)) {
         return -1;
     }
 
@@ -14,18 +14,18 @@ int len_writer_write(void *arg, const slice_t *slice) {
     buf_write(w->buf, slice);
 
     if (LEN_SIZE(w) == 1) {
-        *header = slice->len;
+        *header = slice.len;
     } else if (LEN_SIZE(w) == 2) {
-        *header = slice->len>>8;
-        *(header+1) = slice->len;
+        *header = slice.len>>8;
+        *(header+1) = slice.len;
     } else if (LEN_SIZE(w) == 4) {
-        *header = slice->len>>24;
-        *(header+1) = slice->len>>16;
-        *(header+2) = slice->len>>8;
-        *(header+3) = slice->len;
+        *header = slice.len>>24;
+        *(header+1) = slice.len>>16;
+        *(header+2) = slice.len>>8;
+        *(header+3) = slice.len;
     }
 
-    return slice->len;
+    return slice.len;
 }
 
 int len_reader_read(void *arg, slice_t *slice) {

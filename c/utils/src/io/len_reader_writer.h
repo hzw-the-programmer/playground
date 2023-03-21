@@ -23,7 +23,7 @@ typedef struct {
     int len;
 } len_reader_t;
 
-int len_writer_write(void *arg, const slice_t *slice);
+int len_writer_write(void *arg, slice_t slice);
 int len_reader_read(void *arg, slice_t *slice);
 
 #endif

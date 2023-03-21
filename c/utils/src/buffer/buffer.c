@@ -59,16 +59,16 @@ void buf_tidy(buf_t *buf) {
     buf->r = 0;
 }
 
-int buf_write(buf_t *buf, const slice_t *slice) {
-    int len = slice->len;
+int buf_write(buf_t *buf, slice_t slice) {
+    int len = slice.len;
     if (len > buf_available(buf)) {
         len = buf_available(buf);
     }
     if (!len) {
         return 0;
     }
-    if (slice->ptr) {
-        memmove(buf_write_ptr(buf), slice->ptr, len);    
+    if (slice.ptr) {
+        memmove(buf_write_ptr(buf), slice.ptr, len);    
     }
     buf_write_inc(buf, len);
     return len;

@@ -12,7 +12,7 @@ static void buf_test() {
         if (i > 15) {
             n = 0;
         }
-        assert(buf_write(buf, &slice) == n);
+        assert(buf_write(buf, slice) == n);
     }
 }
 
