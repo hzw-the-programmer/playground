@@ -211,7 +211,78 @@ static void key_3() {
 static void key_4() {
 }
 
+#include "tcpip_tcp.h"
+
 static void key_5() {
+	kal_int8 soc;
+	INT32 keepidle = 30;
+	INT32 keepinterval = 1;
+	INT32 keepcount = 3;
+	INT32  no_delay;
+	INT32  len = sizeof(INT32);
+	UINT32 ret;
+
+	soc = soc_create(/*PF_INET, SOCK_STREAM,*/2, 1, 0, MOD_MMI, 0);
+	LOG("soc=%d", soc);
+
+	ret = CFW_TcpipSocketSetsockopt(
+		soc,
+		CFW_TCPIP_IPPROTO_TCP,
+		TCP_ALIVE_KEEPIDLE,
+		(void *)&keepidle,
+		sizeof(keepidle));
+	LOG("ret=%d", ret);
+
+	ret = CFW_TcpipSocketSetsockopt(
+		soc,
+		CFW_TCPIP_IPPROTO_TCP,
+		TCP_ALIVE_KEEPINTVL,
+		(void *)&keepinterval,
+		sizeof(keepinterval));
+	LOG("ret=%d", ret);
+
+	ret = CFW_TcpipSocketSetsockopt(
+		soc,
+		CFW_TCPIP_IPPROTO_TCP,
+		TCP_ALIVE_KEEPCNT,
+		(void *)&keepcount,
+		sizeof(keepcount));
+	LOG("ret=%d", ret);
+
+	ret = CFW_TcpipSocketGetsockopt(
+		soc,
+		CFW_TCPIP_IPPROTO_TCP,
+		TCP_NODELAY,
+		&no_delay,
+		&len);
+	LOG("TCP_NODELAY:ret=%d,value=%d", ret, no_delay);
+
+	keepidle = -1;
+	ret = CFW_TcpipSocketGetsockopt(
+		soc,
+		CFW_TCPIP_IPPROTO_TCP,
+		TCP_ALIVE_KEEPIDLE,
+		&keepidle,
+		&len);
+	LOG("TCP_ALIVE_KEEPIDLE:ret=%d,value=%d", ret, keepidle);
+
+	keepinterval = -1;
+	ret = CFW_TcpipSocketGetsockopt(
+		soc,
+		CFW_TCPIP_IPPROTO_TCP,
+		TCP_ALIVE_KEEPINTVL,
+		&keepinterval,
+		&len);
+	LOG("TCP_ALIVE_KEEPINTVL:ret=%d,value=%d", ret, keepinterval);
+
+	keepcount = -1;
+	ret = CFW_TcpipSocketGetsockopt(
+		soc,
+		CFW_TCPIP_IPPROTO_TCP,
+		TCP_ALIVE_KEEPCNT,
+		&keepcount,
+		&len);
+	LOG("TCP_ALIVE_KEEPCNT:ret=%d,value=%d", ret, keepcount);
 }
 
 static void key_6() {
