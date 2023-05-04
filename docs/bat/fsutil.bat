@@ -1,0 +1,1 @@
+FOR /L %%i IN (1,1,1024) DO fsutil file createnew gen%%i.tmp 1048576

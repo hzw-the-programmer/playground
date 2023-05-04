@@ -1,3 +1,5 @@
+#include "filemgr.h"
+
 #define LOG_BUF_LEN 1024
 #if defined(WIN32)
 #define LOG_FILE_SEP_CHAR '\\'
@@ -17,8 +19,13 @@ static void log(const char *file, int line, const char *func, const char *fmt, .
 	va_list ap;
 	MYTIME dt;
 
-	if (g_log < 0) {
-		g_log = MMI_FS_Open(L"D:/hzw.log", FS_CREATE_ALWAYS | FS_READ_WRITE);
+	if (g_log < 0) {	
+		UINT8 path_asc[FMGR_PATH_CHAR_COUNT+1];
+		UINT16 path_ucs2[FMGR_PATH_CHAR_COUNT+1];
+		sprintf(path_asc, "%c:/hzw.log", MMI_FS_GetDrive(FS_DRIVE_V_REMOVABLE, 1, FS_NO_ALT_DRIVE));
+		mmi_asc_to_ucs2(path_ucs2, path_asc);
+
+		g_log = MMI_FS_Open(path_ucs2, FS_CREATE_ALWAYS | FS_READ_WRITE);
 		if (g_log < 0) {			
 			mmi_trace(MMI_TRACE_LEVEL_1, LOG_PREFIX "create log file failed,g_log=%d", g_log);
 			return;
