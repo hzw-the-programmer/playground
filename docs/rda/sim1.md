@@ -1,0 +1,5 @@
+MTPNP_AD_Is_Flight_Mode
+IdleRefreshServiceIndicationArea
+mmi_msg_need_new_msg_ind
+EntryIdleScreen
+MTPNP_AD_Get_Startup_Mode
