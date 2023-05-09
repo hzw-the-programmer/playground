@@ -1,5 +1,5 @@
 #define MAX_MSGS 10
-#define MSG_MAX_SIZE 16
+#define MSG_MAX_SIZE 32
 
 typedef struct {
 	UINT8 msgs[MAX_MSGS][MSG_MAX_SIZE];
