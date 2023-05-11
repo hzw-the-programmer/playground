@@ -56,5 +56,7 @@ static void log(const char *file, int line, const char *func, const char *fmt, .
 	buf[len] = '\0';
 	ret = MMI_FS_Write(g_log, buf, len, &wlen);
 	mmi_trace(MMI_TRACE_LEVEL_1, "%s", buf);
-    push_msg_and_draw(&g_msg_ctx, p);
+#if defined(PUSH_MSG_AND_DRAW)
+    PUSH_MSG_AND_DRAW(&g_msg_ctx, p);
+#endif
 }

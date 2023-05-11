@@ -1,0 +1,1 @@
+gdi_layer_create_internal
