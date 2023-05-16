@@ -10,18 +10,17 @@ typedef struct {
 
 static gprs_ctx_t g_gprs_ctx;
 
-static UINT8* ipstr(UINT8 *addr) {
-	in_addr tmp = {0};
-
-	tmp.s_addr = *(UINT32*)addr;
+static UINT8* ipstr(UINT32 addr) {
+	in_addr tmp;
+	tmp.s_addr = addr;
 	return inet_ntoa(tmp);
 }
 
 static UINT8* localip(const gprs_ctx_t *ctx) {
+	UINT32 addr;
 	UINT8 len = 0;
-	UINT32 addr[MAX_SOCK_ADDR_LEN>>2] = {0};
 
-	CFW_GprsGetPdpAddr(ctx->cid, &len, addr, ctx->sim);
+	CFW_GprsGetPdpAddr(ctx->cid, &len, &addr, ctx->sim);
 	return ipstr(addr);
 }
 
@@ -167,6 +166,78 @@ static void gprs_cb(UINT8 state) {
     LOG("%s", localip(ctx));
 }
 
+#define ARR_SIZE(arr) (sizeof(arr)/sizeof(arr[0]))
+
+typedef struct {
+    UINT8 *domain;
+    UINT32 ip;
+} dns_entry_t;
+
+#define BAIDU_INDEX 0
+#define DOUYING_INDEX 1
+
+static dns_entry_t g_dns_entry[] = {
+    {"www.baidu.com", 0},
+    {"www.douyin.com", 0},
+};
+
+static dns_entry_t* get_dns_entry(UINT8 index) {
+    if (index < ARR_SIZE(g_dns_entry)) {
+        return &g_dns_entry[index];
+    }
+    return NULL;
+}
+
+static void dns_cb(void* p) {
+	app_soc_get_host_by_name_ind_struct *msg = (app_soc_get_host_by_name_ind_struct*)p;
+    dns_entry_t *entry;
+    int i;
+
+    LOG("%s:%d:%d", "dnsCb", msg->result, msg->access_id);
+    if (!msg->result) {
+        return;
+    }
+    entry = get_dns_entry(msg->access_id);
+    if (!entry) {
+        return;
+    }
+
+    LOG("%s", entry->domain);
+    for (i = 0; i < msg->num_entry; i++) {
+        UINT32 ip;
+        memcpy(&ip, msg->entry[i].address, sizeof(UINT32));
+        LOG("%s", ipstr(ip));
+        entry->ip = ip;
+    }
+}
+
+static void dns(gprs_ctx_t *ctx, UINT8 index) {
+    dns_entry_t *entry;
+    INT8 ret;
+    UINT32 ip;
+    UINT8 len = 0;
+
+    LOG("dns:%d", index);
+
+    entry = get_dns_entry(index);
+    if (!entry) {
+        return;
+    }
+
+    LOG("%s", entry->domain);
+
+	ret = soc_gethostbynameExt(ctx->sim, ctx->cid, KAL_FALSE,
+		MOD_MMI, WEP_DNS_ID, entry->domain, &ip, &len, index, 0);
+
+	if (ret == SOC_SUCCESS) {
+        LOG("%s", ipstr(ip));
+        entry->ip = ip;
+	} else if (ret == SOC_WOULDBLOCK) {
+        LOG("block");
+		SetProtocolEventHandler(dns_cb, MSG_ID_APP_SOC_GET_HOST_BY_NAME_IND);
+	}
+}
+
 static void lsk() {
 }
 
@@ -209,6 +280,18 @@ static void key_7() {
     LOG("act:state=%d,ret=%x", state, ret);
 }
 
+static void key_8() {
+    int i;
+
+    for (i = 0; i < ARR_SIZE(g_dns_entry); i++) {
+        dns(&g_gprs_ctx, i);
+    }
+}
+
+static void key_9() {
+
+}
+
 static void register_handlers() {
     SetLeftSoftkeyFunction(lsk, KEY_EVENT_UP);
     SetRightSoftkeyFunction(GoBackHistory, KEY_EVENT_UP);
@@ -219,6 +302,8 @@ static void register_handlers() {
 	SetKeyHandler(key_5, KEY_5, KEY_EVENT_DOWN);
 	SetKeyHandler(key_6, KEY_6, KEY_EVENT_DOWN);
 	SetKeyHandler(key_7, KEY_7, KEY_EVENT_DOWN);
+	SetKeyHandler(key_8, KEY_8, KEY_EVENT_DOWN);
+	SetKeyHandler(key_9, KEY_9, KEY_EVENT_DOWN);
 }
 
 static void exit_app() {
