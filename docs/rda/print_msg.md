@@ -38,3 +38,5 @@ static void push_msg_and_draw(msg_ctx_t *ctx, const UINT8 *msg) {
     push_msg(ctx, msg);
     draw_msgs(ctx);
 }
+
+#define PUSH_MSG_AND_DRAW(ctx, msg) push_msg_and_draw(ctx, msg)
