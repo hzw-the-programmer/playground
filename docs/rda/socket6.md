@@ -233,9 +233,57 @@ static void dns(gprs_ctx_t *ctx, UINT8 index) {
         LOG("%s", ipstr(ip));
         entry->ip = ip;
 	} else if (ret == SOC_WOULDBLOCK) {
-        LOG("block");
 		SetProtocolEventHandler(dns_cb, MSG_ID_APP_SOC_GET_HOST_BY_NAME_IND);
 	}
+}
+
+static void notify(void *p) {
+	app_soc_notify_ind_struct *msg = (app_soc_notify_ind_struct*)p;
+
+    switch(msg->event_type) {
+    case SOC_CONNECT:
+        LOG("SOC_CONNECT:%d", msg->result);
+        {
+            kal_int32 n;
+            kal_uint8 *buf = "GET / HTTP/1.1";
+            n = soc_send(msg->socket_id, buf, strlen(buf), 0);
+            LOG("send:%d,%d", n, strlen(buf));
+        }
+        break;
+
+    case SOC_WRITE:
+        LOG("SOC_WRITE:%d", msg->result);
+        break;
+
+    case SOC_READ:
+        LOG("SOC_READ:%d", msg->result);
+        {
+            kal_int32 n = 0;
+            while (n != SOC_WOULDBLOCK) {                
+                kal_uint8 buf[8] = {0};
+                n = soc_recv(msg->socket_id, buf, 8-1, 0);
+                LOG("recv:%d", n);
+                LOG("recv:%s", buf);
+            }
+        }
+        break;
+
+    case SOC_CLOSE:
+        LOG("SOC_CLOSE:%d", msg->result);
+        break;
+
+    case SOC_ERROR_IND:
+        LOG("SOC_ERROR_IND:%d", msg->result);
+        break;
+
+    case SOC_ACCEPT:
+        LOG("SOC_ACCEPT:%d", msg->result);
+        break;
+
+    default:
+        LOG("SOC_0x%02x:%d", msg->event_type, msg->result);
+        break;
+    }
 }
 
 static void lsk() {
@@ -253,34 +301,6 @@ static void key_2() {
 }
 
 static void key_3() {
-}
-
-static void key_4() {
-}
-
-static void key_5() {
-    g_gprs_ctx.sim = 0;
-    LOG("selected:%d", g_gprs_ctx.sim);
-}
-
-static void key_6() {
-    g_gprs_ctx.sim = 1;
-    LOG("selected:%d", g_gprs_ctx.sim);
-}
-
-static void key_7() {
-    gprs_ctx_t *ctx = &g_gprs_ctx;
-    UINT32 ret;
-    UINT8 state;
-
-    ret = CFW_GetGprsAttState(&state, ctx->sim);
-    LOG("att:state=%d,ret=%d", state, ret);
-
-    ret = CFW_GetGprsActState(ctx->cid, &state, ctx->sim);
-    LOG("act:state=%d,ret=%x", state, ret);
-}
-
-static void key_8() {
     int i;
 
     for (i = 0; i < ARR_SIZE(g_dns_entry); i++) {
@@ -288,8 +308,70 @@ static void key_8() {
     }
 }
 
-static void key_9() {
+static void key_4() {
+}
 
+static void key_5() {
+    kal_int8 soc;
+    kal_int8 ret;
+    sockaddr_struct addr = {0};
+    dns_entry_t* entry;
+    kal_uint8 *ip;
+
+    entry = get_dns_entry(BAIDU_INDEX);
+    if (!entry) {
+        return;
+    }
+    ip = &entry->ip;
+
+    soc = soc_create(2, 1, 0, MOD_MMI, 0);
+    LOG("soc=%d", soc);
+    if (soc < 0) return;
+
+    addr.addr[0] = ip[0];
+    addr.addr[1] = ip[1];
+    addr.addr[2] = ip[2];
+    addr.addr[3] = ip[3];
+    addr.port = 80;
+    addr.addr_len = 4;
+
+    ret = soc_connect(soc, &addr);
+    if (ret == SOC_WOULDBLOCK) {
+        LOG("conRet:block");
+        SetProtocolEventHandler(notify, MSG_ID_APP_SOC_NOTIFY_IND);
+    } else {
+        LOG("conRet:%d", ret);
+    }
+}
+
+static void key_6() {
+}
+
+static void key_7() {
+}
+
+static void key_8() {
+}
+
+static void key_9() {
+    gprs_ctx_t *ctx = &g_gprs_ctx;
+    UINT32 ret;
+    UINT8 state;
+
+    ret = CFW_GetGprsAttState(&state, ctx->sim);
+    LOG("att:s=%d,r=%d", state, ret);
+
+    ret = CFW_GetGprsActState(ctx->cid, &state, ctx->sim);
+    LOG("act:s=%d,r=%x", state, ret);
+}
+
+static void key_0() {
+    gprs_ctx_t *ctx = &g_gprs_ctx;
+
+    ctx->sim++;
+    ctx->sim %= 2;
+    
+    LOG("selected:%d", ctx->sim);
 }
 
 static void register_handlers() {
@@ -304,6 +386,7 @@ static void register_handlers() {
 	SetKeyHandler(key_7, KEY_7, KEY_EVENT_DOWN);
 	SetKeyHandler(key_8, KEY_8, KEY_EVENT_DOWN);
 	SetKeyHandler(key_9, KEY_9, KEY_EVENT_DOWN);
+	SetKeyHandler(key_0, KEY_0, KEY_EVENT_DOWN);
 }
 
 static void exit_app() {
