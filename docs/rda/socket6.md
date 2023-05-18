@@ -175,10 +175,12 @@ typedef struct {
 
 #define BAIDU_INDEX 0
 #define DOUYING_INDEX 1
+#define HTTPBIN_INDEX 2
 
 static dns_entry_t g_dns_entry[] = {
     {"www.baidu.com", 0},
     {"www.douyin.com", 0},
+    {"httpbin.org", 0},
 };
 
 static dns_entry_t* get_dns_entry(UINT8 index) {
@@ -244,7 +246,7 @@ static void notify(void *p) {
     case SOC_CONNECT:
         LOG("SOC_CONNECT:%d", msg->result);
         {
-            kal_int32 n;
+            kal_int32 n = 0;
             kal_uint8 *buf = "GET / HTTP/1.1\r\n\r\n";
             n = soc_send(msg->socket_id, buf, strlen(buf), 0);
             LOG("send:%d,%d", n, strlen(buf));
@@ -274,6 +276,7 @@ static void notify(void *p) {
 
     case SOC_CLOSE:
         LOG("SOC_CLOSE:%d", msg->result);
+        soc_close(msg->socket_id);
         break;
 
     case SOC_ERROR_IND:
@@ -287,6 +290,31 @@ static void notify(void *p) {
     default:
         LOG("SOC_0x%02x:%d", msg->event_type, msg->result);
         break;
+    }
+}
+
+static void request(UINT8 *ip, UINT16 port) {
+    kal_int8 soc;
+    kal_int8 ret;
+    sockaddr_struct addr = {0};
+
+    soc = soc_create(2, 1, 0, MOD_MMI, 0);
+    LOG("socCre=%d", soc);
+    if (soc < 0) return;
+
+    addr.addr[0] = ip[0];
+    addr.addr[1] = ip[1];
+    addr.addr[2] = ip[2];
+    addr.addr[3] = ip[3];
+    addr.addr_len = 4;
+    addr.port = port;
+
+    ret = soc_connect(soc, &addr);
+    if (ret == SOC_WOULDBLOCK) {
+        LOG("conRet:block");
+        SetProtocolEventHandler(notify, MSG_ID_APP_SOC_NOTIFY_IND);
+    } else {
+        LOG("conRet:%d", ret);
     }
 }
 
@@ -315,40 +343,22 @@ static void key_3() {
 static void key_4() {
 }
 
-static void key_5() {
-    kal_int8 soc;
-    kal_int8 ret;
-    sockaddr_struct addr = {0};
-    dns_entry_t* entry;
-    kal_uint8 *ip;
+static kal_int8 g_soc;
 
-    entry = get_dns_entry(BAIDU_INDEX);
+static void key_5() {
+    dns_entry_t *entry;
+
+    entry = get_dns_entry(HTTPBIN_INDEX);
     if (!entry) {
         return;
     }
-    ip = &entry->ip;
 
-    soc = soc_create(2, 1, 0, MOD_MMI, 0);
-    LOG("soc=%d", soc);
-    if (soc < 0) return;
-
-    addr.addr[0] = ip[0];
-    addr.addr[1] = ip[1];
-    addr.addr[2] = ip[2];
-    addr.addr[3] = ip[3];
-    addr.port = 80;
-    addr.addr_len = 4;
-
-    ret = soc_connect(soc, &addr);
-    if (ret == SOC_WOULDBLOCK) {
-        LOG("conRet:block");
-        SetProtocolEventHandler(notify, MSG_ID_APP_SOC_NOTIFY_IND);
-    } else {
-        LOG("conRet:%d", ret);
-    }
+    request(&entry->ip, 80);
 }
 
 static void key_6() {
+    UINT8 ip[] = {47, 95, 193, 135};
+    request(ip, 8080);
 }
 
 static void key_7() {
