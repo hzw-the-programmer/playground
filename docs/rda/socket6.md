@@ -245,7 +245,7 @@ static void notify(void *p) {
         LOG("SOC_CONNECT:%d", msg->result);
         {
             kal_int32 n;
-            kal_uint8 *buf = "GET / HTTP/1.1";
+            kal_uint8 *buf = "GET / HTTP/1.1\r\n\r\n";
             n = soc_send(msg->socket_id, buf, strlen(buf), 0);
             LOG("send:%d,%d", n, strlen(buf));
         }
@@ -259,11 +259,15 @@ static void notify(void *p) {
         LOG("SOC_READ:%d", msg->result);
         {
             kal_int32 n = 0;
-            while (n != SOC_WOULDBLOCK) {                
-                kal_uint8 buf[8] = {0};
+            kal_uint8 buf[8] = {0};
+            while (1) {
                 n = soc_recv(msg->socket_id, buf, 8-1, 0);
-                LOG("recv:%d", n);
-                LOG("recv:%s", buf);
+                LOG("recvn:%d", n);
+                if (n == SOC_WOULDBLOCK) {
+                    break;
+                }
+                buf[n] = 0;
+                LOG("recvb:%s", buf);
             }
         }
         break;
