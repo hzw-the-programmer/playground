@@ -1,0 +1,1 @@
+https://sourceware.org/binutils/docs/ld/MEMORY.html#MEMORY

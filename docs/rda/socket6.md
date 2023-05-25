@@ -318,6 +318,13 @@ static void request(UINT8 *ip, UINT16 port) {
     }
 }
 
+// UpdateGPRSStatusIconExt
+// app_Data_Conn_CallbackExt
+void update_status_icon(U8 state)
+{
+    LOG("icon cb:%d", state);
+}
+
 static void lsk() {
 }
 
@@ -362,9 +369,16 @@ static void key_6() {
 }
 
 static void key_7() {
+    LOG("k7");
+    UpdateGPRSStatusIconExt(L4C_NONE_GPRS);
 }
 
 static void key_8() {
+    gprs_ctx_t *ctx = &g_gprs_ctx;
+    UINT32 ret;
+
+    ret = adp_StopGPRSExt(ctx->sim, ctx->cid);
+    LOG("stop:0x%x", ret);
 }
 
 static void key_9() {

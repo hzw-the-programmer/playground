@@ -59,3 +59,4 @@ static void log(const char *file, int line, const char *func, const char *fmt, .
 #if defined(PUSH_MSG_AND_DRAW)
     PUSH_MSG_AND_DRAW(&g_msg_ctx, p);
 #endif
+}
