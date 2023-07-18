@@ -1,12 +1,3 @@
-extern U16 currTimerID;
-
-static void timer_cb()
-{
-    INT i = 10 / 0;
-    //LOG("cb:%d,%d", sxr_GetCurrentTaskId(), currTimerID);
-    LOG("cb:%d,%d,%d", sxr_GetCurrentTaskId(), currTimerID, i);
-}
-
 static void draw(const char *text) {
     gdi_layer_clear(GDI_COLOR_WHITE);
 
@@ -25,8 +16,10 @@ static void key_1() {
 }
 
 static void key_2() {
-    LOG("st:%d,%d", sxr_GetCurrentTaskId(), KEY_TIMER_ID11);
-    StartTimer(KEY_TIMER_ID11, 1000, timer_cb);
+    UINT8 imei[] = "abcdefghijklmnopqrstuvwxyz";
+    UINT8 len;
+    CFW_EmodGetIMEI(imei, &len, 1);
+    LOG("%s", imei);
 }
 
 static void key_3() {

@@ -14,37 +14,37 @@ static void check(UINT16 d) {
 
     sprintf(path, "%c", d);
     mmi_asc_to_ucs2(path_w, path);
-    ret = MMI_FS_IsExist(path_w);
+    ret = MMI_FS_IsExist(path_w); // 0
     LOG("%s=%d", path, ret);
 
     sprintf(path, "%c:", d);
     mmi_asc_to_ucs2(path_w, path);
-    ret = MMI_FS_IsExist(path_w);
+    ret = MMI_FS_IsExist(path_w); // 0
     LOG("%s=%d", path, ret);
 
     sprintf(path, "%c:/", d);
     mmi_asc_to_ucs2(path_w, path);
-    ret = MMI_FS_IsExist(path_w);
+    ret = MMI_FS_IsExist(path_w); // 1
     LOG("%s=%d", path, ret);
 
     sprintf(path, "%c:/h", d);
     mmi_asc_to_ucs2(path_w, path);
-    ret = MMI_FS_IsExist(path_w);
+    ret = MMI_FS_IsExist(path_w); // 1
     LOG("%s=%d", path, ret);
 
     sprintf(path, "%c:/h/", d);
     mmi_asc_to_ucs2(path_w, path);
-    ret = MMI_FS_IsExist(path_w);
+    ret = MMI_FS_IsExist(path_w); // 1
     LOG("%s=%d", path, ret);
 
     sprintf(path, "%c:/h/h", d);
     mmi_asc_to_ucs2(path_w, path);
-    ret = MMI_FS_IsExist(path_w);
+    ret = MMI_FS_IsExist(path_w); // 1
     LOG("%s=%d", path, ret);
 
     sprintf(path, "%c:/h/h/", d);
     mmi_asc_to_ucs2(path_w, path);
-    ret = MMI_FS_IsExist(path_w);
+    ret = MMI_FS_IsExist(path_w); // 1
     LOG("%s=%d", path, ret);
 }
 
@@ -75,10 +75,10 @@ static void key_2() {
         FS_DRIVE_V_NORMAL,
         2,
         FS_DRIVE_I_SYSTEM | FS_DRIVE_V_NORMAL);
-    sprintf(path, "%c:/h/h", phone); // not exit parent dir will crash
+    sprintf(path, "%c:/parent/child", phone);
     LOG("p:%s", path);
     mmi_asc_to_ucs2(path_w, path);
-    ret = MMI_FS_CreateDir(path_w);
+    ret = MMI_FS_CreateDir(path_w); // will crash if parent does not exist
     LOG("ret:%d", ret);
 }
 

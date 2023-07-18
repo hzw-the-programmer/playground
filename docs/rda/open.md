@@ -1,12 +1,3 @@
-extern U16 currTimerID;
-
-static void timer_cb()
-{
-    INT i = 10 / 0;
-    //LOG("cb:%d,%d", sxr_GetCurrentTaskId(), currTimerID);
-    LOG("cb:%d,%d,%d", sxr_GetCurrentTaskId(), currTimerID, i);
-}
-
 static void draw(const char *text) {
     gdi_layer_clear(GDI_COLOR_WHITE);
 
@@ -25,8 +16,29 @@ static void key_1() {
 }
 
 static void key_2() {
-    LOG("st:%d,%d", sxr_GetCurrentTaskId(), KEY_TIMER_ID11);
-    StartTimer(KEY_TIMER_ID11, 1000, timer_cb);
+    INT d;
+    UINT8 path[64] = {0};
+    UINT16 path_w[64] = {0};
+    INT ret;
+    FS_HANDLE h;
+
+    d = MMI_FS_GetDrive(
+        FS_DRIVE_V_REMOVABLE, 1, FS_NO_ALT_DRIVE);
+    sprintf(path, "%c:/test1", d);
+    mmi_asc_to_ucs2(path_w, path);
+    h = MMI_FS_Open(path_w, FS_CREATE|FS_READ_WRITE);
+    LOG("h=%d", h);
+
+    sprintf(path, "%c:/test2", d);
+    mmi_asc_to_ucs2(path_w, path);
+    h = MMI_FS_Open(path_w, FS_CREATE|FS_READ_WRITE);
+    LOG("h=%d", h);
+
+    sprintf(path, "%c:/test3", d);
+    mmi_asc_to_ucs2(path_w, path);
+    h = MMI_FS_Open(path_w, FS_CREATE|FS_READ_WRITE);
+    LOG("h=%d", h);
+
 }
 
 static void key_3() {
