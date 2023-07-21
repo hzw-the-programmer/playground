@@ -238,9 +238,9 @@ c0 3c
 00 ff
 
 // compress len
-1
+01
 // MBEDTLS_SSL_COMPRESS_NULL
-0
+00
 
 // extension len
 00 4c
