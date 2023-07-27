@@ -10,13 +10,13 @@
 03 03 // PTLS_PROTOCOL_VERSION_TLS12
 
 // random_bytes
-82 d7 06 16 0d 1a e7 e3 bc af
-36 ae 5f c7 07 ac 45 b9 4b 81
-0e 3b cf d7 53 b8 6e 36 41 04
-13 2d
+66 04 06 12 de 05 2c 6c 79 db
+66 f5 3a 5b 96 87 8f 70 df 96
+57 ba ae e2 4d df 39 35 33 bf
+c6 88
 
 // legacy_session_id
-00 // len
+00
 
 // cipher_suite
 13 02 // PTLS_CIPHER_SUITE_AES_256_GCM_SHA384
@@ -24,7 +24,7 @@
 00
 
 // extensions
-00 4f // len
+00 4f
 
 00 2b // PTLS_EXTENSION_TYPE_SUPPORTED_VERSIONS
 00 02 // len
@@ -33,12 +33,12 @@
 00 33 // PTLS_EXTENSION_TYPE_KEY_SHARE
 00 45 // len
 00 17 // PTLS_GROUP_SECP256R1
-00 41 // len SECP256R1_PUBLIC_KEY_SIZE
+00 41 // len: SECP256R1_PUBLIC_KEY_SIZE
 04 // TYPE_UNCOMPRESSED_PUBLIC_KEY
-e5 0f 10 e0 8c 91 50 3a b7 5a
-06 26 e6 fb 82 54 44 b5 8e 24
-1c b9 e5 0b fb 9e e7 da 3d 85
-4c 9d 84 16 8a 11 c8 a0 00 29
-44 3f 10 35 70 5b 24 28 99 c5
-d2 bd 43 3d a1 f4 b5 9a 81 ca
-73 35 e1 51
+8c 19 40 35 62 cb be 9b 51 d3
+4a d6 da 2a c6 c7 d0 c6 d6 52
+4e 98 b8 b6 a3 de 73 68 2c 28
+79 3e c8 d8 0b 8b 8a f5 e3 0f
+f6 f6 8a b0 f5 b1 51 6a 36 5e
+22 3e 03 62 7a b1 4c 64 19 d8
+e5 d3 bb 98
