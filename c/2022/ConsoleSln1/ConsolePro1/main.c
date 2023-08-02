@@ -43,11 +43,14 @@ int main() {
 	int ret;
 	size_t len;
 
+	on_extension.cb = on_extension_cb;
+
 	client_ctx.random_bytes = ptls_minicrypto_random_bytes;
 	client_ctx.get_time = &ptls_get_time;
 	client_ctx.key_exchanges = ptls_minicrypto_key_exchanges;
 	client_ctx.cipher_suites = ptls_minicrypto_cipher_suites;
 	client_ctx.verify_certificate = NULL;
+	client_ctx.on_extension = &on_extension;
 
 	client_extensions[0].type = client_extension_type;
 	client_extensions[0].data.base = client_extension_data;
@@ -66,7 +69,6 @@ int main() {
 	server_ctx.cipher_suites = ptls_minicrypto_cipher_suites;
 	ret = ptls_load_certificates(&server_ctx, cert_file);
 	ret = ptls_minicrypto_load_private_key(&server_ctx, key_file);
-	on_extension.cb = on_extension_cb;
 	on_client_hello.cb = on_client_hello_cb;
 	server_ctx.on_extension = &on_extension;
 	server_ctx.on_client_hello = &on_client_hello;
@@ -79,6 +81,16 @@ int main() {
 	ptls_buffer_init(&client_buf, "", 0);
 	ptls_handshake(client_tls, &client_buf, NULL, NULL, &client_prop);
 
+	ptls_buffer_init(&server_buf, "", 0);
+	len = client_buf.off;
+	ptls_handshake(server_tls, &server_buf, client_buf.base, &len, &server_prop);
+
+	ptls_buffer_dispose(&client_buf);
+	ptls_buffer_init(&client_buf, "", 0);
+	len = server_buf.off;
+	ptls_handshake(client_tls, &client_buf, server_buf.base, &len, &client_prop);
+
+	ptls_buffer_dispose(&server_buf);
 	ptls_buffer_init(&server_buf, "", 0);
 	len = client_buf.off;
 	ptls_handshake(server_tls, &server_buf, client_buf.base, &len, &server_prop);
