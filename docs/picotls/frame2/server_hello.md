@@ -1,0 +1,44 @@
+16 // PTLS_CONTENT_TYPE_HANDSHAKE
+03 03 00 7b
+
+02 // PTLS_HANDSHAKE_TYPE_SERVER_HELLO
+00 00 77
+
+// legacy_version
+03 03
+
+// random_bytes
+a9 36 5d 41 ac 57 23 1b ed b9
+25 8f e6 c9 b8 db 0e 8d 10 94
+55 46 0e 01 d7 e0 20 e7 fa 69
+bb b2
+
+// lecagy_session_id
+00
+
+// cipher_suite
+13 02
+
+00
+
+// extensions
+00 4f
+
+// PTLS_EXTENSION_TYPE_SUPPORTED_VERSIONS
+00 2b
+00 02
+03 04
+
+// PTLS_EXTENSION_TYPE_KEY_SHARE
+00 33
+00 45
+00 17 // PTLS_GROUP_SECP256R1
+00 41
+04 // TYPE_UNCOMPRESSED_PUBLIC_KEY
+61 3c 31 8e 70 3b d2 9b ed 51
+38 d8 c5 7b 08 3a b1 e4 5e 96
+bd 22 ab 38 71 15 86 e0 73 f5
+ac 4a 92 e6 e5 0e 85 80 35 96
+51 7c ec 63 67 7f 0c ad 05 03
+36 38 ba 76 c5 a7 a0 0a 15 7a
+66 4b 0e 99
