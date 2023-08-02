@@ -5,13 +5,14 @@
 0b // PTLS_HANDSHAKE_TYPE_CERTIFICATE
 00 02 6d
 
+// certificate request context
 00
 
-// certificates
-00 02 69
+// certificate_list
+00 02 69 // len
 
 // certificate 1
-00 02 64
+00 02 64 // len
 
 30 82 02 60 30 82 01 48 a0 03
 02 01 02 02 01 01 30 0d 06 09
@@ -82,6 +83,7 @@ f6 07 d8 a5 ab 2b 3a 70 8b 77
 90 57 f2 76 2a 23 0b 01 68 c6
 9a f2
 
+// extensions
 00 00
 
 # encrypted
