@@ -1,6 +1,18 @@
 #include "picotls.h"
 #include "minicrypto.h"
 
+#define EXTENSION_1 0x1234
+#define EXTENSION_2 0x5678
+
+typedef struct {
+	size_t extensions_len;
+	uint8_t extensions[16];
+	ptls_handshake_properties_t inner;
+} properties_wrapper;
+
+uint8_t extension_1_data[] = {'a', 'b', 'c', 'd'};
+uint8_t extension_2_data[] = { 'e', 'f', 'g', 'h', 'i'};
+
 char test_sni[] = "test.example.com";
 char test_alpn[] = "picotls";
 ptls_iovec_t proposed_alpn[] = {
@@ -12,9 +24,8 @@ int on_extension_cb(ptls_on_extension_t* self, ptls_t* tls, uint8_t hstype, uint
 	return 0;
 }
 
-int collect_extension_cb(ptls_t* tls, struct st_ptls_handshake_properties_t* properties, uint16_t type) {
-	//return 1;
-	return 0;
+int should_collect_unknown_extension_cb(ptls_t* tls, struct st_ptls_handshake_properties_t* properties, uint16_t type) {
+	return type == EXTENSION_2;
 }
 
 int on_client_hello_cb(ptls_on_client_hello_t* on_hello_cb_ctx, ptls_t* tls,
@@ -32,8 +43,17 @@ int on_client_hello_cb(ptls_on_client_hello_t* on_hello_cb_ctx, ptls_t* tls,
 	return 0;
 }
 
-int collect_extensions_cb(ptls_t* tls, ptls_handshake_properties_t* properties,
+int collected_unknown_extensions_cb(ptls_t* tls, ptls_handshake_properties_t* properties,
 	ptls_raw_extension_t* slots) {
+	properties_wrapper* wrapper = (uint8_t*)properties - offsetof(properties_wrapper, inner);
+	while (slots->type != UINT16_MAX) {
+		if (slots->type == EXTENSION_2) {
+			wrapper->extensions_len = slots->data.len;
+			memcpy(wrapper->extensions, slots->data.base, slots->data.len);
+			break;
+		}
+		slots++;
+	}
 	return 0;
 }
 
@@ -42,9 +62,7 @@ int main() {
 	char* key_file = "ec_key.pem";
 
 	ptls_context_t client_ctx = { 0 };
-	ptls_raw_extension_t client_extensions[2] = { 0 };
-	uint16_t client_extension_type = 1234;
-	uint8_t client_extension_data[] = {1,2,3};
+	ptls_raw_extension_t client_extensions[3] = { 0 };
 	ptls_handshake_properties_t client_prop = { 0 };
 	ptls_t* client_tls;
 	ptls_buffer_t client_buf;
@@ -52,7 +70,7 @@ int main() {
 	ptls_context_t server_ctx = { 0 };
 	ptls_on_extension_t on_extension;
 	ptls_on_client_hello_t on_client_hello;
-	ptls_handshake_properties_t server_prop = { 0 };
+	properties_wrapper server_properties = { 0 };
 	ptls_t* server_tls;
 	ptls_buffer_t server_buf;
 
@@ -69,13 +87,20 @@ int main() {
 	client_ctx.on_extension = &on_extension;
 	client_ctx.use_exporter = 1;
 
-	client_extensions[0].type = client_extension_type;
-	client_extensions[0].data.base = client_extension_data;
-	client_extensions[0].data.len = sizeof(client_extension_data);
-	client_extensions[1].type = UINT16_MAX;
-	client_extensions[1].data.base = NULL;
-	client_extensions[1].data.len = 0;
+	client_extensions[0].type = EXTENSION_1;
+	client_extensions[0].data.base = extension_1_data;
+	client_extensions[0].data.len = sizeof(extension_1_data);
+	
+	client_extensions[1].type = EXTENSION_2;
+	client_extensions[1].data.base = extension_2_data;
+	client_extensions[1].data.len = sizeof(extension_2_data);
+	
+	client_extensions[2].type = UINT16_MAX;
+	client_extensions[2].data.base = NULL;
+	client_extensions[2].data.len = 0;
+	
 	client_prop.additional_extensions = client_extensions;
+	
 	client_prop.client.negotiated_protocols.list = proposed_alpn;
 	client_prop.client.negotiated_protocols.count = sizeof(proposed_alpn) / sizeof(proposed_alpn[0]);
 
@@ -93,8 +118,8 @@ int main() {
 	server_ctx.on_client_hello = &on_client_hello;
 	server_ctx.use_exporter = 1;
 
-	server_prop.collect_extension = collect_extension_cb;
-	server_prop.collected_extensions = collect_extensions_cb;
+	server_properties.inner.collect_extension = should_collect_unknown_extension_cb;
+	server_properties.inner.collected_extensions = collected_unknown_extensions_cb;
 
 	server_tls = ptls_server_new(&server_ctx);
 	
@@ -103,7 +128,7 @@ int main() {
 
 	ptls_buffer_init(&server_buf, "", 0);
 	len = client_buf.off;
-	ptls_handshake(server_tls, &server_buf, client_buf.base, &len, &server_prop);
+	ptls_handshake(server_tls, &server_buf, client_buf.base, &len, &server_properties.inner);
 
 	ptls_buffer_dispose(&client_buf);
 	ptls_buffer_init(&client_buf, "", 0);
@@ -113,7 +138,7 @@ int main() {
 	ptls_buffer_dispose(&server_buf);
 	ptls_buffer_init(&server_buf, "", 0);
 	len = client_buf.off;
-	ptls_handshake(server_tls, &server_buf, client_buf.base, &len, &server_prop);
+	ptls_handshake(server_tls, &server_buf, client_buf.base, &len, &server_properties.inner);
 
 	ptls_cipher_suite_t *client_cipher;
 	uint8_t client_secret[64] = { 0 };
@@ -141,4 +166,7 @@ int main() {
 
 	assert(ptls_get_negotiated_protocol(server_tls) != NULL);
 	assert(strcmp(ptls_get_negotiated_protocol(server_tls), test_alpn) == 0);
+
+	assert(server_properties.extensions_len == sizeof(extension_2_data));
+	assert(memcmp(server_properties.extensions, extension_2_data, sizeof(extension_2_data)) == 0);
 }
