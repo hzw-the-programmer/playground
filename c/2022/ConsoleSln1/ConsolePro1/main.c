@@ -190,4 +190,7 @@ int main() {
 
 	assert(client_ctx.extension_data_len == sizeof(extension_2_server_data) - 1);
 	assert(memcmp(client_ctx.extension_data, extension_2_server_data, sizeof(extension_2_server_data) - 1) == 0);
+
+	ptls_free(client_tls);
+	ptls_free(server_tls);
 }
