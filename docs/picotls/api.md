@@ -15,3 +15,5 @@ aesgcm_encrypt_final
 server_handle_hello
 
 parse_record
+
+secp256r1_create_key_exchange

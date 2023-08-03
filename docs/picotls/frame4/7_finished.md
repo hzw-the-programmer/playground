@@ -1,0 +1,32 @@
+16 // PTLS_CONTENT_TYPE_HANDSHAKE
+03 03 // PTLS_PROTOCOL_VERSION_TLS12
+00 00 // len
+
+14 // PTLS_HANDSHAKE_TYPE_FINISHED
+00 00 30 // len
+
+5b 56 ef 70 7a 16 d9 66 20 9b
+8d 0b f3 c8 29 48 c0 cd 6d 4f
+88 f3 3a b7 13 4a 43 df 3b 16
+7f 29 e4 da 28 a4 23 b4 ea 85
+eb fb 38 38 1e 44 a7 62
+
+# encrypted
+17 // PTLS_CONTENT_TYPE_APPDATA
+03 03 // PTLS_PROTOCOL_VERSION_TLS12
+00 45 // len
+
+d4 // PTLS_HANDSHAKE_TYPE_FINISHED
+b3 16 35 // len
+
+20 be 4d 69 19 b3 21 dc 56 3e
+f2 92 e3 83 36 82 5d f5 b8 97
+68 80 50 67 c5 c7 91 7d 8e 16
+f2 a5 0c 4e bb 4f 7f a6 c0 f4
+a4 32 00 59 02 a8 d2 40
+
+81 // PTLS_CONTENT_TYPE_HANDSHAKE
+
+// tag
+4f ee 72 32 dd c4 61 19 b9 4d
+ee 1f 38 b3 33 ed
