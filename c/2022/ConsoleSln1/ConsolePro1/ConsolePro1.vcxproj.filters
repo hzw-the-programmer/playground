@@ -18,5 +18,11 @@
     <ClCompile Include="main.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="handshake.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="certificate.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
