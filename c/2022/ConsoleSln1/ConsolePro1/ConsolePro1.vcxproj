@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="certificate.c" />
+    <ClCompile Include="cli.c" />
     <ClCompile Include="handshake.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
