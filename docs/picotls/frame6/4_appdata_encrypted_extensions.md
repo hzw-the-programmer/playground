@@ -1,0 +1,27 @@
+// record header
+17 // PTLS_CONTENT_TYPE_APPDATA
+03 03 // PTLS_PROTOCOL_VERSION_TLS12
+00 17 // len
+
+// message
+6d // PTLS_HANDSHAKE_TYPE_ENCRYPTED_EXTENSIONS
+32 d1 75 // len
+
+// extensions
+e9 4d // len
+
+82 // PTLS_CONTENT_TYPE_HANDSHAKE
+
+// tag
+1c b6 cf 36 83 c5 b4 22 89 94
+5f 3d 20 23 1a b3
+
+# message decrypted
+
+08 // PTLS_HANDSHAKE_TYPE_ENCRYPTED_EXTENSIONS
+00 00 02 // len
+
+// extensions
+00 00 // len
+
+16 // PTLS_CONTENT_TYPE_HANDSHAKE

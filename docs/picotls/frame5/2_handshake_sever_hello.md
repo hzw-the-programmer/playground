@@ -1,0 +1,37 @@
+16 // PTLS_CONTENT_TYPE_HANDSHAKE
+03 03 00 7b
+
+02 // PTLS_HANDSHAKE_TYPE_SERVER_HELLO
+00 00 77
+
+03 03
+
+86 d3 7f 05 ac 2a b1 02 e1 ab
+fd 7f f2 3d fd 69 48 b1 b8 05
+15 ea 9a 92 27 84 ab be ec 82
+1e c3
+
+00
+
+13 01
+
+00
+
+00 4f
+
+00 2b // PTLS_EXTENSION_TYPE_SUPPORTED_VERSIONS
+00 02
+03 04
+
+00 33 // PTLS_EXTENSION_TYPE_KEY_SHARE
+00 45
+00 17
+00 41
+04
+76 6d 15 3c 24 7a c3 0a 6c e0
+bd 1a ea c1 b7 1c 67 f2 e3 61
+bf b1 63 fb 5e f7 21 26 65 84
+e9 c2 e2 e3 de a4 55 df a8 ff
+f7 0d 44 fb dd 6b 1c 1e 10 4a
+2d 28 98 f2 ef 18 83 59 4a 2c
+ed 00 25 6f

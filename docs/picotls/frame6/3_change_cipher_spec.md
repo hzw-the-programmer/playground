@@ -1,0 +1,7 @@
+// record header
+14 // PTLS_CONTENT_TYPE_CHANGE_CIPHER_SPEC
+03 03 // PTLS_PROTOCOL_VERSION_TLS12
+00 01 // len
+
+// message
+01
