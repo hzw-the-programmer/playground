@@ -22,6 +22,7 @@
     <ClCompile Include="certificate.c" />
     <ClCompile Include="cli.c" />
     <ClCompile Include="handshake.c" />
+    <ClCompile Include="handshake_2.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

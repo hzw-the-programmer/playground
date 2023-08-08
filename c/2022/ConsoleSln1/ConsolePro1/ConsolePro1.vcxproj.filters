@@ -27,5 +27,8 @@
     <ClCompile Include="cli.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="handshake_2.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
