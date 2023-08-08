@@ -8,6 +8,6 @@ int main(int argc, char* argv[]) {
 	handshake_test_2();
 	certificate_test();
 	
-	//return cli_test(argc, argv);
-	return 0;
+	return cli_test(argc, argv);
+	//return 0;
 }
