@@ -1,3 +1,5 @@
+make p=project_240X320BAR_48MB_CAT1 m=picotls update image
+
 Compiling Source File MS_MMI/source/mmi_app/app/x/main.c...
 C:/Progra~1/ARM/RVCT/Programs/3.1/569/win_32-pentium/tcc
 --cpu ARM926EJ-S
