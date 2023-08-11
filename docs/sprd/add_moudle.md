@@ -69,7 +69,7 @@ PROJECT.modules
 #  Description: The Following Libs Will Be Compiled By Default (Using Make PROJECT update or New)
 #****************************************************************************************#
 
-ifeq ($(strip $(LETSCHAT_SUPPORT)),TRUE)
+ifeq ($(strip $(PICOTLS_SUPPORT)),TRUE)
 COMPLIBS_DBG += picotls
 endif
 
