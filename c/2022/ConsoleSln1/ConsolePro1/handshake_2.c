@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include "picotls.h"
-#include "minicrypto.h"
+#include "picotls/minicrypto.h"
 
 int handshake_test_2() {
 	uint8_t server_hello[] = {

@@ -1,5 +1,5 @@
 #include "picotls.h"
-#include "minicrypto.h"
+#include "picotls/minicrypto.h"
 
 #define EXTENSION_1 0x1234
 #define EXTENSION_2 0x5678
@@ -129,7 +129,10 @@ int handshake_test() {
 	server_tls_ctx.get_time = &ptls_get_time;
 	server_tls_ctx.cipher_suites = ptls_minicrypto_cipher_suites;
 	server_tls_ctx.key_exchanges = ptls_minicrypto_key_exchanges;
+	
 	ret = ptls_load_certificates(&server_tls_ctx, cert_file);
+	print_buf(server_tls_ctx.certificates.list[0].base, server_tls_ctx.certificates.list[0].len);
+	
 	ret = ptls_minicrypto_load_private_key(&server_tls_ctx, key_file);
 	server_tls_ctx.on_extension = &on_extension;
 	on_client_hello.cb = on_client_hello_cb;
@@ -192,5 +195,11 @@ int handshake_test() {
 	assert(memcmp(client_ctx.extension_data, extension_2_server_data, sizeof(extension_2_server_data) - 1) == 0);
 
 	ptls_free(client_tls);
+
+	for (size_t i = 0; i < server_tls_ctx.certificates.count; i++) {
+		free(server_tls_ctx.certificates.list[i].base);
+	}
+	free(server_tls_ctx.certificates.list);
+
 	ptls_free(server_tls);
 }

@@ -23,7 +23,12 @@
     <ClCompile Include="cli.c" />
     <ClCompile Include="handshake.c" />
     <ClCompile Include="handshake_2.c" />
+    <ClCompile Include="handshake_3.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="utils.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -111,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\open_source\open_source1\github\hzw-the-programmer\playground\c\2022\ConsoleSln1\ConsolePro1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
