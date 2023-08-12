@@ -201,5 +201,7 @@ int handshake_test() {
 	}
 	free(server_tls_ctx.certificates.list);
 
+	free(server_tls_ctx.sign_certificate);
+
 	ptls_free(server_tls);
 }

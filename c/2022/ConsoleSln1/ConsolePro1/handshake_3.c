@@ -3,7 +3,7 @@
 
 #include "utils.h"
 
-uint8_t certificate[] = {
+uint8_t g_certificate[] = {
 	0x30, 0x82, 0x02, 0x60, 0x30, 0x82, 0x01, 0x48, 0xa0, 0x03,
 	0x02, 0x01, 0x02, 0x02, 0x01, 0x01, 0x30, 0x0d, 0x06, 0x09,
 	0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b, 0x05,
@@ -74,6 +74,13 @@ uint8_t certificate[] = {
 	0x9a, 0xf2,	
 };
 
+uint8_t ecdsa_key[] = {
+	0xc1, 0x74, 0xb4, 0xf9, 0x5e, 0xfe, 0x7a, 0x01, 0x0e, 0xbe,
+	0x4a, 0xe8, 0x33, 0xb2, 0x36, 0x13, 0xfc, 0x65, 0xe9, 0x65,
+	0x91, 0xa8, 0x39, 0x9e, 0x9a, 0x80, 0xfb, 0xab, 0xd1, 0xff,
+	0xba, 0x3a,
+};
+
 int handshake_test_3() {
 	ptls_context_t ctx = { 0 };
 	ptls_t* tls;
@@ -84,6 +91,8 @@ int handshake_test_3() {
 	ptls_buffer_t server_buf;
 	size_t len;
 	int ret;
+	ptls_iovec_t certificate = { g_certificate, sizeof(g_certificate)};
+	ptls_minicrypto_secp256r1sha256_sign_certificate_t minicrypto_sign_certificate = {0};
 
 	ctx.get_time = &ptls_get_time;
 	ctx.random_bytes = ptls_minicrypto_random_bytes;
@@ -96,6 +105,12 @@ int handshake_test_3() {
 	server_ctx.cipher_suites = ptls_minicrypto_cipher_suites;
 	server_ctx.key_exchanges = ptls_minicrypto_key_exchanges;
 	server_ctx.random_bytes = ptls_minicrypto_random_bytes;
+
+	server_ctx.certificates.list = &certificate;
+	server_ctx.certificates.count = 1;
+
+	ptls_minicrypto_init_secp256r1sha256_sign_certificate(&minicrypto_sign_certificate, ptls_iovec_init(ecdsa_key, sizeof(ecdsa_key)));
+	server_ctx.sign_certificate = &minicrypto_sign_certificate.super;
 
 	server_tls = ptls_server_new(&server_ctx);
 
