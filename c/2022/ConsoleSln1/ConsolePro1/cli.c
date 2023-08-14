@@ -1,7 +1,7 @@
 #include <winsock2.h>
 #include <stdio.h>
 #include "picotls.h"
-#include "minicrypto.h"
+#include "picotls/minicrypto.h"
 
 #define DEFAULT_BUFLEN 1024
 
