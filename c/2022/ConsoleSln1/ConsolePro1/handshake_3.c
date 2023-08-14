@@ -81,6 +81,9 @@ uint8_t ecdsa_key[] = {
 	0xba, 0x3a,
 };
 
+#define REQUEST  "GET / HTTP/1.1\r\n\r\n"
+#define RESPONSE "HTTP/1.1 200 OK\r\n\r\n"
+
 int handshake_test_3() {
 	ptls_context_t ctx = { 0 };
 	ptls_t* tls;
@@ -140,6 +143,32 @@ int handshake_test_3() {
 	ret = ptls_handshake(server_tls, &server_buf, buf.base, &len, NULL);
 	printf("***********************************************************\n");
 	print_buf(server_buf.base, server_buf.off);
+	printf("***********************************************************\n\n");
+
+	buf.off = 0;
+	ret = ptls_send(tls, &buf, REQUEST, strlen(REQUEST));
+	printf("***********************************************************\n");
+	print_buf(buf.base, buf.off);
+	printf("***********************************************************\n\n");
+
+	server_buf.off = 0;
+	len = buf.off;
+	ret = ptls_receive(server_tls, &server_buf, buf.base, &len);
+	printf("***********************************************************\n");
+	print_buf(server_buf.base, server_buf.off);
+	printf("***********************************************************\n\n");
+
+	server_buf.off = 0;
+	ret = ptls_send(server_tls, &server_buf, RESPONSE, strlen(RESPONSE));
+	printf("***********************************************************\n");
+	print_buf(server_buf.base, server_buf.off);
+	printf("***********************************************************\n\n");
+
+	buf.off = 0;
+	len = server_buf.off;
+	ret = ptls_receive(tls, &buf, server_buf.base, &len);
+	printf("***********************************************************\n");
+	print_buf(buf.base, buf.off);
 	printf("***********************************************************\n\n");
 
 	ptls_buffer_dispose(&buf);
