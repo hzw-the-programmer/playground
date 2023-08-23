@@ -333,16 +333,45 @@ static void dns_begin() {
     }
 }
 
+static void req_test() {
+    dns_entry_t *entry;
+
+    entry = get_dns_entry(HTTPBIN_INDEX);
+    if (!entry) {
+        return;
+    }
+
+    request(&entry->ip, 80);
+}
+
+static void deactive() {
+    gprs_ctx_t *ctx = &g_gprs_ctx;
+    UINT32 ret;
+    UINT8 state;
+
+    LOG("cid=%d", ctx->cid);
+    ret = CFW_GetGprsActState(ctx->cid, &state, ctx->sim);
+    LOG("act:s=%d,r=%x", state, ret);
+    if (ret == ERR_SUCCESS && state == CFW_GPRS_ACTIVED) {
+        UINT8 uti;
+
+        CFW_GetFreeUTI(0, &uti);
+        ret = CFW_GprsAct(CFW_GPRS_DEACTIVED, ctx->cid, uti, ctx->sim);
+        LOG("r:%d", ret);
+    }
+}
+
 static void detach() {
     gprs_ctx_t *ctx = &g_gprs_ctx;
-    UINT8 state;
     UINT32 ret;
-    UINT8 uti;
+    UINT8 state;
 
     ret = CFW_GetGprsAttState(&state, ctx->sim);
     LOG("r:%d,s:%d", ret, state);
-    if (ret == ERR_SUCCESS && state == 1) {
-        CFW_GetFreeUTI(0,&uti);
+    if (ret == ERR_SUCCESS && state == CFW_GPRS_ATTACHED) {    
+        UINT8 uti;
+
+        CFW_GetFreeUTI(0, &uti);
         ret = CFW_GprsAtt(CFW_GPRS_DETACHED, uti, ctx->sim);
         LOG("r:%d", ret);
     }
@@ -364,7 +393,7 @@ static void key_2() {
 
 static void key_3() {
     //dns_begin();
-    detach();
+    deactive();
 }
 
 static void key_4() {
@@ -373,14 +402,8 @@ static void key_4() {
 static kal_int8 g_soc;
 
 static void key_5() {
-    dns_entry_t *entry;
-
-    entry = get_dns_entry(HTTPBIN_INDEX);
-    if (!entry) {
-        return;
-    }
-
-    request(&entry->ip, 80);
+    //req_test();
+    detach();
 }
 
 static void key_6() {
