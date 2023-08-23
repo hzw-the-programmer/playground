@@ -325,6 +325,29 @@ void update_status_icon(U8 state)
     LOG("icon cb:%d", state);
 }
 
+static void dns_begin() {
+    int i;
+
+    for (i = 0; i < ARR_SIZE(g_dns_entry); i++) {
+        dns(&g_gprs_ctx, i);
+    }
+}
+
+static void detach() {
+    gprs_ctx_t *ctx = &g_gprs_ctx;
+    UINT8 state;
+    UINT32 ret;
+    UINT8 uti;
+
+    ret = CFW_GetGprsAttState(&state, ctx->sim);
+    LOG("r:%d,s:%d", ret, state);
+    if (ret == ERR_SUCCESS && state == 1) {
+        CFW_GetFreeUTI(0,&uti);
+        ret = CFW_GprsAtt(CFW_GPRS_DETACHED, uti, ctx->sim);
+        LOG("r:%d", ret);
+    }
+}
+
 static void lsk() {
 }
 
@@ -340,11 +363,8 @@ static void key_2() {
 }
 
 static void key_3() {
-    int i;
-
-    for (i = 0; i < ARR_SIZE(g_dns_entry); i++) {
-        dns(&g_gprs_ctx, i);
-    }
+    //dns_begin();
+    detach();
 }
 
 static void key_4() {

@@ -61,3 +61,15 @@
 0x3e, 0x0a, 0x17,
 
 # text
+HTTP/1.0 400 Bad Request
+Server: AkamaiGHost
+Mime-Version: 1.0
+Content-Type: text/html
+Content-Length: 208
+Expires: Tue, 22 Aug 2023 11:27:24 GMT
+Date: Tue, 22 Aug 2023 11:27:24 GMT
+Connection: close
+
+<HTML><HEAD>
+<TITLE>Invalid URL</TITLE>
+</HE...
