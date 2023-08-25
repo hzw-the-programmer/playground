@@ -5,6 +5,7 @@
 #include "window_parse.h"
 #include "demoapp.h"
 #include "log.h"
+#include "compat.h"
 
 MMI_APPLICATION_T g_demoapp;
 
@@ -29,10 +30,6 @@ static TCPIP_SOCKET_T g_socket;
 static void connect(uint32 addr, uint16 port);
 static MMI_RESULT_E socket_cb(PWND app_ptr, uint16 msg_id, DPARAM param);
 #endif // socket
-
-#if defined(WIN32)
-#undef PICOTLS_SUPPORT
-#endif
 
 #if defined(PICOTLS_SUPPORT)
 #include "picotls.h"
@@ -127,6 +124,7 @@ WINDOW_TABLE(MMIDEMOAPP_WIN_TAB) = {
 void demoapp_entry() {
     LOG_INIT();
 #if defined(PICOTLS_SUPPORT)
+    picotls_test();
     picotls_init();
 #endif
     MMK_CreateWin((uint32*)MMIDEMOAPP_WIN_TAB, PNULL);
@@ -348,6 +346,8 @@ static MMI_RESULT_E socket_cb(PWND app_ptr, uint16 msg_id, DPARAM param) {
                             ret = ptls_receive(g_ptls_ctx.tls, &g_ptls_ctx.buf, data + off, &consumed);
                             if (ret == 0) {
                                 if (g_ptls_ctx.buf.off) {
+                                    slice_t slice = slice_new(g_ptls_ctx.buf.base, g_ptls_ctx.buf.off);
+                                    LOG("%S", &slice);
                                 }
                             }
                         }
