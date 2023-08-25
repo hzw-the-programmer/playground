@@ -177,12 +177,7 @@ static void picotls_test_3()
 	ret = ptls_handshake(tls, &buf, server_buf.base, &len, NULL);
     LOG("client:ptls_handshake: ret=0x%x, len=0x%x", ret, buf.off);
 
-	len = buf.off;
-	buf.off = 0;
-	ret = ptls_handshake(server_tls, &server_buf, buf.base, &len, NULL);
-    LOG("server:ptls_handshake: ret=0x%x, len=0x%x", ret, server_buf.off);
-
-	ret = ptls_send(tls, &buf, REQUEST, strlen(REQUEST));
+    ret = ptls_send(tls, &buf, REQUEST, strlen(REQUEST));
     LOG("client:ptls_send: ret=0x%x, len=0x%x", ret, buf.off);
 
 	len = buf.off;
