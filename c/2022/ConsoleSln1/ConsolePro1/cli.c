@@ -5,6 +5,10 @@
 
 #define DEFAULT_BUFLEN 1024
 
+#define REQUEST "GET / HTTP/1.1\r\n"  \
+			    "Host: localhost\r\n" \
+			    "\r\n"
+
 void process(SOCKET soc);
 
 int cli_test(int argc, char* argv[]) {
@@ -64,6 +68,8 @@ void buf_shift(ptls_buffer_t *buf, size_t delta) {
 	buf->off -= delta;
 }
 
+void print_buf(const uint8_t* buf, size_t len);
+
 void process(SOCKET soc) {
 	ptls_context_t ctx = { 0 };
 	ctx.random_bytes = ptls_minicrypto_random_bytes;
@@ -75,7 +81,15 @@ void process(SOCKET soc) {
 
 	ptls_buffer_t sendbuf;
 	ptls_buffer_init(&sendbuf, "", 0);
+	
 	ptls_handshake(tls, &sendbuf, NULL, 0, NULL);
+	printf("***********************************************************\n");
+	printf("* begin\n");
+	printf("***********************************************************\n");
+	print_buf(sendbuf.base, sendbuf.off);
+	printf("***********************************************************\n");
+	printf("* end\n");
+	printf("***********************************************************\n");
 
 	ptls_buffer_t recvbuf;
 	ptls_buffer_init(&recvbuf, "", 0);
@@ -98,18 +112,27 @@ void process(SOCKET soc) {
 		result = recv(soc, buf, DEFAULT_BUFLEN, 0);
 		if (result > 0) {
 			size_t len = result, left = 0, off = 0;
+				
 			while ((left = len - off) > 0) {
 				if (!ptls_handshake_is_complete(tls)) {
 					result = ptls_handshake(tls, &sendbuf, buf, &left, NULL);
 					if (result == 0) {
-						uint8_t req[] = "GET / HTTP/1.1\r\n\r\n";
-						ptls_send(tls, &sendbuf, req, sizeof(req) - 1);
+						ptls_send(tls, &sendbuf, REQUEST, sizeof(REQUEST) - 1);
 					}
 				}
 				else {
 					result = ptls_receive(tls, &recvbuf, buf, &left);
 					if (result == 0) {
+						for (size_t i = 0; i < recvbuf.off; i++) {
+							printf("%c", recvbuf.base[i]);
+						}
 						recvbuf.off = 0;
+
+						static int count;
+						if (count < 2) {
+							ptls_send(tls, &sendbuf, REQUEST, sizeof(REQUEST) - 1);
+							count++;
+						}
 					}
 				}
 				off += left;

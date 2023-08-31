@@ -6,10 +6,21 @@
 #include "demoapp.h"
 #include "log.h"
 #include "compat.h"
+#if defined(PICOTLS_SUPPORT)
+#include "picotls.h"
+#include "picotls/minicrypto.h"
+#endif // PICOTLS_SUPPORT
+#include "http.h"
 
 MMI_APPLICATION_T g_demoapp;
 
 static MMI_RESULT_E processMsg(PWND app_ptr, uint16 msg_id, DPARAM param);
+
+static void http_ctx_init(http_ctx_t *ctx);
+
+#define REQUEST "GET " PATH " HTTP/1.1\r\n" \
+                "Host: " HOST "\r\n" \
+                "\r\n"
 
 #if 1 // pdp
 static uint32 g_netid;
@@ -17,7 +28,7 @@ static void pdp_active();
 #endif // pdp
 
 #if 1 // dns
-#define DOMAIN "localhost"
+#define DOMAIN HOST
 #define PORT 443
 static TCPIP_HOST_HANDLE g_dns_request_id;
 static uint32 g_ip;
@@ -38,6 +49,8 @@ static MMI_RESULT_E socket_cb(PWND app_ptr, uint16 msg_id, DPARAM param);
 typedef struct {
     ptls_t *tls;
     ptls_buffer_t buf;
+    ptls_buffer_t sendbuf;
+    http_ctx_t ctx;
 } ptls_ctx_t;
 
 static ptls_ctx_t g_ptls_ctx;
@@ -125,6 +138,7 @@ void demoapp_entry() {
     LOG_INIT();
 #if defined(PICOTLS_SUPPORT)
     picotls_test();
+    http_ctx_init(&g_ptls_ctx.ctx);
     picotls_init();
 #endif
     MMK_CreateWin((uint32*)MMIDEMOAPP_WIN_TAB, PNULL);
@@ -299,7 +313,7 @@ static int send(TCPIP_SOCKET_T soc, ptls_buffer_t *buf) {
 
     while (buf->off != 0) {
         ret = sci_sock_send(soc, buf->base, buf->off, 0);
-        LOG("sci_sock_send: want=%d, got=%d", buf->off, ret);
+        LOG("sci_sock_send: want=0x%02x, got=0x%02x", buf->off, ret);
         if (ret <= 0) {
             break;
         }
@@ -311,6 +325,7 @@ static int send(TCPIP_SOCKET_T soc, ptls_buffer_t *buf) {
 
 static MMI_RESULT_E socket_cb(PWND app_ptr, uint16 msg_id, DPARAM param) {
     int ret;
+    static int req_count;
 
     switch(msg_id) {
 		case SOCKET_CONNECT_EVENT_IND:
@@ -326,7 +341,7 @@ static MMI_RESULT_E socket_cb(PWND app_ptr, uint16 msg_id, DPARAM param) {
                     uint32_t len, off, consumed;
 
                     ret = sci_sock_recv(g_socket, data, sizeof(data), 0);
-                    LOG("sci_sock_recv: %d", ret);
+                    LOG("sci_sock_recv: 0x%02x", ret);
                     if (ret <= 0) {
                         break;
                     }
@@ -338,16 +353,30 @@ static MMI_RESULT_E socket_cb(PWND app_ptr, uint16 msg_id, DPARAM param) {
                             ret = ptls_handshake(g_ptls_ctx.tls, &g_ptls_ctx.buf, data + off, &consumed, NULL);
                             LOG("ptls_handshake: ret=0x%x, consumed=%d", ret, consumed);
                             if (ret == 0) {
-                                uint8_t *req = "GET / HTTP/1.1\r\n\r\n";
-                                ptls_send(g_ptls_ctx.tls, &g_ptls_ctx.buf, req, strlen(req));
+                                LOG("req_count=%d", req_count++);
+                                LOG("%s", REQUEST);
+                                ptls_send(g_ptls_ctx.tls, &g_ptls_ctx.buf, REQUEST, strlen(REQUEST));
                                 send(g_socket, &g_ptls_ctx.buf);
                             }
                         } else {
                             ret = ptls_receive(g_ptls_ctx.tls, &g_ptls_ctx.buf, data + off, &consumed);
                             if (ret == 0) {
                                 if (g_ptls_ctx.buf.off) {
-                                    slice_t slice = slice_new(g_ptls_ctx.buf.base, g_ptls_ctx.buf.off);
-                                    LOG("%S", &slice);
+                                    size_t t = g_ptls_ctx.buf.off;
+                                    int finished = http_parse_response(&g_ptls_ctx.ctx, g_ptls_ctx.buf.base, &t);
+                                    LOG("t=0x%02x, off=0x%02x", t, g_ptls_ctx.buf.off);
+                                    ptls_buffer_shift(&g_ptls_ctx.buf, t);
+                                    if (finished) {
+                                        http_ctx_init(&g_ptls_ctx.ctx);
+                                        if (req_count < 2) {
+                                            LOG("req_count=%d", req_count++);
+                                            LOG("%s", REQUEST);
+                                            LOG("buf.off=0x%02x", g_ptls_ctx.buf.off);
+                                            ptls_send(g_ptls_ctx.tls, &g_ptls_ctx.buf, REQUEST, strlen(REQUEST));
+                                            LOG("buf.off=0x%02x", g_ptls_ctx.buf.off);
+                                            send(g_socket, &g_ptls_ctx.buf);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -403,5 +432,26 @@ static void picotls_init() {
 
     g_ptls_ctx.tls = tls;
     g_ptls_ctx.buf = buf;
+    ptls_buffer_init(&g_ptls_ctx.sendbuf, "", 0);
 }
 #endif // PICOTLS_SUPPORT
+
+static void firstline_cb(http_ctx_t *ctx, const slice_t *line, const slice_t *version, const slice_t *status, const slice_t *reason) {
+    LOG("%S", line);
+}
+
+static void header_cb(http_ctx_t *ctx, const slice_t *line, const slice_t *key, const slice_t *value) {
+    LOG("%S", line);
+}
+
+static void body_cb(http_ctx_t *ctx, const slice_t *body) {
+    LOG("%S", body);
+}
+
+static void http_ctx_init(http_ctx_t *ctx) {
+    memset(ctx, 0, sizeof(*ctx));
+    ctx->firstline_cb = firstline_cb;
+    ctx->header_cb = header_cb;
+    ctx->body_cb = body_cb;
+}
+
