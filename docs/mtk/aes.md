@@ -1,6 +1,6 @@
 STCHE ctx = {0};
 
-assert(out_len/AES_BLOCK_SIZE >= (in_len+AES_BLOCK_SIZE-1)/AES_BLOCK_SIZE);
+assert(out_len>=in_len+AES_BLOCK_SIZE-in_len%AES_BLOCK_SIZE);
 assert(key_len == AES_256_KEY_LEN);
 assert(iv_len == AES_IV_LEN);
 
@@ -9,7 +9,7 @@ che_init(&ctx, CHE_AES);
 che_key_action(&ctx, CHE_SET_KEY, key, key_len);
 che_set_iv(&ctx, iv, iv_len);
 
-while (in_len >= AES_BLOCK_SIZE)
+while (in_len > AES_BLOCK_SIZE)
 {
     che_process(&ctx,
         CHE_AES,
