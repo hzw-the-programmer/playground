@@ -1,0 +1,11 @@
+dm_redraw_category_screen
+DM_BASE_CONTROL_SET_COMMON
+DM_MULTILINE_INPUTBOX1
+
+wgui_cat_ml_inputbox_show_internal
+dm_setup_and_draw_title
+dm_setup_and_draw_multiline_inputbox
+
+gui_title_show_text
+gui_title_oem_show_background
+gui_redraw_scrolling_text
