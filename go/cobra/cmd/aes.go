@@ -1,13 +1,12 @@
 /*
 Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
+	"bytes"
 	"fmt"
 	"log"
-	"bytes"
 	// "crypto/rand"
 	"crypto/aes"
 	"crypto/cipher"
@@ -49,21 +48,22 @@ to quickly create a Cobra application.`,
 		enc := cipher.NewCBCEncrypter(block, iv)
 		dec := cipher.NewCBCDecrypter(block, iv)
 
+		src := ""
 		// src := "0"
 		// src := "012345678901234"
 		// src := "0123456789012345"
 		// src := "01234567890123456"
 		// src := "01234567890123456789";
-		src := "01234567890123456789012345678901";
+		// src := "01234567890123456789012345678901";
 		// src := "0123456789012345678901234567890123456789012";
-		padding_len := 16 - len(src) % 16
+		padding_len := 16 - len(src)%16
 		// if padding_len == 16 {
 		// 	padding_len = 0
 		// }
 		log.Printf("padding_len=%d", padding_len)
 		dst := append([]byte(src), bytes.Repeat([]byte{byte(padding_len)}, padding_len)...)
 		log.Printf("%#v", dst)
-		
+
 		enc.CryptBlocks(dst[:], dst[:])
 		log.Printf("%#v", dst)
 

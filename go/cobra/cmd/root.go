@@ -8,7 +8,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use: "t1",
+	Use:   "t1",
 	Short: "t1 short",
 	Long: `t1 long
 		   multiline`,
