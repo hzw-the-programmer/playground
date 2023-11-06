@@ -9,3 +9,6 @@ dm_setup_and_draw_multiline_inputbox
 gui_title_show_text
 gui_title_oem_show_background
 gui_redraw_scrolling_text
+
+gui_draw_multi_line_single_character
+mmi_fe_show_single_cluster_other
