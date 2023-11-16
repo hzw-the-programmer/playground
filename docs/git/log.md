@@ -6,3 +6,5 @@ git log --graph --format=oneline
 git log --graph --pretty=oneline
 
 git log origin/dev --grep=feature --author=hzw
+
+git log --stat --grep "pattern"

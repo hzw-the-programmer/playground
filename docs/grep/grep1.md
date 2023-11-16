@@ -10,3 +10,5 @@ grep "xxx" -r --exclude-dir={Bin} application/
 grep "B(efore) 1 line and A(fter) 1 line" -B 1 -A 1 --color -r .
 
 grep text -ri --color docs
+
+grep "text" -r p/c/ --exclude-dir={Debug,}
