@@ -79,6 +79,7 @@ var strCmd = &cobra.Command{
 			"pat":   filenamePattern,
 		}
 
+		fmt.Printf("\n***embeded begin***\n")
 		for _, lang := range langs {
 			newWriter := writers.NewLangUtf16
 			if lang == "english" {
@@ -86,10 +87,15 @@ var strCmd = &cobra.Command{
 			}
 			kvs["lang"] = lang
 			genFile(outDir, "lang.h", langTemplateFile, kvs, newWriter, func(w io.Writer) {
-				for _, tr := range trans {
-					for i, str := range tr[lang] {
-						if len(str) == 0 {
-							str = tr["english"][i]
+				for i, tr := range trans {
+					l := len(tr[lang])
+					fmt.Printf("sheet: %d, language: %-10s, total: %d\n", i, lang, l)
+					for i, eng := range tr["english"] {
+						str := eng
+						if i < l && len(tr[lang][i]) != 0 {
+							str = tr[lang][i]
+						} else {
+							fmt.Printf("index %-3d missing, default to english: %s\n", i, str)
 						}
 						w.Write([]byte(str))
 						w.Write([]byte{0})
@@ -101,6 +107,7 @@ var strCmd = &cobra.Command{
 				}
 			})
 		}
+		fmt.Printf("***embeded end***\n")
 
 		genFile(outDir, "enum.h", enumTemplateFile, kvs, writers.NewEnum, func(w io.Writer) {
 			for i, id := range ids {
@@ -113,6 +120,8 @@ var strCmd = &cobra.Command{
 
 		dir := "."
 		removeOld(dir, filenamePattern)
+
+		fmt.Printf("\n***download begin***\n")
 		for _, lang := range langs {
 			newWriter := writers.NewLangUtf16Binary
 			if lang == "english" {
@@ -121,17 +130,24 @@ var strCmd = &cobra.Command{
 			kvs["lang"] = lang
 			fn := fmt.Sprintf(filenamePattern, lang, major, minor, extension)
 			genFile(dir, fn, "", kvs, newWriter, func(w io.Writer) {
-				for _, tr := range trans {
-					for i, str := range tr[lang] {
-						if len(str) == 0 {
-							str = tr["english"][i]
+				for i, tr := range trans {
+					l := len(tr[lang])
+					fmt.Printf("sheet: %d, language: %-10s, total: %d\n", i, lang, l)
+					for i, eng := range tr["english"] {
+						str := eng
+						if i < l && len(tr[lang][i]) != 0 {
+							str = tr[lang][i]
+						} else {
+							fmt.Printf("index %-3d missing, default to english: %s\n", i, str)
 						}
+
 						w.Write([]byte(str))
 						w.Write([]byte{0})
 					}
 				}
 			})
 		}
+		fmt.Printf("***download end***\n")
 	},
 }
 
