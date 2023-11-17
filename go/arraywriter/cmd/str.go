@@ -87,24 +87,11 @@ var strCmd = &cobra.Command{
 			}
 			kvs["lang"] = lang
 			genFile(outDir, "lang.h", langTemplateFile, kvs, newWriter, func(w io.Writer) {
-				for i, tr := range trans {
-					l := len(tr[lang])
-					fmt.Printf("sheet: %d, language: %-10s, total: %d\n", i, lang, l)
-					for i, eng := range tr["english"] {
-						str := eng
-						if i < l && len(tr[lang][i]) != 0 {
-							str = tr[lang][i]
-						} else {
-							fmt.Printf("index %-3d missing, default to english: %s\n", i, str)
-						}
-						w.Write([]byte(str))
-						w.Write([]byte{0})
-					}
-
-					if lang != "english" {
-						break
-					}
+				sheets := trans
+				if lang != "english" {
+					sheets = trans[:1]
 				}
+				writeFile(sheets, lang, w)
 			})
 		}
 		fmt.Printf("***embeded end***\n")
@@ -130,21 +117,7 @@ var strCmd = &cobra.Command{
 			kvs["lang"] = lang
 			fn := fmt.Sprintf(filenamePattern, lang, major, minor, extension)
 			genFile(dir, fn, "", kvs, newWriter, func(w io.Writer) {
-				for i, tr := range trans {
-					l := len(tr[lang])
-					fmt.Printf("sheet: %d, language: %-10s, total: %d\n", i, lang, l)
-					for i, eng := range tr["english"] {
-						str := eng
-						if i < l && len(tr[lang][i]) != 0 {
-							str = tr[lang][i]
-						} else {
-							fmt.Printf("index %-3d missing, default to english: %s\n", i, str)
-						}
-
-						w.Write([]byte(str))
-						w.Write([]byte{0})
-					}
-				}
+				writeFile(trans, lang, w)
 			})
 		}
 		fmt.Printf("***download end***\n")
@@ -171,6 +144,24 @@ func init() {
 	viper.BindPFlag("minor", strCmd.Flags().Lookup("minor"))
 	viper.BindPFlag("extension", strCmd.Flags().Lookup("ext"))
 	viper.BindPFlag("filenamePattern", strCmd.Flags().Lookup("pat"))
+}
+
+func writeFile(sheets []map[string][]string, lang string, w io.Writer) {
+	for i, sheet := range sheets {
+		l := len(sheet[lang])
+		fmt.Printf("sheet: %d, language: %-10s, total: %d\n", i, lang, l)
+		for i, eng := range sheet["english"] {
+			str := eng
+			if i < l && len(sheet[lang][i]) != 0 {
+				str = sheet[lang][i]
+			} else {
+				fmt.Printf("index %-3d missing, default to english: %s\n", i, str)
+			}
+
+			w.Write([]byte(str))
+			w.Write([]byte{0})
+		}
+	}
 }
 
 func genFile(dir, fn string, templatePath string, kvs map[string]interface{}, writer writers.HeaderFooterCb, cb writers.WriteCb) {
