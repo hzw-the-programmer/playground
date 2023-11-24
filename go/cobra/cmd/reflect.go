@@ -40,14 +40,17 @@ func init() {
 
 type bar struct {
 	x int
+	X int
 }
 
 type Foo struct {
 	A int
 	a bar `t1:"v1" t2:"v2"`
+	B bar
 }
 
 func runReflect(cmd *cobra.Command, args []string) {
+	// 1
 	s := []int{1, 2, 3}
 	st := reflect.TypeOf(s)
 	examiner(st, 0)
@@ -67,6 +70,29 @@ func runReflect(cmd *cobra.Command, args []string) {
 	p := &str
 	pT := reflect.TypeOf(p)
 	examiner(pT, 0)
+
+	// 2
+	g := "hello"
+	gpt := reflect.ValueOf(&g)
+	gpt.Elem().SetString("world")
+	fmt.Println(g)
+
+	// 3
+	fooV := reflect.New(fooT)
+	fooV.Elem().Field(0).SetInt(123)
+	newf := fooV.Elem().Interface().(Foo)
+	fmt.Println(newf)
+	// fooV.Elem().Field(1).Field(0).SetInt(11)
+	// fmt.Println(newf)
+	// fooV.Elem().Field(2).Field(0).SetInt(11)
+	// fmt.Println(newf)
+	fooV.Elem().Field(2).Field(1).SetInt(11)
+	fmt.Println(newf)
+	newf = fooV.Elem().Interface().(Foo)
+	fmt.Println(newf)
+	// fooV.Elem().Field(1).Field(1).SetInt(11)
+	// newf = fooV.Elem().Interface().(Foo)
+	// fmt.Println(newf)
 }
 
 func examiner(t reflect.Type, depth int) {
