@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 	"reflect"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -47,19 +48,37 @@ type Foo struct {
 }
 
 func runReflect(cmd *cobra.Command, args []string) {
+	s := []int{1, 2, 3}
+	st := reflect.TypeOf(s)
+	examiner(st, 0)
+
 	var foo Foo
+	fooT := reflect.TypeOf(foo)
+	examiner(fooT, 0)
 
-	typ := reflect.TypeOf(foo)
+	pFoo := &foo
+	pFooT := reflect.TypeOf(pFoo)
+	examiner(pFooT, 0)
 
-	fmt.Println(typ.Name())
-	fmt.Println(typ.Kind())
-	fmt.Println(typ.NumField())
-	fmt.Println(typ.Field(0).Name)
-	fmt.Println(typ.Field(0).Type.Name())
-	fmt.Println(typ.Field(0).Type.Kind())
+	str := "hello"
+	strT := reflect.TypeOf(str)
+	examiner(strT, 0)
 
-	fmt.Println(typ.Field(1).Name)
-	fmt.Println(typ.Field(1).Type.Name())
-	fmt.Println(typ.Field(1).Type.Kind())
-	fmt.Println(typ.Field(1).Tag)
+	p := &str
+	pT := reflect.TypeOf(p)
+	examiner(pT, 0)
+}
+
+func examiner(t reflect.Type, depth int) {
+	fmt.Printf("%sType is %q, Kind is %q\n", strings.Repeat("\t", depth), t.Name(), t.Kind())
+	switch t.Kind() {
+	case reflect.Slice, reflect.Ptr:
+		fmt.Printf("%sContained type:\n", strings.Repeat("\t", depth+1))
+		examiner(t.Elem(), depth+1)
+	case reflect.Struct:
+		for i := 0; i < t.NumField(); i++ {
+			f := t.Field(i)
+			fmt.Printf("%sField%d, Name:%q, Type:%q, Kind:%q, Tag:%s\n", strings.Repeat("\t", depth+1), i+1, f.Name, f.Type.Name(), f.Type.Kind(), f.Tag)
+		}
+	}
 }
