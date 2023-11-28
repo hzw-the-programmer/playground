@@ -12,3 +12,5 @@ gui_redraw_scrolling_text
 
 gui_draw_multi_line_single_character
 mmi_fe_show_single_cluster_other
+
+gui_end_multi_line_new_line_loop
