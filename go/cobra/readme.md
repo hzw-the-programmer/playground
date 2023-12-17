@@ -6,3 +6,5 @@ protoc.exe --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_o
 
 // cd grpc
 // protoc.exe --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative users.proto
+
+go get -u google.golang.org/grpc
