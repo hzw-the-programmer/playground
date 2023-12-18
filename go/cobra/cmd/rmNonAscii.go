@@ -41,14 +41,14 @@ func init() {
 }
 
 func rmNonAsciiRun(cmd *cobra.Command, args []string) {
-	_, err := writeToTemp(args[0])
+	_, err := rmNonAscii(args[0])
 	if err != nil {
 		log.Fatal(err)
 	}
 
 }
 
-func writeToTemp(path string) (tempPath string, err error) {
+func rmNonAscii(path string) (tempPath string, err error) {
 	src, err := os.OpenFile(path, os.O_RDWR, 0)
 	if err != nil {
 		return
@@ -73,7 +73,8 @@ func writeToTemp(path string) (tempPath string, err error) {
 			io.Copy(src, dst)
 		}
 		dst.Close()
-		os.Remove(dst.Name())
+		tempPath = dst.Name()
+		os.Remove(tempPath)
 	}()
 
 	for {
