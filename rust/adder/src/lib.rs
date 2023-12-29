@@ -91,7 +91,7 @@ struct Guess {
 
 impl Guess {
     fn new(value: i32) -> Guess {
-        if value < 1 || value > 100 {
+        if value < 1 {
             panic!("Guess value must be between 1 and 100, got {}.", value);
         }
         Guess{value}
