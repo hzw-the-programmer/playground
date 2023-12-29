@@ -66,5 +66,5 @@ impl Rectangle {
 }
 
 fn add_two(a: i32) -> i32 {
-    2 + a
+    3 + a
 }
