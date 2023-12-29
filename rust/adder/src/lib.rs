@@ -52,6 +52,12 @@ mod tests {
     fn it_adds_two() {
         assert_eq!(4, add_two(2))
     }
+
+    #[test]
+    fn greeting_contains_name() {
+        let result = greet("Carol");
+        assert!(result.contains("Carol"));
+    }
 }
 
 struct Rectangle {
@@ -67,4 +73,8 @@ impl Rectangle {
 
 fn add_two(a: i32) -> i32 {
     3 + a
+}
+
+fn greet(name: &str) -> String {
+    format!("Hello {}!", name)
 }
