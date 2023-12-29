@@ -76,5 +76,5 @@ fn add_two(a: i32) -> i32 {
 }
 
 fn greet(name: &str) -> String {
-    format!("Hello {}!", name)
+    String::from("Hello")
 }
