@@ -58,6 +58,12 @@ mod tests {
         let result = greet("Carol");
         assert!(result.contains("Carol"), "Greeting did not contain name, value was '{}'", result);
     }
+
+    #[test]
+    #[should_panic]
+    fn greeter_than_100() {
+        Guess::new(200);
+    }
 }
 
 struct Rectangle {
@@ -77,4 +83,17 @@ fn add_two(a: i32) -> i32 {
 
 fn greet(name: &str) -> String {
     String::from("Hello")
+}
+
+struct Guess {
+    value: i32,
+}
+
+impl Guess {
+    fn new(value: i32) -> Guess {
+        if value < 1 || value > 100 {
+            panic!("Guess value must be between 1 and 100, got {}.", value);
+        }
+        Guess{value}
+    }
 }
