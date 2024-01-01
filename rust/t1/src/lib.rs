@@ -7,3 +7,5 @@ impl Drop for Foo {
         println!("Foo {} drop", self.id);
     }
 }
+
+mod nums_sum;
