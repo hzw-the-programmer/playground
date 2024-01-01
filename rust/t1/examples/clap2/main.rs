@@ -1,4 +1,4 @@
-use clap::{Command};
+use clap::Command;
 mod hashmap;
 
 fn main() {

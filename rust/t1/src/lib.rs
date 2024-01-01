@@ -10,4 +10,5 @@ impl Drop for Foo {
     }
 }
 
+mod num2str;
 mod nums_sum;
