@@ -1,2 +1,1 @@
-pub fn do_something() {
-}
+pub fn do_something() {}

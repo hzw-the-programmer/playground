@@ -10,6 +10,7 @@ fn call_garden() {
     garden::do_something();
     garden2::do_something();
     garden::vegetables::do_something();
+    garden::vegetables2::do_something();
 }
 
 pub fn add(left: usize, right: usize) -> usize {
