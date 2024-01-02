@@ -1,6 +1,7 @@
 // cargo test -- --show-output
 // cargo test one_hundred
 // cargo test add
+// cargo test -- --ignored
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
@@ -27,7 +28,7 @@ mod tests {
 
     #[test]
     fn exporation() {
-        assert_eq!(2+2, 4);
+        assert_eq!(2 + 2, 4);
     }
 
     #[test]
@@ -69,11 +70,15 @@ mod tests {
     #[test]
     fn greeting_contains_name() {
         let result = greet("Carol");
-        assert!(result.contains("Carol"), "Greeting did not contain name, value was '{}'", result);
+        assert!(
+            result.contains("Carol"),
+            "Greeting did not contain name, value was '{}'",
+            result
+        );
     }
 
     #[test]
-    #[should_panic(expected="less than or equal to 100")]
+    #[should_panic(expected = "less than or equal to 100")]
     fn greeter_than_100() {
         Guess::new(200);
     }
@@ -111,6 +116,10 @@ mod tests {
     fn one_hundred() {
         assert_eq!(103, add_3(100));
     }
+
+    #[test]
+    #[ignore]
+    fn expensive_test() {}
 }
 
 struct Rectangle {
@@ -139,10 +148,16 @@ struct Guess {
 impl Guess {
     fn new(value: i32) -> Guess {
         if value < 1 {
-            panic!("Guess value must be greeter than or equal to 1, got {}.", value);
+            panic!(
+                "Guess value must be greeter than or equal to 1, got {}.",
+                value
+            );
         } else if value > 100 {
-            panic!("Guess value must be less than or equal to 100, got {}.", value);
+            panic!(
+                "Guess value must be less than or equal to 100, got {}.",
+                value
+            );
         }
-        Guess{value}
+        Guess { value }
     }
 }
