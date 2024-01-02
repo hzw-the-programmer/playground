@@ -3,6 +3,12 @@
 // cargo test add
 // cargo test -- --ignored
 
+mod garden;
+
+fn call_garden() {
+    garden::do_something();
+}
+
 pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
