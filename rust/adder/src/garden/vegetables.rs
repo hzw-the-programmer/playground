@@ -1,4 +1,3 @@
-pub mod vegetables;
-
 pub fn do_something() {
+
 }
