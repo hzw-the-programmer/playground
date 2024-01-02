@@ -1,3 +1,7 @@
+// cargo test -- --show-output
+// cargo test one_hundred
+// cargo test add
+
 pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
@@ -5,6 +9,10 @@ pub fn add(left: usize, right: usize) -> usize {
 fn prints_and_returns_10(a: i32) -> i32 {
     println!("I got the value {}", a);
     10
+}
+
+fn add_3(a: i32) -> i32 {
+    3 + a
 }
 
 #[cfg(test)]
@@ -79,7 +87,6 @@ mod tests {
         }
     }
 
-    // cargo test -- --show-output
     #[test]
     fn this_test_will_passh() {
         assert_eq!(10, prints_and_returns_10(4));
@@ -88,6 +95,21 @@ mod tests {
     #[test]
     fn this_test_will_fail() {
         assert_eq!(5, prints_and_returns_10(8));
+    }
+
+    #[test]
+    fn add_3_and_4() {
+        assert_eq!(7, add_3(4));
+    }
+
+    #[test]
+    fn add_3_and_5() {
+        assert_eq!(8, add_3(5));
+    }
+
+    #[test]
+    fn one_hundred() {
+        assert_eq!(103, add_3(100));
     }
 }
 
