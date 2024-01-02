@@ -71,6 +71,7 @@ fn test_5() {
     let mut foos = vec![Foo { id: 1 }, Foo { id: 2 }, Foo { id: 3 }, Foo { id: 4 }];
 
     let filtered = foos.iter().filter(|foo| {
+        // let i: i32 = foo;
         let ret = foo.id % 2 == 0;
         println!("Foo {} filtered: {}", foo.id, ret);
         ret
@@ -95,6 +96,7 @@ fn test_6() {
     let mut foos = vec![Foo { id: 1 }, Foo { id: 2 }, Foo { id: 3 }, Foo { id: 4 }];
 
     let filtered = foos.into_iter().filter(|foo| {
+        // let i: i32 = foo;
         let ret = foo.id % 2 == 0;
         println!("Foo {} filtered: {}", foo.id, ret);
         ret
