@@ -60,7 +60,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
+    #[should_panic(expected="less than or equal to 100")]
     fn greeter_than_100() {
         Guess::new(200);
     }
@@ -92,7 +92,9 @@ struct Guess {
 impl Guess {
     fn new(value: i32) -> Guess {
         if value < 1 {
-            panic!("Guess value must be between 1 and 100, got {}.", value);
+            panic!("Guess value must be greeter than or equal to 1, got {}.", value);
+        } else if value > 100 {
+            panic!("Guess value must be less than or equal to 100, got {}.", value);
         }
         Guess{value}
     }
