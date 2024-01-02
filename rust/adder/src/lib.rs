@@ -1,3 +1,4 @@
+use garden::vegetables2;
 // cargo test -- --show-output
 // cargo test one_hundred
 // cargo test add
@@ -11,6 +12,7 @@ fn call_garden() {
     garden2::do_something();
     garden::vegetables::do_something();
     garden::vegetables2::do_something();
+    vegetables2::do_something();
 }
 
 pub fn add(left: usize, right: usize) -> usize {
