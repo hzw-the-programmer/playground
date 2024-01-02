@@ -16,6 +16,10 @@ fn add_3(a: i32) -> i32 {
     3 + a
 }
 
+pub fn adds_two(a: i32) -> i32 {
+    2 + a
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
