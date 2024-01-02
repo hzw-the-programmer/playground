@@ -2,6 +2,11 @@ pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
 
+fn prints_and_returns_10(a: i32) -> i32 {
+    println!("I got the value {}", a);
+    10
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -72,6 +77,17 @@ mod tests {
         } else {
             Err(String::from("two plus two does not equal four"))
         }
+    }
+
+    // cargo test -- --show-output
+    #[test]
+    fn this_test_will_passh() {
+        assert_eq!(10, prints_and_returns_10(4));
+    }
+
+    #[test]
+    fn this_test_will_fail() {
+        assert_eq!(5, prints_and_returns_10(8));
     }
 }
 
