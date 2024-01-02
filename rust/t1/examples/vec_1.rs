@@ -63,6 +63,11 @@ fn test_4() {
     println!("finish");
 }
 
+// fn filter<P>(self, predicate: P) -> Filter<Self, P>
+// where
+//     Self: Sized,
+//     P: FnMut(&Self::Item) -> bool,
+
 fn test_5() {
     println!();
     println!("****** test_5 ******");
@@ -93,7 +98,7 @@ fn test_6() {
     println!("****** test_6 ******");
     println!();
 
-    let mut foos = vec![Foo { id: 1 }, Foo { id: 2 }, Foo { id: 3 }, Foo { id: 4 }];
+    let foos = vec![Foo { id: 1 }, Foo { id: 2 }, Foo { id: 3 }, Foo { id: 4 }];
 
     let filtered = foos.into_iter().filter(|foo| {
         // let i: i32 = foo;
@@ -109,6 +114,55 @@ fn test_6() {
     println!("after loop");
 }
 
+// fn map<B, F>(self, f: F) -> Map<Self, F>
+// where
+//     Self: Sized,
+//     F: FnMut(Self::Item) -> B,
+
+fn test_7() {
+    println!();
+    println!("****** test_7 ******");
+    println!();
+
+    let mut foos = vec![Foo { id: 1 }, Foo { id: 2 }, Foo { id: 3 }, Foo { id: 4 }];
+
+    let iter = foos.iter().map(|foo| {
+        // let i: i32 = foo;
+        println!("Foo {}", foo.id);
+        foo.id
+    });
+
+    println!("before loop");
+    for foo in iter {
+        println!("Foo {} in loop", foo);
+    }
+    println!("after loop");
+
+    foos.push(Foo { id: 5 });
+
+    println!("finish");
+}
+
+fn test_8() {
+    println!();
+    println!("****** test_8 ******");
+    println!();
+
+    let foos = vec![Foo { id: 1 }, Foo { id: 2 }, Foo { id: 3 }, Foo { id: 4 }];
+
+    let iter = foos.into_iter().map(|foo| {
+        // let i: i32 = foo;
+        println!("Foo {}", foo.id);
+        foo.id
+    });
+
+    println!("before loop");
+    for foo in iter {
+        println!("Foo {} in loop", foo);
+    }
+    println!("after loop");
+}
+
 fn main() {
     test_1();
     test_2();
@@ -116,6 +170,8 @@ fn main() {
     test_4();
     test_5();
     test_6();
+    test_7();
+    test_8();
 }
 
 struct Foo {
