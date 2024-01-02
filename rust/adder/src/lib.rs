@@ -3,7 +3,7 @@
 // cargo test add
 // cargo test -- --ignored
 
-mod garden;
+pub mod garden;
 
 fn call_garden() {
     garden::do_something();

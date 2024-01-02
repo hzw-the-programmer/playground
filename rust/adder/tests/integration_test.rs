@@ -14,3 +14,8 @@ fn another_test() {
     common::setup();
     assert_eq!(4, adder::adds_two(2));
 }
+
+#[test]
+fn garden_test() {
+    adder::garden::do_something();
+}
