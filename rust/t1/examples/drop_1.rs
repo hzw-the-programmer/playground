@@ -68,11 +68,29 @@ fn test_5() {
     println!("finish");
 }
 
+fn test_6() {
+    println!("\ntest_6\n");
+    let b = Bar4 {
+        id: 1,
+        b1: Bar {
+            id: 1,
+            foo1: Foo { id: 1 },
+            foo2: Foo { id: 2 },
+        },
+        b2: Bar2 {
+            id: 2,
+            foo1: Foo { id: 3 },
+            foo2: Foo { id: 4 },
+        },
+    };
+}
+
 fn main() {
     test_1();
     test_2();
     test_4();
     test_5();
+    test_6();
 }
 
 struct Bar {
@@ -95,4 +113,16 @@ struct Bar2 {
 
 struct Bar3 {
     id: u64,
+}
+
+struct Bar4 {
+    id: u64,
+    b1: Bar,
+    b2: Bar2,
+}
+
+impl Drop for Bar4 {
+    fn drop(&mut self) {
+        println!("Bar4 {} drop", self.id);
+    }
 }
