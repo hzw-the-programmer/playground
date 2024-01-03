@@ -12,3 +12,7 @@ impl Drop for Foo {
 
 mod num2str;
 mod nums_sum;
+
+pub trait Hello {
+    fn hello();
+}
