@@ -16,3 +16,7 @@ mod nums_sum;
 pub trait Hello {
     fn hello();
 }
+
+pub trait HelloMacro {
+    fn hello_macro();
+}
