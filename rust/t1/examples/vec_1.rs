@@ -325,6 +325,31 @@ fn test_14() {
     println!("after loop");
 }
 
+fn test_15() {
+    println!();
+    println!("****** test_15 ******");
+    println!();
+
+    let foos = vec![Foo { id: 1 }, Foo { id: 2 }, Foo { id: 3 }, Foo { id: 4 }];
+
+    let iter = foos.into_iter().map_while(|foo| {
+        // let i: i32 = foo;
+        println!("Foo {} in predicate", foo.id);
+        if foo.id < 3 {
+            Some(foo)
+        } else {
+            None
+        }
+    });
+
+    println!("before loop");
+    for foo in iter {
+        // let i: i32 = foo;
+        println!("Foo {} in loop", foo.id);
+    }
+    println!("after loop");
+}
+
 fn main() {
     test_1();
     test_2();
@@ -340,6 +365,7 @@ fn main() {
     test_12();
     test_13();
     test_14();
+    test_15();
 }
 
 struct Foo {

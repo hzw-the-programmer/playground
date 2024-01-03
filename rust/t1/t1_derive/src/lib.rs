@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
-use syn;
 use quote::quote;
+use syn;
 
 // cargo new t1_derive --lib
 

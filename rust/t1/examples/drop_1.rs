@@ -24,6 +24,22 @@ fn test_2() {
     println!("finish");
 }
 
+fn test_3() {
+    println!("\ntest_3\n");
+    let bar = Bar {
+        id: 1,
+        foo1: Foo { id: 1 },
+        foo2: Foo { id: 2 },
+    };
+
+    {
+        // let foo1 = bar.foo1;
+        let foo1 = &bar.foo1;
+    }
+
+    println!("finish");
+}
+
 fn main() {
     test_1();
     test_2();
