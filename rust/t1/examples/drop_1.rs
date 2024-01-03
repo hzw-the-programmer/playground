@@ -51,10 +51,28 @@ fn test_4() {
     let b = Bar3 { id: 1 };
 }
 
+fn test_5() {
+    println!("\ntest_5\n");
+    let foo = Foo { id: 1 };
+    let mut bar = Bar {
+        id: 1,
+        foo1: Foo { id: 2 },
+        foo2: Foo { id: 3 },
+    };
+    let f = Foo { id: 4 };
+    bar = Bar {
+        id: 3,
+        foo1: Foo { id: 5 },
+        foo2: Foo { id: 6 },
+    };
+    println!("finish");
+}
+
 fn main() {
     test_1();
     test_2();
     test_4();
+    test_5();
 }
 
 struct Bar {
