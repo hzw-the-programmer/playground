@@ -4,6 +4,7 @@ use t1::Foo;
 fn main() {
     test1();
     test2();
+    test3();
 }
 
 fn test1() {
@@ -34,5 +35,17 @@ fn test2() {
         let f = &*f;
         println!("{:?}", f);
         dealloc(ptr, layout);
+    }
+}
+
+fn test3() {
+    unsafe {
+        let layout = Layout::new::<Foo>();
+        let ptr = alloc(layout) as *mut Foo;
+        if ptr.is_null() {
+            handle_alloc_error(layout);
+        }
+        let f = Box::from_raw(ptr);
+        // let f1 = Box::from_raw(ptr);
     }
 }
