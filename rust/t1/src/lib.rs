@@ -21,3 +21,5 @@ pub trait Hello {
 pub trait HelloMacro {
     fn hello_macro();
 }
+
+mod io;
