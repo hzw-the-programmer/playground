@@ -96,6 +96,39 @@ fn test_7() {
     println!("finish");
 }
 
+fn test_8() {
+    println!("\ntest_8\n");
+    let bar = Bar5 {
+        id: 1,
+        foo: Foo { id: 1 },
+        foos: vec![Foo { id: 2 }, Foo { id: 3 }],
+    };
+    let f = bar.into_inner();
+    println!("finish");
+}
+
+fn test_9() {
+    println!("\ntest_9\n");
+    let bar = Bar5 {
+        id: 1,
+        foo: Foo { id: 1 },
+        foos: vec![Foo { id: 2 }, Foo { id: 3 }],
+    };
+    let f = bar.into_inner_1();
+    println!("finish");
+}
+
+fn test_10() {
+    println!("\ntest_9\n");
+    let bar = Bar5 {
+        id: 1,
+        foo: Foo { id: 1 },
+        foos: vec![Foo { id: 2 }, Foo { id: 3 }],
+    };
+    let f = bar.into_inner_2();
+    println!("finish");
+}
+
 fn main() {
     test_1();
     test_2();
@@ -103,6 +136,9 @@ fn main() {
     test_5();
     test_6();
     test_7();
+    test_8();
+    test_9();
+    test_10();
 }
 
 struct Bar {
@@ -148,5 +184,26 @@ struct Bar4 {
 impl Drop for Bar4 {
     fn drop(&mut self) {
         println!("Bar4 {} drop", self.id);
+    }
+}
+
+struct Bar5 {
+    id: u64,
+    foo: Foo,
+    foos: Vec<Foo>,
+}
+
+impl Bar5 {
+    fn into_inner(self) -> Foo {
+        self.foo
+    }
+
+    fn into_inner_1(self) -> Vec<Foo> {
+        self.foos
+    }
+
+    fn into_inner_2(mut self) -> Foo {
+        // self.foos[0]
+        self.foos.remove(0)
     }
 }
