@@ -85,12 +85,24 @@ fn test_6() {
     };
 }
 
+fn test_7() {
+    println!("\ntest_7\n");
+    let bar = Bar2 {
+        id: 1,
+        foo1: Foo { id: 1 },
+        foo2: Foo { id: 2 },
+    };
+    let f = bar.into_inner();
+    println!("finish");
+}
+
 fn main() {
     test_1();
     test_2();
     test_4();
     test_5();
     test_6();
+    test_7();
 }
 
 struct Bar {
@@ -105,10 +117,22 @@ impl Drop for Bar {
     }
 }
 
+// impl Bar {
+//     fn into_inner(self) -> Foo {
+//         self.foo1
+//     }
+// }
+
 struct Bar2 {
     id: u64,
     foo1: Foo,
     foo2: Foo,
+}
+
+impl Bar2 {
+    fn into_inner(self) -> Foo {
+        self.foo1
+    }
 }
 
 struct Bar3 {
