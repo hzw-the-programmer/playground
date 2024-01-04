@@ -1,5 +1,6 @@
 //https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html
 
+#[derive(Debug)]
 pub struct Foo {
     pub id: usize,
 }
