@@ -33,5 +33,6 @@ fn test2() {
         // let f = f as &Foo;
         let f = &*f;
         println!("{:?}", f);
+        dealloc(ptr, layout);
     }
 }
