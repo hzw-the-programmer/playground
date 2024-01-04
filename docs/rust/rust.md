@@ -12,3 +12,4 @@ ls
 rustup default
 rustup default nightly
 
+C:\Users\Admin\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\core\src\marker.rs

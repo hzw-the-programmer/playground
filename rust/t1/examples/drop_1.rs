@@ -132,7 +132,8 @@ fn test_10() {
 fn test_11() {
     println!("\ntest_11\n");
     let x = 5;
-    let y = Box::new(x);
+    let mut y = Box::new(x);
+    *y = 6;
     println!("x = {}, y = {}", x, y);
 
     let x = Bar3 { id: 1 };
@@ -144,7 +145,8 @@ fn test_11() {
     // println!("x = {:?}, y = {:?}", x, y);
 
     let x = Bar6 { id: 1 };
-    let y = Box::new(x);
+    let mut y = Box::new(x);
+    y.id = 2;
     println!("x = {:?}, y = {:?}", x, y);
 }
 
@@ -233,3 +235,9 @@ impl Bar5 {
 struct Bar6 {
     id: u64,
 }
+
+// impl Drop for Bar6 {
+//     fn drop(&mut self) {
+//         println!("Bar6 {} dropped", self.id);
+//     }
+// }
