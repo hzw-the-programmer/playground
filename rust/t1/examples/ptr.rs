@@ -5,6 +5,8 @@ fn main() {
     test1();
     test2();
     test3();
+    test4();
+    test5();
 }
 
 fn test1() {
@@ -34,4 +36,22 @@ fn test3() {
     unsafe {
         ptr::write(p, Foo { id: 2 });
     };
+}
+
+fn test4() {
+    println!("\ntest4\n");
+    let mut f = Foo { id: 1 };
+    println!("{:?}", &f as *const Foo);
+    f = Foo { id: 2 };
+    println!("{:?}", &f as *const Foo);
+    println!("finish");
+}
+
+fn test5() {
+    println!("\ntest5\n");
+    let f = Foo { id: 1 };
+    println!("{:?}", &f as *const Foo);
+    let f = Foo { id: 2 };
+    println!("{:?}", &f as *const Foo);
+    println!("finish");
 }
