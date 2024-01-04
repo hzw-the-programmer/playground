@@ -22,7 +22,9 @@ fn test1() {
 fn test2() {
     println!("\ntest2\n");
     let v = vec![Foo { id: 1 }, Foo { id: 2 }];
+    // let n: i32 = v;
     let mut i = &v[0];
+    // let n: i32 = i;
     // i.id = 3;
     i = &v[1];
 }
@@ -30,7 +32,9 @@ fn test2() {
 fn test3() {
     println!("\ntest3\n");
     let mut v = vec![Foo { id: 1 }, Foo { id: 2 }];
+    // let n: i32 = v;
     let i = &mut v[0];
+    // let n: i32 = i;
     i.id = 3;
     // i = &mut v[1];
 }
