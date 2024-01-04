@@ -129,6 +129,25 @@ fn test_10() {
     println!("finish");
 }
 
+fn test_11() {
+    println!("\ntest_11\n");
+    let x = 5;
+    let y = Box::new(x);
+    println!("x = {}, y = {}", x, y);
+
+    let x = Bar3 { id: 1 };
+    let y = Box::new(x);
+    // println!("x = {:?}, y = {:?}", x, y);
+
+    let x = Bar3 { id: 1 };
+    let y = x;
+    // println!("x = {:?}, y = {:?}", x, y);
+
+    let x = Bar6 { id: 1 };
+    let y = Box::new(x);
+    println!("x = {:?}, y = {:?}", x, y);
+}
+
 fn main() {
     test_1();
     test_2();
@@ -139,6 +158,7 @@ fn main() {
     test_8();
     test_9();
     test_10();
+    test_11();
 }
 
 struct Bar {
@@ -171,6 +191,7 @@ impl Bar2 {
     }
 }
 
+#[derive(Debug)]
 struct Bar3 {
     id: u64,
 }
@@ -206,4 +227,9 @@ impl Bar5 {
         // self.foos[0]
         self.foos.remove(0)
     }
+}
+
+#[derive(Debug, Copy, Clone)]
+struct Bar6 {
+    id: u64,
 }
