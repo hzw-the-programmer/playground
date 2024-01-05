@@ -5,6 +5,7 @@ use std::io::{Result, Write};
 
 fn main() -> Result<()> {
     let mut v = Vec::new();
+    // v.reserve(12);
 
     println!("len={},cap={}", v.len(), v.capacity());
 
