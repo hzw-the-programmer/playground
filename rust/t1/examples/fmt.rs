@@ -37,9 +37,20 @@ fn main() -> Result<()> {
             longitude: 121.48054,
             latitude: 31.23593
         }
-    );
+    )?;
     println!("len={},cap={}", v.len(), v.capacity());
     assert_eq!(v, b"hello world! I'm here: (121.48054, 31.23593)");
+
+    let position = Position {
+        longitude: 121.48054,
+        latitude: 31.23593,
+    };
+    let s = format!("{position}");
+    // let n: i32 = s;
+    println!("{}", s);
+    let s = format!("{position:?}");
+    // let n: i32 = s;
+    println!("{}", s);
 
     Ok(())
 }
