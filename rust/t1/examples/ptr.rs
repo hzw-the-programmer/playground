@@ -7,6 +7,7 @@ fn main() {
     test3();
     test4();
     test5();
+    test6();
 }
 
 fn test1() {
@@ -54,4 +55,12 @@ fn test5() {
     let f = Foo { id: 2 };
     println!("{:?}", &f as *const Foo);
     println!("finish");
+}
+
+fn test6() {
+    println!("\ntest6\n");
+    let v = vec![1, 2, 3];
+    println!("{:?}", &v as *const Vec<i32>);
+    // println!("{:?}", &v as *const [i32]);
+    println!("{:?}", v.as_ptr());
 }
