@@ -10,6 +10,8 @@ fn main() {
     println!("{}", mem::size_of::<&[u8]>());
 
     test2();
+    test3();
+    test4();
 }
 
 struct Foo {
@@ -27,4 +29,18 @@ fn test2() {
 
     let c = &[1, 2, 3][..];
     // let n: i32 = c;
+}
+
+fn test3() {
+    let v = vec![1, 2, 3];
+    // let n: i32 = v;
+    // let n: i32 = &v;
+    // let n: i32 = &v[..];
+}
+
+fn test4() {
+    let s = String::from("hello world!");
+    // let n: i32 = s;
+    // let n: i32 = &s;
+    // let n: i32 = &s[..];
 }
