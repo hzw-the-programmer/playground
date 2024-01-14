@@ -24,4 +24,7 @@ fn test2() {
     // let n: i32 = b;
     let e = unsafe { a.get_unchecked(0) };
     println!("{}", e);
+
+    let c = &[1, 2, 3][..];
+    // let n: i32 = c;
 }
