@@ -13,7 +13,7 @@ default_impl! { bool, false, "Returns the default value of `false`" }
 ```
 
 ```
-let b: bool = Defaut::default();
+let b: bool = Default::default();
 println!("{:?}", b); // false
 
 let b = bool::default();

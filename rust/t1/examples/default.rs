@@ -1,5 +1,6 @@
 fn main() {
     test1();
+    test2();
 }
 
 #[derive(Debug, Default)]
@@ -16,5 +17,14 @@ fn test1() {
         f1: 1,
         ..Default::default()
     };
+    println!("{:?}", b);
+}
+
+fn test2() {
+    println!("\ntest2\n");
+    let b: bool = Default::default();
+    println!("{:?}", b);
+
+    let b = bool::default();
     println!("{:?}", b);
 }
