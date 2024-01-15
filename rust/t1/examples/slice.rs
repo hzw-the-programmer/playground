@@ -43,4 +43,15 @@ fn test4() {
     // let n: i32 = s;
     // let n: i32 = &s;
     // let n: i32 = &s[..];
+    // let n: i32 = s[..];
+}
+
+fn test5() {
+    let s = "hello world!";
+    // let n: i32 = s;
+    let s = b"hello world!";
+    // let n: i32 = s;
+    // let s = b"hello world!"[..];
+    let s = &b"hello world!"[..];
+    // let n: i32 = s;
 }
