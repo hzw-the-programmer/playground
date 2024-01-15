@@ -41,9 +41,34 @@ fn test_4() {
     println!("finish");
 }
 
+fn test_5() {
+    println!("\ntest_5\n");
+    let o = Some(Foo { id: 1 });
+    let n = o.map(|f| {
+        // let n: i32 = f;
+        println!("in map");
+        f.id
+    });
+    println!("finish: {:?}", n);
+}
+
+fn test_6() {
+    println!("\ntest_6\n");
+    let o = Some(Foo { id: 1 });
+    let o: Option<Foo> = None;
+    let n = o.map_or(2, |f| {
+        // let n: i32 = f;
+        println!("in map_or");
+        f.id
+    });
+    println!("finish: {:?}", n);
+}
+
 fn main() {
     test_1();
     test_2();
     test_3();
     test_4();
+    test_5();
+    test_6();
 }
