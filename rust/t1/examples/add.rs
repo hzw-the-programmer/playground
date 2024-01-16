@@ -1,4 +1,4 @@
-use std::ops::Add;
+use std::ops::{Add, Sub};
 
 #[derive(PartialEq, Debug, Copy, Clone)]
 struct Point {
@@ -17,11 +17,24 @@ impl Add for Point {
     }
 }
 
+impl Sub for Point {
+    type Output = Point;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Point {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+        }
+    }
+}
+
 fn test1() {
     println!("\ntest1\n");
     let p1 = Point { x: 1, y: 0 };
     let p2 = Point { x: 2, y: 3 };
     assert_eq!(Point { x: 3, y: 3 }, p1 + p2);
+    println!("{:?} {:?}", p1, p2);
+    assert_eq!(Point { x: -1, y: -3 }, p1 - p2);
     println!("{:?} {:?}", p1, p2);
 }
 
