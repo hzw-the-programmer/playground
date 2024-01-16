@@ -46,9 +46,30 @@ fn test4() {
     println!("{}", x);
 }
 
+use t1::Foo;
+
+fn consume_with_relish<F>(func: F)
+where
+    F: FnOnce() -> Foo,
+{
+    println!("consume_with_relish: begin");
+    func();
+    // let f = func();
+    println!("consume_with_relish: end");
+}
+
+fn test5() {
+    println!("\ntest5\n");
+    let f = Foo { id: 1 };
+    let func = || f;
+    consume_with_relish(func);
+    println!("finish");
+}
+
 fn main() {
     test1();
     test2();
     test3();
     test4();
+    test5();
 }
