@@ -8,6 +8,7 @@ fn function() {
 
 // rustc split.rs && ./split
 // https://doc.rust-lang.org/rust-by-example/mod/split.html
+// tree.com //a //f
 
 fn main() {
     my::function();
