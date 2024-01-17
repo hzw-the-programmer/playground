@@ -15,7 +15,7 @@ async fn say_world() {
 //     op.await;
 // }
 
-async fn new_task() {
+async fn task1() {
     // Calling `say_world()` does not execute the body of `say_world()`.
     let op = say_world();
     // let n: i32 = op;
@@ -27,7 +27,20 @@ async fn new_task() {
     op.await;
 }
 
+use tokio::task;
+
+async fn task2() {
+    task::spawn(async {
+        // ...
+        println!("spawned task done!")
+    });
+
+    // Yield, allowing the newly-spawned task to execute first.
+    // task::yield_now().await;
+    println!("main task done!");
+}
+
 fn main() {
     let mut rt = tokio::runtime::Runtime::new().unwrap();
-    rt.block_on(new_task())
+    rt.block_on(task2())
 }
