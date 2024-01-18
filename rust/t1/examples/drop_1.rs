@@ -150,6 +150,20 @@ fn test_11() {
     println!("x = {:?}, y = {:?}", x, y);
 }
 
+fn test_12() {
+    println!("\ntest_12\n");
+    let f = Foo { id: 1 };
+    let f = Foo { id: 2 };
+    println!("finish");
+}
+
+fn test_13() {
+    println!("\ntest_12\n");
+    let mut f = Foo { id: 1 };
+    f = Foo { id: 2 };
+    println!("finish");
+}
+
 fn main() {
     test_1();
     test_2();
@@ -161,6 +175,8 @@ fn main() {
     test_9();
     test_10();
     test_11();
+    test_12();
+    test_13();
 }
 
 struct Bar {
