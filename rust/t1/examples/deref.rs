@@ -1,5 +1,10 @@
 use std::ops::Deref;
 
+#[derive(PartialEq, Debug)]
+struct Foo {
+    id: i32,
+}
+
 fn main() {
     test1();
 }
@@ -23,8 +28,17 @@ fn test1() {
     assert_eq!(x, *y);
 
     hello(&MyBox::new(String::from("hzw")));
+
+    let f = Foo { id: 1 };
+    let r = &f;
+    // let b = *r;
+
+    let mb = MyBox(Foo { id: 1 });
+    // let b = *mb;
+    assert_eq!(Foo { id: 1 }, *mb);
 }
 
+#[derive(Debug)]
 struct MyBox<T>(T);
 
 impl<T> MyBox<T> {
