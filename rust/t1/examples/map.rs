@@ -45,6 +45,8 @@ fn test3() {
     println!("finish");
 }
 
+use std::borrow::Borrow;
+
 #[derive(Eq, PartialEq, Hash)]
 struct Bar {
     id: i32,
@@ -53,6 +55,12 @@ struct Bar {
 impl Drop for Bar {
     fn drop(&mut self) {
         println!("Bar {} drop", self.id);
+    }
+}
+
+impl Borrow<i32> for Bar {
+    fn borrow(&self) -> &i32 {
+        &self.id
     }
 }
 
@@ -68,6 +76,8 @@ fn test4() {
         map.insert(k, v);
     }
     let v = map.get(&Bar { id: 1 }).unwrap();
+    println!("{v:?}");
+    let v = map.get(&1).unwrap();
     println!("{v:?}");
     println!("finish")
 }
