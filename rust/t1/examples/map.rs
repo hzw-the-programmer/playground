@@ -5,6 +5,7 @@ use t1::Foo;
 fn main() {
     test1();
     test2();
+    test3();
 }
 
 fn test1() {
@@ -31,5 +32,14 @@ fn test2() {
     {
         let f = map.insert(1, Foo { id: 3 }).unwrap();
     }
+    println!("finish");
+}
+
+fn test3() {
+    print!("\n* test3\n");
+    let mut map = HashMap::new();
+    map.insert(1, Foo { id: 1 });
+    map.insert(2, Foo { id: 2 });
+    map.remove(&2);
     println!("finish");
 }
