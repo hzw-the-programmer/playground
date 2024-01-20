@@ -32,12 +32,12 @@ fn test1() {
     let b = Bar;
     let mut i = 0;
     while let Some(n) = b.foo().id() {
-        println!("in while");
+        println!("begin while");
         if i > 1 {
             break;
         }
         i += 1;
-        println!("leave while")
+        println!("end while")
     }
 }
 
@@ -46,7 +46,9 @@ fn test2() {
     let b = Bar;
     let mut i = 0;
     loop {
+        println!("before");
         let n = b.foo().id().unwrap();
+        println!("after");
         if i > 1 {
             break;
         }
