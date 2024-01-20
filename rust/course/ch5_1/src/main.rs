@@ -23,9 +23,13 @@ fn main() {
 
 fn handle_connection(mut stream: TcpStream) {
     let mut buffer = [0; 1024];
-    println!("before read");
-    stream.read(&mut buffer).unwrap();
-    println!("after read");
+    match stream.read(&mut buffer) {
+        Ok(n) => println!("read {n}"),
+        Err(err) => {
+            println!("{err}");
+            return;
+        }
+    }
 
     let get = b"GET / HTTP/1.1\r\n";
     let sleep = b"GET /sleep HTTP/1.1\r\n";
