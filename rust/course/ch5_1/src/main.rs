@@ -1,6 +1,6 @@
 use ch5_1::ThreadPool;
 use std::fs;
-use std::io::prelude::*;
+use std::io::{prelude::*, BufReader};
 use std::net::TcpListener;
 use std::net::TcpStream;
 use std::thread;
@@ -22,25 +22,48 @@ fn main() {
 }
 
 fn handle_connection(mut stream: TcpStream) {
-    let mut buffer = [0; 1024];
-    match stream.read(&mut buffer) {
-        Ok(n) => println!("read {n}"),
-        Err(err) => {
+    // let mut buffer = [0; 1024];
+    // match stream.read(&mut buffer) {
+    //     Ok(n) => println!("read {n}"),
+    //     Err(err) => {
+    //         println!("{err}");
+    //         return;
+    //     }
+    // }
+
+    // let get = b"GET / HTTP/1.1\r\n";
+    // let sleep = b"GET /sleep HTTP/1.1\r\n";
+
+    // let (status_line, filename) = if buffer.starts_with(get) {
+    //     ("HTTP/1.1 200 OK", "hello.html")
+    // } else if buffer.starts_with(sleep) {
+    //     thread::sleep(Duration::from_secs(5));
+    //     ("HTTP/1.1 200 OK", "hello.html")
+    // } else {
+    //     ("HTTP/1.1 404 NOT FOUND", "404.html")
+    // };
+    let buf_reader = BufReader::new(&mut stream);
+    let request_line = match buf_reader.lines().next() {
+        Some(Ok(line)) => {
+            println!("{line}");
+            line
+        }
+        Some(Err(err)) => {
             println!("{err}");
             return;
         }
-    }
-
-    let get = b"GET / HTTP/1.1\r\n";
-    let sleep = b"GET /sleep HTTP/1.1\r\n";
-
-    let (status_line, filename) = if buffer.starts_with(get) {
-        ("HTTP/1.1 200 OK", "hello.html")
-    } else if buffer.starts_with(sleep) {
-        thread::sleep(Duration::from_secs(5));
-        ("HTTP/1.1 200 OK", "hello.html")
-    } else {
-        ("HTTP/1.1 404 NOT FOUND", "404.html")
+        None => {
+            println!("no lines");
+            return;
+        }
+    };
+    let (status_line, filename) = match &request_line[..] {
+        "GET / HTTP/1.1" => ("HTTP/1.1 200 OK", "hello.html"),
+        "GET /sleep HTTP/1.1" => {
+            thread::sleep(Duration::from_secs(5));
+            ("HTTP/1.1 200 OK", "hello.html")
+        }
+        _ => ("HTTP/1.1 404 NOT FOUND", "404.html"),
     };
 
     let contents = fs::read_to_string(filename).unwrap();
