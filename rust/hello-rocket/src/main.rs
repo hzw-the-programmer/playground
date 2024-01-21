@@ -34,12 +34,26 @@ async fn blocking_task() -> io::Result<Vec<u8>> {
     Ok(vec)
 }
 
-#[launch]
-fn rocket() -> _ {
-    rocket::build()
+// #[launch]
+// fn rocket() -> _ {
+//     rocket::build()
+//         .mount("/", routes![index])
+//         .mount("/", routes![delay])
+//         .mount("/", routes![blocking_task])
+//         .mount("/hello", routes![world])
+//         .mount("/hi", routes![world])
+// }
+
+#[rocket::main]
+async fn main() -> Result<(), rocket::Error> {
+    let _rocket = rocket::build()
         .mount("/", routes![index])
         .mount("/", routes![delay])
         .mount("/", routes![blocking_task])
         .mount("/hello", routes![world])
         .mount("/hi", routes![world])
+        .launch()
+        .await?;
+
+    Ok(())
 }
