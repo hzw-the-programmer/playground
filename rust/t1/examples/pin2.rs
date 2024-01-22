@@ -4,8 +4,9 @@ struct Bar {
 }
 
 fn consume_bar(b: Bar) {
-    println!("{:p}", &b.id);
-    println!("{:p}", b.ptr);
+    println!("id  addr : {:p}", &b.id);
+    println!("ptr addr : {:p}", &b.ptr);
+    println!("ptr value: {:p}", b.ptr);
 }
 
 fn main() {
@@ -16,8 +17,9 @@ fn main() {
 
     b.ptr = &b.id;
 
-    println!("{:p}", &b.id);
-    println!("{:p}", b.ptr);
+    println!("id  addr : {:p}", &b.id);
+    println!("ptr addr : {:p}", &b.ptr);
+    println!("ptr value: {:p}", b.ptr);
 
     consume_bar(b);
 }
