@@ -26,19 +26,39 @@ fn test1() {
     let mut v = vec![];
     println!("len={}, capacity={}", v.len(), v.capacity());
 
+    println!();
+    println!("***begin for***");
     for id in 0..3 {
-        let b = Bar::new(1);
-        println!("before push");
+        let b = Bar::new(id);
         println!("id addr  : {:p}", &b.id);
         println!("ptr value: {:p}", b.ptr);
         v.push(b);
     }
+    println!("***end for***");
 
+    println!();
+    let b = Bar::new(3);
+    println!("id addr  : {:p}", &b.id);
+    println!("ptr value: {:p}", b.ptr);
+    v.push(b);
+
+    let b = Bar::new(4);
+    println!("id addr  : {:p}", &b.id);
+    println!("ptr value: {:p}", b.ptr);
+    v.push(b);
+
+    let b = Bar::new(5);
+    println!("id addr  : {:p}", &b.id);
+    println!("ptr value: {:p}", b.ptr);
+    v.push(b);
+
+    println!();
     for b in &v {
         println!("id addr  : {:p}", &b.id);
         println!("ptr value: {:p}", b.ptr);
     }
 
+    println!();
     for b in v {
         println!("id addr  : {:p}", &b.id);
         println!("ptr value: {:p}", b.ptr);
