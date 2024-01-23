@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 fn nums_sum1(nums: &[i32]) -> i32 {
     let mut sum = 0;
     for num in nums {

@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::io::{self, Seek, SeekFrom, Write};
 
 fn write_ten_bytes_at_end<W: Write + Seek>(mut writer: W) -> io::Result<()> {
