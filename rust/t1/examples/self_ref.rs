@@ -1,6 +1,7 @@
 fn main() {
     test1();
     test2();
+    test3();
 }
 
 struct Foo {
@@ -10,9 +11,14 @@ struct Foo {
 
 impl Foo {
     fn consume(self) {
-        println!("{:p}", &self.id);
-        println!("{:p}", &self.ptr);
-        println!("{:p}", self.ptr);
+        println!("{:016p}", &self.id);
+        println!("{:016p}", self.ptr);
+    }
+}
+
+impl Drop for Foo {
+    fn drop(&mut self) {
+        println!("Foo {} drop", self.id);
     }
 }
 
@@ -25,11 +31,12 @@ fn test1() {
     };
     f.ptr = &f.id;
 
-    println!("{:p}", &f.id);
-    println!("{:p}", &f.ptr);
-    println!("{:p}", f.ptr);
+    println!("{:016p}", &f.id);
+    println!("{:016p}", f.ptr);
 
     f.consume();
+
+    println!("finish");
 }
 
 fn test2() {
@@ -41,23 +48,56 @@ fn test2() {
     };
     f.ptr = &f.id;
 
-    println!("{:p}", &f.id);
-    println!("{:p}", &f.ptr);
-    println!("{:p}", f.ptr);
+    println!("{:016p}", &f.id);
+    println!("{:016p}", f.ptr);
 
     let func_ref = || {
-        println!("{:p}", &f.id);
-        println!("{:p}", &f.ptr);
-        println!("{:p}", f.ptr);
+        println!("{:016p}", &f.id);
+        println!("{:016p}", f.ptr);
     };
     println!();
     func_ref();
 
     let func = move || {
-        println!("{:p}", &f.id);
-        println!("{:p}", &f.ptr);
-        println!("{:p}", f.ptr);
+        println!("{:016p}", &f.id);
+        println!("{:016p}", f.ptr);
     };
     println!();
     func();
+
+    println!("finish");
+}
+
+fn test3() {
+    print!("\ntest3\n\n");
+
+    let f = Foo {
+        id: 1,
+        ptr: std::ptr::null(),
+    };
+    println!("stack");
+    println!("{:016p}", &f.id);
+    println!("{:016p}", f.ptr);
+
+    let mut p = Box::new(f);
+    p.ptr = &p.id;
+    println!("heap");
+    println!("{:016p}", &p.id);
+    println!("{:016p}", p.ptr);
+
+    let func_ref = || {
+        println!("{:016p}", &p.id);
+        println!("{:016p}", p.ptr);
+    };
+    println!();
+    func_ref();
+
+    let func = move || {
+        println!("{:016p}", &p.id);
+        println!("{:016p}", p.ptr);
+    };
+    println!();
+    func();
+
+    println!("finish");
 }
