@@ -36,23 +36,30 @@ impl WorkRef for &Foo {
 
 fn test1() {
     print!("\ntest1\n\n");
+
     let f = Foo { id: 1 };
-    f.work();
-    let f = &Foo { id: 2 };
+    f.work_ref();
     f.work();
 }
 
 fn test2() {
     print!("\ntest2\n\n");
-    let f = Foo { id: 1 };
+
+    let f = &Foo { id: 1 };
     f.work_ref();
-    let f = &Foo { id: 2 };
+    f.work();
+}
+
+fn test3() {
+    print!("\ntest3\n\n");
+
+    let f = &&Foo { id: 1 };
     f.work_ref();
-    let f = &&Foo { id: 2 };
-    f.work_ref();
+    f.work();
 }
 
 fn main() {
     test1();
     test2();
+    test3();
 }

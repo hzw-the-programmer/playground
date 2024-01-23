@@ -31,6 +31,7 @@ fn test1() {
     let b = Bar(foo);
     b.work();
 
+    // cannot move out of dereference of `Bar<Foo>`
     // b.work_2();
     // let f = *b;
     let f = b.0;
@@ -47,7 +48,26 @@ fn test2() {
     // let f = *b;
 }
 
+fn test3() {
+    print!("\ntest3\n\n");
+
+    let f = Foo { id: 1 };
+    f.work();
+    f.work_2();
+}
+
+fn test4() {
+    print!("\ntest4\n\n");
+
+    let f = &Foo { id: 1 };
+    f.work();
+    // cannot move out of `*f` which is behind a shared reference
+    // f.work_2();
+}
+
 fn main() {
     test1();
     test2();
+    test3();
+    test4();
 }
