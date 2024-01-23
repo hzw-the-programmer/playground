@@ -60,6 +60,20 @@ fn test2() {
     // let n = p;
 }
 
+impl Foo {
+    fn work_1(&self) {
+        println!("heap");
+        println!("{:016p}", &self.id);
+        println!("{:016p}", self.ptr);
+    }
+
+    fn work_2(self) {
+        println!("stack");
+        println!("{:016p}", &self.id);
+        println!("{:016p}", self.ptr);
+    }
+}
+
 fn test3() {
     print!("\ntest3\n\n");
 
@@ -67,20 +81,16 @@ fn test3() {
         id: 1,
         ptr: std::ptr::null(),
     };
-    let mut p = Box::pin(f);
+    println!("stack:");
+    println!("{:016p}", &f.id);
+    println!("{:016p}", f.ptr);
+
+    let mut p = Box::new(f);
     p.ptr = &p.id;
-    println!();
-    println!("id  addr : {:p}", &p.id);
-    println!("ptr addr : {:p}", &p.ptr);
-    println!("ptr value: {:p}", p.ptr);
+    println!("heap");
+    println!("{:016p}", &p.id);
+    println!("{:016p}", p.ptr);
 
-    // let n: i32 = p;
-    // let n: i32 = p.as_mut();
-
-    // let p1 = *p;
-    // let p1 = *(p.as_mut());
-    // println!();
-    // println!("id  addr : {:p}", &p1.id);
-    // println!("ptr addr : {:p}", &p1.ptr);
-    // println!("ptr value: {:p}", p1.ptr);
+    p.work_1();
+    p.work_2();
 }
