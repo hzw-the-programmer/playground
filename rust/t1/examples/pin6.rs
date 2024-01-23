@@ -4,6 +4,12 @@ struct Foo {
     id: i32,
 }
 
+impl Drop for Foo {
+    fn drop(&mut self) {
+        println!("Foo {} drop", self.id);
+    }
+}
+
 impl Foo {
     fn work_1(self: Pin<&mut Self>) {
         println!("Foo.work_1");
@@ -15,6 +21,8 @@ impl Foo {
 }
 
 fn test1() {
+    print!("\ntest1\n\n");
+
     let mut f = Foo { id: 1 };
     // f.work_1();
     let pinned_mut = Pin::new(&mut f);
@@ -25,6 +33,8 @@ fn test1() {
     let pinned = Pin::new(&f);
     // pinned.work_1();
     pinned.work_2();
+
+    println!("finish");
 }
 
 fn main() {
