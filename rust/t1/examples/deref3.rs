@@ -5,12 +5,14 @@ struct Foo {
 }
 
 impl Foo {
-    fn work(&self) {
-        println!("Foo.work");
+    fn work_ref(&self) {
+        println!("Foo.work_ref");
+        println!("{:016p}", self);
     }
 
-    fn work_2(self) {
-        println!("Foo.work_2");
+    fn work_consume(self) {
+        println!("Foo.work_consume");
+        println!("{:016p}", &self);
     }
 }
 
@@ -27,42 +29,46 @@ impl<T> Deref for Bar<T> {
 fn test1() {
     print!("\ntest1\n\n");
 
-    let foo = Foo { id: 1 };
-    let b = Bar(foo);
-    b.work();
-
-    // cannot move out of dereference of `Bar<Foo>`
-    // b.work_2();
-    // let f = *b;
-    let f = b.0;
+    let f = Foo { id: 1 };
+    println!("{:016p}", &f);
+    f.work_ref();
+    f.work_consume();
 }
 
 fn test2() {
     print!("\ntest2\n\n");
 
-    let foo = Foo { id: 1 };
-    let b = Box::new(foo);
-    b.work();
+    let f = Foo { id: 1 };
+    println!("{:016p}", &f);
+    let b = Box::new(f);
+    println!("{:016p}", b);
+    b.work_ref();
 
-    b.work_2();
+    b.work_consume();
     // let f = *b;
 }
 
 fn test3() {
     print!("\ntest3\n\n");
 
-    let f = Foo { id: 1 };
-    f.work();
-    f.work_2();
+    let f = &Foo { id: 1 };
+    println!("{:016p}", f);
+    f.work_ref();
+    // cannot move out of `*f` which is behind a shared reference
+    // f.work_consume();
 }
 
 fn test4() {
     print!("\ntest4\n\n");
 
-    let f = &Foo { id: 1 };
-    f.work();
-    // cannot move out of `*f` which is behind a shared reference
-    // f.work_2();
+    let foo = Foo { id: 1 };
+    let b = Bar(foo);
+    b.work_ref();
+
+    // cannot move out of dereference of `Bar<Foo>`
+    // b.work_consume();
+    // let f = *b;
+    let f = b.0;
 }
 
 fn main() {
