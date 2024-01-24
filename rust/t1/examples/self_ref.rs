@@ -5,6 +5,7 @@ fn main() {
     test4();
     test5();
     test6();
+    test7();
 }
 
 struct Foo {
@@ -119,18 +120,32 @@ fn test4() {
     print!("\ntest4\n\n");
 
     let b = Bar { id: 1 };
-
     println!("{:016p}", &b.id);
 
     let h = std::thread::spawn(move || {
         println!("{:016p}", &b.id);
     });
     h.join();
+
     println!("finish");
 }
 
 fn test5() {
     print!("\ntest5\n\n");
+
+    let b = Bar { id: 1 };
+    println!("{:016p}", &b);
+
+    let h = std::thread::spawn(move || {
+        println!("{:016p}", &b);
+    });
+    h.join();
+
+    println!("finish");
+}
+
+fn test6() {
+    print!("\ntest6\n\n");
 
     let h;
     {
@@ -147,8 +162,8 @@ fn test5() {
     println!("finish");
 }
 
-fn test6() {
-    print!("\ntest6\n\n");
+fn test7() {
+    print!("\ntest7\n\n");
 
     let h;
     {
