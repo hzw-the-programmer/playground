@@ -1,5 +1,11 @@
+use futures::task::{self, ArcWake};
+use std::future::Future;
+use std::pin::Pin;
 use std::sync::mpsc;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
+use std::task::{Context, Poll};
+use std::thread;
+use std::time::{Duration, Instant};
 
 struct MiniTokio {
     scheduled: mpsc::Receiver<Arc<Task>>,
@@ -7,12 +13,6 @@ struct MiniTokio {
 }
 
 impl MiniTokio {
-    fn run(&self) {
-        while let Ok(task) = self.scheduled.recv() {
-            task.poll();
-        }
-    }
-
     /// Initialize a new mini-tokio instance.
     fn new() -> MiniTokio {
         let (sender, scheduled) = mpsc::channel();
@@ -30,6 +30,12 @@ impl MiniTokio {
     {
         Task::spawn(future, &self.sender);
     }
+
+    fn run(&self) {
+        while let Ok(task) = self.scheduled.recv() {
+            task.poll();
+        }
+    }
 }
 
 struct Task {
@@ -44,19 +50,6 @@ struct Task {
 }
 
 impl Task {
-    fn poll(self: Arc<Self>) {
-        // Create a waker from the `Task` instance. This
-        // uses the `ArcWake` impl from above.
-        let waker = task::waker(self.clone());
-        let mut cx = Context::from_waker(&waker);
-
-        // No other thread ever tries to lock the future
-        let mut future = self.future.try_lock().unwrap();
-
-        // Poll the future
-        let _ = future.as_mut().poll(&mut cx);
-    }
-
     // Spawns a new task with the given future.
     //
     // Initializes a new Task harness containing the given future and pushes it
@@ -74,6 +67,19 @@ impl Task {
         let _ = sender.send(task);
     }
 
+    fn poll(self: Arc<Self>) {
+        // Create a waker from the `Task` instance. This
+        // uses the `ArcWake` impl from above.
+        let waker = task::waker(self.clone());
+        let mut cx = Context::from_waker(&waker);
+
+        // No other thread ever tries to lock the future
+        let mut future = self.future.try_lock().unwrap();
+
+        // Poll the future
+        let _ = future.as_mut().poll(&mut cx);
+    }
+
     fn schedule(self: &Arc<Self>) {
         self.executor.send(self.clone());
     }
@@ -81,12 +87,14 @@ impl Task {
 
 impl ArcWake for Task {
     fn wake_by_ref(arc_self: &Arc<Self>) {
+        println!("Task: before schedule");
         arc_self.schedule();
+        println!("Task: after schedule");
     }
 }
 
 fn main() {
-    let mut mini_tokio = MiniTokio::new();
+    let mini_tokio = MiniTokio::new();
 
     mini_tokio.spawn(async {
         let when = Instant::now() + Duration::from_millis(10);
@@ -97,4 +105,44 @@ fn main() {
     });
 
     mini_tokio.run();
+}
+
+struct Delay {
+    when: Instant,
+}
+
+impl Future for Delay {
+    type Output = &'static str;
+
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<&'static str> {
+        println!("Delay: poll");
+        if Instant::now() >= self.when {
+            println!("Delay: Poll::Ready");
+            Poll::Ready("done")
+        } else {
+            println!("Delay: Poll::Pending");
+
+            // Ignore this line for now.
+            // cx.waker().wake_by_ref();
+
+            // Get a handle to the waker for the current task
+            let waker = cx.waker().clone();
+            let when = self.when;
+
+            // Spawn a timer thread.
+            thread::spawn(move || {
+                let now = Instant::now();
+
+                if now < when {
+                    thread::sleep(when - now);
+                }
+
+                println!("Delay: before wake");
+                waker.wake();
+                println!("Delay: after wake");
+            });
+
+            Poll::Pending
+        }
+    }
 }
