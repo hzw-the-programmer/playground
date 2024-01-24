@@ -10,3 +10,7 @@ rustup component add llvm-tools
 ${RUSTUP_HOME}\toolchains\nightly-x86_64-pc-windows-msvc\lib\rustlib\x86_64-pc-windows-msvc\bin
 
 rustup default stable
+
+cargo install cargo-binutils
+cargo install bootimage
+${CARGO_HOME}\bin
