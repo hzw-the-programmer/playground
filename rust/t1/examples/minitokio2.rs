@@ -28,10 +28,14 @@ impl MiniTokio {
     where
         F: Future<Output = ()> + Send + 'static,
     {
+        println!("MiniTokio: spawn");
+
         Task::spawn(future, &self.sender);
     }
 
     fn run(&self) {
+        println!("MiniTokio: run");
+
         while let Ok(task) = self.scheduled.recv() {
             task.poll();
         }
@@ -59,6 +63,8 @@ impl Task {
     where
         F: Future<Output = ()> + Send + 'static,
     {
+        println!("Task: spawn");
+
         let task = Arc::new(Task {
             future: Mutex::new(Box::pin(future)),
             executor: sender.clone(),
@@ -68,6 +74,8 @@ impl Task {
     }
 
     fn poll(self: Arc<Self>) {
+        println!("Task: poll");
+
         // Create a waker from the `Task` instance. This
         // uses the `ArcWake` impl from above.
         let waker = task::waker(self.clone());
@@ -81,15 +89,16 @@ impl Task {
     }
 
     fn schedule(self: &Arc<Self>) {
+        println!("Task: schedule");
+
         self.executor.send(self.clone());
     }
 }
 
 impl ArcWake for Task {
     fn wake_by_ref(arc_self: &Arc<Self>) {
-        println!("Task: before schedule");
+        println!("Task: wake_by_ref");
         arc_self.schedule();
-        println!("Task: after schedule");
     }
 }
 
@@ -97,10 +106,13 @@ fn main() {
     let mini_tokio = MiniTokio::new();
 
     mini_tokio.spawn(async {
+        println!("async begin");
         let when = Instant::now() + Duration::from_millis(10);
         let future = Delay { when };
 
+        println!("before wait");
         let out = future.await;
+        println!("after wait");
         assert_eq!(out, "done");
     });
 
