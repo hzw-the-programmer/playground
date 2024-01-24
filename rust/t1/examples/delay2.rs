@@ -1,6 +1,7 @@
 use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
+use std::thread;
 use std::time::{Duration, Instant};
 
 struct Delay {
@@ -17,8 +18,25 @@ impl Future for Delay {
             Poll::Ready("done")
         } else {
             println!("Delay: Poll::Pending");
+
             // Ignore this line for now.
-            cx.waker().wake_by_ref();
+            // cx.waker().wake_by_ref();
+
+            // Get a handle to the waker for the current task
+            let waker = cx.waker().clone();
+            let when = self.when;
+
+            // Spawn a timer thread.
+            thread::spawn(move || {
+                let now = Instant::now();
+
+                if now < when {
+                    thread::sleep(when - now);
+                }
+
+                waker.wake();
+            });
+
             Poll::Pending
         }
     }
@@ -45,7 +63,7 @@ impl Future for MainFuture {
             match *self {
                 State0 => {
                     println!("MainFuture: State0");
-                    let when = Instant::now() + Duration::from_millis(1);
+                    let when = Instant::now() + Duration::from_millis(10);
                     let future = Delay { when };
                     *self = State1(future);
                 }
