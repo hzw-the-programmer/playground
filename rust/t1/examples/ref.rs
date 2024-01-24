@@ -34,6 +34,12 @@ impl WorkRef for &Foo {
     }
 }
 
+impl Work for &mut Foo {
+    fn work(self) {
+        println!("&mut Foo.work");
+    }
+}
+
 impl Drop for Foo {
     fn drop(&mut self) {
         println!("Foo {} drop", self.id);
@@ -70,8 +76,19 @@ fn test3() {
     println!("finish");
 }
 
+fn test4() {
+    print!("\ntest4\n\n");
+
+    let f = &mut Foo { id: 1 };
+    f.work_ref();
+    f.work();
+
+    println!("finish");
+}
+
 fn main() {
     test1();
     test2();
     test3();
+    test4();
 }
