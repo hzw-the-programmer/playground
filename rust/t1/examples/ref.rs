@@ -86,9 +86,23 @@ fn test4() {
     println!("finish");
 }
 
+fn test5() {
+    print!("\ntest5\n\n");
+
+    // let f = &&mut Foo { id: 1 };
+    let f = &mut &mut Foo { id: 1 };
+    f.work_ref();
+    // cannot borrow `**f` as mutable, as it is behind a `&` reference
+    // `f` is a `&` reference, so the data it refers to cannot be borrowed as mutable
+    f.work();
+
+    println!("finish");
+}
+
 fn main() {
     test1();
     test2();
     test3();
     test4();
+    test5();
 }
