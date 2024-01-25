@@ -1,6 +1,6 @@
 fn main() {
     let tests = vec![
-        test1, test2, test2_1, test3, test3_1, test4, test5, test6, test6_1, test7, test8,
+        test1, test2, test2_1, test3, test3_1, test4, test5, test6, test6_1, test7, test8, test9,
     ];
     for (i, test) in tests.iter().enumerate() {
         print!("\n*** test {i} ***\n\n");
@@ -300,4 +300,29 @@ fn test8() {
     println!("before join");
     h.join();
     println!("finish");
+}
+
+impl Bar {
+    fn work(&self) {
+        println!("work");
+    }
+}
+
+fn test9() {
+    let f = Bar { id: 1 };
+    {
+        let c = move || {
+            println!("{:p}", &f.id);
+        };
+        // c();
+    }
+    f.work();
+    println!("finish");
+    // let b = Bar { id: 1 };
+    // {
+    //     let c = move || {
+    //         println!("{:016p}", &b.id);
+    //     };
+    // }
+    // println!("finish");
 }

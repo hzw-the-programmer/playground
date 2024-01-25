@@ -14,6 +14,7 @@ fn main() {
     println!("Option<[i16; 10]>: {}", mem::size_of::<Option<[i16; 10]>>());
     println!("Option<[i32; 10]>: {}", mem::size_of::<Option<[i32; 10]>>());
     println!("Option<&i32>: {}", mem::size_of::<Option<&i32>>());
+    println!("&str: {}", mem::size_of::<&str>());
 }
 
 struct Foo {
