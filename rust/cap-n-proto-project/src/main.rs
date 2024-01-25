@@ -4,6 +4,8 @@ use capnp::serialize;
 
 pub mod person_schema_capnp;
 
+// https://blog.logrocket.com/using-capn-proto-rust-serialize-deserialize-objects/
+
 fn main() {
     // Creating object
     let mut message = Builder::new_default();
