@@ -9,6 +9,8 @@
 // [package]
 // edition = "2021"
 
+// rustc --edition 2021 main.rs
+
 // https://doc.rust-lang.org/edition-guide/rust-2021/disjoint-capture-in-closures.html
 
 struct Foo {
