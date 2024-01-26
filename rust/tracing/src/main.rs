@@ -1,8 +1,21 @@
 use tracing::{event, instrument, span, Level};
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+
+// cargo run
+// RUST_LOG=warn cargo run
 
 fn main() {
-    tracing_subscriber::fmt()
-        .with_max_level(tracing::Level::TRACE)
+    // tracing_subscriber::fmt()
+    //     .with_max_level(tracing::Level::TRACE)
+    //     .init();
+    tracing_subscriber::registry()
+        .with(
+            tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| {
+                println!("no env");
+                "tracing=info".into()
+            }),
+        )
+        .with(tracing_subscriber::fmt::layer())
         .init();
 
     log::debug!("this is a log line");
