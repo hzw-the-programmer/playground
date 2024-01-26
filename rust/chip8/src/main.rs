@@ -44,7 +44,7 @@ impl CPU {
             let d = ((opcode & 0x000F) >> 0) as u8;
 
             match (c, x, y, d) {
-                (0x00, 0x00, 0x00, 0x00) => break,
+                (0x00, 0x00, 0x00, 0x00) => return,
                 (0x08, _, _, 0x04) => self.add_xy(x, y),
                 _ => todo!("opcode 0x{:04x}", opcode),
             }
@@ -59,6 +59,15 @@ impl CPU {
     }
 
     fn add_xy(&mut self, x: u8, y: u8) {
-        self.registers[x as usize] += self.registers[y as usize];
+        let arg1 = self.registers[x as usize];
+        let arg2 = self.registers[y as usize];
+
+        let (val, overflow) = arg1.overflowing_add(arg2);
+        self.registers[x as usize] = val;
+        if overflow {
+            self.registers[0x0F] = 1;
+        } else {
+            self.registers[0x0F] = 0;
+        }
     }
 }
