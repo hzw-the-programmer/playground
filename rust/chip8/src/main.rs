@@ -85,12 +85,18 @@ impl CPU {
     }
 
     fn call(&mut self, addr: u16) {
+        if self.stack_pointer >= self.stack.len() {
+            panic!("stack overflow");
+        }
         self.stack[self.stack_pointer] = self.position_in_memory as u16;
         self.stack_pointer += 1;
         self.position_in_memory = addr as usize;
     }
 
     fn ret(&mut self) {
+        if self.stack_pointer == 0 {
+            panic!("stack underflow");
+        }
         self.stack_pointer -= 1;
         self.position_in_memory = self.stack[self.stack_pointer] as usize;
     }
