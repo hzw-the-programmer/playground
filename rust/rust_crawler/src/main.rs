@@ -1,3 +1,5 @@
+use select::document::Document;
+use select::predicate::Name;
 use std::io::Read;
 
 fn main() {
@@ -9,4 +11,9 @@ fn main() {
     let mut body = String::new();
     res.read_to_string(&mut body).unwrap();
     println!("HTML: {}", &body[0..40]);
+
+    Document::from(body.as_str())
+        .find(Name("a"))
+        .filter_map(|n| n.attr("href"))
+        .for_each(|x| println!("{}", x));
 }
