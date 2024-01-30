@@ -3,7 +3,9 @@ use select::document::Document;
 use select::predicate::Name;
 use select::predicate::Predicate;
 use std::collections::HashSet;
+use std::fs;
 use std::io::Read;
+use std::path::Path;
 use std::time::Instant;
 
 fn main() {
@@ -13,6 +15,7 @@ fn main() {
     let origin_url = "https://rolisz.ro/";
 
     let body = fetch_url(&client, origin_url);
+    write_file("", &body);
 
     let mut visited = HashSet::new();
     visited.insert(origin_url.to_string());
@@ -27,6 +30,7 @@ fn main() {
             .iter()
             .map(|url| {
                 let body = fetch_url(&client, url);
+                write_file(&url[origin_url.len() - 1..], &body);
                 let links = get_links_from_html(&body);
                 println!("Visited: {} found {} links", url, links.len());
                 links
@@ -51,6 +55,7 @@ fn get_links_from_html(html: &str) -> HashSet<String> {
     Document::from(html)
         .find(Name("a").or(Name("link")))
         .filter_map(|n| n.attr("href"))
+        .filter(has_extension)
         .filter_map(normalize_url)
         .collect::<HashSet<String>>()
 }
@@ -83,4 +88,13 @@ fn fetch_url(client: &reqwest::blocking::Client, url: &str) -> String {
     let mut body = String::new();
     res.read_to_string(&mut body).unwrap();
     body
+}
+
+fn write_file(path: &str, content: &str) {
+    fs::create_dir_all(format!("static{}", path)).unwrap();
+    fs::write(format!("static{}/index.html", path), content);
+}
+
+fn has_extension(url: &&str) -> bool {
+    Path::new(url).extension().is_none()
 }
