@@ -27,7 +27,7 @@ fn main() {
         .collect::<HashSet<String>>();
 
     while !new_urls.is_empty() {
-        let mut found_urls: HashSet<String> = new_urls
+        let found_urls: HashSet<String> = new_urls
             .par_iter()
             .map(|url| {
                 let body = fetch_url(&client, url);
@@ -67,7 +67,7 @@ fn normalize_url(url: &str) -> Option<String> {
     let new_url = Url::parse(url);
     match new_url {
         Ok(new_url) => {
-            if new_url.has_host() && new_url.host_str().unwrap() == "ghost.rolisz.ro" {
+            if let Some("ghost.rolisz.ro") = new_url.host_str() {
                 Some(url.to_string())
             } else {
                 None
