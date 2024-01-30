@@ -1,3 +1,4 @@
+use rayon::prelude::*;
 use reqwest::Url;
 use select::document::Document;
 use select::predicate::Name;
@@ -27,15 +28,17 @@ fn main() {
 
     while !new_urls.is_empty() {
         let mut found_urls: HashSet<String> = new_urls
-            .iter()
+            .par_iter()
             .map(|url| {
                 let body = fetch_url(&client, url);
                 write_file(&url[origin_url.len() - 1..], &body);
+
                 let links = get_links_from_html(&body);
                 println!("Visited: {} found {} links", url, links.len());
+
                 links
             })
-            .fold(HashSet::new(), |mut acc, x| {
+            .reduce(HashSet::new, |mut acc, x| {
                 acc.extend(x);
                 acc
             });
