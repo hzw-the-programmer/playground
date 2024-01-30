@@ -4,19 +4,47 @@ use select::predicate::Name;
 use select::predicate::Predicate;
 use std::collections::HashSet;
 use std::io::Read;
+use std::time::Instant;
 
 fn main() {
+    let now = Instant::now();
+
     let client = reqwest::blocking::Client::new();
     let origin_url = "https://rolisz.ro/";
-    let mut res = client.get(origin_url).send().unwrap();
-    println!("Status for {}: {}", origin_url, res.status());
 
-    let mut body = String::new();
-    res.read_to_string(&mut body).unwrap();
-    println!("HTML: {}", &body[0..40]);
+    let body = fetch_url(&client, origin_url);
 
+    let mut visited = HashSet::new();
+    visited.insert(origin_url.to_string());
     let found_urls = get_links_from_html(&body);
-    println!("URLs: {:#?}", found_urls)
+    let mut new_urls = found_urls
+        .difference(&visited)
+        .map(|x| x.to_string())
+        .collect::<HashSet<String>>();
+
+    while !new_urls.is_empty() {
+        let mut found_urls: HashSet<String> = new_urls
+            .iter()
+            .map(|url| {
+                let body = fetch_url(&client, url);
+                let links = get_links_from_html(&body);
+                println!("Visited: {} found {} links", url, links.len());
+                links
+            })
+            .fold(HashSet::new(), |mut acc, x| {
+                acc.extend(x);
+                acc
+            });
+        visited.extend(new_urls);
+
+        new_urls = found_urls
+            .difference(&visited)
+            .map(|x| x.to_string())
+            .collect::<HashSet<String>>();
+        println!("New urls: {}", new_urls.len())
+    }
+    println!("URLs: {:#?}", found_urls);
+    println!("{}", now.elapsed().as_secs());
 }
 
 fn get_links_from_html(html: &str) -> HashSet<String> {
@@ -46,4 +74,13 @@ fn normalize_url(url: &str) -> Option<String> {
             }
         }
     }
+}
+
+fn fetch_url(client: &reqwest::blocking::Client, url: &str) -> String {
+    let mut res = client.get(url).send().unwrap();
+    println!("Status for {}: {}", url, res.status());
+
+    let mut body = String::new();
+    res.read_to_string(&mut body).unwrap();
+    body
 }
