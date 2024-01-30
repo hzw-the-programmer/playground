@@ -1,0 +1,12 @@
+use std::io::Read;
+
+fn main() {
+    let client = reqwest::blocking::Client::new();
+    let origin_url = "https://rolisz.ro/";
+    let mut res = client.get(origin_url).send().unwrap();
+    println!("Status for {}: {}", origin_url, res.status());
+
+    let mut body = String::new();
+    res.read_to_string(&mut body).unwrap();
+    println!("HTML: {}", &body[0..40]);
+}
