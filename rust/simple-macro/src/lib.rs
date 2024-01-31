@@ -21,9 +21,7 @@ pub fn attr_with_args(args: TokenStream, input: TokenStream) -> TokenStream {
     assert_eq!("\"Hello Rust!\"", args);
     let input = input.to_string();
     assert_eq!("fn foo() { println!(\"hhh\"); }", input);
-    r#"
-        fn foo() -> String { "Hello Rust!".to_string() }
-    "#
-    .parse()
-    .unwrap()
+    format!("fn foo() -> String {{ {}.to_string() }}", args)
+        .parse()
+        .unwrap()
 }
