@@ -1,4 +1,4 @@
-use simple_macro::{attr_with_args, A};
+use simple_macro::{attr_with_args, hashmap, A};
 
 #[derive(A)]
 struct A;
@@ -16,4 +16,10 @@ fn foo() {
 #[test]
 fn test_foo() {
     assert_eq!("Hello Rust!", foo());
+}
+
+#[test]
+fn test_hashmap() {
+    let hm = hashmap!("a": 1, "b": 2,);
+    assert_eq!(hm["a"], 1);
 }

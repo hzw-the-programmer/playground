@@ -25,3 +25,42 @@ pub fn attr_with_args(args: TokenStream, input: TokenStream) -> TokenStream {
         .parse()
         .unwrap()
 }
+
+#[proc_macro]
+pub fn hashmap(input: TokenStream) -> TokenStream {
+    let input = input.to_string();
+    println!("{input}");
+    // let input = input.trim_end_matches(",");
+    // println!("{input}");
+    let insert = input
+        .split(",")
+        .filter(|i| i.len() != 0)
+        .map(|i| {
+            let kv = if i.contains("=>") {
+                i.split("=>")
+            } else {
+                i.split(":")
+            };
+            let kv = kv.map(|i| i.trim()).collect::<Vec<&str>>();
+            // format!("hm.insert({}, {});\n", kv[0], kv[1])
+            format!("hm.insert({}, {});\n", kv[0], kv[1])
+        })
+        // .for_each(|i| println!("{i:?}"));
+        // .collect::<String>();
+        .collect::<Vec<String>>();
+    println!("{insert:?}");
+
+    format!(
+        r#"
+        {{
+            let mut hm = std::collections::HashMap::with_capacity({});
+            {}
+            hm
+        }}
+    "#,
+        insert.len(),
+        insert.into_iter().collect::<String>()
+    )
+    .parse()
+    .unwrap()
+}
