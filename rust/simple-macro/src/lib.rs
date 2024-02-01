@@ -1,4 +1,6 @@
 use proc_macro::TokenStream;
+use quote::*;
+use syn::{parse_macro_input, Data, DeriveInput, Fields};
 
 #[proc_macro_derive(A)]
 pub fn derive(input: TokenStream) -> TokenStream {
@@ -63,4 +65,51 @@ pub fn hashmap(input: TokenStream) -> TokenStream {
     )
     .parse()
     .unwrap()
+}
+
+#[proc_macro_derive(New)]
+pub fn derive_new(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    println!("{:?}", input.attrs);
+    println!("{:?}", input.vis);
+    println!("{:?}", input.ident);
+    println!("{:?}", input.generics);
+    println!("{:?}", input.data);
+    match input.data {
+        Data::Struct(ds) => {
+            // println!("{ds:?}");
+            println!("{:?}", ds.struct_token);
+            // println!("{:?}", ds.fields);
+            match ds.fields {
+                Fields::Named(fin) => {
+                    // println!("{fin:?}");
+                    // println!("{:?}", fin.named);
+                    for f in fin.named {
+                        // println!("{f:?}");
+                        println!("\nfiled: {}", f.ident.unwrap());
+                        println!("{:?}", f.attrs);
+                        println!("{:?}", f.vis);
+                        println!("{:?}", f.mutability);
+                        // println!("{:?}", f.ident);
+                        println!("{:?}", f.colon_token);
+                        println!("{:?}", f.ty);
+                    }
+                }
+                _ => {}
+            }
+        }
+        _ => {}
+    }
+
+    let struct_name = &input.ident;
+    let new = syn::Ident::new("new", proc_macro2::Span::call_site());
+
+    quote! {
+        impl #struct_name {
+            pub fn #new() -> Self {
+                #struct_name { id: 1 }
+            }
+        }
+    }
+    .into()
 }

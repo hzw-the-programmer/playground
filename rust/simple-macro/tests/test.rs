@@ -1,4 +1,4 @@
-use simple_macro::{attr_with_args, hashmap, A};
+use simple_macro::{attr_with_args, hashmap, New, A};
 
 #[derive(A)]
 struct A;
@@ -22,4 +22,15 @@ fn test_foo() {
 fn test_hashmap() {
     let hm = hashmap!("a": 1, "b": 2,);
     assert_eq!(hm["a"], 1);
+}
+
+#[derive(New, Debug, PartialEq)]
+struct Foo {
+    id: i32,
+}
+
+#[test]
+fn test_foo_new() {
+    let f = Foo::new();
+    assert_eq!(f, Foo { id: 1 });
 }
