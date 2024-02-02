@@ -6,4 +6,5 @@ fn main() {
     for (k, v) in env::vars() {
         println!("{k}: {v}");
     }
+    println!("value of SIZE is: {:?}", env::var("SIZE"));
 }
