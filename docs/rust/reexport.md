@@ -62,3 +62,9 @@ macro_rules! command {
 }
 ```
 要打开 cargo feature，command 宏才定义
+
+在项目的 Cargo.toml 中加入
+```
+[dependencies]
+clap = { version = "4.4.18", features = ["cargo"] }
+```
