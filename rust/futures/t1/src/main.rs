@@ -29,4 +29,7 @@ fn main() {
     // println!("{} {}", a.num, a.factor);
     // println!("{} {}", b.num, b.factor);
     println!("{} {}", c.num, c.factor);
+
+    let d = Multiply::new(0, 0).number(3).factor(4);
+    println!("{} {}", d.num, d.factor);
 }
