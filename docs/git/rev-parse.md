@@ -1,0 +1,1 @@
+git rev-parse --show-toplevel --git-path hooks
