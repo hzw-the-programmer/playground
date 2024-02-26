@@ -6,8 +6,6 @@ fn binary_search(nums: &[i32], target: i32) -> bool {
     let mut low = 0;
     let mut high = nums.len() - 1;
 
-    let mut count = 0;
-
     while low <= high {
         let mid = low + ((high - low) >> 1);
         if nums[mid] == target {
