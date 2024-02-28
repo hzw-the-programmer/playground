@@ -1,4 +1,4 @@
-fn fibonacci(n: i32) -> i32 {
+fn fibonacci_iterative(n: i32) -> i32 {
     if n == 0 {
         return 0;
     }
@@ -29,10 +29,10 @@ fn fibonacci_recursive(n: u64) -> u64 {
 }
 
 #[test]
-fn fibonacci_test() {
-    assert_eq!(fibonacci(0), 0);
-    assert_eq!(fibonacci(1), 1);
-    assert_eq!(fibonacci(2), 1);
+fn fibonacci_iterative_test() {
+    assert_eq!(fibonacci_iterative(0), 0);
+    assert_eq!(fibonacci_iterative(1), 1);
+    assert_eq!(fibonacci_iterative(2), 1);
 }
 
 #[test]
