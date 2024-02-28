@@ -17,9 +17,27 @@ fn fibonacci(n: i32) -> i32 {
     fib
 }
 
+fn fibonacci_recursive(n: u64) -> u64 {
+    if n == 0 {
+        return 0;
+    }
+    if n == 1 {
+        return 1;
+    }
+
+    fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2)
+}
+
 #[test]
 fn fibonacci_test() {
     assert_eq!(fibonacci(0), 0);
     assert_eq!(fibonacci(1), 1);
     assert_eq!(fibonacci(2), 1);
+}
+
+#[test]
+fn fibonacci_recursive_test() {
+    assert_eq!(fibonacci_recursive(0), 0);
+    assert_eq!(fibonacci_recursive(1), 1);
+    assert_eq!(fibonacci_recursive(2), 1);
 }
