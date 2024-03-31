@@ -1,5 +1,5 @@
 //! Run with
-//! 
+//!
 //! ```not_rust
 //! cargo run -p example-anyhow-error-response
 //! ```
@@ -14,7 +14,7 @@ use axum::{
 #[tokio::main]
 async fn main() {
     let app = Router::new().route("/", get(handler));
-    
+
     let listener = tokio::net::TcpListener::bind("127.0.0.1:30000")
         .await
         .unwrap();
