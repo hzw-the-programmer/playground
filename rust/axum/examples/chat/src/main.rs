@@ -1,3 +1,11 @@
+//! Example chat application.
+//!
+//! Run with
+//!
+//! ```not_rust
+//! cargo run -p example-chat
+//! ```
+
 use axum::{response::Html, routing::get, Router};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -11,7 +19,7 @@ async fn main() {
         .with(tracing_subscriber::fmt::layer())
         .init();
 
-    let app = Router::new().route("/", get(handler));
+    let app = Router::new().route("/", get(index));
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
         .await
         .unwrap();
@@ -19,6 +27,7 @@ async fn main() {
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn handler() -> Html<&'static str> {
+// Include utf-8 file at **compile** time.
+async fn index() -> Html<&'static str> {
     Html(std::include_str!("../chat.html"))
 }
