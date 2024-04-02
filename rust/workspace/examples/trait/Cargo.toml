@@ -1,0 +1,3 @@
+[package]
+name = "trait"
+edition = "2021"

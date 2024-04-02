@@ -1,2 +1,2 @@
 [workspace]
-members = ["axum_test"]
+members = ["axum_test", "examples/*"]
