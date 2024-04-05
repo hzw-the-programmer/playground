@@ -58,5 +58,10 @@ pub fn test() {
     let mut foo = Foo { id: 5 };
     foo.write_ref_mut();
 
+    let mut foo = &mut Foo { id: 1 };
+    foo.write_val();
+    foo.write_ref();
+    (&mut foo).write_ref_mut();
+
     println!("finish");
 }
