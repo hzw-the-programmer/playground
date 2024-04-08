@@ -1,0 +1,3 @@
+[package]
+name = "sizeof"
+edition = "2015"
