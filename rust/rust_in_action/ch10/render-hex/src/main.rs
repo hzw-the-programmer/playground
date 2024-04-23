@@ -4,24 +4,34 @@ fn main() {
     println!("Hello, world!");
 }
 
+const WIDTH: isize = 400;
+const HEIGHT: isize = WIDTH;
+
 enum Operation {
     Forward(isize),
     TurnLeft,
     TurnRight,
     Home,
-    Invalid(char),
+    Noop(u8),
 }
 
-fn parse(hex: &str) -> Vec<Operation> {
-    let mut ops = vec![];
-    for b in hex.chars() {
-        ops.push(match b {
-            '0' => Home,
-            '1'..='9' => Forward(b as isize - '0' as isize),
-            'a' | 'b' | 'c' => TurnLeft,
-            'd' | 'e' | 'f' => TurnRight,
-            _ => Invalid(b),
-        })
+fn parse(input: &str) -> Vec<Operation> {
+    let mut steps = Vec::new();
+
+    for byte in input.bytes() {
+        let step = match byte {
+            b'0' => Home,
+            b'1'..=b'9' => {
+                let distance = (byte - 0x30) as isize;
+                Forward(distance * HEIGHT / 2)
+            }
+            b'a' | b'b' | b'c' => TurnLeft,
+            b'd' | b'e' | b'f' => TurnRight,
+            _ => Noop(byte),
+        };
+
+        steps.push(step);
     }
-    ops
+
+    steps
 }
