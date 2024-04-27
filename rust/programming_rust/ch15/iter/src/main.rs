@@ -4,19 +4,21 @@ fn main() {
     }
 }
 
-struct Range {
-    start: i32,
-    end: i32,
+struct Range<T> {
+    start: T,
+    end: T,
 }
 
-impl Range {
-    fn new(start: i32, end: i32) -> Range {
+impl<T> Range<T> {
+    fn new(start: T, end: T) -> Self {
         Range { start, end }
     }
 }
 
-impl Iterator for Range {
-    type Item = i32;
+use std::ops::AddAssign;
+
+impl<T: PartialOrd + AddAssign<i32> + Copy> Iterator for Range<T> {
+    type Item = T;
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.start >= self.end {
