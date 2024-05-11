@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::{io::Write, mem};
 
 pub fn test() {
