@@ -9,6 +9,9 @@ fn main() {
     serialize_bound();
     serialize_result();
     serialize_option();
+
+    serialize_cstring();
+    serialize_string();
 }
 
 fn serialize_unit() {
@@ -278,6 +281,24 @@ fn serialize_option() {
     print!("\t{}\n", s);
 
     let v = Some(true);
+    let s = serde_json::to_string(&v).unwrap();
+    print!("\t{}\n", s);
+}
+
+fn serialize_cstring() {
+    // D:\github\serde-rs\serde\serde\src\ser\impls.rs
+    // line: 87
+    println!("serialize_cstring");
+    let v = std::ffi::CString::new("hello world").unwrap();
+    let s = serde_json::to_string(&v).unwrap();
+    print!("\t{}\n", s);
+}
+
+fn serialize_string() {
+    // D:\github\serde-rs\serde\serde\src\ser\impls.rs
+    // line: 52
+    println!("serialize_string");
+    let v = String::from("hello world");
     let s = serde_json::to_string(&v).unwrap();
     print!("\t{}\n", s);
 }
