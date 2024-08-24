@@ -1,3 +1,5 @@
+#![allow(unused_variables, dead_code)]
+
 use core::ops::Deref;
 
 pub fn test() {

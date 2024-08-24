@@ -1,0 +1,3 @@
+[package]
+name = "drop"
+edition = "2021"

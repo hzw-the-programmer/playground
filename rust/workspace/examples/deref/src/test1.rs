@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 struct Foo<'a> {
     i: &'a i32,
 }
