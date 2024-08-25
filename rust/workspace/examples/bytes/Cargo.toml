@@ -1,0 +1,3 @@
+[package]
+name = "bytes"
+edition = "2021"
