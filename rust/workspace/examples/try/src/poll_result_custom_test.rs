@@ -5,6 +5,7 @@ pub fn test() {
     test1();
     test2();
     test3();
+    test4();
 }
 
 fn test1() {
@@ -28,6 +29,13 @@ fn test3() {
     println!("test3: leave");
 }
 
+fn test4() {
+    println!("\ntest4: enter");
+    let r = f4();
+    println!("{:?}", r);
+    println!("test4: leave");
+}
+
 fn f1() -> PollCustom<ResultCustom<Foo, Bar>> {
     let r = PollCustom::Pending;
     let r = r?;
@@ -48,6 +56,14 @@ fn f2() -> PollCustom<ResultCustom<Foo, Bar>> {
 
 fn f3() -> PollCustom<ResultCustom<Foo, Bar>> {
     let r = PollCustom::Ready(ResultCustom::Err(Bar));
+    let r = r?;
+    println!("after ?");
+    // r.map(ResultCustom::Ok)
+    try { r }
+}
+
+fn f4() -> PollCustom<ResultCustom<Foo, Bar>> {
+    let r = ResultCustom::Err(Bar);
     let r = r?;
     println!("after ?");
     // r.map(ResultCustom::Ok)

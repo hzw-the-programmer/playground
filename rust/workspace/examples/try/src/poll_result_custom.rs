@@ -12,12 +12,12 @@ impl<T, E> Try for PollCustom<ResultCustom<T, E>> {
     type Residual = ResultCustom<Infallible, E>;
 
     fn from_output(output: Self::Output) -> Self {
-        println!("Try::from_output");
+        println!("PollCustom::from_output");
         output.map(ResultCustom::Ok)
     }
 
     fn branch(self) -> ControlFlow<Self::Residual, Self::Output> {
-        println!("Try::branch");
+        println!("PollCustom::branch");
         match self {
             PollCustom::Pending => ControlFlow::Continue(PollCustom::Pending),
             PollCustom::Ready(ResultCustom::Ok(t)) => ControlFlow::Continue(PollCustom::Ready(t)),
@@ -30,7 +30,7 @@ impl<T, E, F: From<E>> FromResidual<ResultCustom<Infallible, E>>
     for PollCustom<ResultCustom<T, F>>
 {
     fn from_residual(residual: ResultCustom<Infallible, E>) -> Self {
-        println!("FromResidual::from_residual");
+        println!("PollCustom::from_residual");
         match residual {
             ResultCustom::Err(e) => PollCustom::Ready(ResultCustom::Err(From::from(e))),
             ResultCustom::Ok(_) => todo!(),
@@ -54,4 +54,32 @@ impl<T> PollCustom<T> {
 pub enum ResultCustom<T, E> {
     Ok(T),
     Err(E),
+}
+
+impl<T, E> Try for ResultCustom<T, E> {
+    type Output = T;
+    type Residual = ResultCustom<Infallible, E>;
+
+    fn from_output(output: Self::Output) -> Self {
+        println!("ResultCustom::from_output");
+        ResultCustom::Ok(output)
+    }
+
+    fn branch(self) -> ControlFlow<Self::Residual, Self::Output> {
+        println!("ResultCustom::branch");
+        match self {
+            ResultCustom::Ok(t) => ControlFlow::Continue(t),
+            ResultCustom::Err(e) => ControlFlow::Break(ResultCustom::Err(e)),
+        }
+    }
+}
+
+impl<T, E, F: From<E>> FromResidual<ResultCustom<Infallible, E>> for ResultCustom<T, F> {
+    fn from_residual(residual: ResultCustom<Infallible, E>) -> Self {
+        println!("ResultCustom::from_residual");
+        match residual {
+            ResultCustom::Err(e) => ResultCustom::Err(From::from(e)),
+            ResultCustom::Ok(_) => todo!(),
+        }
+    }
 }
