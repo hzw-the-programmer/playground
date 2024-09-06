@@ -7,6 +7,7 @@ pub fn test() {
     test3();
     test4();
     test5();
+    test6();
 }
 
 fn test1() {
@@ -42,6 +43,13 @@ fn test5() {
     let r = f5();
     println!("{:?}", r);
     println!("test5: leave");
+}
+
+fn test6() {
+    println!("\ntest6: enter");
+    let r = f6();
+    println!("{:?}", r);
+    println!("test6: leave");
 }
 
 fn f1() -> PollCustom<ResultCustom<Foo, Bar>> {
@@ -84,4 +92,22 @@ fn f5() -> PollCustom<ResultCustom<Foo, Bar>> {
     println!("after ?");
     // r.map(ResultCustom::Ok)
     try { PollCustom::Ready(r) }
+}
+
+fn f6() -> PollCustom<ResultCustom<Foo, Bar>> {
+    use core::ops::{ControlFlow, FromResidual, Try};
+
+    let r = PollCustom::Ready(ResultCustom::Ok(Foo));
+    // let r = PollCustom::Ready(ResultCustom::Err(Bar));
+
+    // let r = r?;
+    let r = match r.branch() {
+        ControlFlow::Continue(c) => c,
+        ControlFlow::Break(b) => return FromResidual::from_residual(b),
+    };
+
+    println!("after ?");
+
+    // try { r }
+    Try::from_output(r)
 }
