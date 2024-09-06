@@ -1,0 +1,3 @@
+[package]
+name = "from"
+edition = "2021"
