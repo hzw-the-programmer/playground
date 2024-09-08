@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 mod binary_tree_1;
 mod binary_tree_2;
 
