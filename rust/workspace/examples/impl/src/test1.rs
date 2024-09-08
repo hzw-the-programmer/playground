@@ -66,7 +66,7 @@ impl TraitOne for Foo {
 
 impl TraitOne for &Foo {
     fn fn_1(&self) {
-        println!("&Foo.fn_1");
+        println!("&Foo.fn_1 begin");
 
         // let i: i32 = self;
         // self.fn_1(); // thread 'main' has overflowed its stack
