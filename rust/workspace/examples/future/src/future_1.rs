@@ -7,6 +7,8 @@ pub fn test() {
 }
 
 fn test1() {
+    println!("\ntest1: begin");
+
     let mut cx = Context::from_waker(Waker::noop());
 
     // no method named `poll` found for opaque type `impl Future<Output = ()>` in the current scope
@@ -18,9 +20,13 @@ fn test1() {
     println!("after poll 1: {r:?}");
     let r = pinned.as_mut().poll(&mut cx);
     println!("after poll 2: {r:?}");
+    let r = pinned.as_mut().poll(&mut cx);
+    println!("after poll 3: {r:?}");
 
     // let mut future = Box::pin(f1());
     // future.as_mut().poll(&mut cx);
+
+    println!("test1: end");
 }
 
 async fn f1() -> i32 {
@@ -48,7 +54,8 @@ struct Foo(i32);
 impl Future for Foo {
     type Output = i32;
     fn poll(mut self: Pin<&mut Self>, _cx: &mut Context) -> Poll<Self::Output> {
-        if self.0 == 1 {
+        println!("Foo.poll");
+        if self.0 < 3 {
             self.0 += 1;
             Poll::Pending
         } else {
