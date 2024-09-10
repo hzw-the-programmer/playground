@@ -1,8 +1,10 @@
 #![feature(noop_waker)]
 
-mod future_1;
+mod future_async_await;
+mod future_state_machine;
 
-use future_1 as test;
+// use future_async_await as test;
+use future_state_machine as test;
 
 fn main() {
     test::test();
