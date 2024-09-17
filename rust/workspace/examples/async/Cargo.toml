@@ -1,0 +1,3 @@
+[package]
+name = "async"
+edition = "2021"
