@@ -1,6 +1,10 @@
-mod test1;
+#![allow(unused_mut)]
+#![allow(dead_code)]
 
-use test1 as test;
+mod test1;
+mod test2;
+
+use test2 as test;
 
 fn main() {
     test::test();

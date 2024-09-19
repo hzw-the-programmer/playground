@@ -18,8 +18,11 @@ fn test2() {
     let r = &Bar;
     r.by_ref();
     Foo::by_ref(r);
+    // cannot move out of `*r` which is behind a shared reference
     // r.by_val();
-    Foo::by_val(&r);
+    // Foo::by_val(*r);
+    // the trait bound `&test1::Bar: test1::Foo` is not satisfied
+    // Foo::by_val(r);
     println!("teset2: leave");
 }
 
@@ -40,12 +43,12 @@ impl Foo for Bar {
     }
 }
 
-impl Foo for &Bar {
-    fn by_ref(&self) {
-        println!("&Bar.by_ref()");
-    }
+// impl Foo for &Bar {
+//     fn by_ref(&self) {
+//         println!("&Bar.by_ref()");
+//     }
 
-    fn by_val(self) {
-        println!("&Bar.by_val");
-    }
-}
+//     fn by_val(self) {
+//         println!("&Bar.by_val");
+//     }
+// }
