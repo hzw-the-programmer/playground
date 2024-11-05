@@ -4,6 +4,7 @@ use core::pin::Pin;
 pub fn test() {
     test1();
     test2();
+    test3();
 }
 
 fn test1() {
@@ -38,6 +39,23 @@ fn test2() {
     Pin::new(bar).as_mut().f3();
 
     println!("test2: leave");
+}
+
+fn test3() {
+    println!("\ntest3: enter");
+
+    let mut foo = Foo;
+
+    let pf = Pin::new(&mut foo);
+    pf.f3();
+    // move occurs because `pf` has type `Pin<&mut Foo>`, which does not implement the `Copy` trait
+    // pf.f3();
+
+    let mut pf = Pin::new(&mut foo);
+    pf.as_mut().f3();
+    pf.as_mut().f3();
+
+    println!("test3: leave");
 }
 
 struct Foo;
