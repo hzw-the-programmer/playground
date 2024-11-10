@@ -1,6 +1,7 @@
 pub fn test() {
     test1();
     test2();
+    test3();
 }
 
 fn test1() {
@@ -46,4 +47,18 @@ fn test2() {
     // borrow of moved value: `add_one`
     // add_one();
     assert_eq!(x, 4);
+}
+
+fn test3() {
+    fn do_twice<F: FnMut()>(f: &mut F) {
+        f();
+        f();
+    }
+    let mut x = 2;
+    let mut add_one = || x += 1;
+    // let add_one = || x += 1;
+    do_twice(&mut add_one);
+    add_one();
+    add_one();
+    assert_eq!(x, 6);
 }
