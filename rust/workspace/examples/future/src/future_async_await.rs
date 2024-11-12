@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use core::future::Future;
 use core::task::{Context, Poll, Waker};
 use std::pin::{pin, Pin};

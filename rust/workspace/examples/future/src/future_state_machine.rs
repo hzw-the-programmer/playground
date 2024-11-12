@@ -46,7 +46,7 @@ impl Future for Future1 {
             println!("Future1 loop");
             // let i: i32 = *self;
             // let i: i32 = &mut *self;
-            match &mut *self {
+            match self.as_mut().get_mut() {
                 Future1::StateBegin => {
                     println!("Future1::StateBegin");
                     *self = Future1::State1(Future2::StateBegin);
@@ -74,7 +74,7 @@ impl Future for Future2 {
         println!("Future2 poll");
         loop {
             println!("Future2 loop");
-            match &mut *self {
+            match self.as_mut().get_mut() {
                 Future2::StateBegin => {
                     println!("Future2::StateBegin");
                     *self = Future2::State1(Future3(0));
