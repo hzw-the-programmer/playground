@@ -17,14 +17,17 @@ fn test1() {
     let mut cx = Context::from_waker(Waker::noop());
     let mut fut = pin!(fut);
 
+    println!("poll 1");
     let r = fut.as_mut().poll(&mut cx);
-    println!("{:?}", r);
+    println!("poll 1: {:?}\n", r);
 
+    println!("poll 2");
     let r = fut.as_mut().poll(&mut cx);
-    println!("{:?}", r);
+    println!("poll 2: {:?}\n", r);
 
+    println!("poll 3");
     let r = fut.as_mut().poll(&mut cx);
-    println!("{:?}", r);
+    println!("poll 3: {:?}\n", r);
 }
 
 struct Foo(i32);
@@ -33,11 +36,12 @@ impl<Item: std::fmt::Debug> Sink<Item> for Foo {
     type Error = ();
 
     fn poll_ready(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        println!("Foo::poll_ready: {:?}", self.0);
         if self.0 % 2 == 0 {
+            println!("Foo::poll_ready: Pending");
             self.0 += 1;
             Poll::Pending
         } else {
+            println!("Foo::poll_ready: Ready(Ok())");
             self.0 += 1;
             Poll::Ready(Ok(()))
         }
@@ -65,15 +69,15 @@ impl Stream for Bar {
     type Item = Result<i32, ()>;
 
     fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-        println!("Bar::poll_next");
-
         if self.0 < 2 {
+            println!("Bar::poll_next Ready(Some(Ok({})))", self.0);
             Poll::Ready(Some(Ok({
                 let r = self.0;
                 self.0 += 1;
                 r
             })))
         } else {
+            println!("Bar::poll_next Ready(None)");
             Poll::Ready(None)
         }
     }
