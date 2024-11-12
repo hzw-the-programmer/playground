@@ -1,6 +1,3 @@
-#![allow(unused_variables)]
-#![allow(dead_code)]
-
 use core::future::Future;
 use core::pin::{pin, Pin};
 use core::task::{Context, Poll, Waker};
