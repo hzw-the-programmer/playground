@@ -62,8 +62,11 @@ fn left() {
     };
     let x = 6;
     let mut fut = if x < 10 {
+        // `if` and `else` have incompatible types
+        // fut1
         fut1.left_future()
     } else {
+        // fut2
         fut2.right_future()
     };
 
