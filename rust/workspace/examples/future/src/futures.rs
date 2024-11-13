@@ -1,12 +1,13 @@
 use core::future::Future;
 use core::pin::{pin, Pin};
 use core::task::{Context, Poll, Waker};
-use futures_util::FutureExt;
+use futures_util::{FutureExt, StreamExt};
 
 pub fn test() {
     // map();
     // then();
-    left();
+    // left();
+    into_stream();
 }
 
 fn map() {
@@ -73,6 +74,21 @@ fn left() {
     let mut cx = Context::from_waker(Waker::noop());
 
     let mut fut = pin!(fut);
+
+    println!("left: poll begin");
+    let r = fut.as_mut().poll(&mut cx);
+    println!("left: poll end: {:?}", r);
+}
+
+fn into_stream() {
+    let fut = Foo(0);
+    let st = fut.into_stream();
+    let mut fut = pin!(st.collect::<Vec<i32>>());
+    let mut cx = Context::from_waker(Waker::noop());
+
+    println!("left: poll begin");
+    let r = fut.as_mut().poll(&mut cx);
+    println!("left: poll end: {:?}\n", r);
 
     println!("left: poll begin");
     let r = fut.as_mut().poll(&mut cx);
