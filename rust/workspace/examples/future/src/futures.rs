@@ -7,7 +7,8 @@ pub fn test() {
     // map();
     // then();
     // left();
-    into_stream();
+    // into_stream();
+    flatten();
 }
 
 fn map() {
@@ -85,6 +86,26 @@ fn into_stream() {
     let st = fut.into_stream();
     let mut fut = pin!(st.collect::<Vec<i32>>());
     let mut cx = Context::from_waker(Waker::noop());
+
+    println!("left: poll begin");
+    let r = fut.as_mut().poll(&mut cx);
+    println!("left: poll end: {:?}\n", r);
+
+    println!("left: poll begin");
+    let r = fut.as_mut().poll(&mut cx);
+    println!("left: poll end: {:?}", r);
+}
+
+fn flatten() {
+    let fut = Foo(0);
+    let fut = fut.map(|i| Foo(i + 1));
+    let mut fut = pin!(fut.flatten());
+
+    let mut cx = Context::from_waker(Waker::noop());
+
+    println!("left: poll begin");
+    let r = fut.as_mut().poll(&mut cx);
+    println!("left: poll end: {:?}\n", r);
 
     println!("left: poll begin");
     let r = fut.as_mut().poll(&mut cx);
