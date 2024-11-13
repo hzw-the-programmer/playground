@@ -49,7 +49,7 @@ impl Future for Future1 {
             match self.as_mut().get_mut() {
                 Future1::StateBegin => {
                     println!("Future1::StateBegin");
-                    *self = Future1::State1(Future2::StateBegin);
+                    self.set(Future1::State1(Future2::StateBegin));
                 }
                 Future1::State1(f) => {
                     println!("Future1::State1(f)");
@@ -77,7 +77,7 @@ impl Future for Future2 {
             match self.as_mut().get_mut() {
                 Future2::StateBegin => {
                     println!("Future2::StateBegin");
-                    *self = Future2::State1(Future3(0));
+                    self.set(Future2::State1(Future3(0)));
                 }
                 Future2::State1(f) => {
                     println!("Future2::State1(f)");
