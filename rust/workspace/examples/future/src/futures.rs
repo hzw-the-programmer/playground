@@ -1,5 +1,5 @@
 use core::future::Future;
-use core::pin::Pin;
+use core::pin::{pin, Pin};
 use core::task::{Context, Poll, Waker};
 use futures_util::FutureExt;
 
@@ -13,7 +13,7 @@ fn test1() {
     // let fut = async { 1 };
     let fut = async { Foo(0).await };
     let mut fut = fut.map(|x| x + 3);
-    let mut fut = unsafe { Pin::new_unchecked(&mut fut) };
+    let mut fut = pin!(fut);
 
     assert_eq!(fut.as_mut().poll(&mut cx), Poll::Pending);
     assert_eq!(fut.as_mut().poll(&mut cx), Poll::Ready(4));
