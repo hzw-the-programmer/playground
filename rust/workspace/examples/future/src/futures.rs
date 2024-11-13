@@ -5,7 +5,8 @@ use futures_util::FutureExt;
 
 pub fn test() {
     // map();
-    then();
+    // then();
+    left();
 }
 
 fn map() {
@@ -48,6 +49,31 @@ fn then() {
     // println!("then: end poll: {:?}", r);
 
     println!("\nthen: end")
+}
+
+fn left() {
+    let fut1 = async {
+        println!("async -> true");
+        true
+    };
+    let fut2 = async {
+        println!("async -> false");
+        false
+    };
+    let x = 6;
+    let mut fut = if x < 10 {
+        fut1.left_future()
+    } else {
+        fut2.right_future()
+    };
+
+    let mut cx = Context::from_waker(Waker::noop());
+
+    let mut fut = pin!(fut);
+
+    println!("left: poll begin");
+    let r = fut.as_mut().poll(&mut cx);
+    println!("left: poll end: {:?}", r);
 }
 
 struct Foo(i32);
