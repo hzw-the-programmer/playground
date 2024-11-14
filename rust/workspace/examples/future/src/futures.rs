@@ -12,7 +12,8 @@ pub fn test() {
     // flatten_stream_1();
     // flatten_stream_2();
     // fuse_1();
-    fuse_2();
+    // fuse_2();
+    inspect();
 }
 
 fn map() {
@@ -188,15 +189,39 @@ fn fuse_1() {
 fn fuse_2() {
     let mut fut = pin!(Foo(0).fuse());
     let mut cx = Context::from_waker(Waker::noop());
+
     println!("poll begin");
     let r = fut.as_mut().poll(&mut cx);
     println!("poll end: {:?}\n", r);
+
     println!("poll begin");
     let r = fut.as_mut().poll(&mut cx);
     println!("poll end: {:?}\n", r);
+
     println!("poll begin");
     let r = fut.as_mut().poll(&mut cx);
     println!("poll end: {:?}\n", r);
+}
+
+fn inspect() {
+    let mut fut = pin!(Foo(0).inspect(|i| {
+        // expected `i32`, found `&i32`
+        // let ii: i32 = i;
+        println!("inspect {i}")
+    }));
+    let mut cx = Context::from_waker(Waker::noop());
+
+    println!("poll begin");
+    let r = fut.as_mut().poll(&mut cx);
+    println!("poll end: {:?}\n", r);
+
+    println!("poll begin");
+    let r = fut.as_mut().poll(&mut cx);
+    println!("poll end: {:?}\n", r);
+
+    // println!("poll begin");
+    // let r = fut.as_mut().poll(&mut cx);
+    // println!("poll end: {:?}\n", r);
 }
 
 struct Foo(i32);
