@@ -1,14 +1,16 @@
 use core::future::Future;
 use core::pin::{pin, Pin};
 use core::task::{Context, Poll, Waker};
-use futures_util::{FutureExt, StreamExt};
+use futures_util::{stream, FutureExt, Stream, StreamExt};
 
 pub fn test() {
     // map();
     // then();
     // left();
     // into_stream();
-    flatten();
+    // flatten();
+    // flatten_stream_1();
+    flatten_stream_2();
 }
 
 fn map() {
@@ -114,6 +116,43 @@ fn flatten() {
     println!("left: poll begin");
     let r = fut.as_mut().poll(&mut cx);
     println!("left: poll end: {:?}", r);
+}
+
+fn flatten_stream_1() {
+    let vec = vec![1, 2, 3];
+    let fut = async { stream::iter(vec) };
+    let st = fut.flatten_stream();
+    let mut fut = pin!(st.collect::<Vec<i32>>());
+
+    let mut cx = Context::from_waker(Waker::noop());
+
+    println!("poll begin");
+    let r = fut.as_mut().poll(&mut cx);
+    println!("poll end: {:?}\n", r);
+}
+
+fn flatten_stream_2() {
+    let vec = vec![1, 2, 3];
+    let fut = async { stream::iter(vec) };
+    let mut st = pin!(fut.flatten_stream());
+
+    let mut cx = Context::from_waker(Waker::noop());
+
+    println!("poll_next begin");
+    let r = st.as_mut().poll_next(&mut cx);
+    println!("poll_next end: {:?}\n", r);
+
+    println!("poll_next begin");
+    let r = st.as_mut().poll_next(&mut cx);
+    println!("poll_next end: {:?}\n", r);
+
+    println!("poll_next begin");
+    let r = st.as_mut().poll_next(&mut cx);
+    println!("poll_next end: {:?}\n", r);
+
+    println!("poll_next begin");
+    let r = st.as_mut().poll_next(&mut cx);
+    println!("poll_next end: {:?}", r);
 }
 
 struct Foo(i32);
