@@ -1,7 +1,10 @@
 use core::future::Future;
 use core::pin::{pin, Pin};
 use core::task::{Context, Poll, Waker};
+use futures_executor as executor;
 use futures_util::{stream, FutureExt, Stream, StreamExt};
+use std::thread;
+use std::time::Duration;
 
 pub fn test() {
     // map();
@@ -13,7 +16,9 @@ pub fn test() {
     // flatten_stream_2();
     // fuse_1();
     // fuse_2();
-    inspect();
+    // inspect();
+    // block_on_1();
+    block_on_2();
 }
 
 fn map() {
@@ -224,6 +229,14 @@ fn inspect() {
     // println!("poll end: {:?}\n", r);
 }
 
+fn block_on_1() {
+    executor::block_on(Foo(0));
+}
+
+fn block_on_2() {
+    executor::block_on(Bar(0));
+}
+
 struct Foo(i32);
 
 impl Future for Foo {
@@ -235,6 +248,30 @@ impl Future for Foo {
             Poll::Pending
         } else {
             println!("Foo::poll -> Ready({})", self.0);
+            Poll::Ready(self.0)
+        }
+    }
+}
+
+struct Bar(i32);
+
+impl Future for Bar {
+    type Output = i32;
+
+    fn poll(mut self: Pin<&mut Self>, cx: &mut Context) -> Poll<Self::Output> {
+        if self.0 % 2 == 0 {
+            println!("Bar::poll -> Pending");
+            self.0 += 1;
+            let waker = cx.waker().clone();
+            thread::spawn(move || {
+                println!("thread: before sleep");
+                thread::sleep(Duration::from_secs(5));
+                println!("thread: after sleep");
+                waker.wake();
+            });
+            Poll::Pending
+        } else {
+            println!("Bar::poll -> Ready({})", self.0);
             Poll::Ready(self.0)
         }
     }
