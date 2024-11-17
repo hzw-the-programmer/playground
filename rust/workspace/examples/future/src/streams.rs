@@ -1,11 +1,12 @@
 use core::future::Future;
 use core::pin::{pin, Pin};
-use core::task::{Context, Poll, Waker};
+use core::task::{ready, Context, Poll, Waker};
 use futures_util::{stream, Stream, StreamExt};
 
 pub fn test() {
     // next_1();
-    next_2();
+    // next_2();
+    let _ = into_future();
 }
 
 fn next_1() {
@@ -63,6 +64,38 @@ fn next_2() {
     println!("poll end: {:?}\n", r);
 }
 
+fn into_future() -> Poll<()> {
+    let mut cx = Context::from_waker(Waker::noop());
+
+    let st = Foo(0);
+
+    let mut fut = pin!(st.into_future());
+    println!("poll begin");
+    let r = fut.as_mut().poll(&mut cx);
+    println!("poll end: {:?}\n", r);
+    println!("poll begin");
+    let r = fut.as_mut().poll(&mut cx);
+    println!("poll end: {:?}\n", r);
+    println!("poll begin");
+    let r = fut.as_mut().poll(&mut cx);
+    println!("poll end: {:?}\n", r);
+
+    let r = ready!(r);
+    let fut = pin!(r.1.into_future());
+    println!("poll begin");
+    let r = fut.poll(&mut cx);
+    println!("poll end: {:?}\n", r);
+
+    let r = ready!(r);
+    let fut = pin!(r.1.into_future());
+    println!("poll begin");
+    let r = fut.poll(&mut cx);
+    println!("poll end: {:?}\n", r);
+
+    Poll::Ready(())
+}
+
+#[derive(Debug)]
 struct Foo(i32);
 
 impl Stream for Foo {
