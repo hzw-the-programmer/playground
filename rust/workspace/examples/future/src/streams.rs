@@ -33,28 +33,33 @@ fn next_1() {
 
 fn next_2() {
     let mut st = Foo(0);
-    let mut fut = pin!(st.next());
+    // let mut fut = pin!(st.next());
 
     let mut cx = Context::from_waker(Waker::noop());
 
     println!("poll begin");
-    let r = fut.as_mut().poll(&mut cx);
+    // let r = fut.as_mut().poll(&mut cx);
+    let r = pin!(st.next()).poll(&mut cx);
     println!("poll end: {:?}\n", r);
 
     println!("poll begin");
-    let r = fut.as_mut().poll(&mut cx);
+    // let r = fut.as_mut().poll(&mut cx);
+    let r = pin!(st.next()).poll(&mut cx);
     println!("poll end: {:?}\n", r);
 
     println!("poll begin");
-    let r = fut.as_mut().poll(&mut cx);
+    // let r = fut.as_mut().poll(&mut cx);
+    let r = pin!(st.next()).poll(&mut cx);
     println!("poll end: {:?}\n", r);
 
     println!("poll begin");
-    let r = fut.as_mut().poll(&mut cx);
+    // let r = fut.as_mut().poll(&mut cx);
+    let r = pin!(st.next()).poll(&mut cx);
     println!("poll end: {:?}\n", r);
 
     println!("poll begin");
-    let r = fut.as_mut().poll(&mut cx);
+    // let r = fut.as_mut().poll(&mut cx);
+    let r = pin!(st.next()).poll(&mut cx);
     println!("poll end: {:?}\n", r);
 }
 
