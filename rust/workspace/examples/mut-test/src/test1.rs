@@ -7,7 +7,8 @@ pub fn test() {
     // test4();
     // test5();
     // test6();
-    test7();
+    // test7();
+    test8();
 }
 
 fn test1() {
@@ -72,6 +73,21 @@ fn test7() {
     println!("leave");
 }
 
+fn test8() {
+    fn fn1(i: &Foo) {}
+    fn fn2(i: &u8) {}
+    let b = Bar(Foo { id: 1 });
+    // let i: u8 = *b;
+    // let i: u8 = **b;
+    // let i: u8 = &*b;
+    let i: &u8 = &*b;
+    // let i: &u8 = &b;
+    // let i: &Foo = &b;
+    // let i: &Bar = &b;
+    // fn1(&b);
+    // fn2(&b);
+}
+
 struct Foo {
     id: u8,
 }
@@ -118,5 +134,15 @@ impl<Ptr: DerefMut> DerefMut for Pin<Ptr> {
         // &mut self.ptr
         &mut *self.ptr
         // self.ptr // if Ptr is not &mut Foo, but Foo
+    }
+}
+
+struct Bar(Foo);
+
+impl Deref for Bar {
+    type Target = Foo;
+    fn deref(&self) -> &Self::Target {
+        println!("Bar::deref");
+        &self.0
     }
 }
