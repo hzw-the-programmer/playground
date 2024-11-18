@@ -82,6 +82,21 @@ impl Drop for Foo {
     }
 }
 
+impl Deref for Foo {
+    type Target = u8;
+    fn deref(&self) -> &Self::Target {
+        println!("Foo::deref");
+        &self.id
+    }
+}
+
+impl DerefMut for Foo {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        println!("Foo::deref_mut");
+        &mut self.id
+    }
+}
+
 struct Pin<Ptr> {
     ptr: Ptr,
 }
@@ -90,15 +105,18 @@ impl<Ptr: Deref> Deref for Pin<Ptr> {
     type Target = Ptr::Target;
 
     fn deref(&self) -> &Self::Target {
-        &self.ptr
-        // &*self.ptr
+        println!("Pin::deref");
+        // &self.ptr
+        &*self.ptr
+        // self.ptr // if Ptr is not &Foo, but Foo
     }
 }
 
 impl<Ptr: DerefMut> DerefMut for Pin<Ptr> {
     fn deref_mut(&mut self) -> &mut Ptr::Target {
         println!("Pin::deref_mut");
-        &mut self.ptr
-        // &mut *self.ptr
+        // &mut self.ptr
+        &mut *self.ptr
+        // self.ptr // if Ptr is not &mut Foo, but Foo
     }
 }
