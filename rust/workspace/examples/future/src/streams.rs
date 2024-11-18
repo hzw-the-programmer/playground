@@ -1,12 +1,14 @@
 use core::future::Future;
 use core::pin::{pin, Pin};
 use core::task::{ready, Context, Poll, Waker};
+use futures_executor as executor;
 use futures_util::{stream, Stream, StreamExt};
 
 pub fn test() {
     // next_1();
     // next_2();
-    let _ = into_future();
+    // let _ = into_future();
+    map();
 }
 
 fn next_1() {
@@ -93,6 +95,14 @@ fn into_future() -> Poll<()> {
     println!("poll end: {:?}\n", r);
 
     Poll::Ready(())
+}
+
+fn map() {
+    executor::block_on(async {
+        let st = stream::iter(1..=3);
+        let st = st.map(|i| i + 1);
+        assert_eq!(vec![2, 3, 4], st.collect::<Vec<_>>().await);
+    });
 }
 
 #[derive(Debug)]

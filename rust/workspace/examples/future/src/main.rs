@@ -13,8 +13,8 @@ mod streams;
 // use future_state_machine as test;
 // use sink as test;
 // use futures as test;
-// use streams as test;
-use drop as test;
+use streams as test;
+// use drop as test;
 
 fn main() {
     test::test();
