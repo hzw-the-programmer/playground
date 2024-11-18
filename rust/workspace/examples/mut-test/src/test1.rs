@@ -90,13 +90,15 @@ impl<Ptr: Deref> Deref for Pin<Ptr> {
     type Target = Ptr::Target;
 
     fn deref(&self) -> &Self::Target {
-        &self.ptr
+        // &self.ptr
+        &*self.ptr
     }
 }
 
 impl<Ptr: DerefMut> DerefMut for Pin<Ptr> {
     fn deref_mut(&mut self) -> &mut Ptr::Target {
         println!("Pin::deref_mut");
-        &mut self.ptr
+        // &mut self.ptr
+        &mut *self.ptr
     }
 }
