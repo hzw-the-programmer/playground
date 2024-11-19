@@ -1,4 +1,4 @@
-use core::future::Future;
+use core::future::{ready, Future};
 use core::pin::{pin, Pin};
 use core::task::{ready, Context, Poll, Waker};
 use futures_executor as executor;
@@ -9,7 +9,8 @@ pub fn test() {
     // next_2();
     // let _ = into_future();
     // map();
-    enumerate();
+    // enumerate();
+    filter();
 }
 
 fn next_1() {
@@ -114,6 +115,14 @@ fn enumerate() {
         assert_eq!(Some((1, 'b')), st.next().await);
         assert_eq!(Some((2, 'c')), st.next().await);
         assert_eq!(None, st.next().await);
+    });
+}
+
+fn filter() {
+    executor::block_on(async {
+        let st = stream::iter(1..=10);
+        let st = st.filter(|i| ready(i % 2 == 0));
+        assert_eq!(vec![2, 4, 6, 8, 10], st.collect::<Vec<_>>().await);
     });
 }
 
