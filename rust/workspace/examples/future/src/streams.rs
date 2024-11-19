@@ -17,7 +17,8 @@ pub fn test() {
     // then();
     // unzip();
     // concat();
-    count();
+    // count();
+    cycle();
 }
 
 fn next_1() {
@@ -196,6 +197,20 @@ fn count() {
     executor::block_on(async {
         let st = stream::iter(1..=10);
         assert_eq!(10, st.count().await);
+    });
+}
+
+fn cycle() {
+    executor::block_on(async {
+        let a = [1, 2, 3];
+        let st = stream::iter(a);
+        let mut st = st.cycle();
+        assert_eq!(Some(1), st.next().await);
+        assert_eq!(Some(2), st.next().await);
+        assert_eq!(Some(3), st.next().await);
+        assert_eq!(Some(1), st.next().await);
+        assert_eq!(Some(2), st.next().await);
+        assert_eq!(Some(3), st.next().await);
     });
 }
 
