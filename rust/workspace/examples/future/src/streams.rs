@@ -10,7 +10,9 @@ pub fn test() {
     // let _ = into_future();
     // map();
     // enumerate();
-    filter();
+    // filter();
+    // filter_map();
+    then();
 }
 
 fn next_1() {
@@ -136,7 +138,18 @@ fn filter_map() {
                 None
             }
         });
-        assert_eq!(vec![3, 5, 6, 9, 11], st.collect::<Vec<_>>().await);
+        assert_eq!(vec![3, 5, 7, 9, 11], st.collect::<Vec<_>>().await);
+    });
+}
+
+fn then() {
+    executor::block_on(async {
+        let st = stream::iter(1..=10);
+        let st = st.then(|i| async move { i + 1 });
+        assert_eq!(
+            vec![2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            st.collect::<Vec<_>>().await
+        );
     });
 }
 
