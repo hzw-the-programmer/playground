@@ -15,7 +15,8 @@ pub fn test() {
     // filter();
     // filter_map();
     // then();
-    unzip();
+    // unzip();
+    concat();
 }
 
 fn next_1() {
@@ -170,6 +171,23 @@ fn unzip() {
 
         assert_eq!(vec!['a', 'b', 'c'], a);
         assert_eq!(vec![1, 2, 3], b);
+    });
+}
+
+fn concat() {
+    executor::block_on(async {
+        let (tx, rx) = mpsc::unbounded();
+
+        thread::spawn(move || {
+            for i in (1..3).rev() {
+                let n = i * 3;
+                tx.unbounded_send(vec![n + 1, n + 2, n + 3]).unwrap();
+            }
+        });
+
+        let r = rx.concat().await;
+
+        assert_eq!(vec![7, 8, 9, 4, 5, 6], r);
     });
 }
 
