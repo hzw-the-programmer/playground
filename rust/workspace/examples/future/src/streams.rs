@@ -126,6 +126,20 @@ fn filter() {
     });
 }
 
+fn filter_map() {
+    executor::block_on(async {
+        let st = stream::iter(1..=10);
+        let st = st.filter_map(|i| async move {
+            if i % 2 == 0 {
+                Some(i + 1)
+            } else {
+                None
+            }
+        });
+        assert_eq!(vec![3, 5, 6, 9, 11], st.collect::<Vec<_>>().await);
+    });
+}
+
 #[derive(Debug)]
 struct Foo(i32);
 
