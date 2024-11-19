@@ -18,7 +18,8 @@ pub fn test() {
     // unzip();
     // concat();
     // count();
-    cycle();
+    // cycle();
+    fold();
 }
 
 fn next_1() {
@@ -211,6 +212,14 @@ fn cycle() {
         assert_eq!(Some(1), st.next().await);
         assert_eq!(Some(2), st.next().await);
         assert_eq!(Some(3), st.next().await);
+    });
+}
+
+fn fold() {
+    executor::block_on(async {
+        let st = stream::iter(1..6);
+        let sum = st.fold(0, |a, e| ready(a + e));
+        assert_eq!(sum.await, 15);
     });
 }
 
