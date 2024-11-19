@@ -7,3 +7,4 @@ futures-sink = "0.3"
 futures-core = "0.3"
 futures-util = { version = "0.3", features = ["sink"] }
 futures-executor = "0.3"
+futures-channel = "0.3"

@@ -1,8 +1,10 @@
 use core::future::{ready, Future};
 use core::pin::{pin, Pin};
 use core::task::{ready, Context, Poll, Waker};
+use futures_channel::mpsc;
 use futures_executor as executor;
 use futures_util::{stream, Stream, StreamExt};
+use std::thread;
 
 pub fn test() {
     // next_1();
@@ -12,7 +14,8 @@ pub fn test() {
     // enumerate();
     // filter();
     // filter_map();
-    then();
+    // then();
+    unzip();
 }
 
 fn next_1() {
@@ -150,6 +153,23 @@ fn then() {
             vec![2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
             st.collect::<Vec<_>>().await
         );
+    });
+}
+
+fn unzip() {
+    executor::block_on(async {
+        let (tx, rx) = mpsc::unbounded();
+
+        thread::spawn(move || {
+            tx.unbounded_send(('a', 1)).unwrap();
+            tx.unbounded_send(('b', 2)).unwrap();
+            tx.unbounded_send(('c', 3)).unwrap();
+        });
+
+        let (a, b): (Vec<_>, Vec<_>) = rx.unzip().await;
+
+        assert_eq!(vec!['a', 'b', 'c'], a);
+        assert_eq!(vec![1, 2, 3], b);
     });
 }
 

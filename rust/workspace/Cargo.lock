@@ -195,6 +195,7 @@ version = "0.0.0"
 name = "future"
 version = "0.0.0"
 dependencies = [
+ "futures-channel",
  "futures-core",
  "futures-executor",
  "futures-sink",
