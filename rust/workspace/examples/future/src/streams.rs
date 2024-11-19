@@ -16,7 +16,8 @@ pub fn test() {
     // filter_map();
     // then();
     // unzip();
-    concat();
+    // concat();
+    count();
 }
 
 fn next_1() {
@@ -188,6 +189,13 @@ fn concat() {
         let r = rx.concat().await;
 
         assert_eq!(vec![7, 8, 9, 4, 5, 6], r);
+    });
+}
+
+fn count() {
+    executor::block_on(async {
+        let st = stream::iter(1..=10);
+        assert_eq!(10, st.count().await);
     });
 }
 
