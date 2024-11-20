@@ -19,7 +19,8 @@ pub fn test() {
     // concat();
     // count();
     // cycle();
-    fold();
+    // fold();
+    any();
 }
 
 fn next_1() {
@@ -220,6 +221,14 @@ fn fold() {
         let st = stream::iter(1..6);
         let sum = st.fold(0, |a, e| ready(a + e));
         assert_eq!(sum.await, 15);
+    });
+}
+
+fn any() {
+    executor::block_on(async {
+        let st = stream::iter(1..10);
+        let fut = st.any(|i| ready(i % 3 == 0));
+        assert_eq!(fut.await, true);
     });
 }
 
