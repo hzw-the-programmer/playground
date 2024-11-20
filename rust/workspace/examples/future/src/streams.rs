@@ -20,7 +20,8 @@ pub fn test() {
     // count();
     // cycle();
     // fold();
-    any();
+    // any();
+    all();
 }
 
 fn next_1() {
@@ -228,6 +229,14 @@ fn any() {
     executor::block_on(async {
         let st = stream::iter(1..10);
         let fut = st.any(|i| ready(i % 3 == 0));
+        assert_eq!(fut.await, true);
+    });
+}
+
+fn all() {
+    executor::block_on(async {
+        let st = stream::iter(1..10);
+        let fut = st.any(|i| ready(i < 20));
         assert_eq!(fut.await, true);
     });
 }
