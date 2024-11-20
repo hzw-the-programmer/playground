@@ -21,7 +21,8 @@ pub fn test() {
     // cycle();
     // fold();
     // any();
-    all();
+    // all();
+    flatten();
 }
 
 fn next_1() {
@@ -238,6 +239,30 @@ fn all() {
         let st = stream::iter(1..10);
         let fut = st.any(|i| ready(i < 20));
         assert_eq!(fut.await, true);
+    });
+}
+
+fn flatten() {
+    executor::block_on(async {
+        let (tx1, rx1) = mpsc::unbounded();
+        let (tx2, rx2) = mpsc::unbounded();
+        let (tx3, rx3) = mpsc::unbounded();
+
+        thread::spawn(move || {
+            tx1.unbounded_send(1).unwrap();
+            tx1.unbounded_send(2).unwrap();
+        });
+        thread::spawn(move || {
+            tx2.unbounded_send(3).unwrap();
+            tx2.unbounded_send(4).unwrap();
+        });
+        thread::spawn(move || {
+            tx3.unbounded_send(rx1).unwrap();
+            tx3.unbounded_send(rx2).unwrap();
+        });
+
+        let fut = rx3.flatten().collect::<Vec<_>>();
+        assert_eq!(fut.await, vec![1, 2, 3, 4]);
     });
 }
 
