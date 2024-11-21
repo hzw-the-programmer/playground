@@ -24,7 +24,8 @@ pub fn test() {
     // all();
     // flatten();
     // flatten_unordered();
-    flat_map();
+    // flat_map();
+    flat_map_unordered();
 }
 
 fn next_1() {
@@ -302,6 +303,17 @@ fn flat_map() {
         let st = stream::iter(1..=3);
         let st = st.flat_map(|i| stream::iter(vec![i + 3; i]));
         assert_eq!(vec![4, 5, 5, 6, 6, 6], st.collect::<Vec<_>>().await);
+    });
+}
+
+fn flat_map_unordered() {
+    executor::block_on(async {
+        let st = stream::iter(1..5);
+        let st = st.flat_map_unordered(0, |i| stream::iter(vec![i; i]));
+        let mut values = st.collect::<Vec<_>>().await;
+        println!("{:?}", values);
+        values.sort();
+        assert_eq!(vec![1, 2, 2, 3, 3, 3, 4, 4, 4, 4], values);
     });
 }
 
