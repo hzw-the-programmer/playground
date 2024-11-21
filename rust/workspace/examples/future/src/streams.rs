@@ -23,7 +23,8 @@ pub fn test() {
     // any();
     // all();
     // flatten();
-    flatten_unordered();
+    // flatten_unordered();
+    flat_map();
 }
 
 fn next_1() {
@@ -293,6 +294,14 @@ fn flatten_unordered() {
         println!("{:?}", v);
         v.sort();
         assert_eq!(v, vec![1, 2, 3, 4]);
+    });
+}
+
+fn flat_map() {
+    executor::block_on(async {
+        let st = stream::iter(1..=3);
+        let st = st.flat_map(|i| stream::iter(vec![i + 3; i]));
+        assert_eq!(vec![4, 5, 5, 6, 6, 6], st.collect::<Vec<_>>().await);
     });
 }
 
