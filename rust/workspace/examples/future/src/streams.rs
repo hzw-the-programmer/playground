@@ -22,7 +22,8 @@ pub fn test() {
     // fold();
     // any();
     // all();
-    flatten();
+    // flatten();
+    flatten_unordered();
 }
 
 fn next_1() {
@@ -263,6 +264,35 @@ fn flatten() {
 
         let fut = rx3.flatten().collect::<Vec<_>>();
         assert_eq!(fut.await, vec![1, 2, 3, 4]);
+    });
+}
+
+fn flatten_unordered() {
+    executor::block_on(async {
+        let (t1, r1) = mpsc::unbounded();
+        let (t2, r2) = mpsc::unbounded();
+        let (t3, r3) = mpsc::unbounded();
+
+        thread::spawn(move || {
+            t1.unbounded_send(1).unwrap();
+            t1.unbounded_send(2).unwrap();
+        });
+
+        thread::spawn(move || {
+            t2.unbounded_send(3).unwrap();
+            t2.unbounded_send(4).unwrap();
+        });
+
+        thread::spawn(move || {
+            t3.unbounded_send(r1).unwrap();
+            t3.unbounded_send(r2).unwrap();
+        });
+
+        let fut = r3.flatten_unordered(0).collect::<Vec<_>>();
+        let mut v = fut.await;
+        println!("{:?}", v);
+        v.sort();
+        assert_eq!(v, vec![1, 2, 3, 4]);
     });
 }
 
