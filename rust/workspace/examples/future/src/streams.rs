@@ -25,7 +25,8 @@ pub fn test() {
     // flatten();
     // flatten_unordered();
     // flat_map();
-    flat_map_unordered();
+    // flat_map_unordered();
+    scan();
 }
 
 fn next_1() {
@@ -314,6 +315,17 @@ fn flat_map_unordered() {
         println!("{:?}", values);
         values.sort();
         assert_eq!(vec![1, 2, 2, 3, 3, 3, 4, 4, 4, 4], values);
+    });
+}
+
+fn scan() {
+    executor::block_on(async {
+        let st = stream::iter(1..10);
+        let st = st.scan(0, |state, i| {
+            *state += i;
+            ready(if *state < 10 { Some(i) } else { None })
+        });
+        assert_eq!(vec![1, 2, 3], st.collect::<Vec<_>>().await);
     });
 }
 
