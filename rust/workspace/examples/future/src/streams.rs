@@ -27,7 +27,8 @@ pub fn test() {
     // flat_map();
     // flat_map_unordered();
     // scan();
-    skip_while();
+    // skip_while();
+    take_while();
 }
 
 fn next_1() {
@@ -335,6 +336,14 @@ fn skip_while() {
         let st = stream::iter(1..10);
         let st = st.skip_while(|i| ready(*i < 6));
         assert_eq!(vec![6, 7, 8, 9], st.collect::<Vec<_>>().await);
+    });
+}
+
+fn take_while() {
+    executor::block_on(async {
+        let st = stream::iter(1..10);
+        let st = st.take_while(|i| ready(*i < 6));
+        assert_eq!(vec![1, 2, 3, 4, 5], st.collect::<Vec<_>>().await);
     });
 }
 
