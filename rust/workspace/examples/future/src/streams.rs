@@ -1,7 +1,7 @@
 use core::future::{poll_fn, ready, Future};
 use core::pin::{pin, Pin};
 use core::task::{ready, Context, Poll, Waker};
-use futures_channel::mpsc;
+use futures_channel::{mpsc, oneshot};
 use futures_executor as executor;
 use futures_util::{stream, Stream, StreamExt};
 use std::thread;
@@ -30,7 +30,9 @@ pub fn test() {
     // skip_while();
     // take_while();
     // take_until();
-    for_each();
+    // for_each();
+    // for_each_concurrent();
+    take();
 }
 
 fn next_1() {
@@ -377,6 +379,28 @@ fn for_each() {
             fut.await;
         }
         assert_eq!(3, x);
+    });
+}
+
+fn for_each_concurrent() {
+    executor::block_on(async {
+        let (tx1, rx1) = oneshot::channel();
+        let (tx2, rx2) = oneshot::channel();
+        let (tx3, rx3) = oneshot::channel();
+        let fut = stream::iter(vec![rx1, rx2, rx3]).for_each_concurrent(0, |rx| async move {
+            rx.await.unwrap();
+        });
+        tx1.send(()).unwrap();
+        tx2.send(()).unwrap();
+        tx3.send(()).unwrap();
+        fut.await;
+    });
+}
+
+fn take() {
+    executor::block_on(async {
+        let st = stream::iter(1..10).take(3);
+        assert_eq!(vec![1, 2, 3], st.collect::<Vec<_>>().await);
     });
 }
 
