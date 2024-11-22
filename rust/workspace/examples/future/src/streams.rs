@@ -26,7 +26,8 @@ pub fn test() {
     // flatten_unordered();
     // flat_map();
     // flat_map_unordered();
-    scan();
+    // scan();
+    skip_while();
 }
 
 fn next_1() {
@@ -326,6 +327,14 @@ fn scan() {
             ready(if *state < 10 { Some(i) } else { None })
         });
         assert_eq!(vec![1, 2, 3], st.collect::<Vec<_>>().await);
+    });
+}
+
+fn skip_while() {
+    executor::block_on(async {
+        let st = stream::iter(1..10);
+        let st = st.skip_while(|i| ready(*i < 6));
+        assert_eq!(vec![6, 7, 8, 9], st.collect::<Vec<_>>().await);
     });
 }
 
