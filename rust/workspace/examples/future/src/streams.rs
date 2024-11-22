@@ -1,4 +1,4 @@
-use core::future::{ready, Future};
+use core::future::{poll_fn, ready, Future};
 use core::pin::{pin, Pin};
 use core::task::{ready, Context, Poll, Waker};
 use futures_channel::mpsc;
@@ -28,7 +28,8 @@ pub fn test() {
     // flat_map_unordered();
     // scan();
     // skip_while();
-    take_while();
+    // take_while();
+    take_until();
 }
 
 fn next_1() {
@@ -344,6 +345,23 @@ fn take_while() {
         let st = stream::iter(1..10);
         let st = st.take_while(|i| ready(*i < 6));
         assert_eq!(vec![1, 2, 3, 4, 5], st.collect::<Vec<_>>().await);
+    });
+}
+
+fn take_until() {
+    executor::block_on(async {
+        let mut i = 0;
+        let stop_fut = poll_fn(|_cx| {
+            i += 1;
+            if i < 5 {
+                Poll::Pending
+            } else {
+                Poll::Ready(())
+            }
+        });
+        let st = stream::iter(1..10);
+        let st = st.take_until(stop_fut);
+        assert_eq!(vec![1, 2, 3, 4], st.collect::<Vec<_>>().await);
     });
 }
 
