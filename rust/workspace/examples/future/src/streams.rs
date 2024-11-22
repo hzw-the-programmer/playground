@@ -32,7 +32,8 @@ pub fn test() {
     // take_until();
     // for_each();
     // for_each_concurrent();
-    take();
+    // take();
+    skip();
 }
 
 fn next_1() {
@@ -401,6 +402,13 @@ fn take() {
     executor::block_on(async {
         let st = stream::iter(1..10).take(3);
         assert_eq!(vec![1, 2, 3], st.collect::<Vec<_>>().await);
+    });
+}
+
+fn skip() {
+    executor::block_on(async {
+        let st = stream::iter(1..10).skip(7);
+        assert_eq!(vec![8, 9], st.collect::<Vec<_>>().await);
     });
 }
 
