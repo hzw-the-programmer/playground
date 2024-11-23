@@ -34,7 +34,8 @@ pub fn test() {
     // for_each_concurrent();
     // take();
     // skip();
-    fuse();
+    // fuse();
+    by_ref();
 }
 
 fn next_1() {
@@ -429,6 +430,20 @@ fn fuse() {
     assert_eq!(Some(2), iter.next());
     assert_eq!(None, iter.next());
     assert_eq!(None, iter.next());
+}
+
+fn by_ref() {
+    executor::block_on(async {
+        let mut st = stream::iter(1..=5);
+        let sum = st
+            .by_ref()
+            .take(2)
+            .fold(0, |a, b| async move { a + b })
+            .await;
+        assert_eq!(3, sum);
+        let sum = st.take(2).fold(0, |a, b| async move { a + b }).await;
+        assert_eq!(7, sum);
+    });
 }
 
 #[derive(Debug)]
