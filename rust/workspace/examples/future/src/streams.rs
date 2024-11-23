@@ -33,7 +33,8 @@ pub fn test() {
     // for_each();
     // for_each_concurrent();
     // take();
-    skip();
+    // skip();
+    fuse();
 }
 
 fn next_1() {
@@ -410,6 +411,24 @@ fn skip() {
         let st = stream::iter(1..10).skip(7);
         assert_eq!(vec![8, 9], st.collect::<Vec<_>>().await);
     });
+}
+
+fn fuse() {
+    let mut x = 0;
+    let st = stream::poll_fn(|_| {
+        x += 1;
+        match x {
+            0..=2 => Poll::Ready(Some(x)),
+            3 => Poll::Ready(None),
+            _ => panic!("should not happen"),
+        }
+    });
+    // let mut iter = executor::block_on_stream(st);
+    let mut iter = executor::block_on_stream(st.fuse());
+    assert_eq!(Some(1), iter.next());
+    assert_eq!(Some(2), iter.next());
+    assert_eq!(None, iter.next());
+    assert_eq!(None, iter.next());
 }
 
 #[derive(Debug)]
