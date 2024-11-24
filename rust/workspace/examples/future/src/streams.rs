@@ -38,8 +38,9 @@ pub fn test() {
     // by_ref();
     // catch_unwind();
     // buffered();
-    buffered_1();
+    // buffered_1();
     // buffer_unordered();
+    zip();
 }
 
 fn next_1() {
@@ -526,6 +527,16 @@ fn buffer_unordered() {
         let st = st.buffer_unordered(3);
         let r = st.collect::<Vec<_>>().await;
         println!("{:?}", r);
+    });
+}
+
+fn zip() {
+    executor::block_on(async {
+        let st1 = stream::iter(1..=3);
+        let st2 = stream::iter(5..=10);
+        let st = st1.zip(st2);
+        let results = st.collect::<Vec<_>>().await;
+        println!("{:?}", results);
     });
 }
 
