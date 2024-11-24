@@ -36,7 +36,8 @@ pub fn test() {
     // skip();
     // fuse();
     // by_ref();
-    catch_unwind();
+    // catch_unwind();
+    buffered();
 }
 
 fn next_1() {
@@ -459,6 +460,22 @@ fn catch_unwind() {
             _ => panic!("unexpected"),
         }
         assert!(results[1].is_err());
+    });
+}
+
+fn buffered() {
+    executor::block_on(async {
+        let st = stream::iter(1..=10);
+        let st = st.map(|i| {
+            println!("return fut {}", i);
+            async move {
+                println!("poll fut {}", i);
+                i
+            }
+        });
+        let st = st.buffered(3);
+        let r = st.collect::<Vec<_>>().await;
+        println!("{:?}", r);
     });
 }
 
