@@ -1,0 +1,3 @@
+[package]
+name = "panic"
+edition = "2021"
