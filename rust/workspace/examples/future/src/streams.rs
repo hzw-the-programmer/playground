@@ -37,7 +37,9 @@ pub fn test() {
     // fuse();
     // by_ref();
     // catch_unwind();
-    buffered();
+    // buffered();
+    buffered_1();
+    // buffer_unordered();
 }
 
 fn next_1() {
@@ -474,6 +476,54 @@ fn buffered() {
             }
         });
         let st = st.buffered(3);
+        let r = st.collect::<Vec<_>>().await;
+        println!("{:?}", r);
+    });
+}
+
+fn buffered_1() {
+    executor::block_on(async {
+        let st = stream::iter(1..=10);
+        let st = st.map(|i| {
+            println!("return fut {}", i);
+            let mut j = i;
+            poll_fn(move |cx| {
+                println!("poll fut {}", i);
+                if j % 2 == 0 {
+                    j += 1;
+                    let w = cx.waker().clone();
+                    thread::spawn(move || w.wake());
+                    Poll::Pending
+                } else {
+                    Poll::Ready(i)
+                }
+            })
+        });
+        let st = st.buffered(3);
+        let r = st.collect::<Vec<_>>().await;
+        println!("{:?}", r);
+    });
+}
+
+fn buffer_unordered() {
+    executor::block_on(async {
+        let st = stream::iter(1..=10);
+        let st = st.map(|i| {
+            println!("return fut {}", i);
+            let mut j = i;
+            poll_fn(move |cx| {
+                println!("poll fut {}", i);
+                if j % 2 == 0 {
+                    j += 1;
+                    let w = cx.waker().clone();
+                    thread::spawn(move || w.wake());
+                    Poll::Pending
+                } else {
+                    Poll::Ready(i)
+                }
+            })
+        });
+        let st = st.buffer_unordered(3);
         let r = st.collect::<Vec<_>>().await;
         println!("{:?}", r);
     });
