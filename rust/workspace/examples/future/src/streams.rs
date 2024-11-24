@@ -35,7 +35,8 @@ pub fn test() {
     // take();
     // skip();
     // fuse();
-    by_ref();
+    // by_ref();
+    catch_unwind();
 }
 
 fn next_1() {
@@ -443,6 +444,21 @@ fn by_ref() {
         assert_eq!(3, sum);
         let sum = st.take(2).fold(0, |a, b| async move { a + b }).await;
         assert_eq!(7, sum);
+    });
+}
+
+fn catch_unwind() {
+    executor::block_on(async {
+        let st = stream::iter(vec![Some(10), None, Some(12)]);
+        let st = st.map(|o| o.unwrap());
+        let st = st.catch_unwind();
+        let results = st.collect::<Vec<_>>().await;
+        assert_eq!(results.len(), 2);
+        match results[0] {
+            Ok(i) => println!("{}", i),
+            _ => panic!("unexpected"),
+        }
+        assert!(results[1].is_err());
     });
 }
 
