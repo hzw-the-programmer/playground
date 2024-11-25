@@ -40,7 +40,8 @@ pub fn test() {
     // buffered();
     // buffered_1();
     // buffer_unordered();
-    zip();
+    // zip();
+    chain();
 }
 
 fn next_1() {
@@ -537,6 +538,16 @@ fn zip() {
         let st = st1.zip(st2);
         let results = st.collect::<Vec<_>>().await;
         println!("{:?}", results);
+    });
+}
+
+fn chain() {
+    executor::block_on(async {
+        let st1 = stream::iter(vec![Ok(10), Err(false)]);
+        let st2 = stream::iter(vec![Err(true), Ok(20)]);
+        let st = st1.chain(st2);
+        let r: Vec<_> = st.collect().await;
+        assert_eq!(vec![Ok(10), Err(false), Err(true), Ok(20)], r);
     });
 }
 
