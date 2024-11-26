@@ -563,6 +563,17 @@ fn peek() {
         assert_eq!(Some(&3), st.as_mut().peek().await);
         assert_eq!(Some(&3), st.as_mut().peek().await);
         assert_eq!(Some(3), st.next().await);
+        assert_eq!(Some(&mut 4), st.as_mut().peek_mut().await);
+        assert_eq!(Some(&mut 4), st.as_mut().peek_mut().await);
+        assert_eq!(Some(4), st.next().await);
+        assert_eq!(Some(5), st.as_mut().next_if(|&x| x < 6).await);
+        assert_eq!(None, st.as_mut().next_if(|&x| x < 6).await);
+        assert_eq!(None, st.as_mut().next_if(|&x| x < 6).await);
+        assert_eq!(Some(&mut 6), st.as_mut().peek_mut().await);
+        assert_eq!(Some(6), st.next().await);
+        while st.as_mut().next_if(|&x| x < 9).await.is_some() {}
+        assert_eq!(Some(&9), st.as_mut().peek().await);
+        assert_eq!(Some(&mut 9), st.as_mut().peek_mut().await);
     });
 }
 
