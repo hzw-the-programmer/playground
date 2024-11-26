@@ -3,7 +3,8 @@ pub fn test() {
     // test6();
     // test7();
     // test8();
-    test9();
+    // test9();
+    test10();
 }
 
 fn test5() {
@@ -64,6 +65,20 @@ fn test9() {
     let Bar { f1, .. } = b;
     f1.consume();
     b.f2.byref();
+    println!("finish");
+}
+
+fn test10() {
+    let f1 = Foo(1);
+    let c = || {
+        let f2 = Foo(2);
+        f1.byref();
+        let c = || {
+            f2.byref();
+        };
+        c();
+    };
+    c();
     println!("finish");
 }
 
