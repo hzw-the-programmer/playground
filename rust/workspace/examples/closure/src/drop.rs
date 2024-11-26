@@ -4,7 +4,10 @@ pub fn test() {
     // test7();
     // test8();
     // test9();
-    test10();
+    // test10();
+    // test11();
+    // test12();
+    test13();
 }
 
 fn test5() {
@@ -70,15 +73,77 @@ fn test9() {
 
 fn test10() {
     let f1 = Foo(1);
-    let c = || {
+    let c1 = || {
+        println!("c1 begin");
         let f2 = Foo(2);
         f1.byref();
-        let c = || {
+        let c2 = || {
+            println!("c2 begin");
             f2.byref();
+            println!("c2 finish");
         };
-        c();
+        c2();
+        println!("c1 finish");
     };
-    c();
+    c1();
+    println!("finish");
+}
+
+fn test11() {
+    let f1 = Foo(1);
+    let c1 = || {
+        println!("c1 begin");
+        let f2 = Foo(2);
+        f1.byref();
+        {
+            let c2 = || {
+                println!("c2 begin");
+                f2.byref();
+                println!("c2 finish");
+            };
+            c2();
+        }
+        println!("c1 finish");
+    };
+    c1();
+    println!("finish");
+}
+
+fn test12() {
+    let f1 = Foo(1);
+    let c1 = move || {
+        println!("c1 begin");
+        let f2 = Foo(2);
+        f1.byref();
+        let c2 = move || {
+            println!("c2 begin");
+            f2.byref();
+            println!("c2 finish");
+        };
+        c2();
+        println!("c1 finish");
+    };
+    c1();
+    println!("finish");
+}
+
+fn test13() {
+    let f1 = Foo(1);
+    let c1 = move || {
+        println!("c1 begin");
+        let f2 = Foo(2);
+        f1.byref();
+        {
+            let c2 = move || {
+                println!("c2 begin");
+                f2.byref();
+                println!("c2 finish");
+            };
+            c2();
+        }
+        println!("c1 finish");
+    };
+    c1();
     println!("finish");
 }
 
