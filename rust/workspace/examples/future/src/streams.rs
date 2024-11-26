@@ -41,7 +41,8 @@ pub fn test() {
     // buffered_1();
     // buffer_unordered();
     // zip();
-    chain();
+    // chain();
+    peek();
 }
 
 fn next_1() {
@@ -548,6 +549,20 @@ fn chain() {
         let st = st1.chain(st2);
         let r: Vec<_> = st.collect().await;
         assert_eq!(vec![Ok(10), Err(false), Err(true), Ok(20)], r);
+    });
+}
+
+fn peek() {
+    executor::block_on(async {
+        let st = stream::iter(1..=10);
+        let mut st = pin!(st.peekable());
+        assert_eq!(Some(&1), st.as_mut().peek().await);
+        assert_eq!(Some(&1), st.as_mut().peek().await);
+        assert_eq!(Some(1), st.next().await);
+        assert_eq!(Some(2), st.next().await);
+        assert_eq!(Some(&3), st.as_mut().peek().await);
+        assert_eq!(Some(&3), st.as_mut().peek().await);
+        assert_eq!(Some(3), st.next().await);
     });
 }
 
