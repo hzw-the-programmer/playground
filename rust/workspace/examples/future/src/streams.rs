@@ -43,7 +43,8 @@ pub fn test() {
     // zip();
     // chain();
     // peek();
-    chunks();
+    // chunks();
+    ready_chunks();
 }
 
 fn next_1() {
@@ -587,6 +588,24 @@ fn chunks() {
         assert_eq!(Some(vec![7, 8, 9]), st.next().await);
         assert_eq!(Some(vec![10]), st.next().await);
         assert_eq!(None, st.next().await);
+    });
+}
+
+fn ready_chunks() {
+    executor::block_on(async {
+        let mut counter = 0;
+        let st = stream::poll_fn(|_| {
+            counter += 1;
+            if counter % 3 == 0 && counter != 9 {
+                Poll::Pending
+            } else {
+                Poll::Ready(Some(counter))
+            }
+        });
+        let mut st = st.ready_chunks(3);
+        assert_eq!(Some(vec![1, 2]), st.next().await);
+        assert_eq!(Some(vec![4, 5]), st.next().await);
+        assert_eq!(Some(vec![7, 8, 9]), st.next().await);
     });
 }
 
