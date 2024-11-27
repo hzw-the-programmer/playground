@@ -3,7 +3,7 @@ use core::pin::{pin, Pin};
 use core::task::{ready, Context, Poll, Waker};
 use futures_channel::{mpsc, oneshot};
 use futures_executor as executor;
-use futures_util::{stream, Sink, Stream, StreamExt};
+use futures_util::{future, select, stream, Sink, Stream, StreamExt};
 use std::thread;
 
 pub fn test() {
@@ -45,7 +45,9 @@ pub fn test() {
     // peek();
     // chunks();
     // ready_chunks();
-    forward_1();
+    // forward_1();
+    // inspect();
+    select_next_some();
 }
 
 fn next_1() {
@@ -614,6 +616,36 @@ fn forward_1() {
     executor::block_on(async {
         let st = stream::iter((1..=10).map(Ok));
         let _ = st.forward(Foo(0)).await;
+    });
+}
+
+fn inspect() {
+    executor::block_on(async {
+        let st = stream::iter(1..=3);
+        let st = st.inspect(|x| {
+            // let i: i32 = x;
+            println!("{:?}", x);
+        });
+        assert_eq!(vec![1, 2, 3], st.collect::<Vec<_>>().await);
+    });
+}
+
+fn select_next_some() {
+    executor::block_on(async {
+        let mut fut = future::ready(1);
+        let mut tasks = stream::FuturesUnordered::new();
+        let mut total = 0;
+        loop {
+            select! {
+                num = fut => {
+                    total += num;
+                    tasks.push(async {5});
+                }
+                num = tasks.select_next_some() => total += num,
+                complete => break,
+            }
+        }
+        assert_eq!(6, total);
     });
 }
 
