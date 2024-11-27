@@ -42,7 +42,8 @@ pub fn test() {
     // buffer_unordered();
     // zip();
     // chain();
-    peek();
+    // peek();
+    chunks();
 }
 
 fn next_1() {
@@ -574,6 +575,18 @@ fn peek() {
         while st.as_mut().next_if(|&x| x < 9).await.is_some() {}
         assert_eq!(Some(&9), st.as_mut().peek().await);
         assert_eq!(Some(&mut 9), st.as_mut().peek_mut().await);
+    });
+}
+
+fn chunks() {
+    executor::block_on(async {
+        let st = stream::iter(1..=10);
+        let mut st = st.chunks(3);
+        assert_eq!(Some(vec![1, 2, 3]), st.next().await);
+        assert_eq!(Some(vec![4, 5, 6]), st.next().await);
+        assert_eq!(Some(vec![7, 8, 9]), st.next().await);
+        assert_eq!(Some(vec![10]), st.next().await);
+        assert_eq!(None, st.next().await);
     });
 }
 
