@@ -3,7 +3,7 @@ use core::pin::{pin, Pin};
 use core::task::{ready, Context, Poll, Waker};
 use futures_channel::{mpsc, oneshot};
 use futures_executor as executor;
-use futures_util::{stream, Stream, StreamExt};
+use futures_util::{stream, Sink, Stream, StreamExt};
 use std::thread;
 
 pub fn test() {
@@ -44,7 +44,8 @@ pub fn test() {
     // chain();
     // peek();
     // chunks();
-    ready_chunks();
+    // ready_chunks();
+    forward_1();
 }
 
 fn next_1() {
@@ -609,6 +610,13 @@ fn ready_chunks() {
     });
 }
 
+fn forward_1() {
+    executor::block_on(async {
+        let st = stream::iter((1..=10).map(Ok));
+        let _ = st.forward(Foo(0)).await;
+    });
+}
+
 #[derive(Debug)]
 struct Foo(i32);
 
@@ -628,5 +636,29 @@ impl Stream for Foo {
             println!("Foo::poll_next -> Ready(None)");
             Poll::Ready(None)
         }
+    }
+}
+
+impl<Item> Sink<Item> for Foo {
+    type Error = ();
+
+    fn poll_ready(self: Pin<&mut Self>, _cx: &mut Context) -> Poll<Result<(), Self::Error>> {
+        println!("Foo::poll_ready");
+        Poll::Ready(Ok(()))
+    }
+
+    fn start_send(self: Pin<&mut Self>, item: Item) -> Result<(), Self::Error> {
+        println!("Foo::start_send");
+        Ok(())
+    }
+
+    fn poll_close(self: Pin<&mut Self>, _cx: &mut Context) -> Poll<Result<(), Self::Error>> {
+        println!("Foo::poll_close");
+        Poll::Ready(Ok(()))
+    }
+
+    fn poll_flush(self: Pin<&mut Self>, _cx: &mut Context) -> Poll<Result<(), Self::Error>> {
+        println!("Foo::poll_flush");
+        Poll::Ready(Ok(()))
     }
 }
