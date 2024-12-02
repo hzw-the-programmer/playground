@@ -1,12 +1,11 @@
-use core::pin::{pin, Pin};
 use core::ops::Deref;
+use core::pin::Pin;
 
 pub fn test() {}
 
 struct Foo;
 
-impl Foo {
-}
+impl Foo {}
 
 struct Bar(i32);
 
@@ -19,7 +18,7 @@ impl Bar {
 
         // expected `i32`, found `Pin<Bar>`
         // let s = Pin::new(Bar);
-        
+
         // expected `i32`, found `Baz`
         // let s = Pin::new(Bar);
         // let s = *s;
