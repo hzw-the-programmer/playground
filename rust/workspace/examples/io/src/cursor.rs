@@ -13,5 +13,6 @@ fn test1() {
     assert_eq!(c.position(), 2);
     let _ = c.write(&b[..]);
     assert_eq!(c.position(), 4);
+    assert_eq!(c.remaining_slice(), &[5]);
     assert_eq!(c.get_ref(), &vec![1, 2, 1, 2, 5]);
 }

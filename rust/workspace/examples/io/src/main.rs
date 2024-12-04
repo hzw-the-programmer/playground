@@ -1,3 +1,5 @@
+#![feature(cursor_remaining)]
+
 mod cursor;
 
 use cursor as test;
