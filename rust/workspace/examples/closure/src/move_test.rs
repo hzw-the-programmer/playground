@@ -1,5 +1,6 @@
 pub fn test() {
-    test1();
+    // test1();
+    test3();
 }
 
 fn test1() {
@@ -24,4 +25,18 @@ fn test2() {
     // let f = c;
     f_move(&mut c);
     // c();
+}
+
+fn test3() {
+    fn f_move<T: FnOnce()>(f: T) {
+        f();
+    }
+    let mut i = 0;
+    let mut c = || {
+        println!("closure");
+        i += 1
+    };
+    // let i: i32 = &mut c;
+    f_move(&mut c);
+    c();
 }
