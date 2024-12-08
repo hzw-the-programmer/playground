@@ -1,7 +1,8 @@
 pub fn test() {
     // map();
     // for_each();
-    for_each_2();
+    // for_each_2();
+    for_each_3();
 }
 
 fn map() {
@@ -41,4 +42,11 @@ fn for_each_2() {
     (0..5)
         .flat_map(|x| x * 100..x * 110)
         .for_each(|x| println!("{}", x));
+}
+
+fn for_each_3() {
+    (0..5)
+        .flat_map(|x| x * 100..x * 110)
+        .enumerate()
+        .for_each(|x| println!("{:?}", x));
 }
