@@ -48,5 +48,6 @@ fn for_each_3() {
     (0..5)
         .flat_map(|x| x * 100..x * 110)
         .enumerate()
-        .for_each(|x| println!("{:?}", x));
+        // .for_each(|x| println!("{:?}", x));
+        .for_each(|(i, x)| println!("{i}:{x}"));
 }
