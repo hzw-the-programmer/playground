@@ -1,6 +1,7 @@
 pub fn test() {
     // map();
-    for_each();
+    // for_each();
+    for_each_2();
 }
 
 fn map() {
@@ -34,4 +35,10 @@ fn for_each() {
         .for_each(move |x| tx.send(x).unwrap());
     let v: Vec<_> = rx.iter().collect();
     assert_eq!(vec![1, 3, 5, 7, 9], v);
+}
+
+fn for_each_2() {
+    (0..5)
+        .flat_map(|x| x * 100..x * 110)
+        .for_each(|x| println!("{}", x));
 }
