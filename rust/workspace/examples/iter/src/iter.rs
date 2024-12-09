@@ -41,7 +41,10 @@ pub fn test() {
 
     // scan();
 
-    flat_map();
+    // flat_map();
+
+    // flatten();
+    flatten_2();
 }
 
 fn map() {
@@ -327,4 +330,16 @@ fn flat_map() {
     let a = ["apha", "beta", "gamma"];
     let v: String = a.iter().flat_map(|s| s.chars()).collect();
     assert_eq!(v, "aphabetagamma");
+}
+
+fn flatten() {
+    let a = vec![vec![1, 2, 3, 4], vec![5, 6]];
+    let v = a.into_iter().flatten().collect::<Vec<_>>();
+    assert_eq!(v, &[1, 2, 3, 4, 5, 6]);
+}
+
+fn flatten_2() {
+    let a = ["alpha", "beta", "gamma"];
+    let s: String = a.iter().map(|s| s.chars()).flatten().collect();
+    assert_eq!(s, "alphabetagamma");
 }
