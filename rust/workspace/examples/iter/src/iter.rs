@@ -33,7 +33,11 @@ pub fn test() {
     // map_while_3();
     // map_while_4();
 
-    skip();
+    // skip();
+
+    // take();
+    // take_2();
+    take_3();
 }
 
 fn map() {
@@ -272,5 +276,29 @@ fn skip() {
     let a = [1, 2, 3];
     let mut i = a.iter().skip(2);
     assert_eq!(Some(&3), i.next());
+    assert_eq!(None, i.next());
+}
+
+fn take() {
+    let a = [1, 2, 3];
+    let mut i = a.iter().take(2);
+    assert_eq!(Some(&1), i.next());
+    assert_eq!(Some(&2), i.next());
+    assert_eq!(None, i.next());
+}
+
+fn take_2() {
+    let mut i = (0..).take(3);
+    assert_eq!(Some(0), i.next());
+    assert_eq!(Some(1), i.next());
+    assert_eq!(Some(2), i.next());
+    assert_eq!(None, i.next());
+}
+
+fn take_3() {
+    let v = [1, 2];
+    let mut i = v.into_iter().take(5);
+    assert_eq!(Some(1), i.next());
+    assert_eq!(Some(2), i.next());
     assert_eq!(None, i.next());
 }
