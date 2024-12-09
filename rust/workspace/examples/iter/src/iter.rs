@@ -13,7 +13,10 @@ pub fn test() {
     // filter_map();
     // filter_map_2();
 
-    enumerate();
+    // enumerate();
+
+    // peekable();
+    peekable_2();
 }
 
 fn map() {
@@ -119,4 +122,27 @@ fn enumerate() {
     assert_eq!(Some((1, &'b')), i.next());
     assert_eq!(Some((2, &'c')), i.next());
     assert_eq!(None, i.next());
+}
+
+fn peekable() {
+    let a = [1, 2, 3];
+    let mut i = a.iter().peekable();
+    assert_eq!(Some(&&1), i.peek());
+    assert_eq!(Some(&&1), i.peek());
+    assert_eq!(Some(&1), i.next());
+    assert_eq!(Some(&2), i.next());
+    assert_eq!(Some(&3), i.next());
+    assert_eq!(None, i.peek());
+}
+
+fn peekable_2() {
+    let a = [1, 2, 3];
+    let mut i = a.iter().peekable();
+    assert_eq!(Some(&mut &1), i.peek_mut());
+    if let Some(e) = i.peek_mut() {
+        // let i :i32 = e;
+        *e = &4;
+    }
+    assert_eq!(vec![&4, &2, &3], i.collect::<Vec<_>>());
+    assert_eq!([1, 2, 3], a);
 }
