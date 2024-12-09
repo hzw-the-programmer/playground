@@ -20,7 +20,13 @@ pub fn test() {
 
     // skip_while();
     // skip_while_2();
-    skip_while_3();
+    // skip_while_3();
+
+    // take_while();
+    // take_while_2();
+    // take_while_3();
+    // take_while_4();
+    take_while_5();
 }
 
 fn map() {
@@ -175,4 +181,41 @@ fn skip_while_3() {
     assert_eq!(Some(&1), i.next());
     assert_eq!(Some(&-2), i.next());
     assert_eq!(None, i.next());
+}
+
+fn take_while() {
+    let a = [-1i32, 0, 1];
+    let mut i = a.iter().take_while(|x| x.is_negative());
+    assert_eq!(Some(&-1), i.next());
+    assert_eq!(None, i.next());
+}
+
+fn take_while_2() {
+    let a = [-1, 0, 1];
+    let mut i = a.iter().take_while(|x| **x < 0);
+    assert_eq!(Some(&-1), i.next());
+    assert_eq!(None, i.next());
+}
+
+fn take_while_3() {
+    let a = [-1, 0, 1, -2];
+    let mut i = a.iter().take_while(|x| **x < 0);
+    assert_eq!(Some(&-1), i.next());
+    assert_eq!(None, i.next());
+}
+
+fn take_while_4() {
+    let a = [1, 2, 3, 4];
+    let mut i = a.iter();
+    let v: Vec<_> = i.by_ref().take_while(|x| **x != 3).collect();
+    assert_eq!(vec![&1, &2], v);
+    assert_eq!(vec![&4], i.collect::<Vec<_>>());
+}
+
+fn take_while_5() {
+    let a = [1, 2, 3, 4];
+    let mut i = a.iter();
+    let v: Vec<_> = i.by_ref().take_while(|x| **x != 3).cloned().collect();
+    assert_eq!(vec![1, 2], v);
+    assert_eq!(vec![4], i.cloned().collect::<Vec<_>>());
 }
