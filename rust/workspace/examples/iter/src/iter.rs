@@ -11,7 +11,9 @@ pub fn test() {
     // filter_4();
 
     // filter_map();
-    filter_map_2();
+    // filter_map_2();
+
+    enumerate();
 }
 
 fn map() {
@@ -107,5 +109,14 @@ fn filter_map_2() {
     let mut i = a.iter().filter_map(|s| s.parse().ok());
     assert_eq!(Some(1), i.next());
     assert_eq!(Some(5), i.next());
+    assert_eq!(None, i.next());
+}
+
+fn enumerate() {
+    let a = ['a', 'b', 'c'];
+    let mut i = a.iter().enumerate();
+    assert_eq!(Some((0, &'a')), i.next());
+    assert_eq!(Some((1, &'b')), i.next());
+    assert_eq!(Some((2, &'c')), i.next());
     assert_eq!(None, i.next());
 }
