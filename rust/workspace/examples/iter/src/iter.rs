@@ -16,7 +16,11 @@ pub fn test() {
     // enumerate();
 
     // peekable();
-    peekable_2();
+    // peekable_2();
+
+    // skip_while();
+    // skip_while_2();
+    skip_while_3();
 }
 
 fn map() {
@@ -145,4 +149,30 @@ fn peekable_2() {
     }
     assert_eq!(vec![&4, &2, &3], i.collect::<Vec<_>>());
     assert_eq!([1, 2, 3], a);
+}
+
+fn skip_while() {
+    let a = [-1i32, 0, 1];
+    // no method named `is_negative` found for reference `&&{integer}` in the current scope
+    let mut i = a.iter().skip_while(|x| x.is_negative());
+    assert_eq!(Some(&0), i.next());
+    assert_eq!(Some(&1), i.next());
+    assert_eq!(None, i.next());
+}
+
+fn skip_while_2() {
+    let a = [-1, 0, 1];
+    let mut i = a.iter().skip_while(|x| **x < 0);
+    assert_eq!(Some(&0), i.next());
+    assert_eq!(Some(&1), i.next());
+    assert_eq!(None, i.next());
+}
+
+fn skip_while_3() {
+    let a = [-1, 0, 1, -2];
+    let mut i = a.iter().skip_while(|x| **x < 0);
+    assert_eq!(Some(&0), i.next());
+    assert_eq!(Some(&1), i.next());
+    assert_eq!(Some(&-2), i.next());
+    assert_eq!(None, i.next());
 }
