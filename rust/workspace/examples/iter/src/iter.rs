@@ -31,7 +31,9 @@ pub fn test() {
     // map_while();
     // map_while_2();
     // map_while_3();
-    map_while_4();
+    // map_while_4();
+
+    skip();
 }
 
 fn map() {
@@ -264,4 +266,11 @@ fn map_while_4() {
     assert_eq!(v, &[1, 2]);
     let v: Vec<_> = i.cloned().collect();
     assert_eq!(v, &[4]);
+}
+
+fn skip() {
+    let a = [1, 2, 3];
+    let mut i = a.iter().skip(2);
+    assert_eq!(Some(&3), i.next());
+    assert_eq!(None, i.next());
 }
