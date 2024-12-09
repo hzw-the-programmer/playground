@@ -26,7 +26,12 @@ pub fn test() {
     // take_while_2();
     // take_while_3();
     // take_while_4();
-    take_while_5();
+    // take_while_5();
+
+    // map_while();
+    // map_while_2();
+    // map_while_3();
+    map_while_4();
 }
 
 fn map() {
@@ -218,4 +223,45 @@ fn take_while_5() {
     let v: Vec<_> = i.by_ref().take_while(|x| **x != 3).cloned().collect();
     assert_eq!(vec![1, 2], v);
     assert_eq!(vec![4], i.cloned().collect::<Vec<_>>());
+}
+
+fn map_while() {
+    let a = [-1, 4, 0, 1];
+    let mut i = a.iter().map_while(|x| 16i32.checked_div(*x));
+    assert_eq!(Some(-16), i.next());
+    assert_eq!(Some(4), i.next());
+    assert_eq!(None, i.next());
+}
+
+fn map_while_2() {
+    let a = [-1, 4, 0, 1];
+    let mut i = a
+        .iter()
+        .map(|x| 16i32.checked_div(*x))
+        .take_while(|x| x.is_some())
+        .map(|x| x.unwrap());
+    assert_eq!(Some(-16), i.next());
+    assert_eq!(Some(4), i.next());
+    assert_eq!(None, i.next());
+}
+
+fn map_while_3() {
+    let a = [0, 1, 2, -3, 4, 5, -6];
+    let v = a
+        .iter()
+        .map_while(|x| u32::try_from(*x).ok())
+        .collect::<Vec<_>>();
+    assert_eq!(vec![0, 1, 2], v);
+    // can't compare `&[{integer}; 3]` with `Vec<u32>`
+    // assert_eq!(&[0, 1, 2], v);
+    assert_eq!(v, &[0, 1, 2]);
+}
+
+fn map_while_4() {
+    let a = [1, 2, -3, 4];
+    let mut i = a.iter();
+    let v: Vec<_> = i.by_ref().map_while(|x| u32::try_from(*x).ok()).collect();
+    assert_eq!(v, &[1, 2]);
+    let v: Vec<_> = i.cloned().collect();
+    assert_eq!(v, &[4]);
 }
