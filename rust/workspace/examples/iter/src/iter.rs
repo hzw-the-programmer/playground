@@ -48,7 +48,14 @@ pub fn test() {
     // flatten_3();
     // flatten_4();
     // flatten_5();
-    flatten_6();
+    // flatten_6();
+
+    // map_windows();
+    // map_windows_2();
+    // map_windows_3();
+    // map_windows_4();
+    // map_windows_5();
+    map_windows_6();
 }
 
 fn map() {
@@ -370,4 +377,114 @@ fn flatten_6() {
     let a = [Ok(123), Ok(321), Err(456), Ok(231)];
     let v: Vec<_> = a.into_iter().flatten().collect();
     assert_eq!(v, &[123, 321, 231]);
+}
+
+fn map_windows() {
+    let a = "abcd"
+        .chars()
+        .map_windows(|[x, y]| {
+            // expected `i32`, found `&char`
+            // let i: i32 = x;
+            format!("{x}+{y}")
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(a, &["a+b", &"b+c", &"c+d"]);
+}
+
+fn map_windows_2() {
+    let v = "abcde"
+        .chars()
+        .map_windows(|&[x, y, z]| {
+            // expected `i32`, found `char`
+            // let i: i32 = x;
+            format!("{x}+{y}+{z}")
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(v, &["a+b+c", "b+c+d", "c+d+e"]);
+}
+
+fn map_windows_3() {
+    // let mut i = [1, 3, 8, 1].iter().map_windows(|[a, b]| {
+    let mut i = [1, 3, 8, 1].iter().map_windows(|&[a, b]| {
+        // expected `i32`, found `&&{integer}`
+        // expected `i32`, found `&{integer}`
+        // let i: i32 = a;
+        a + b
+    });
+    assert_eq!(i.next(), Some(4));
+    assert_eq!(i.next(), Some(11));
+    assert_eq!(i.next(), Some(9));
+    assert_eq!(i.next(), None);
+}
+
+fn map_windows_4() {
+    let mut i = "ferris".chars().map_windows(|w: &[_; 3]| *w);
+    assert_eq!(i.next(), Some(['f', 'e', 'r']));
+    assert_eq!(i.next(), Some(['e', 'r', 'r']));
+    assert_eq!(i.next(), Some(['r', 'r', 'i']));
+    assert_eq!(i.next(), Some(['r', 'i', 's']));
+    assert_eq!(i.next(), None);
+}
+
+fn map_windows_5() {
+    let mut i = [0.5, 1.0, 3.5, 3.0, 8.5, 8.5, f32::NAN]
+        .iter()
+        .map_windows(|[a, b]| {
+            // expected `i32`, found `&&f32`
+            // let i: i32 = a;
+            a <= b
+        });
+    assert_eq!(i.next(), Some(true));
+    assert_eq!(i.next(), Some(true));
+    assert_eq!(i.next(), Some(false));
+    assert_eq!(i.next(), Some(true));
+    assert_eq!(i.next(), Some(true));
+    assert_eq!(i.next(), Some(false));
+    assert_eq!(i.next(), None);
+}
+
+fn map_windows_6() {
+    #[derive(Default)]
+    struct NonFusedIterator {
+        state: i32,
+    }
+
+    impl Iterator for NonFusedIterator {
+        type Item = i32;
+
+        fn next(&mut self) -> Option<Self::Item> {
+            let v = self.state;
+            self.state += 1;
+            if v < 5 || v % 2 == 0 {
+                Some(v)
+            } else {
+                None
+            }
+        }
+    }
+
+    let mut i = NonFusedIterator::default();
+    assert_eq!(i.next(), Some(0));
+    assert_eq!(i.next(), Some(1));
+    assert_eq!(i.next(), Some(2));
+    assert_eq!(i.next(), Some(3));
+    assert_eq!(i.next(), Some(4));
+    assert_eq!(i.next(), None);
+
+    assert_eq!(i.next(), Some(6));
+    assert_eq!(i.next(), None);
+
+    assert_eq!(i.next(), Some(8));
+    assert_eq!(i.next(), None);
+
+    let mut i = NonFusedIterator::default().map_windows(|a: &[_; 2]| *a);
+    assert_eq!(i.next(), Some([0, 1]));
+    assert_eq!(i.next(), Some([1, 2]));
+    assert_eq!(i.next(), Some([2, 3]));
+    assert_eq!(i.next(), Some([3, 4]));
+    assert_eq!(i.next(), None);
+
+    assert_eq!(i.next(), None);
+    assert_eq!(i.next(), None);
+    assert_eq!(i.next(), None);
 }
