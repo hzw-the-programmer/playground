@@ -37,7 +37,9 @@ pub fn test() {
 
     // take();
     // take_2();
-    take_3();
+    // take_3();
+
+    scan();
 }
 
 fn map() {
@@ -301,4 +303,20 @@ fn take_3() {
     assert_eq!(Some(1), i.next());
     assert_eq!(Some(2), i.next());
     assert_eq!(None, i.next());
+}
+
+fn scan() {
+    let a = [1, 2, 3, 4];
+    let mut i = a.iter().scan(1, |s, &x| {
+        *s = *s * x;
+        if *s > 6 {
+            None
+        } else {
+            Some(-*s)
+        }
+    });
+    assert_eq!(i.next(), Some(-1));
+    assert_eq!(i.next(), Some(-2));
+    assert_eq!(i.next(), Some(-6));
+    assert_eq!(i.next(), None);
 }
