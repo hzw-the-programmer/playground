@@ -39,7 +39,9 @@ pub fn test() {
     // take_2();
     // take_3();
 
-    scan();
+    // scan();
+
+    flat_map();
 }
 
 fn map() {
@@ -319,4 +321,10 @@ fn scan() {
     assert_eq!(i.next(), Some(-2));
     assert_eq!(i.next(), Some(-6));
     assert_eq!(i.next(), None);
+}
+
+fn flat_map() {
+    let a = ["apha", "beta", "gamma"];
+    let v: String = a.iter().flat_map(|s| s.chars()).collect();
+    assert_eq!(v, "aphabetagamma");
 }
