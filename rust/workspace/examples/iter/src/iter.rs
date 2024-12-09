@@ -44,7 +44,11 @@ pub fn test() {
     // flat_map();
 
     // flatten();
-    flatten_2();
+    // flatten_2();
+    // flatten_3();
+    // flatten_4();
+    // flatten_5();
+    flatten_6();
 }
 
 fn map() {
@@ -342,4 +346,28 @@ fn flatten_2() {
     let a = ["alpha", "beta", "gamma"];
     let s: String = a.iter().map(|s| s.chars()).flatten().collect();
     assert_eq!(s, "alphabetagamma");
+}
+
+fn flatten_3() {
+    let a = [Some(123), Some(321), None, Some(231)];
+    let v: Vec<_> = a.iter().flatten().collect();
+    assert_eq!(v, &[&123, &321, &231]);
+}
+
+fn flatten_4() {
+    let a = [Some(123), Some(321), None, Some(231)];
+    let v: Vec<_> = a.into_iter().flatten().collect();
+    assert_eq!(v, &[123, 321, 231]);
+}
+
+fn flatten_5() {
+    let a = [Ok(123), Ok(321), Err(456), Ok(231)];
+    let v: Vec<_> = a.iter().flatten().collect();
+    assert_eq!(v, &[&123, &321, &231]);
+}
+
+fn flatten_6() {
+    let a = [Ok(123), Ok(321), Err(456), Ok(231)];
+    let v: Vec<_> = a.into_iter().flatten().collect();
+    assert_eq!(v, &[123, 321, 231]);
 }
