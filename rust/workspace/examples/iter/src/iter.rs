@@ -1,12 +1,17 @@
 pub fn test() {
     // map();
+
     // for_each();
     // for_each_2();
     // for_each_3();
+
     // filter();
     // filter_2();
     // filter_3();
-    filter_4();
+    // filter_4();
+
+    // filter_map();
+    filter_map_2();
 }
 
 fn map() {
@@ -82,5 +87,25 @@ fn filter_4() {
     let a = [0, 1, 2];
     let mut i = a.iter().filter(|&&x| x > 1);
     assert_eq!(Some(&2), i.next());
+    assert_eq!(None, i.next());
+}
+
+fn filter_map() {
+    let a = ["1", "two", "NaN", "four", "5"];
+    let mut i = a
+        .iter()
+        .map(|s| s.parse())
+        .filter(|r| r.is_ok())
+        .map(|r| r.unwrap());
+    assert_eq!(Some(1), i.next());
+    assert_eq!(Some(5), i.next());
+    assert_eq!(None, i.next());
+}
+
+fn filter_map_2() {
+    let a = ["1", "two", "NaN", "four", "5"];
+    let mut i = a.iter().filter_map(|s| s.parse().ok());
+    assert_eq!(Some(1), i.next());
+    assert_eq!(Some(5), i.next());
     assert_eq!(None, i.next());
 }
