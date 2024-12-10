@@ -60,7 +60,9 @@ pub fn test() {
     // fuse();
 
     // inspect();
-    inspect_2();
+    // inspect_2();
+
+    by_ref();
 }
 
 fn map() {
@@ -559,4 +561,12 @@ fn inspect_2() {
         .filter_map(Result::ok)
         .sum::<i32>();
     println!("{sum}");
+}
+
+fn by_ref() {
+    let mut words = ["hello", "world", "of", "Rust"].into_iter();
+    let hello_world: Vec<_> = words.by_ref().take(2).collect();
+    assert_eq!(hello_world, &["hello", "world"]);
+    let of_rust: Vec<_> = words.collect();
+    assert_eq!(of_rust, &["of", "Rust"]);
 }
