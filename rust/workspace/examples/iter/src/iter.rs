@@ -59,7 +59,8 @@ pub fn test() {
 
     // fuse();
 
-    inspect();
+    // inspect();
+    inspect_2();
 }
 
 fn map() {
@@ -534,9 +535,28 @@ fn inspect() {
     let sum = a
         .iter()
         .cloned()
-        .inspect(|x| println!("before filter: {x}"))
+        .inspect(|x| println!("about to filter: {x}"))
         .filter(|x| x % 2 == 0)
-        .inspect(|x| println!("after filter: {x}"))
+        .inspect(|x| println!("made it through filter: {x}"))
         .fold(0, |sum, x| sum + x);
+    println!("{sum}");
+}
+
+fn inspect_2() {
+    let a = ["1", "2", "a", "b", "5"];
+    let sum = a
+        .iter()
+        .map(|l| l.parse::<i32>())
+        .inspect(|r| {
+            // expected `i32`, found `&Result<i32, ParseIntError>`
+            // let i: i32 = r;
+            if let Err(e) = r {
+                // expected `i32`, found `&ParseIntError`
+                // let i: i32 = e;
+                println!("Parsing err: {e}");
+            }
+        })
+        .filter_map(Result::ok)
+        .sum::<i32>();
     println!("{sum}");
 }
