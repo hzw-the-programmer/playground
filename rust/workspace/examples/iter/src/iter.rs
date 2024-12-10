@@ -62,7 +62,9 @@ pub fn test() {
     // inspect();
     // inspect_2();
 
-    by_ref();
+    // by_ref();
+
+    collect();
 }
 
 fn map() {
@@ -569,4 +571,36 @@ fn by_ref() {
     assert_eq!(hello_world, &["hello", "world"]);
     let of_rust: Vec<_> = words.collect();
     assert_eq!(of_rust, &["of", "Rust"]);
+}
+
+fn collect() {
+    let a = [1, 2, 3];
+    let doubled: Vec<_> = a.iter().map(|&x| x * 2).collect();
+    assert_eq!(doubled, &[2, 4, 6]);
+
+    use std::collections::VecDeque;
+
+    let doubled: VecDeque<_> = a.iter().map(|&x| x * 2).collect();
+    assert_eq!(doubled[0], 2);
+    assert_eq!(doubled[1], 4);
+    assert_eq!(doubled[2], 6);
+
+    let doubled = a.iter().map(|&x| x * 2).collect::<Vec<_>>();
+    assert_eq!(doubled, &[2, 4, 6]);
+
+    let chars = ['g', 'd', 'k', 'k', 'n'];
+    let hello: String = chars
+        .iter()
+        .map(|&x| x as u8)
+        .map(|x| (x + 1) as char)
+        .collect();
+    assert_eq!(hello, "hello");
+
+    let r = [Ok(1), Err("nope"), Ok(3), Err("bad")];
+    let r: Result<Vec<_>, &str> = r.iter().cloned().collect();
+    assert_eq!(r, Err("nope"));
+
+    let r = [Ok(1), Ok(3)];
+    let r: Result<Vec<_>, &str> = r.iter().cloned().collect();
+    assert_eq!(r, Ok(vec![1, 3]));
 }
