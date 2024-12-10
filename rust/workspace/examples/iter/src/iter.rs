@@ -55,7 +55,9 @@ pub fn test() {
     // map_windows_3();
     // map_windows_4();
     // map_windows_5();
-    map_windows_6();
+    // map_windows_6();
+
+    fuse();
 }
 
 fn map() {
@@ -484,6 +486,36 @@ fn map_windows_6() {
     assert_eq!(i.next(), Some([3, 4]));
     assert_eq!(i.next(), None);
 
+    assert_eq!(i.next(), None);
+    assert_eq!(i.next(), None);
+    assert_eq!(i.next(), None);
+}
+
+fn fuse() {
+    struct Alternate {
+        state: i32,
+    }
+    impl Iterator for Alternate {
+        type Item = i32;
+        fn next(&mut self) -> Option<Self::Item> {
+            let v = self.state;
+            self.state += 1;
+            if v % 2 == 0 {
+                Some(v)
+            } else {
+                None
+            }
+        }
+    }
+
+    let mut i = Alternate { state: 0 };
+    assert_eq!(i.next(), Some(0));
+    assert_eq!(i.next(), None);
+    assert_eq!(i.next(), Some(2));
+    assert_eq!(i.next(), None);
+
+    let mut i = i.fuse();
+    assert_eq!(i.next(), Some(4));
     assert_eq!(i.next(), None);
     assert_eq!(i.next(), None);
     assert_eq!(i.next(), None);
