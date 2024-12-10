@@ -57,7 +57,9 @@ pub fn test() {
     // map_windows_5();
     // map_windows_6();
 
-    fuse();
+    // fuse();
+
+    inspect();
 }
 
 fn map() {
@@ -519,4 +521,22 @@ fn fuse() {
     assert_eq!(i.next(), None);
     assert_eq!(i.next(), None);
     assert_eq!(i.next(), None);
+}
+
+fn inspect() {
+    let a = [1, 4, 2, 3];
+    let sum = a
+        .iter()
+        .cloned()
+        .filter(|x| x % 2 == 0)
+        .fold(0, |sum, x| sum + x);
+    println!("{sum}");
+    let sum = a
+        .iter()
+        .cloned()
+        .inspect(|x| println!("before filter: {x}"))
+        .filter(|x| x % 2 == 0)
+        .inspect(|x| println!("after filter: {x}"))
+        .fold(0, |sum, x| sum + x);
+    println!("{sum}");
 }
