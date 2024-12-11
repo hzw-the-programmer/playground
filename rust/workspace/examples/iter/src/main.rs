@@ -2,6 +2,7 @@
 #![feature(iter_map_windows)]
 #![feature(iterator_try_collect)]
 #![feature(iter_collect_into)]
+#![feature(iter_partition_in_place)]
 
 mod iter;
 

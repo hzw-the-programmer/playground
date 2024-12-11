@@ -70,7 +70,9 @@ pub fn test() {
 
     // collect_into();
 
-    partition();
+    // partition();
+
+    partition_in_place();
 }
 
 fn map() {
@@ -681,7 +683,22 @@ fn collect_into() {
 
 fn partition() {
     let a = [1, 2, 3];
-    let (even, ord): (Vec<_>, Vec<_>) = a.into_iter().partition(|n| n % 2 == 0);
+    let (even, odd): (Vec<_>, Vec<_>) = a.into_iter().partition(|n| {
+        // expected `i32`, found `&{integer}`
+        // let i: i32 = n;
+        n % 2 == 0
+    });
     assert_eq!(even, &[2]);
-    assert_eq!(ord, &[1, 3]);
+    assert_eq!(odd, &[1, 3]);
+}
+
+fn partition_in_place() {
+    let mut a = [1, 2, 3, 4, 5, 6, 7];
+    let l = a.iter_mut().partition_in_place(|n| {
+        // expected `i32`, found `&{integer}`
+        // let i: i32 = n;
+        n % 2 == 0
+    });
+    assert_eq!(a[..l], [6, 2, 4]);
+    assert_eq!(a[l..], [3, 5, 1, 7]);
 }
