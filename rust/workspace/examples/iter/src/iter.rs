@@ -66,7 +66,9 @@ pub fn test() {
 
     // collect();
 
-    try_collect();
+    // try_collect();
+
+    collect_into();
 }
 
 fn map() {
@@ -640,4 +642,37 @@ fn try_collect() {
     assert_eq!(c, Break(3));
     let c = i.try_collect::<Vec<_>>();
     assert_eq!(c, Continue(vec![4, 5]));
+}
+
+fn collect_into() {
+    let a = [1, 2, 3];
+    let mut v = vec![0, 1];
+    a.iter().map(|&x| x * 2).collect_into(&mut v);
+    assert_eq!(v, &[0, 1, 2, 4, 6]);
+    a.iter().map(|&x| x * 10).collect_into(&mut v);
+    assert_eq!(v, &[0, 1, 2, 4, 6, 10, 20, 30]);
+
+    let mut v = Vec::with_capacity(6);
+    assert_eq!(v.len(), 0);
+    assert_eq!(v.capacity(), 6);
+    a.iter().map(|&x| x * 2).collect_into(&mut v);
+    assert_eq!(v.len(), 3);
+    assert_eq!(v.capacity(), 6);
+    assert_eq!(v, &[2, 4, 6]);
+    a.iter().map(|&x| x * 10).collect_into(&mut v);
+    assert_eq!(v.len(), 6);
+    assert_eq!(v.capacity(), 6);
+    assert_eq!(v, &[2, 4, 6, 10, 20, 30]);
+
+    // type annotations needed for `Vec<_>`
+    // let mut v = Vec::with_capacity(6);
+    // associated function takes 0 generic arguments but 1 generic argument was supplied
+    // let mut v = Vec::with_capacity::<i32>(6);
+    let mut v: Vec<i32> = Vec::with_capacity(6);
+    let count = a.iter().collect_into(&mut v).iter().count();
+    assert_eq!(v.len(), count);
+    assert_eq!(v, &[1, 2, 3]);
+    let count = a.iter().collect_into(&mut v).iter().count();
+    assert_eq!(v.len(), count);
+    assert_eq!(v, &[1, 2, 3, 1, 2, 3]);
 }
