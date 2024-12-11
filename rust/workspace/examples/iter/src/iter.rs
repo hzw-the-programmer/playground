@@ -68,7 +68,9 @@ pub fn test() {
 
     // try_collect();
 
-    collect_into();
+    // collect_into();
+
+    partition();
 }
 
 fn map() {
@@ -675,4 +677,11 @@ fn collect_into() {
     let count = a.iter().collect_into(&mut v).iter().count();
     assert_eq!(v.len(), count);
     assert_eq!(v, &[1, 2, 3, 1, 2, 3]);
+}
+
+fn partition() {
+    let a = [1, 2, 3];
+    let (even, ord): (Vec<_>, Vec<_>) = a.into_iter().partition(|n| n % 2 == 0);
+    assert_eq!(even, &[2]);
+    assert_eq!(ord, &[1, 3]);
 }
