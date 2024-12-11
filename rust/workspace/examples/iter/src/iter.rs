@@ -64,7 +64,9 @@ pub fn test() {
 
     // by_ref();
 
-    collect();
+    // collect();
+
+    try_collect();
 }
 
 fn map() {
@@ -611,4 +613,31 @@ fn collect() {
     let o = [Some(1), Some(2)];
     let o: Option<Vec<_>> = o.iter().cloned().collect();
     assert_eq!(o, Some(vec![1, 2]));
+}
+
+fn try_collect() {
+    let o = [Some(1), Some(2), Some(3)];
+    let o = o.iter().cloned().try_collect::<Vec<_>>();
+    assert_eq!(o, Some(vec![1, 2, 3]));
+
+    let o = [Some(1), None, Some(3)];
+    let o = o.into_iter().try_collect::<Vec<_>>();
+    assert_eq!(o, None);
+
+    // let r: [Result<_, ()>; 3] = [Ok(1), Ok(2), Ok(3)];
+    let r = [Ok::<_, ()>(1), Ok(2), Ok(3)];
+    let r = r.iter().cloned().try_collect::<Vec<_>>();
+    assert_eq!(r, Ok(vec![1, 2, 3]));
+
+    let r = vec![Ok(1), Err(()), Ok(2)];
+    let r = r.into_iter().try_collect::<Vec<_>>();
+    assert_eq!(r, Err(()));
+
+    use core::ops::ControlFlow::{Break, Continue};
+    let c = [Continue(1), Continue(2), Break(3), Continue(4), Continue(5)];
+    let mut i = c.into_iter();
+    let c = i.try_collect::<Vec<_>>();
+    assert_eq!(c, Break(3));
+    let c = i.try_collect::<Vec<_>>();
+    assert_eq!(c, Continue(vec![4, 5]));
 }
