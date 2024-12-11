@@ -72,7 +72,9 @@ pub fn test() {
 
     // partition();
 
-    partition_in_place();
+    // partition_in_place();
+
+    is_partitioned();
 }
 
 fn map() {
@@ -701,4 +703,9 @@ fn partition_in_place() {
     });
     assert_eq!(a[..l], [6, 2, 4]);
     assert_eq!(a[l..], [3, 5, 1, 7]);
+}
+
+fn is_partitioned() {
+    assert!("Iterator".chars().is_partitioned(char::is_uppercase));
+    assert!(!"IntoIterator".chars().is_partitioned(char::is_uppercase));
 }

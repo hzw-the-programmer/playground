@@ -3,6 +3,7 @@
 #![feature(iterator_try_collect)]
 #![feature(iter_collect_into)]
 #![feature(iter_partition_in_place)]
+#![feature(iter_is_partitioned)]
 
 mod iter;
 
