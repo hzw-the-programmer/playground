@@ -603,4 +603,12 @@ fn collect() {
     let r = [Ok(1), Ok(3)];
     let r: Result<Vec<_>, &str> = r.iter().cloned().collect();
     assert_eq!(r, Ok(vec![1, 3]));
+
+    let o = [Some(1), None, Some(3), None];
+    let o: Option<Vec<_>> = o.iter().cloned().collect();
+    assert_eq!(o, None);
+
+    let o = [Some(1), Some(2)];
+    let o: Option<Vec<_>> = o.iter().cloned().collect();
+    assert_eq!(o, Some(vec![1, 2]));
 }
