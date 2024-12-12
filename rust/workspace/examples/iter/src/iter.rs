@@ -857,4 +857,15 @@ fn try_reduce() {
         }
     });
     assert_eq!(r, Ok(Some("5")));
+
+    let n = ["1", "2", "Nan", "4", "5"];
+    let mut i = n.into_iter();
+    let r: Result<_, <usize as core::str::FromStr>::Err> = i.try_reduce(|x, y| {
+        if x.parse::<usize>()? > y.parse::<usize>()? {
+            Ok(x)
+        } else {
+            Ok(y)
+        }
+    });
+    println!("{r:?}");
 }
