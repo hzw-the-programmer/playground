@@ -716,4 +716,36 @@ fn try_fold() {
     let a = [1, 2, 3];
     let sum = a.iter().try_fold(0i8, |acc, &x| acc.checked_add(x));
     assert_eq!(sum, Some(6));
+
+    let a = [10, 20, 30, 100, 40, 50];
+    let mut i = a.iter();
+    let sum = i.try_fold(0i8, |acc, &n| acc.checked_add(n));
+    assert_eq!(sum, None);
+    assert_eq!(i.len(), 2);
+    assert_eq!(i.next(), Some(&40));
+
+    use core::ops::ControlFlow;
+    let mut i = 1..30;
+    let triangular = i.try_fold(0_i8, |acc, x| {
+        // expected `char`, found integer
+        // let i: char = x;
+        if let Some(acc) = acc.checked_add(x) {
+            ControlFlow::Continue(acc)
+        } else {
+            ControlFlow::Break(acc)
+        }
+    });
+    assert_eq!(triangular, ControlFlow::Break(120));
+    assert_eq!(i.next(), Some(17));
+
+    let mut i = 1..30;
+    let triangular = i.try_fold(0_u64, |pre, x| {
+        if let Some(next) = pre.checked_add(x) {
+            ControlFlow::Continue(next)
+        } else {
+            ControlFlow::Break(pre)
+        }
+    });
+    assert_eq!(triangular, ControlFlow::Continue(435));
+    assert_eq!(i.next(), None);
 }
