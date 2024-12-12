@@ -74,7 +74,9 @@ pub fn test() {
 
     // partition_in_place();
 
-    is_partitioned();
+    // is_partitioned();
+
+    try_fold();
 }
 
 fn map() {
@@ -708,4 +710,10 @@ fn partition_in_place() {
 fn is_partitioned() {
     assert!("Iterator".chars().is_partitioned(char::is_uppercase));
     assert!(!"IntoIterator".chars().is_partitioned(char::is_uppercase));
+}
+
+fn try_fold() {
+    let a = [1, 2, 3];
+    let sum = a.iter().try_fold(0i8, |acc, &x| acc.checked_add(x));
+    assert_eq!(sum, Some(6));
 }
