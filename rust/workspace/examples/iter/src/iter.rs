@@ -78,7 +78,9 @@ pub fn test() {
 
     // try_fold();
 
-    try_for_each();
+    // try_for_each();
+
+    fold();
 }
 
 fn map() {
@@ -784,4 +786,37 @@ fn try_for_each() {
         }
     });
     assert_eq!(r, ControlFlow::Break(17));
+}
+
+fn fold() {
+    let a = [1, 2, 3];
+    let sum = a.iter().fold(0, |acc, x| {
+        // expected `i32`, found `&{integer}`
+        // let i: i32 = x;
+        acc + x
+    });
+    assert_eq!(sum, 6);
+
+    let a = [1, 2, 3, 4, 5];
+    let zero = "0".to_string();
+    let sum = a.iter().fold(zero, |acc, &x| format!("({acc} + {x})"));
+    assert_eq!(sum, "(((((0 + 1) + 2) + 3) + 4) + 5)");
+
+    let a = [1, 2, 3, 4, 5];
+    let zero = "0".to_string();
+    let sum = a.iter().fold(zero, |acc, x| format!("({acc} + {x})"));
+    assert_eq!(sum, "(((((0 + 1) + 2) + 3) + 4) + 5)");
+
+    let a = [1, 2, 3, 4, 5];
+    let mut result = 0;
+    for i in &a {
+        result += i;
+    }
+    assert_eq!(result, 15);
+
+    let r = a.iter().fold(0, |acc, x| acc + x);
+    assert_eq!(r, result);
+
+    let r = a.iter().fold(0, |acc, &x| acc + x);
+    assert_eq!(r, result);
 }
