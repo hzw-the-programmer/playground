@@ -82,7 +82,9 @@ pub fn test() {
 
     // fold();
 
-    reduce();
+    // reduce();
+
+    try_reduce();
 }
 
 fn map() {
@@ -829,4 +831,30 @@ fn reduce() {
 
     let r = (1..10).fold(0, |acc, x| acc + x);
     assert_eq!(r, 45);
+}
+
+fn try_reduce() {
+    let n = vec![10usize, 20, 5, 23, 0];
+    let r = n.into_iter().try_reduce(|x, y| x.checked_add(y));
+    assert_eq!(r, Some(Some(58)));
+
+    let n = vec![1, 2, usize::MAX, 4, 5];
+    let mut i = n.into_iter();
+    let r = i.try_reduce(|x, y| x.checked_add(y));
+    assert_eq!(r, None);
+    assert_eq!(i.next(), Some(4));
+
+    let n: Vec<usize> = vec![];
+    let r = n.into_iter().try_reduce(|x, y| x.checked_add(y));
+    assert_eq!(r, Some(None));
+
+    let n = ["1", "2", "3", "4", "5"];
+    let r: Result<_, core::num::ParseIntError> = n.into_iter().try_reduce(|x, y| {
+        if x.parse::<usize>()? > y.parse::<usize>()? {
+            Ok(x)
+        } else {
+            Ok(y)
+        }
+    });
+    assert_eq!(r, Ok(Some("5")));
 }

@@ -4,6 +4,7 @@
 #![feature(iter_collect_into)]
 #![feature(iter_partition_in_place)]
 #![feature(iter_is_partitioned)]
+#![feature(iterator_try_reduce)]
 
 mod iter;
 
