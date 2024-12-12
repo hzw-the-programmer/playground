@@ -849,7 +849,7 @@ fn try_reduce() {
     assert_eq!(r, Some(None));
 
     let n = ["1", "2", "3", "4", "5"];
-    let r: Result<_, core::num::ParseIntError> = n.into_iter().try_reduce(|x, y| {
+    let r: Result<_, <usize as core::str::FromStr>::Err> = n.into_iter().try_reduce(|x, y| {
         if x.parse::<usize>()? > y.parse::<usize>()? {
             Ok(x)
         } else {
