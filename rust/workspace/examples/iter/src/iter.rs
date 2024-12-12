@@ -76,7 +76,9 @@ pub fn test() {
 
     // is_partitioned();
 
-    try_fold();
+    // try_fold();
+
+    try_for_each();
 }
 
 fn map() {
@@ -748,4 +750,38 @@ fn try_fold() {
     });
     assert_eq!(triangular, ControlFlow::Continue(435));
     assert_eq!(i.next(), None);
+}
+
+fn try_for_each() {
+    use std::fs::rename;
+    use std::io::{stdout, Write};
+    use std::path::Path;
+    let data = ["no_tea.txt", "stable_bread.json", "torrential_rain.png"];
+    let r = data.iter().try_for_each(|x| {
+        // expected `i32`, found `&&str`
+        // let i: i32 = x;
+        writeln!(stdout(), "{x}")
+    });
+    assert!(r.is_ok());
+    assert_eq!(r.unwrap(), ());
+
+    let mut i = data.iter();
+    let r = i.try_for_each(|x| rename(x, Path::new(x).with_extension("old")));
+    assert!(r.is_err());
+    assert_eq!(i.next(), Some(&"stable_bread.json"));
+
+    let mut i = data.iter().cloned();
+    let r = i.try_for_each(|x| rename(x, Path::new(x).with_extension("old")));
+    assert!(r.is_err());
+    assert_eq!(i.next(), Some("stable_bread.json"));
+
+    use core::ops::ControlFlow;
+    let r = (2..100).try_for_each(|x| {
+        if 323 % x == 0 {
+            ControlFlow::Break(x)
+        } else {
+            ControlFlow::Continue(())
+        }
+    });
+    assert_eq!(r, ControlFlow::Break(17));
 }
