@@ -84,7 +84,9 @@ pub fn test() {
 
     // reduce();
 
-    try_reduce();
+    // try_reduce();
+
+    all();
 }
 
 fn map() {
@@ -868,4 +870,24 @@ fn try_reduce() {
         }
     });
     println!("{r:?}");
+}
+
+fn all() {
+    let a = [1, 2, 3];
+    assert!(a.iter().all(|&x| x > 0));
+    assert!(!a.iter().all(|&x| x > 2));
+
+    let mut i = a.iter();
+    assert!(!i.all(|&x| x != 2));
+    assert_eq!(i.next(), Some(&3));
+}
+
+fn any() {
+    let a = [1, 2, 3];
+    assert!(a.iter().any(|&x| x > 0));
+    assert!(!a.iter().any(|&x| x > 5));
+
+    let mut i = a.iter();
+    assert!(i.any(|&x| x != 2));
+    assert_eq!(i.next(), Some(&2));
 }
