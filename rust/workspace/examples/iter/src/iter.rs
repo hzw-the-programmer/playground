@@ -80,7 +80,9 @@ pub fn test() {
 
     // try_for_each();
 
-    fold();
+    // fold();
+
+    reduce();
 }
 
 fn map() {
@@ -819,4 +821,12 @@ fn fold() {
 
     let r = a.iter().fold(0, |acc, &x| acc + x);
     assert_eq!(r, result);
+}
+
+fn reduce() {
+    let r = (1..10).reduce(|acc, x| acc + x).unwrap();
+    assert_eq!(r, 45);
+
+    let r = (1..10).fold(0, |acc, x| acc + x);
+    assert_eq!(r, 45);
 }
