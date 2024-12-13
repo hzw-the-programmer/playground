@@ -100,7 +100,9 @@ pub fn test() {
 
     // max();
 
-    min();
+    // min();
+
+    max_by_key();
 }
 
 fn map() {
@@ -999,4 +1001,10 @@ fn min() {
 
     let a: Vec<u32> = vec![];
     assert_eq!(a.iter().min(), None);
+}
+
+fn max_by_key() {
+    let a = [-3_i32, 0, 5, -10];
+    assert_eq!(a.iter().max_by_key(|x| x.abs()), Some(&-10));
+    assert_eq!(*a.iter().max_by_key(|x| x.abs()).unwrap(), -10);
 }
