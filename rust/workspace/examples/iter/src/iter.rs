@@ -98,7 +98,9 @@ pub fn test() {
 
     // rposition();
 
-    max();
+    // max();
+
+    min();
 }
 
 fn map() {
@@ -986,4 +988,15 @@ fn max() {
     // let a: Vec<u32> = Vec::new();
     let a: [u32; 0] = [];
     assert_eq!(a.iter().max(), None);
+}
+
+fn min() {
+    let a = [2.4, f32::NAN];
+    assert_eq!(a.into_iter().reduce(f32::min), Some(2.4));
+
+    let a = [1, 2, 3];
+    assert_eq!(a.iter().min(), Some(&1));
+
+    let a: Vec<u32> = vec![];
+    assert_eq!(a.iter().min(), None);
 }
