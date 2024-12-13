@@ -88,7 +88,11 @@ pub fn test() {
 
     // all();
 
-    find();
+    // find();
+
+    // find_map();
+
+    try_find();
 }
 
 fn map() {
@@ -903,4 +907,40 @@ fn find() {
     let mut iter = a.iter();
     assert_eq!(iter.find(|&&x| x == 2), Some(&2));
     assert_eq!(iter.next(), Some(&3));
+}
+
+fn find_map() {
+    let a = ["lol", "NaN", "2", "5"];
+    let n = a.iter().find_map(|s| s.parse().ok());
+    assert_eq!(n, Some(2));
+}
+
+fn try_find() {
+    let a = ["1", "2", "lol", "NaN", "5"];
+    let r = a
+        .iter()
+        .try_find(|&&s| Ok::<_, core::num::ParseIntError>(s.parse::<i32>()? == 2));
+    assert_eq!(r, Ok(Some(&"2")));
+
+    let r = a
+        .iter()
+        .try_find(|s| Ok::<_, core::num::ParseIntError>(s.parse::<i32>()? == 5));
+    assert!(r.is_err());
+
+    use core::num::NonZeroU32;
+    let a = [3, 5, 7, 4, 9, 0, 11];
+    let mut i = a.iter();
+    let r = i.try_find(|&&x| NonZeroU32::new(x).map(|y| y.is_power_of_two()));
+    assert_eq!(r, Some(Some(&4)));
+    assert_eq!(i.next(), Some(&9));
+
+    let mut i = a.iter().take(3);
+    let r = i.try_find(|&&x| NonZeroU32::new(x).map(|y| y.is_power_of_two()));
+    assert_eq!(r, Some(None));
+    assert_eq!(i.next(), None);
+
+    let mut i = a.iter().rev();
+    let r = i.try_find(|&&x| NonZeroU32::new(x).map(|y| y.is_power_of_two()));
+    assert_eq!(r, None);
+    assert_eq!(i.next(), Some(&9));
 }
