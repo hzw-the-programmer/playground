@@ -86,7 +86,9 @@ pub fn test() {
 
     // try_reduce();
 
-    all();
+    // all();
+
+    find();
 }
 
 fn map() {
@@ -890,4 +892,15 @@ fn any() {
     let mut i = a.iter();
     assert!(i.any(|&x| x != 2));
     assert_eq!(i.next(), Some(&2));
+}
+
+fn find() {
+    let a = [1, 2, 3];
+    assert_eq!(a.iter().find(|&&x| x == 2), Some(&2));
+    assert_eq!(a.iter().find(|&&x| x == 4), None);
+
+    let a = [1, 2, 3];
+    let mut iter = a.iter();
+    assert_eq!(iter.find(|&&x| x == 2), Some(&2));
+    assert_eq!(iter.next(), Some(&3));
 }
