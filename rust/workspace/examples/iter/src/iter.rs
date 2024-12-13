@@ -96,7 +96,9 @@ pub fn test() {
 
     // position();
 
-    rposition();
+    // rposition();
+
+    max();
 }
 
 fn map() {
@@ -972,4 +974,16 @@ fn rposition() {
     assert_eq!(i.rposition(|&x| x == 2), Some(1));
     assert_eq!(i.next(), Some(&1));
     assert_eq!(i.next(), None);
+}
+
+fn max() {
+    let a = [2.4, f32::NAN, 1.3];
+    assert_eq!(a.into_iter().reduce(f32::max), Some(2.4));
+
+    let a = [1, 2, 3];
+    assert_eq!(a.iter().max(), Some(&3));
+
+    // let a: Vec<u32> = Vec::new();
+    let a: [u32; 0] = [];
+    assert_eq!(a.iter().max(), None);
 }
