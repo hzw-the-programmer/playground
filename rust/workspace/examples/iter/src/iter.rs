@@ -92,7 +92,9 @@ pub fn test() {
 
     // find_map();
 
-    try_find();
+    // try_find();
+
+    position();
 }
 
 fn map() {
@@ -943,4 +945,16 @@ fn try_find() {
     let r = i.try_find(|&&x| NonZeroU32::new(x).map(|y| y.is_power_of_two()));
     assert_eq!(r, None);
     assert_eq!(i.next(), Some(&9));
+}
+
+fn position() {
+    let a = [1, 2, 3];
+    assert_eq!(a.iter().position(|&x| x == 2), Some(1));
+    assert_eq!(a.iter().position(|&x| x == 5), None);
+
+    let a = [1, 2, 3, 4];
+    let mut i = a.iter();
+    assert_eq!(i.position(|x| *x >= 2), Some(1));
+    assert_eq!(i.next(), Some(&3));
+    assert_eq!(i.position(|x| *x == 4), Some(0));
 }
