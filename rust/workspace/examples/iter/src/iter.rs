@@ -94,7 +94,9 @@ pub fn test() {
 
     // try_find();
 
-    position();
+    // position();
+
+    rposition();
 }
 
 fn map() {
@@ -957,4 +959,17 @@ fn position() {
     assert_eq!(i.position(|x| *x >= 2), Some(1));
     assert_eq!(i.next(), Some(&3));
     assert_eq!(i.position(|x| *x == 4), Some(0));
+}
+
+fn rposition() {
+    let a = [1, 2, 3];
+    assert_eq!(a.iter().rposition(|&x| x == 3), Some(2));
+    assert_eq!(a.iter().rposition(|&x| x == 5), None);
+
+    let a = [1, 2, 3, 4];
+    let mut i = a.iter();
+    assert_eq!(i.rposition(|&x| x == 4), Some(3));
+    assert_eq!(i.rposition(|&x| x == 2), Some(1));
+    assert_eq!(i.next(), Some(&1));
+    assert_eq!(i.next(), None);
 }
