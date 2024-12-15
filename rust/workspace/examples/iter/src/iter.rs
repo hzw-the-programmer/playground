@@ -102,7 +102,11 @@ pub fn test() {
 
     // min();
 
-    max_by_key();
+    // max_by_key();
+
+    // max_by();
+
+    min_by_key();
 }
 
 fn map() {
@@ -1007,4 +1011,14 @@ fn max_by_key() {
     let a = [-3_i32, 0, 5, -10];
     assert_eq!(a.iter().max_by_key(|x| x.abs()), Some(&-10));
     assert_eq!(*a.iter().max_by_key(|x| x.abs()).unwrap(), -10);
+}
+
+fn max_by() {
+    let a = [-3_i32, 0, 1, 5, -10];
+    assert_eq!(a.iter().max_by(|x, y| x.cmp(y)), Some(&5));
+}
+
+fn min_by_key() {
+    let a = [-3_i32, 0, 1, 5, 10];
+    assert_eq!(a.iter().min_by_key(|x| x.abs()), Some(&0));
 }
