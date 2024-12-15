@@ -110,7 +110,9 @@ pub fn test() {
 
     // min_by();
 
-    rev();
+    // rev();
+
+    unzip();
 }
 
 fn map() {
@@ -1039,4 +1041,17 @@ fn rev() {
     assert_eq!(i.next(), Some(&2));
     assert_eq!(i.next(), Some(&1));
     assert_eq!(i.next(), None);
+}
+
+fn unzip() {
+    let a = [(1, 2), (3, 4), (5, 6)];
+    let (l, r): (Vec<_>, Vec<_>) = a.iter().cloned().unzip();
+    assert_eq!(l, [1, 3, 5]);
+    assert_eq!(r, [2, 4, 6]);
+
+    let a = [(1, (2, 3)), (4, (5, 6))];
+    let (x, (y, z)): (Vec<_>, (Vec<_>, Vec<_>)) = a.iter().cloned().unzip();
+    assert_eq!(x, [1, 4]);
+    assert_eq!(y, [2, 5]);
+    assert_eq!(z, [3, 6]);
 }
