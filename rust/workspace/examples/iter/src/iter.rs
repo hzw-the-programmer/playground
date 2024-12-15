@@ -106,7 +106,9 @@ pub fn test() {
 
     // max_by();
 
-    min_by_key();
+    // min_by_key();
+
+    min_by();
 }
 
 fn map() {
@@ -1021,4 +1023,9 @@ fn max_by() {
 fn min_by_key() {
     let a = [-3_i32, 0, 1, 5, 10];
     assert_eq!(a.iter().min_by_key(|x| x.abs()), Some(&0));
+}
+
+fn min_by() {
+    let a = [-3_i32, 0, 1, 5, -10];
+    assert_eq!(a.iter().min_by(|x, y| x.cmp(y)), Some(&-10));
 }
