@@ -114,7 +114,9 @@ pub fn test() {
 
     // unzip();
 
-    copied();
+    // copied();
+
+    cloned();
 }
 
 fn map() {
@@ -1063,4 +1065,16 @@ fn copied() {
     let v_copied: Vec<_> = a.iter().copied().collect();
     let v_map: Vec<_> = a.iter().map(|&x| x).collect();
     assert_eq!(v_copied, v_map);
+}
+
+fn cloned() {
+    let a = [1, 2, 3];
+    let v_cloned: Vec<_> = a.iter().cloned().collect();
+    let v_map: Vec<_> = a.iter().map(|&x| x).collect();
+    assert_eq!(v_cloned, v_map);
+
+    let a = [vec![0, 1, 2], vec![3, 4], vec![23]];
+    let slower: Vec<_> = a.iter().cloned().filter(|e| e.len() == 1).collect();
+    let faster: Vec<_> = a.iter().filter(|e| e.len() == 1).cloned().collect();
+    assert_eq!(slower, faster);
 }
