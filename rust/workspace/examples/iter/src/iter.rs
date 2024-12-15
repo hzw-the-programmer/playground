@@ -116,7 +116,9 @@ pub fn test() {
 
     // copied();
 
-    cloned();
+    // cloned();
+
+    cycle();
 }
 
 fn map() {
@@ -1077,4 +1079,16 @@ fn cloned() {
     let slower: Vec<_> = a.iter().cloned().filter(|e| e.len() == 1).collect();
     let faster: Vec<_> = a.iter().filter(|e| e.len() == 1).cloned().collect();
     assert_eq!(slower, faster);
+}
+
+fn cycle() {
+    let a = [1, 2, 3];
+    let mut i = a.iter().cycle();
+    assert_eq!(i.next(), Some(&1));
+    assert_eq!(i.next(), Some(&2));
+    assert_eq!(i.next(), Some(&3));
+    assert_eq!(i.next(), Some(&1));
+    assert_eq!(i.next(), Some(&2));
+    assert_eq!(i.next(), Some(&3));
+    assert_eq!(i.next(), Some(&1));
 }
