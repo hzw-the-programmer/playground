@@ -112,7 +112,9 @@ pub fn test() {
 
     // rev();
 
-    unzip();
+    // unzip();
+
+    copied();
 }
 
 fn map() {
@@ -1054,4 +1056,11 @@ fn unzip() {
     assert_eq!(x, [1, 4]);
     assert_eq!(y, [2, 5]);
     assert_eq!(z, [3, 6]);
+}
+
+fn copied() {
+    let a = [1, 2, 3];
+    let v_copied: Vec<_> = a.iter().copied().collect();
+    let v_map: Vec<_> = a.iter().map(|&x| x).collect();
+    assert_eq!(v_copied, v_map);
 }
