@@ -1,0 +1,3 @@
+[package]
+name = "slice"
+edition = "2021"

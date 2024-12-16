@@ -698,6 +698,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "slice"
+version = "0.0.0"
+
+[[package]]
 name = "smallvec"
 version = "1.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
