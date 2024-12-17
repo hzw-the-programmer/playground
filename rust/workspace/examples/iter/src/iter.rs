@@ -120,7 +120,9 @@ pub fn test() {
 
     // cycle();
 
-    next_chunk();
+    // next_chunk();
+
+    size_hint();
 }
 
 fn map() {
@@ -1108,4 +1110,21 @@ fn next_chunk() {
     assert_eq!(s, "all");
     assert_eq!(t, "those");
     assert_eq!(i.next(), Some("who"));
+}
+
+fn size_hint() {
+    let a = [1, 2, 3];
+    let mut i = a.iter();
+    assert_eq!(i.size_hint(), (3, Some(3)));
+    i.next();
+    assert_eq!(i.size_hint(), (2, Some(2)));
+
+    let i = (0..10).filter(|x| x % 2 == 0);
+    assert_eq!(i.size_hint(), (0, Some(10)));
+
+    let i = (0..10).filter(|x| x % 2 == 0).chain(15..20);
+    assert_eq!(i.size_hint(), (5, Some(15)));
+
+    let i = 0..;
+    assert_eq!(i.size_hint(), (usize::MAX, None));
 }
