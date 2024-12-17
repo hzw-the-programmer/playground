@@ -138,7 +138,9 @@ pub fn test() {
 
     // zip();
 
-    intersperse();
+    // intersperse();
+
+    itersperse_with();
 }
 
 fn map() {
@@ -1327,6 +1329,26 @@ fn intersperse() {
         .intersperse(" ")
         .collect();
     assert_eq!(r, "hello world !");
+}
+
+fn itersperse_with() {
+    #[derive(PartialEq, Debug)]
+    struct NotClone(usize);
+    let a = [NotClone(0), NotClone(1), NotClone(2)];
+    let mut i = a.into_iter().intersperse_with(|| NotClone(99));
+    // let i = a.iter();
+    assert_eq!(i.next(), Some(NotClone(0)));
+    assert_eq!(i.next(), Some(NotClone(99)));
+    assert_eq!(i.next(), Some(NotClone(1)));
+    assert_eq!(i.next(), Some(NotClone(99)));
+    assert_eq!(i.next(), Some(NotClone(2)));
+    assert_eq!(i.next(), None);
+
+    let src = ["Hello", "to", "all", "people", "!!"].iter().copied();
+    let mut happy_emojis = [" ❤️ ", " 😀 "].iter().copied();
+    let separator = || happy_emojis.next().unwrap_or(" 🦀 ");
+    let r: String = src.intersperse_with(separator).collect();
+    assert_eq!(r, "Hello ❤️ to 😀 all 🦀 people 🦀 !!");
 }
 
 #[derive(Debug, PartialEq)]
