@@ -136,7 +136,9 @@ pub fn test() {
 
     // chain();
 
-    zip();
+    // zip();
+
+    intersperse();
 }
 
 fn map() {
@@ -1307,6 +1309,24 @@ fn zip() {
     assert_eq!(i.next(), Some((4, 10)));
     assert_eq!(i.next(), Some((6, 12)));
     assert_eq!(i.next(), None);
+}
+
+fn intersperse() {
+    let mut i = [0, 1, 2].iter().intersperse(&100);
+    assert_eq!(i.next(), Some(&0));
+    assert_eq!(i.next(), Some(&100));
+    assert_eq!(i.next(), Some(&1));
+    assert_eq!(i.next(), Some(&100));
+    assert_eq!(i.next(), Some(&2));
+    assert_eq!(i.next(), None);
+    assert_eq!(i.next(), None);
+
+    let r: String = ["hello", "world", "!"]
+        .iter()
+        .copied()
+        .intersperse(" ")
+        .collect();
+    assert_eq!(r, "hello world !");
 }
 
 #[derive(Debug, PartialEq)]
