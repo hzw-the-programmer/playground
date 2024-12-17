@@ -7,6 +7,7 @@
 #![feature(iterator_try_reduce)]
 #![feature(try_find)]
 #![feature(iter_next_chunk)]
+#![feature(iter_advance_by)]
 
 mod iter;
 

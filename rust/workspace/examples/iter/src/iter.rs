@@ -126,7 +126,11 @@ pub fn test() {
 
     // count();
 
-    last();
+    // last();
+
+    // advance_by();
+
+    nth();
 }
 
 fn map() {
@@ -1153,4 +1157,27 @@ fn last() {
     assert_eq!(a.iter().last(), Some(&3));
     let a = [1, 2, 3, 4, 5];
     assert_eq!(a.iter().last(), Some(&5));
+}
+
+fn advance_by() {
+    let a = [1, 2, 3, 4];
+    let mut i = a.iter();
+    assert_eq!(i.advance_by(2), Ok(()));
+    assert_eq!(i.next(), Some(&3));
+    assert_eq!(i.advance_by(0), Ok(()));
+    use core::num::NonZeroUsize;
+    assert_eq!(i.advance_by(100), Err(NonZeroUsize::new(99).unwrap()));
+}
+
+fn nth() {
+    let a = [1, 2, 3];
+    let mut i = a.iter();
+    assert_eq!(i.nth(0), Some(&1));
+
+    i = a.iter();
+    assert_eq!(i.nth(1), Some(&2));
+    assert_eq!(i.nth(1), None);
+
+    i = a.iter();
+    assert_eq!(i.nth(100), None);
 }
