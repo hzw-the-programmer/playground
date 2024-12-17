@@ -130,9 +130,11 @@ pub fn test() {
 
     // advance_by();
 
-    nth();
+    // nth();
 
     // step_by();
+
+    chain();
 }
 
 fn map() {
@@ -1216,5 +1218,27 @@ fn step_by() {
     assert_eq!(i.next(), Some(&0));
     assert_eq!(i.next(), Some(&2));
     assert_eq!(i.next(), Some(&4));
+    assert_eq!(i.next(), None);
+}
+
+fn chain() {
+    let a = [1, 2, 3];
+    let b = [4, 5, 6];
+    let mut i = a.iter().chain(b.iter());
+    assert_eq!(i.next(), Some(&1));
+    assert_eq!(i.next(), Some(&2));
+    assert_eq!(i.next(), Some(&3));
+    assert_eq!(i.next(), Some(&4));
+    assert_eq!(i.next(), Some(&5));
+    assert_eq!(i.next(), Some(&6));
+    assert_eq!(i.next(), None);
+
+    let mut i = a.iter().chain(&b);
+    assert_eq!(i.next(), Some(&1));
+    assert_eq!(i.next(), Some(&2));
+    assert_eq!(i.next(), Some(&3));
+    assert_eq!(i.next(), Some(&4));
+    assert_eq!(i.next(), Some(&5));
+    assert_eq!(i.next(), Some(&6));
     assert_eq!(i.next(), None);
 }
