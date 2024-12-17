@@ -140,7 +140,9 @@ pub fn test() {
 
     // intersperse();
 
-    itersperse_with();
+    // itersperse_with();
+
+    array_chunks();
 }
 
 fn map() {
@@ -1349,6 +1351,30 @@ fn itersperse_with() {
     let separator = || happy_emojis.next().unwrap_or(" 🦀 ");
     let r: String = src.intersperse_with(separator).collect();
     assert_eq!(r, "Hello ❤️ to 😀 all 🦀 people 🦀 !!");
+}
+
+fn array_chunks() {
+    let a = [1, 1, 2, -2, 6, 0, 3, 1];
+    let mut i = a.iter().array_chunks();
+    assert_eq!(i.next(), Some([&1, &1, &2]));
+    assert_eq!(i.next(), Some([&-2, &6, &0]));
+    assert_eq!(i.next(), None);
+    let mut i = i.into_remainder().unwrap();
+    assert_eq!(i.next(), Some(&3));
+    assert_eq!(i.next(), Some(&1));
+    assert_eq!(i.next(), None);
+
+    for [x, y, z] in a.iter().array_chunks() {
+        assert_eq!(x + y + z, 4);
+    }
+
+    let mut i = "lorem".chars().array_chunks();
+    assert_eq!(i.next(), Some(['l', 'o']));
+    assert_eq!(i.next(), Some(['r', 'e']));
+    assert_eq!(i.next(), None);
+    // assert_eq!(i.into_remainder().unwrap().as_slice(), ['m']);
+    // assert_eq!(i.into_remainder().unwrap().as_slice(), &['m']);
+    assert_eq!(i.into_remainder().unwrap().as_slice(), &['m'][..]);
 }
 
 #[derive(Debug, PartialEq)]

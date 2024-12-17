@@ -9,6 +9,7 @@
 #![feature(iter_next_chunk)]
 #![feature(iter_advance_by)]
 #![feature(iter_intersperse)]
+#![feature(iter_array_chunks)]
 
 mod iter;
 
