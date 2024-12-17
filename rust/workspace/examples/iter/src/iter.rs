@@ -122,7 +122,9 @@ pub fn test() {
 
     // next_chunk();
 
-    size_hint();
+    // size_hint();
+
+    count();
 }
 
 fn map() {
@@ -1127,4 +1129,19 @@ fn size_hint() {
 
     let i = 0..;
     assert_eq!(i.size_hint(), (usize::MAX, None));
+}
+
+fn count() {
+    let a = [1, 2, 3];
+    assert_eq!(a.iter().count(), 3);
+    let a = [1, 2, 3, 4, 5];
+    assert_eq!(a.iter().count(), 5);
+
+    // cargo run -p iter
+    // thread 'main' panicked at /rustc/dbce3b43b6cb34dd3ba12c3ec6f708fe68e9c3df\library\core\src\iter\range.rs:417:1:
+    // attempt to add with overflow
+    // note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+    // error: process didn't exit successfully: `target\debug\iter.exe` (exit code: 101)
+    // let a = 0..;
+    // a.count();
 }
