@@ -128,9 +128,9 @@ pub fn test() {
 
     // last();
 
-    // advance_by();
+    advance_by();
 
-    nth();
+    // nth();
 }
 
 fn map() {
@@ -1167,6 +1167,17 @@ fn advance_by() {
     assert_eq!(i.advance_by(0), Ok(()));
     use core::num::NonZeroUsize;
     assert_eq!(i.advance_by(100), Err(NonZeroUsize::new(99).unwrap()));
+
+    struct Foo(i32);
+    impl Drop for Foo {
+        fn drop(&mut self) {
+            println!("Foo {} drop", self.0);
+        }
+    }
+    let a = [Foo(0), Foo(1), Foo(2), Foo(3)];
+    let mut i = a.into_iter();
+    let _ = i.advance_by(2);
+    println!("finish");
 }
 
 fn nth() {
