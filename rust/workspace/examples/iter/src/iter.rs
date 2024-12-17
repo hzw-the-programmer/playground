@@ -128,9 +128,11 @@ pub fn test() {
 
     // last();
 
-    advance_by();
+    // advance_by();
 
-    // nth();
+    nth();
+
+    // step_by();
 }
 
 fn map() {
@@ -1191,4 +1193,28 @@ fn nth() {
 
     i = a.iter();
     assert_eq!(i.nth(100), None);
+
+    #[derive(Debug)]
+    struct Foo(i32);
+    impl Drop for Foo {
+        fn drop(&mut self) {
+            println!("Foo {} drop", self.0);
+        }
+    }
+    let a = [Foo(0), Foo(1), Foo(2), Foo(3)];
+    let mut i = a.into_iter();
+    {
+        let e = i.nth(1);
+        println!("{e:?}");
+    }
+    println!("finish");
+}
+
+fn step_by() {
+    let a = [0, 1, 2, 3, 4, 5];
+    let mut i = a.iter().step_by(2);
+    assert_eq!(i.next(), Some(&0));
+    assert_eq!(i.next(), Some(&2));
+    assert_eq!(i.next(), Some(&4));
+    assert_eq!(i.next(), None);
 }
