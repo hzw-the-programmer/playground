@@ -118,7 +118,9 @@ pub fn test() {
 
     // cloned();
 
-    cycle();
+    // cycle();
+
+    next_chunk();
 }
 
 fn map() {
@@ -1091,4 +1093,19 @@ fn cycle() {
     assert_eq!(i.next(), Some(&2));
     assert_eq!(i.next(), Some(&3));
     assert_eq!(i.next(), Some(&1));
+}
+
+fn next_chunk() {
+    let mut a = "lorem".chars();
+    assert_eq!(a.next_chunk().unwrap(), ['l', 'o']);
+    assert_eq!(a.next_chunk().unwrap(), ['r', 'e', 'm']);
+    assert_eq!(a.next_chunk::<4>().unwrap_err().as_slice(), []);
+
+    let quote = "not all those who wander are lost";
+    let mut i = quote.split_whitespace();
+    let [f, s, t] = i.next_chunk().unwrap();
+    assert_eq!(f, "not");
+    assert_eq!(s, "all");
+    assert_eq!(t, "those");
+    assert_eq!(i.next(), Some("who"));
 }

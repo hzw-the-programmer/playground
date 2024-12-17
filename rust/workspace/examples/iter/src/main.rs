@@ -6,6 +6,7 @@
 #![feature(iter_is_partitioned)]
 #![feature(iterator_try_reduce)]
 #![feature(try_find)]
+#![feature(iter_next_chunk)]
 
 mod iter;
 
