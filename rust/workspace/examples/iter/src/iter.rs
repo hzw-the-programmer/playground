@@ -142,7 +142,9 @@ pub fn test() {
 
     // itersperse_with();
 
-    array_chunks();
+    // array_chunks();
+
+    sum();
 }
 
 fn map() {
@@ -1375,6 +1377,30 @@ fn array_chunks() {
     // assert_eq!(i.into_remainder().unwrap().as_slice(), ['m']);
     // assert_eq!(i.into_remainder().unwrap().as_slice(), &['m']);
     assert_eq!(i.into_remainder().unwrap().as_slice(), &['m'][..]);
+}
+
+fn sum() {
+    let a = [1, 2, 3];
+    let r: i32 = a.iter().sum();
+    assert_eq!(r, 6);
+
+    let f = |&x| {
+        if x < 0 {
+            Err("Negative element found")
+        } else {
+            Ok(x)
+        }
+    };
+    let v = vec![1, 2];
+    let r: Result<i32, _> = v.iter().map(f).sum();
+    assert_eq!(r, Ok(3));
+    let v = vec![1, -2];
+    let r: Result<i32, _> = v.iter().map(f).sum();
+    assert_eq!(r, Err("Negative element found"));
+
+    let words = vec!["have", "a", "great", "day"];
+    let r: Option<_> = words.iter().map(|w| w.find('a')).sum();
+    assert_eq!(r, Some(5));
 }
 
 #[derive(Debug, PartialEq)]
