@@ -144,7 +144,9 @@ pub fn test() {
 
     // array_chunks();
 
-    sum();
+    // sum();
+
+    product();
 }
 
 fn map() {
@@ -1401,6 +1403,37 @@ fn sum() {
     let words = vec!["have", "a", "great", "day"];
     let r: Option<_> = words.iter().map(|w| w.find('a')).sum();
     assert_eq!(r, Some(5));
+}
+
+fn product() {
+    fn factorial(n: u32) -> u32 {
+        (1..n).product()
+    }
+    assert_eq!(factorial(0), 1);
+    assert_eq!(factorial(1), 1);
+    assert_eq!(factorial(5), 24);
+
+    let words = vec!["5", "10", "1", "2"];
+    let r: Result<_, _> = words.iter().map(|w| w.parse::<usize>()).product();
+    // type annotations needed
+    // let r: Result<usize, _> = words.iter().map(|w| w.parse()).product();
+    assert_eq!(r, Ok(100));
+
+    let words = vec!["5", "10", "one", "2"];
+    // type annotations needed
+    // let r: Result<_, _> = words.iter().map(|w| w.parse::<usize>()).product();
+    let r: Result<usize, _> = words.iter().map(|w| w.parse::<usize>()).product();
+    assert!(r.is_err());
+
+    let words = vec!["5", "10", "1", "2"];
+    let r: Option<_> = words.iter().map(|w| w.parse::<usize>().ok()).product();
+    assert_eq!(r, Some(100));
+
+    let words = vec!["5", "10", "one", "2"];
+    // type annotations needed
+    // let r: Option<_> = words.iter().map(|w| w.parse::<usize>().ok()).product();
+    let r: Option<usize> = words.iter().map(|w| w.parse::<usize>().ok()).product();
+    assert_eq!(r, None);
 }
 
 #[derive(Debug, PartialEq)]
