@@ -124,7 +124,9 @@ pub fn test() {
 
     // size_hint();
 
-    count();
+    // count();
+
+    last();
 }
 
 fn map() {
@@ -1144,4 +1146,11 @@ fn count() {
     // error: process didn't exit successfully: `target\debug\iter.exe` (exit code: 101)
     // let a = 0..;
     // a.count();
+}
+
+fn last() {
+    let a = [1, 2, 3];
+    assert_eq!(a.iter().last(), Some(&3));
+    let a = [1, 2, 3, 4, 5];
+    assert_eq!(a.iter().last(), Some(&5));
 }
