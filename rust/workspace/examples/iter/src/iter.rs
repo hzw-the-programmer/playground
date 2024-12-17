@@ -134,7 +134,9 @@ pub fn test() {
 
     // step_by();
 
-    chain();
+    // chain();
+
+    zip();
 }
 
 fn map() {
@@ -1172,12 +1174,6 @@ fn advance_by() {
     use core::num::NonZeroUsize;
     assert_eq!(i.advance_by(100), Err(NonZeroUsize::new(99).unwrap()));
 
-    struct Foo(i32);
-    impl Drop for Foo {
-        fn drop(&mut self) {
-            println!("Foo {} drop", self.0);
-        }
-    }
     let a = [Foo(0), Foo(1), Foo(2), Foo(3)];
     let mut i = a.into_iter();
     let _ = i.advance_by(2);
@@ -1196,13 +1192,6 @@ fn nth() {
     i = a.iter();
     assert_eq!(i.nth(100), None);
 
-    #[derive(Debug)]
-    struct Foo(i32);
-    impl Drop for Foo {
-        fn drop(&mut self) {
-            println!("Foo {} drop", self.0);
-        }
-    }
     let a = [Foo(0), Foo(1), Foo(2), Foo(3)];
     let mut i = a.into_iter();
     {
@@ -1241,4 +1230,89 @@ fn chain() {
     assert_eq!(i.next(), Some(&5));
     assert_eq!(i.next(), Some(&6));
     assert_eq!(i.next(), None);
+}
+
+fn zip() {
+    let a = [1, 2, 3];
+    let b = [4, 5, 6];
+    let mut i = a.iter().zip(b.iter());
+    assert_eq!(i.next(), Some((&1, &4)));
+    assert_eq!(i.next(), Some((&2, &5)));
+    assert_eq!(i.next(), Some((&3, &6)));
+    assert_eq!(i.next(), None);
+
+    let mut i = a.iter().zip(b);
+    assert_eq!(i.next(), Some((&1, 4)));
+    assert_eq!(i.next(), Some((&2, 5)));
+    assert_eq!(i.next(), Some((&3, 6)));
+    assert_eq!(i.next(), None);
+
+    let mut i = b.iter();
+    assert_eq!(i.next(), Some(&4));
+
+    {
+        let b = [Foo(0), Foo(1), Foo(2), Foo(3)];
+        let mut i = a.iter().zip(&b);
+        assert_eq!(i.next(), Some((&1, &Foo(0))));
+        println!("0");
+        assert_eq!(i.next(), Some((&2, &Foo(1))));
+        println!("1");
+        assert_eq!(i.next(), Some((&3, &Foo(2))));
+        println!("2");
+        assert_eq!(i.next(), None);
+        println!("before leave");
+    }
+    println!("after leave\n");
+
+    {
+        let b = [Foo(0), Foo(1), Foo(2), Foo(3)];
+        let mut i = a.iter().zip(b);
+        // borrow of moved value: `b`
+        // let i = b.iter();
+        assert_eq!(i.next(), Some((&1, Foo(0))));
+        println!("0");
+        assert_eq!(i.next(), Some((&2, Foo(1))));
+        println!("1");
+        assert_eq!(i.next(), Some((&3, Foo(2))));
+        println!("2");
+        assert_eq!(i.next(), None);
+        println!("before leave");
+    }
+    println!("after leave\n");
+
+    let e: Vec<_> = "foo".chars().enumerate().collect();
+    let z: Vec<_> = (0..).zip("foo".chars()).collect();
+    assert_eq!(e[0], (0, 'f'));
+    assert_eq!(z[0], (0, 'f'));
+    assert_eq!(e[1], (1, 'o'));
+    assert_eq!(z[1], (1, 'o'));
+    assert_eq!(e[2], (2, 'o'));
+    assert_eq!(z[2], (2, 'o'));
+
+    let a = [1, 2, 3];
+    let b = [4, 5, 6];
+    let mut i = core::iter::zip(
+        a.into_iter().map(|x| x * 2).skip(1),
+        b.into_iter().map(|x| x * 2).skip(1),
+    );
+    assert_eq!(i.next(), Some((4, 10)));
+    assert_eq!(i.next(), Some((6, 12)));
+    assert_eq!(i.next(), None);
+
+    let mut i = a
+        .iter()
+        .map(|x| x * 2)
+        .skip(1)
+        .zip(b.iter().map(|x| x * 2).skip(1));
+    assert_eq!(i.next(), Some((4, 10)));
+    assert_eq!(i.next(), Some((6, 12)));
+    assert_eq!(i.next(), None);
+}
+
+#[derive(Debug, PartialEq)]
+struct Foo(i32);
+impl Drop for Foo {
+    fn drop(&mut self) {
+        println!("Foo {} drop", self.0);
+    }
 }
