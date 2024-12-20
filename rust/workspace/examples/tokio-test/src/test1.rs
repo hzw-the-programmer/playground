@@ -27,6 +27,7 @@ fn test2() {
         .thread_keep_alive(time::Duration::from_secs(1))
         .on_thread_park(|| println!("{} park", thread::current().name().unwrap()))
         .on_thread_unpark(|| println!("{} unpark", thread::current().name().unwrap()))
+        .worker_threads(2)
         .build()
         .unwrap();
     thread::sleep(time::Duration::from_secs(5));
