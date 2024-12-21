@@ -5,7 +5,8 @@ use tokio::runtime;
 pub fn test() {
     // test1();
     // test2();
-    test3();
+    // test3();
+    test4();
 }
 
 fn test1() {
@@ -57,4 +58,29 @@ fn test3() {
     println!("after spawn blocking");
 
     thread::sleep(time::Duration::from_secs(6));
+}
+
+fn test4() {
+    let rt = runtime::Builder::new_multi_thread()
+        .enable_all()
+        .thread_name_fn(|| {
+            static ATOMIC_ID: atomic::AtomicUsize = atomic::AtomicUsize::new(0);
+            let id = ATOMIC_ID.fetch_add(1, atomic::Ordering::SeqCst);
+            format!("my-pool-{}", id)
+        })
+        .on_thread_start(|| println!("{}: start", thread::current().name().unwrap()))
+        .on_thread_stop(|| println!("{}: stop", thread::current().name().unwrap()))
+        .thread_keep_alive(time::Duration::from_secs(3))
+        .on_thread_park(|| println!("{}: park", thread::current().name().unwrap()))
+        .on_thread_unpark(|| println!("{}: unpark", thread::current().name().unwrap()))
+        .worker_threads(2)
+        .build()
+        .unwrap();
+
+    thread::sleep(time::Duration::from_secs(1));
+
+    rt.spawn(async { println!("{}: in future", thread::current().name().unwrap()) });
+    println!("after spawn");
+
+    thread::sleep(time::Duration::from_secs(2));
 }
