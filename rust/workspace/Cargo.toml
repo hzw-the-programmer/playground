@@ -1,3 +1,6 @@
 [workspace]
 members = ["axum_test", "examples/*"]
 resolver = "2"
+
+[patch.crates-io]
+tokio = { path = "D:/github/tokio-rs/tokio/tokio" }
