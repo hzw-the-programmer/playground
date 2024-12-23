@@ -437,8 +437,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2886843bf800fba2e3377cff24abf6379b4c4d5c6681eaf9ea5b0d15090450bd"
 dependencies = [
  "libc",
+ "log",
  "wasi",
  "windows-sys",
+]
+
+[[package]]
+name = "mio_test"
+version = "0.0.0"
+dependencies = [
+ "mio",
 ]
 
 [[package]]
