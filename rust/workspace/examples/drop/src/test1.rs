@@ -10,6 +10,7 @@ fn test1() {
     struct Foo(u8);
     let mut f = Foo(1);
     let fdup = f;
+    // move occurs because `f` has type `test1::test1::Foo`, which does not implement the `Copy` trait
     // f.0 = 2;
 }
 
@@ -19,12 +20,11 @@ fn test2() {
     }
     let mut f = Foo { id: 1 };
     let fdup = f;
+    // move occurs because `f` has type `test1::test2::Foo`, which does not implement the `Copy` trait
     // f.id = 2;
 }
 
 fn test3() {
-    println!("\ntest3: enter");
-
     struct Foo(u8);
     impl Drop for Foo {
         fn drop(&mut self) {
@@ -41,7 +41,7 @@ fn test3() {
     impl Baz {
         fn into_foo(self) -> Foo {
             let r = self.0;
-            println!("Baz.into_foo: leave");
+            println!("Baz::into_foo");
             r
         }
         fn into_bar(self) -> Bar {
@@ -57,6 +57,5 @@ fn test3() {
 
     let baz = Baz(Foo(1), Bar(1));
     let foo = baz.into_foo();
-
-    println!("test3: leave");
+    println!("finish");
 }
