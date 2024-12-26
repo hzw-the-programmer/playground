@@ -7,8 +7,9 @@
 mod test1;
 // mod zook;
 mod test2;
+mod test3;
 
-use test2 as test;
+use test3 as test;
 
 fn main() {
     test::test();
