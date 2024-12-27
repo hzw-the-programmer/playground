@@ -1,6 +1,8 @@
 pub fn test() {
     // test1();
-    test2();
+    // test2();
+    // read();
+    write();
 }
 
 fn test1() {
@@ -56,5 +58,38 @@ fn test2() {
 
     let foo = Foo(Bar, Baz);
     let _bar = foo.into_bar();
+    println!("finish");
+}
+
+fn read() {
+    use core::ptr;
+    struct Foo(i32);
+    impl Drop for Foo {
+        fn drop(&mut self) {
+            println!("Foo {} drop", self.0);
+        }
+    }
+
+    let f1 = Foo(1);
+    unsafe {
+        let _f1 = ptr::read(&f1);
+    }
+    println!("finish");
+}
+
+fn write() {
+    use core::ptr;
+    struct Foo(i32);
+    impl Drop for Foo {
+        fn drop(&mut self) {
+            println!("Foo {} drop", self.0);
+        }
+    }
+
+    let mut f1 = Foo(1);
+    unsafe {
+        let f2 = Foo(2);
+        ptr::write(&mut f1, f2);
+    }
     println!("finish");
 }
