@@ -4,6 +4,7 @@ T的deinit由T的drop负责，Box的drop释放内存。
 这和普通结构体drop顺序相反。
 由于结构体在drop时，可以访问其成员，所以成员不能先drop。
 参看例子：examples\drop\src\test3.rs
+参看Vec：alloc\src\vec\mod.rs
 
 Box的定义及Drop实现：
 alloc\src\boxed.rs
