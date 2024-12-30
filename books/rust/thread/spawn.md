@@ -58,3 +58,5 @@ fn test1() {
     }
 }
 ```
+
+完整例子：rust\workspace\examples\thread\src\test1.rs
