@@ -1,3 +1,4 @@
+use core::time::Duration;
 use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
 
@@ -51,11 +52,15 @@ fn test2() {
         println!("thread 2 done");
     });
 
+    thread::sleep(Duration::from_secs(1));
     let (lock, cvar) = &*pair;
     {
         let mut done = lock.lock().unwrap();
         *done = true;
         cvar.notify_all();
+        // cvar.notify_one();
+        println!("notified");
+        thread::sleep(Duration::from_secs(2));
     }
 
     let _ = jh1.join();
