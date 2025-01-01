@@ -40,6 +40,7 @@ fn test2() {
             done = cvar.wait(done).unwrap();
         }
         println!("thread 1 done");
+        thread::sleep(Duration::from_secs(2));
     });
 
     let pair2 = pair.clone();
@@ -50,6 +51,7 @@ fn test2() {
             done = cvar.wait(done).unwrap();
         }
         println!("thread 2 done");
+        thread::sleep(Duration::from_secs(2));
     });
 
     thread::sleep(Duration::from_secs(1));
