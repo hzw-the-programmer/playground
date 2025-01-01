@@ -2,7 +2,8 @@ use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
 
 pub fn test() {
-    test1();
+    // test1();
+    test2();
 }
 
 fn test1() {
@@ -25,4 +26,38 @@ fn test1() {
     while !*done {
         done = cvar.wait(done).unwrap();
     }
+}
+
+fn test2() {
+    let pair = Arc::new((Mutex::new(false), Condvar::new()));
+
+    let pair1 = pair.clone();
+    let jh1 = thread::spawn(move || {
+        let (lock, cvar) = &*pair1;
+        let mut done = lock.lock().unwrap();
+        while !*done {
+            done = cvar.wait(done).unwrap();
+        }
+        println!("thread 1 done");
+    });
+
+    let pair2 = pair.clone();
+    let jh2 = thread::spawn(move || {
+        let (lock, cvar) = &*pair2;
+        let mut done = lock.lock().unwrap();
+        while !*done {
+            done = cvar.wait(done).unwrap();
+        }
+        println!("thread 2 done");
+    });
+
+    let (lock, cvar) = &*pair;
+    {
+        let mut done = lock.lock().unwrap();
+        *done = true;
+        cvar.notify_all();
+    }
+
+    let _ = jh1.join();
+    let _ = jh2.join();
 }

@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 mod condvar_1;
 
 use condvar_1 as test;
