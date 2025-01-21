@@ -3,8 +3,9 @@
 
 mod buf_read;
 mod cursor;
+mod cursor2;
 
-use cursor as test;
+use cursor2 as test;
 // use buf_read as test;
 
 fn main() {

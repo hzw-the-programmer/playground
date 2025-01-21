@@ -25,7 +25,7 @@ fn test2() {
     let mut c = Cursor::new(vec![1, 2, 3]);
     assert_eq!(c.position(), 0);
     c.set_position(4);
-    let n = c.write(&[0; 1][0..0]).unwrap();
+    let n = c.write(&[]).unwrap();
     assert_eq!(n, 0);
     assert_eq!(c.get_ref(), &[1, 2, 3, 0]);
     assert_eq!(c.position(), 4);
@@ -34,7 +34,7 @@ fn test2() {
 fn test3() {
     let mut c = Cursor::new(vec![1, 2, 3]);
     assert_eq!(c.position(), 0);
-    let n = c.write(&[0; 2][..]).unwrap();
+    let n = c.write(&[0; 2]).unwrap();
     assert_eq!(n, 2);
     assert_eq!(c.position(), 2);
     assert_eq!(c.get_ref(), &[0, 0, 3]);
