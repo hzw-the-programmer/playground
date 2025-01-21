@@ -5,8 +5,9 @@
 mod read;
 mod test1;
 mod test2;
+mod write;
 
-use read as test;
+use write as test;
 
 fn main() {
     test::test();
