@@ -4,23 +4,29 @@ fn main() {}
 
 fn valid_parenthese(s: &str) -> bool {
     let mut stack = vec![];
-    for (i, c) in s.chars().enumerate() {
-        if c == '(' || c == '[' || c == '{' {
-            stack.push(i);
-        } else {
-            if let Some(i) = stack.pop() {
-                let left = s.chars().nth(i).unwrap();
-                if (c == ')' && left != '(')
-                    || (c == ']' && left != '[')
-                    || (c == '}' && left != '{')
-                {
+
+    for c in s.chars() {
+        match c {
+            '(' | '[' | '{' => stack.push(c),
+            ')' => {
+                if stack.pop() != Some('(') {
                     return false;
                 }
-            } else {
-                return false;
             }
+            ']' => {
+                if stack.pop() != Some('[') {
+                    return false;
+                }
+            }
+            '}' => {
+                if stack.pop() != Some('{') {
+                    return false;
+                }
+            }
+            _ => return false,
         }
     }
+
     stack.is_empty()
 }
 
