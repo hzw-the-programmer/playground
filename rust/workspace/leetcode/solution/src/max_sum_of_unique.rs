@@ -5,9 +5,6 @@ pub fn max_sum_of_unique(nums: &[i32], k: usize, m: usize) -> i32 {
     let mut map = HashMap::new();
     let mut sum = 0;
     for i in 0..k {
-        // map.entry(nums[i])
-        //     .and_modify(|counter| *counter += 1)
-        //     .or_insert(1);
         *map.entry(nums[i]).or_insert(0) += 1;
         sum += nums[i];
     }
@@ -18,21 +15,13 @@ pub fn max_sum_of_unique(nums: &[i32], k: usize, m: usize) -> i32 {
     }
 
     for i in k..nums.len() {
-        // if let Some(count) = map.get_mut(&nums[i - k]) {
-        //     *count -= 1;
-        //     if *count == 0 {
-        //         map.remove(&nums[i - k]);
-        //     }
-        // }
+        *map.entry(nums[i]).or_insert(0) += 1;
         let count = map.get_mut(&nums[i - k]).unwrap();
         *count -= 1;
         if *count == 0 {
             map.remove(&nums[i - k]);
         }
-        // map.entry(nums[i])
-        //     .and_modify(|counter| *counter += 1)
-        //     .or_insert(1);
-        *map.entry(nums[i]).or_insert(0) += 1;
+
         sum += nums[i] - nums[i - k];
         if map.len() >= m {
             max = max.max(sum);
