@@ -1,3 +1,4 @@
+// 2841. Maximum Sum of Almost Unique Subarray
 use std::collections::HashSet;
 
 pub fn max_sum_of_unique(nums: &[i32], k: usize, m: usize) -> i32 {
