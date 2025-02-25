@@ -1,3 +1,4 @@
+// 2379. Minimum Recolors to Get K consecutive Black Blocks
 pub fn minimum_recolors(s: &[u8], k: usize) -> usize {
     if s.len() < k {
         return 0;

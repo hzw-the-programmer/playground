@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+mod k_radius_average;
 mod max_average;
 mod max_vowels;
 mod minimum_recolors;
