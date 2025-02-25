@@ -6,3 +6,5 @@ mod max_sum_of_unique;
 mod max_vowels;
 mod minimum_recolors;
 mod num_of_subarrays;
+
+mod bubble_sort;
