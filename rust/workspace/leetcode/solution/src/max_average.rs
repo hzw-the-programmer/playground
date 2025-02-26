@@ -1,18 +1,21 @@
 // 643. Maximum Average Subarray
-pub fn max_sum(nums: &[i32], k: usize) -> i32 {
+pub fn max_min_sum<F>(nums: &[i32], k: usize, f: F) -> i32
+where
+    F: Fn(i32, i32) -> i32,
+{
     let mut sum: i32 = nums[..k].iter().sum();
 
-    let mut max = sum;
+    let mut res = sum;
     for i in k..nums.len() {
         sum += nums[i] - nums[i - k];
-        max = max.max(sum);
+        res = f(res, sum);
     }
 
-    max
+    res
 }
 
 pub fn max_average(nums: &[i32], k: usize) -> f32 {
-    max_sum(nums, k) as f32 / k as f32
+    max_min_sum(nums, k, std::cmp::max) as f32 / k as f32
 }
 
 // cargo test max_average -p solution
