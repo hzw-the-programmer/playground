@@ -1,17 +1,18 @@
-pub fn max_average(nums: &[i32], k: usize) -> f32 {
-    let mut sum = 0;
-    for i in 0..k {
-        sum += nums[i];
-    }
+// 643. Maximum Average Subarray
+pub fn max_sum(nums: &[i32], k: usize) -> i32 {
+    let mut sum: i32 = nums[..k].iter().sum();
 
     let mut max = sum;
-
     for i in k..nums.len() {
         sum += nums[i] - nums[i - k];
         max = max.max(sum);
     }
 
-    max as f32 / k as f32
+    max
+}
+
+pub fn max_average(nums: &[i32], k: usize) -> f32 {
+    max_sum(nums, k) as f32 / k as f32
 }
 
 // cargo test max_average -p solution
