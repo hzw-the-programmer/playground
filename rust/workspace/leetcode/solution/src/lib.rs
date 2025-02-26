@@ -10,3 +10,4 @@ mod num_of_subarrays;
 mod bubble_sort;
 
 mod max_min_sum;
+mod max_points;
