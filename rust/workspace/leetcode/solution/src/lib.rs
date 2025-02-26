@@ -8,3 +8,5 @@ mod minimum_recolors;
 mod num_of_subarrays;
 
 mod bubble_sort;
+
+mod max_min_sum;
