@@ -11,3 +11,4 @@ mod bubble_sort;
 
 mod max_min_sum;
 mod max_points;
+mod max_satisfied;
