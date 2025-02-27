@@ -2,7 +2,7 @@ pub fn performance(calories: &[i32], k: usize, lower: i32, upper: i32) -> i32 {
     let mut score = 0;
     let n = calories.len();
 
-    let mut sum: i32 = calories[0..k].iter().sum();
+    let mut sum = calories.iter().take(k).sum::<i32>();
     if sum < lower {
         score -= 1;
     } else if sum > upper {
