@@ -29,11 +29,11 @@ impl<'a> CPU<'a> {
             let kk = (opcode & 0x00FF) as u8;
 
             match (c, x, y, d) {
-                (0, 0, 0, 0) => return,
-                (0x8, _, _, 0x4) => self.add(x, y),
                 (0x7, _, _, _) => self.set(x, kk),
+                (0x8, _, _, 0x4) => self.add(x, y),
                 (0x2, _, _, _) => self.call(nnn),
                 (0, 0, 0xE, 0xE) => self.ret(),
+                (0, 0, 0, 0) => return,
                 _ => todo!("opcode {:04x}", opcode),
             }
         }
