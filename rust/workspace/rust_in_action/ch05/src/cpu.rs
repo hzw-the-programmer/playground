@@ -51,6 +51,12 @@ mod tests {
 
     #[test]
     fn test() {
+        let mut cpu = CPU {
+            registers: [0; 16],
+            pc: 0,
+            memory: &[0; 0],
+        };
+
         #[rustfmt::skip]
         let memory = [
             0x70, 0x05,
@@ -65,12 +71,8 @@ mod tests {
             0x00, 0x00,
         ];
 
-        let mut cpu = CPU {
-            registers: [0; 16],
-            pc: 0,
-            memory: &memory,
-        };
-
+        cpu.memory = &memory;
+        cpu.pc = 0;
         cpu.run();
 
         assert_eq!(35, cpu.registers[0]);
