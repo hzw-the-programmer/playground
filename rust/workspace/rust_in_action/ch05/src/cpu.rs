@@ -30,8 +30,8 @@ impl<'a> CPU<'a> {
 
             match (c, x, y, d) {
                 (0, 0, 0, 0) => return,
-                (0x8, _, _, 0x4) => self.add_xy(x, y),
-                (0x7, _, _, _) => self.registers[x as usize] = kk,
+                (0x8, _, _, 0x4) => self.add(x, y),
+                (0x7, _, _, _) => self.set(x, kk),
                 (0x2, _, _, _) => self.call(nnn),
                 (0, 0, 0xE, 0xE) => self.ret(),
                 _ => todo!("opcode {:04x}", opcode),
@@ -45,7 +45,7 @@ impl<'a> CPU<'a> {
         op1 << 8 | op2
     }
 
-    fn add_xy(&mut self, x: u8, y: u8) {
+    fn add(&mut self, x: u8, y: u8) {
         let (res, overflow) =
             self.registers[x as usize].overflowing_add(self.registers[y as usize]);
         self.registers[x as usize] = res;
@@ -54,6 +54,10 @@ impl<'a> CPU<'a> {
         } else {
             self.registers[0x0F] = 0;
         }
+    }
+
+    fn set(&mut self, x: u8, v: u8) {
+        self.registers[x as usize] = v;
     }
 
     fn call(&mut self, addr: u16) {
@@ -65,9 +69,9 @@ impl<'a> CPU<'a> {
     }
 
     fn ret(&mut self) {
-        let h = self.memory[self.sp - 2] as usize;
-        let l = self.memory[self.sp - 1] as usize;
         self.sp -= 2;
+        let h = self.memory[self.sp] as usize;
+        let l = self.memory[self.sp + 1] as usize;
         self.pc = h << 8 | l;
         // println!("ret: {:04x}", self.pc);
     }
