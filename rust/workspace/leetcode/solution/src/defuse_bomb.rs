@@ -7,18 +7,21 @@ pub fn decrypt(code: &[i32], k: i32) -> Vec<i32> {
         return res;
     }
 
-    if k > 0 {
-        for i in 0..n {
-            for j in 1..=k as usize {
-                res[i] += code[(i + j) % n];
-            }
-        }
-    } else {
-        for i in 0..n {
-            for j in 1..=-k as usize {
-                res[i] += code[(i + n - j) % n];
-            }
-        }
+    let mut start = if k > 0 { 1 } else { (n as i32 + k) as usize };
+    let mut end = if k > 0 { k as usize } else { n - 1 };
+
+    let mut sum = 0;
+    for i in start..=end {
+        sum += code[i];
+    }
+
+    for i in 0..n {
+        res[i] = sum;
+
+        sum -= code[start];
+        start = (start + 1) % n;
+        end = (end + 1) % n;
+        sum += code[end];
     }
 
     res
