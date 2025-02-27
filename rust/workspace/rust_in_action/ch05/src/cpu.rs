@@ -40,9 +40,13 @@ impl<'a> CPU<'a> {
     }
 
     fn read_opcode(&self) -> u16 {
-        let op1 = self.memory[self.pc] as u16;
-        let op2 = self.memory[self.pc + 1] as u16;
-        op1 << 8 | op2
+        let h = self.memory[self.pc] as u16;
+        let l = self.memory[self.pc + 1] as u16;
+        h << 8 | l
+    }
+
+    fn set(&mut self, x: u8, v: u8) {
+        self.registers[x as usize] = v;
     }
 
     fn add(&mut self, x: u8, y: u8) {
@@ -54,10 +58,6 @@ impl<'a> CPU<'a> {
         } else {
             self.registers[0x0F] = 0;
         }
-    }
-
-    fn set(&mut self, x: u8, v: u8) {
-        self.registers[x as usize] = v;
     }
 
     fn call(&mut self, addr: u16) {
