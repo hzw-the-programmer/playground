@@ -14,3 +14,4 @@ mod diet_plan;
 mod max_min_sum;
 mod max_points;
 mod max_satisfied;
+mod substrs_no_repeats;
