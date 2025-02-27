@@ -1,10 +1,20 @@
 struct CPU<'a> {
     registers: [u8; 0x10],
+    memory: &'a mut [u8],
     pc: usize,
-    memory: &'a [u8],
+    sp: usize,
 }
 
-impl CPU<'_> {
+impl<'a> CPU<'a> {
+    fn new(memory: &'a mut [u8], pc: usize, sp: usize) -> CPU<'a> {
+        Self {
+            registers: [0; 0x10],
+            pc,
+            sp,
+            memory,
+        }
+    }
+
     fn run(&mut self) {
         loop {
             let opcode = self.read_opcode();
@@ -15,12 +25,15 @@ impl CPU<'_> {
             let y = ((opcode & 0x00F0) >> 4) as u8;
             let d = ((opcode & 0x000F) >> 0) as u8;
 
+            let nnn = opcode & 0x0FFF;
             let kk = (opcode & 0x00FF) as u8;
 
             match (c, x, y, d) {
                 (0, 0, 0, 0) => return,
                 (0x8, _, _, 0x4) => self.add_xy(x, y),
                 (0x7, _, _, _) => self.registers[x as usize] = kk,
+                (0x2, _, _, _) => self.call(nnn),
+                (0, 0, 0xE, 0xE) => self.ret(),
                 _ => todo!("opcode {:04x}", opcode),
             }
         }
@@ -42,68 +55,77 @@ impl CPU<'_> {
             self.registers[0x0F] = 0;
         }
     }
+
+    fn call(&mut self, addr: u16) {
+        // println!("call: {:04x} -> {:04x}", self.pc, addr);
+        self.memory[self.sp] = (self.pc >> 8) as u8;
+        self.memory[self.sp + 1] = self.pc as u8;
+        self.sp += 2;
+        self.pc = addr as usize;
+    }
+
+    fn ret(&mut self) {
+        let h = self.memory[self.sp - 2] as usize;
+        let l = self.memory[self.sp - 1] as usize;
+        self.sp -= 2;
+        self.pc = h << 8 | l;
+        // println!("ret: {:04x}", self.pc);
+    }
 }
 
-// cargo test cpu_v2 -p ch05 -- --show-output
+// cargo test cpu -p ch05 -- --show-output
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test() {
-        let mut cpu = CPU {
-            registers: [0; 16],
-            pc: 0,
-            memory: &[0; 0],
-        };
-
         #[rustfmt::skip]
-        let memory = [
+        let mut memory = [
+            // main
             0x70, 0x05,
+            0x20, 0x10, // call fun_1
+            0x20, 0x10, // call fun_1
+            0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x00,
+
+            // fun_1: 0x10
             0x71, 0x0A,
             0x72, 0x0A,
             0x73, 0x0A,
+            0x20, 0x20, // call fun_2
+            0x00, 0xEE,
+            0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x00,
 
+            // fun_2: 0x20
             0x80, 0x14,
             0x80, 0x24,
             0x80, 0x34,
+            0x00, 0xEE,
+            0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x00,
 
+            // stack: 0x2F
+            0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x00,
             0x00, 0x00,
         ];
 
-        cpu.memory = &memory;
-        cpu.pc = 0;
+        let mut cpu = CPU::new(&mut memory, 0, 0x2F);
         cpu.run();
-
-        assert_eq!(35, cpu.registers[0]);
-        assert_eq!(0, cpu.registers[15]);
-
-        #[rustfmt::skip]
-        let memory = [
-            0x71, 0xDD,
-            0x80, 0x14,
-            0x00, 0x00,
-        ];
-
-        cpu.memory = &memory;
-        cpu.pc = 0;
-        cpu.run();
-
-        assert_eq!(0, cpu.registers[0]);
-        assert_eq!(1, cpu.registers[15]);
-
-        #[rustfmt::skip]
-        let memory = [
-            0x71, 0xDD,
-            0x80, 0x14,
-            0x00, 0x00,
-        ];
-
-        cpu.memory = &memory;
-        cpu.pc = 0;
-        cpu.run();
-
-        assert_eq!(0xDD, cpu.registers[0]);
-        assert_eq!(0, cpu.registers[15]);
+        assert_eq!(65, cpu.registers[0]);
+        assert_eq!(0, cpu.registers[0x0F]);
     }
 }
