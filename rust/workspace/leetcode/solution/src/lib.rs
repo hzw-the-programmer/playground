@@ -10,6 +10,7 @@ mod num_of_subarrays;
 mod bubble_sort;
 
 mod defuse_bomb;
+mod diet_plan;
 mod max_min_sum;
 mod max_points;
 mod max_satisfied;
