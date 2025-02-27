@@ -57,11 +57,11 @@ mod tests {
             0x71, 0x0A,
             0x72, 0x0A,
             0x73, 0x0A,
-            
+
             0x80, 0x14,
             0x80, 0x24,
             0x80, 0x34,
-            
+
             0x00, 0x00,
         ];
 
@@ -74,6 +74,34 @@ mod tests {
         cpu.run();
 
         assert_eq!(35, cpu.registers[0]);
+        assert_eq!(0, cpu.registers[15]);
+
+        #[rustfmt::skip]
+        let memory = [
+            0x71, 0xDD,
+            0x80, 0x14,
+            0x00, 0x00,
+        ];
+
+        cpu.memory = &memory;
+        cpu.pc = 0;
+        cpu.run();
+
+        assert_eq!(0, cpu.registers[0]);
+        assert_eq!(1, cpu.registers[15]);
+
+        #[rustfmt::skip]
+        let memory = [
+            0x71, 0xDD,
+            0x80, 0x14,
+            0x00, 0x00,
+        ];
+
+        cpu.memory = &memory;
+        cpu.pc = 0;
+        cpu.run();
+
+        assert_eq!(0xDD, cpu.registers[0]);
         assert_eq!(0, cpu.registers[15]);
     }
 }
