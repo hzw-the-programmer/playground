@@ -35,6 +35,8 @@ impl CPU {
         self.registers[x as usize] = res;
         if overflow {
             self.registers[0x0F] = 1;
+        } else {
+            self.registers[0x0F] = 0;
         }
     }
 }
@@ -96,5 +98,10 @@ mod tests {
         assert_eq!(0, cpu.registers[0]);
         // assert_eq!(1, cpu.registers[0]);
         assert_eq!(1, cpu.registers[15]);
+
+        cpu.pc = 0;
+        cpu.run();
+        assert_eq!(251, cpu.registers[0]);
+        assert_eq!(0, cpu.registers[15]);
     }
 }
