@@ -1,10 +1,10 @@
-struct CPU {
+struct CPU<'a> {
     registers: [u8; 0x10],
     pc: usize,
-    memory: [u8; 0x1000],
+    memory: &'a [u8],
 }
 
-impl CPU {
+impl CPU<'_> {
     fn run(&mut self) {
         loop {
             let opcode = self.read_opcode();
@@ -51,32 +51,16 @@ mod tests {
 
     #[test]
     fn test() {
+        let memory = [
+            0x70, 0x05, 0x71, 0x0A, 0x72, 0x0A, 0x73, 0x0A, 0x80, 0x14, 0x80, 0x24, 0x80, 0x34,
+            0x00, 0x00,
+        ];
+
         let mut cpu = CPU {
             registers: [0; 16],
             pc: 0,
-            memory: [0; 4096],
+            memory: &memory,
         };
-
-        cpu.memory[0] = 0x70;
-        cpu.memory[1] = 0x05;
-
-        cpu.memory[2] = 0x71;
-        cpu.memory[3] = 0x0A;
-
-        cpu.memory[4] = 0x72;
-        cpu.memory[5] = 0x0A;
-
-        cpu.memory[6] = 0x73;
-        cpu.memory[7] = 0x0A;
-
-        cpu.memory[8] = 0x80;
-        cpu.memory[9] = 0x14;
-
-        cpu.memory[10] = 0x80;
-        cpu.memory[11] = 0x24;
-
-        cpu.memory[12] = 0x80;
-        cpu.memory[13] = 0x34;
 
         cpu.run();
 
