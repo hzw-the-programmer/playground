@@ -1,32 +1,40 @@
-use std::collections::HashMap;
-
 // 1100. Find K-Length Substrings With No Repeated Characters
-pub fn substrs_no_repeats(s: &[u8], k: usize) -> i32 {
+pub fn substrs_no_repeats(s: &str, k: usize) -> i32 {
+    let s = s.as_bytes();
     let n = s.len();
     if n < k {
         return 0;
     }
 
-    let mut map = HashMap::new();
+    let mut map = [0; 26];
+    let mut uniq = 0;
     for i in 0..k {
-        *map.entry(s[i]).or_insert(0) += 1;
+        let index = (s[i] - b'a') as usize;
+        if map[index] == 0 {
+            uniq += 1;
+        }
+        map[index] += 1;
     }
 
     let mut count = 0;
-    if map.len() == k {
+    if uniq == k {
         count += 1;
     }
 
     for i in k..n {
-        *map.entry(s[i]).or_insert(0) += 1;
+        let index = (s[i] - b'a') as usize;
+        if map[index] == 0 {
+            uniq += 1;
+        }
+        map[index] += 1;
 
-        let c = map.get_mut(&s[i - k]).unwrap();
-        *c -= 1;
-        if *c == 0 {
-            map.remove(&s[i - k]);
+        let index = (s[i - k] - b'a') as usize;
+        map[index] -= 1;
+        if map[index] == 0 {
+            uniq -= 1;
         }
 
-        if map.len() == k {
+        if uniq == k {
             count += 1;
         }
     }
@@ -40,7 +48,7 @@ mod tests {
 
     #[test]
     fn test() {
-        assert_eq!(6, substrs_no_repeats(b"havefunonleetcode", 5));
-        assert_eq!(0, substrs_no_repeats(b"home", 5));
+        assert_eq!(6, substrs_no_repeats("havefunonleetcode", 5));
+        assert_eq!(0, substrs_no_repeats("home", 5));
     }
 }
