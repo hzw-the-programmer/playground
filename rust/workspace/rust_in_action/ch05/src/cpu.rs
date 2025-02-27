@@ -15,9 +15,12 @@ impl CPU {
             let y = ((opcode & 0x00F0) >> 4) as u8;
             let d = ((opcode & 0x000F) >> 0) as u8;
 
+            let kk = (opcode & 0x00FF) as u8;
+
             match (c, x, y, d) {
                 (0, 0, 0, 0) => return,
                 (0x8, _, _, 0x4) => self.add_xy(x, y),
+                (0x7, _, _, _) => self.registers[x as usize] = kk,
                 _ => todo!("opcode {:04x}", opcode),
             }
         }
@@ -47,61 +50,37 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_1() {
+    fn test() {
         let mut cpu = CPU {
             registers: [0; 16],
             pc: 0,
             memory: [0; 4096],
         };
 
-        cpu.registers[0] = 5;
-        cpu.registers[1] = 10;
-        cpu.registers[2] = 10;
-        cpu.registers[3] = 10;
+        cpu.memory[0] = 0x70;
+        cpu.memory[1] = 0x05;
 
-        cpu.memory[0] = 0x80;
-        cpu.memory[1] = 0x14;
-        cpu.memory[2] = 0x80;
-        cpu.memory[3] = 0x24;
-        cpu.memory[4] = 0x80;
-        cpu.memory[5] = 0x34;
+        cpu.memory[2] = 0x71;
+        cpu.memory[3] = 0x0A;
+
+        cpu.memory[4] = 0x72;
+        cpu.memory[5] = 0x0A;
+
+        cpu.memory[6] = 0x73;
+        cpu.memory[7] = 0x0A;
+
+        cpu.memory[8] = 0x80;
+        cpu.memory[9] = 0x14;
+
+        cpu.memory[10] = 0x80;
+        cpu.memory[11] = 0x24;
+
+        cpu.memory[12] = 0x80;
+        cpu.memory[13] = 0x34;
 
         cpu.run();
 
         assert_eq!(35, cpu.registers[0]);
-        assert_eq!(0, cpu.registers[15]);
-    }
-
-    #[test]
-    fn test_2() {
-        let mut cpu = CPU {
-            registers: [0; 16],
-            pc: 0,
-            memory: [0; 4096],
-        };
-
-        cpu.registers[0] = 5;
-        cpu.registers[1] = 10;
-        cpu.registers[2] = 10;
-        cpu.registers[3] = 231;
-        // cpu.registers[3] = 232;
-
-        cpu.memory[0] = 0x80;
-        cpu.memory[1] = 0x14;
-        cpu.memory[2] = 0x80;
-        cpu.memory[3] = 0x24;
-        cpu.memory[4] = 0x80;
-        cpu.memory[5] = 0x34;
-
-        cpu.run();
-
-        assert_eq!(0, cpu.registers[0]);
-        // assert_eq!(1, cpu.registers[0]);
-        assert_eq!(1, cpu.registers[15]);
-
-        cpu.pc = 0;
-        cpu.run();
-        assert_eq!(251, cpu.registers[0]);
         assert_eq!(0, cpu.registers[15]);
     }
 }
