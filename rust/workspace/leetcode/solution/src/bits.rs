@@ -10,40 +10,51 @@ pub struct Bits {
 }
 
 impl Bits {
+    const ELEM_SIZE: usize = 8;
+    const MASK: u8 = 0xFF;
+
     pub fn new(len: usize) -> Bits {
         assert!(len > 0);
 
         let mut b = Bits {
-            bytes: vec![0; (len + 7) / 8],
+            bytes: vec![0; (len + (Self::ELEM_SIZE - 1)) / Self::ELEM_SIZE],
             len,
         };
 
-        if len % 8 != 0 {
-            b.bytes[(len - 1) / 8] = !((1 << (len % 8)) - 1);
+        if len % Self::ELEM_SIZE != 0 {
+            b.bytes[(len - 1) / Self::ELEM_SIZE] = !((1 << (len % Self::ELEM_SIZE)) - 1);
         }
 
         b
     }
 
+    fn len(&self) -> usize {
+        self.len
+    }
+
+    fn cap(&self) -> usize {
+        self.bytes.len() * Self::ELEM_SIZE
+    }
+
     pub fn set(&mut self, index: usize) {
         assert!(index < self.len);
-        self.bytes[index / 8] |= 1 << (index % 8);
+        self.bytes[index / Self::ELEM_SIZE] |= 1 << (index % Self::ELEM_SIZE);
     }
 
     fn clear(&mut self, index: usize) {
         #[cfg(not(test))]
         assert!(index < self.len);
-        self.bytes[index / 8] &= !(1 << (index % 8));
+        self.bytes[index / Self::ELEM_SIZE] &= !(1 << (index % Self::ELEM_SIZE));
     }
 
     fn is_set(&self, index: usize) -> bool {
         #[cfg(not(test))]
         assert!(index < self.len);
-        self.bytes[index / 8] & (1 << (index % 8)) != 0
+        self.bytes[index / Self::ELEM_SIZE] & (1 << (index % Self::ELEM_SIZE)) != 0
     }
 
     pub fn all_set(&self) -> bool {
-        self.bytes.iter().all(|b| b & 0xFF == 0xFF)
+        self.bytes.iter().all(|b| b & Self::MASK == Self::MASK)
     }
 }
 
@@ -59,27 +70,24 @@ mod tests {
            byte 2: 1110 0000
            index : fedc ba98
         */
-        let len = 13;
-        let max = ((len + 7) / 8) * 8;
+        let mut bits = Bits::new(13);
 
-        let mut bits = Bits::new(len);
-
-        for i in 0..len {
+        for i in 0..bits.len() {
             assert!(!bits.is_set(i));
         }
-        for i in len..max {
+        for i in bits.len()..bits.cap() {
             assert!(bits.is_set(i));
         }
 
-        for i in 0..len {
+        for i in 0..bits.len() {
             bits.set(i);
         }
         assert!(bits.all_set());
 
-        for i in 0..max {
+        for i in 0..bits.cap() {
             bits.clear(i);
         }
-        for i in 0..max {
+        for i in 0..bits.cap() {
             assert!(!bits.is_set(i));
         }
     }
