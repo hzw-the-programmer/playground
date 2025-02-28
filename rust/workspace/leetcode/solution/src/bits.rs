@@ -5,13 +5,13 @@
    index : fedc ba98
 */
 pub struct Bits {
-    bytes: Vec<u8>,
+    bytes: Vec<u64>,
     len: usize,
 }
 
 impl Bits {
-    const ELEM_SIZE: usize = 8;
-    const MASK: u8 = 0xFF;
+    const ELEM_SIZE: usize = 64;
+    const MASK: u64 = u64::MAX;
 
     pub fn new(len: usize) -> Bits {
         assert!(len > 0);
