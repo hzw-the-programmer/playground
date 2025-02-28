@@ -5,13 +5,13 @@ pub fn has_all_codes(s: &str, k: usize) -> bool {
 
     let mut index = 0;
     for i in 0..k {
-        index += (s[i] - b'0') as usize * (1 << i);
+        index = (index << 1) | (s[i] - b'0') as usize;
     }
     bits.set(index);
 
+    let mask = (1 << k) - 1;
     for i in k..s.len() {
-        index >>= 1;
-        index += (s[i] - b'0') as usize * (1 << (k - 1));
+        index = ((index << 1) | (s[i] - b'0') as usize) & mask;
 
         bits.set(index);
 
