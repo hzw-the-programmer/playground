@@ -1,6 +1,9 @@
 pub fn minimum_swaps(data: &[i32]) -> i32 {
-    let k = data.iter().sum::<i32>() as usize;
-    
+    let k = data.iter().filter(|&&x| x == 1).count();
+    if k <= 1 {
+        return 0;
+    }
+
     let mut count = 0;
     for i in 0..k {
         if data[i] == 0 {
