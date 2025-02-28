@@ -15,4 +15,5 @@ mod distinct_nums;
 mod max_min_sum;
 mod max_points;
 mod max_satisfied;
+mod minimum_swaps;
 mod substrs_no_repeats;
