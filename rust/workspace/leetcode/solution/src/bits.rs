@@ -10,7 +10,7 @@ pub struct Bits {
 }
 
 impl Bits {
-    const ELEM_SIZE: usize = 64;
+    const ELEM_SIZE: usize = u64::BITS as usize;
     const MASK: u64 = u64::MAX;
 
     pub fn new(len: usize) -> Bits {
