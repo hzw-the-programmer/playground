@@ -1,4 +1,4 @@
-// 1151. Distinct Numbers in Each Subarray
+// 1151. Minimum Swaps to Group All 1’s Together
 pub fn minimum_swaps(data: &[i32]) -> i32 {
     let k = data.iter().filter(|&&x| x == 1).count();
     if k <= 1 {
