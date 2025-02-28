@@ -3,18 +3,18 @@ pub fn has_all_codes(s: &str, k: usize) -> bool {
     let s = s.as_bytes();
     let n = s.len();
     let total = 1 << k;
-    let mut flags = vec![0; total];
+    let mut flags = vec![0u8; total];
 
     let mut index = 0;
     for i in 0..k {
-        index += (s[i] - b'0') * (1 << i);
+        index += (s[i] - b'0') as usize * (1 << i);
     }
-    flags[index as usize] = 1;
+    flags[index] = 1;
 
     for i in k..n {
         index >>= 1;
-        index += (s[i] - b'0') * (1 << (k - 1));
-        flags[index as usize] = 1;
+        index += (s[i] - b'0') as usize * (1 << (k - 1));
+        flags[index] = 1;
     }
 
     flags.iter().filter(|&&x| x == 1).count() == total
