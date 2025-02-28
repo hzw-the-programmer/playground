@@ -14,6 +14,10 @@ pub fn has_all_codes(s: &str, k: usize) -> bool {
         index += (s[i] - b'0') as usize * (1 << (k - 1));
 
         bits.set(index);
+
+        if bits.all_set() {
+            return true;
+        }
     }
 
     bits.all_set()
