@@ -1,4 +1,6 @@
 pub fn rabin_karp(text: &str, pattern: &str) -> bool {
+    let text = text.as_bytes();
+    let pattern = pattern.as_bytes();
     let n = text.len();
     let k = pattern.len();
     if k > n {
@@ -10,8 +12,8 @@ pub fn rabin_karp(text: &str, pattern: &str) -> bool {
     let mut t = 0;
     let mut p = 0;
     for i in 0..k {
-        t = (t * b + text.as_bytes()[i] as usize) % q;
-        p = (p * b + pattern.as_bytes()[i] as usize) % q;
+        t = (t * b + text[i] as usize) % q;
+        p = (p * b + pattern[i] as usize) % q;
     }
 
     let mut h = 1;
@@ -23,8 +25,7 @@ pub fn rabin_karp(text: &str, pattern: &str) -> bool {
             return true;
         }
 
-        t = ((t + q - (text.as_bytes()[i] as usize * h) % q) * b + text.as_bytes()[i + k] as usize)
-            % q;
+        t = ((t + q - (text[i] as usize * h) % q) * b + text[i + k] as usize) % q;
     }
 
     false
