@@ -15,6 +15,7 @@ mod diet_plan;
 mod distinct_nums;
 mod has_all_codes;
 mod max_flavors;
+mod max_freq;
 mod max_min_sum;
 mod max_points;
 mod max_satisfied;
