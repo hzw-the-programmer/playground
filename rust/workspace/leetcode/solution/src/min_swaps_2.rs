@@ -3,12 +3,12 @@ pub fn min_swaps_2(nums: &[i32]) -> usize {
     let k = nums.iter().filter(|&&x| x == 1).count();
     let mut count = nums[0..k].iter().filter(|&&x| x == 0).count();
     let mut min = count;
-    for i in 1..nums.len() {
-        if nums[i - 1] == 0 {
-            count -= 1;
-        }
-        if nums[(i + k - 1) % nums.len()] == 0 {
+    for i in k..nums.len() + k - 1 {
+        if nums[i % nums.len()] == 0 {
             count += 1;
+        }
+        if nums[i - k] == 0 {
+            count -= 1;
         }
         min = min.min(count);
     }
