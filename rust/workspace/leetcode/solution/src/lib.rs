@@ -18,7 +18,7 @@ mod max_flavors;
 mod max_min_sum;
 mod max_points;
 mod max_satisfied;
+mod min_swaps;
 mod min_swaps_2;
-mod minimum_swaps;
 mod rabin_karp;
 mod substrs_no_repeats;
