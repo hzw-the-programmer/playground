@@ -1,19 +1,19 @@
 pub fn counting_sort(nums: &mut [i32]) {
     let mut min = nums[0];
     let mut max = nums[0];
-    for i in 1..nums.len() {
-        if min > nums[i] {
-            min = nums[i];
+    for &e in nums.iter() {
+        if min > e {
+            min = e;
         }
-        if max < nums[i] {
-            max = nums[i];
+        if max < e {
+            max = e;
         }
     }
 
-    let range = (max - min) as usize + 1;
+    let range = (max - min + 1) as usize;
     let mut count = vec![0; range];
-    for i in 0..nums.len() {
-        count[(nums[i] - min) as usize] += 1;
+    for &e in nums.iter() {
+        count[(e - min) as usize] += 1;
     }
 
     let mut j = 0;
