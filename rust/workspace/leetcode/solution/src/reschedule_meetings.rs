@@ -1,4 +1,7 @@
 // 3439. Reschedule Meetings for Maximum Free Time I
+// 在长度为 n + 1 的空闲时常数组中，求和最大的 k + 1 子数组
+// *代表会议时常，_代表空闲时常
+// _*_*_*_
 pub fn max_free_time(event_time: i32, k: usize, start_time: &[i32], end_time: &[i32]) -> i32 {
     let n = start_time.len();
 
