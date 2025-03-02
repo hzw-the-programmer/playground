@@ -10,6 +10,7 @@ mod num_of_subarrays;
 mod bubble_sort;
 
 mod bits;
+mod counting_sort;
 mod defuse_bomb;
 mod diet_plan;
 mod distinct_nums;
