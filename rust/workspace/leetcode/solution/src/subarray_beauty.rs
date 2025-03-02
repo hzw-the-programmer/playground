@@ -16,17 +16,17 @@
 
 pub fn subarray_beauty(nums: &[i32], k: usize, x: usize) -> Vec<i32> {
     let n = nums.len();
-    let mut res = vec![0; n - k + 1];
+    let mut res = Vec::new();
     let mut count = [0; 101];
     for i in 0..k {
         count[(nums[i] + 50) as usize] += 1;
     }
-    res[0] = find_xth_smallest(&count, x);
+    res.push(find_xth_smallest(&count, x));
 
     for i in k..n {
         count[(nums[i] + 50) as usize] += 1;
         count[(nums[i - k] + 50) as usize] -= 1;
-        res[i - k + 1] = find_xth_smallest(&count, x);
+        res.push(find_xth_smallest(&count, x));
     }
 
     res
