@@ -22,4 +22,5 @@ mod max_satisfied;
 mod min_swaps;
 mod min_swaps_2;
 mod rabin_karp;
+mod subarray_beauty;
 mod substrs_no_repeats;
