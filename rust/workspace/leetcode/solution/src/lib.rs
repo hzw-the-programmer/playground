@@ -20,6 +20,7 @@ mod max_freq;
 mod max_min_sum;
 mod max_points;
 mod max_satisfied;
+mod min_flips;
 mod min_swaps;
 mod min_swaps_2;
 mod rabin_karp;
