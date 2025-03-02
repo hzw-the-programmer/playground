@@ -23,5 +23,6 @@ mod max_satisfied;
 mod min_swaps;
 mod min_swaps_2;
 mod rabin_karp;
+mod reschedule_meetings;
 mod subarray_beauty;
 mod substrs_no_repeats;
