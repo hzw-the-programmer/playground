@@ -2,12 +2,12 @@
 pub fn max_free_time(event_time: i32, k: usize, start_time: &[i32], end_time: &[i32]) -> i32 {
     let n = start_time.len();
 
-    let get = |i, start_time: &[i32], end_time: &[i32], event_time| -> i32 {
+    let get = |i| {
         if i == 0 {
             return start_time[0];
         }
         if i == n {
-            return event_time - end_time[n - 1];
+            return event_time - end_time[i - 1];
         }
         start_time[i] - end_time[i - 1]
     };
@@ -15,11 +15,12 @@ pub fn max_free_time(event_time: i32, k: usize, start_time: &[i32], end_time: &[
     let mut sum = 0;
     let mut max = 0;
     for i in 0..=n {
-        sum += get(i, start_time, end_time, event_time);
-        if i >= k {
-            max = max.max(sum);
-            sum -= get(i - k, start_time, end_time, event_time);
+        sum += get(i);
+        if i < k {
+            continue;
         }
+        max = max.max(sum);
+        sum -= get(i - k);
     }
 
     max
