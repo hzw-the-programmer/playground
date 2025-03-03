@@ -1,37 +1,33 @@
-pub fn min_flips(s: &str) -> i32 {
+// 1888. Minimum Number of Flips to Make the Binary String Alternating
+// https://algo.monster/liteproblems/1888
+pub fn min_flips(s: &str) -> usize {
     let s = s.as_bytes();
+    let n = s.len();
+    let target = b"01";
 
-    let mut start_0 = 0;
-    let mut start_1 = 0;
+    let mut flips = 0;
     for (i, &c) in s.iter().enumerate() {
-        if i % 2 == 0 {
-            if c == b'1' {
-                start_0 += 1;
-            } else {
-                start_1 += 1;
-            }
-        } else {
-            if c == b'0' {
-                start_0 += 1;
-            } else {
-                start_1 += 1;
-            }
+        if c != target[i & 1] {
+            flips += 1;
         }
     }
+    let mut min = flips.min(n - flips);
 
-    if s.len() % 2 == 0 {
-        return start_0.min(start_1);
+    if n % 2 == 0 {
+        return min;
     }
 
-    let mut min = start_0.min(start_1);
-    for &c in s.iter() {
-        std::mem::swap(&mut start_0, &mut start_1);
-        if c == b'0' {
-            start_1 += 1;
-        } else {
-            start_0 += 1;
+    for (i, &c) in s.iter().enumerate() {
+        // If we remove a character that needs flipping from the start, decrease the flip count
+        // 在原来的位置不满足要求，表明被 flip 过，所以要 -1
+        if c != target[i & 1] {
+            flips -= 1;
         }
-        min = min.min(start_0).min(start_1);
+        // 在新位置不满足要求，要 +1
+        if c != target[(i + n) & 1] {
+            flips += 1;
+        }
+        min = min.min(flips).min(n - flips);
     }
     min
 }
