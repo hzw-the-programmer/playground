@@ -23,6 +23,7 @@ mod max_satisfied;
 mod min_flips;
 mod min_swaps;
 mod min_swaps_2;
+mod permutation_in_str;
 mod rabin_karp;
 mod reschedule_meetings;
 mod subarray_beauty;
