@@ -8,22 +8,33 @@ pub fn check_inclusion(s1: &str, s2: &str) -> bool {
         return false;
     }
 
-    let mut cnt1 = [0; 26];
-    let mut cnt2 = [0; 26];
+    let mut cnt = [0; 26];
     for i in 0..n1 {
-        cnt1[(s1[i] - b'a') as usize] += 1;
-        cnt2[(s2[i] - b'a') as usize] += 1;
+        cnt[(s2[i] - b'a') as usize] += 1;
+        cnt[(s1[i] - b'a') as usize] -= 1;
     }
 
-    if cnt1 == cnt2 {
+    let mut differ = cnt.iter().filter(|&&x| x != 0).count();
+    if differ == 0 {
         return true;
     }
 
     for i in n1..n2 {
-        cnt2[(s2[i] - b'a') as usize] += 1;
-        cnt2[(s2[i - n1] - b'a') as usize] -= 1;
+        if cnt[(s2[i] - b'a') as usize] == 0 {
+            differ += 1;
+        } else if cnt[(s2[i] - b'a') as usize] == -1 {
+            differ -= 1;
+        }
+        cnt[(s2[i] - b'a') as usize] += 1;
 
-        if cnt1 == cnt2 {
+        if cnt[(s2[i - n1] - b'a') as usize] == 0 {
+            differ += 1;
+        } else if cnt[(s2[i - n1] - b'a') as usize] == 1 {
+            differ -= 1;
+        }
+        cnt[(s2[i - n1] - b'a') as usize] -= 1;
+
+        if differ == 0 {
             return true;
         }
     }
