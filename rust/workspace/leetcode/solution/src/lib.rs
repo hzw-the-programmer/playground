@@ -9,6 +9,7 @@ mod num_of_subarrays;
 
 mod bubble_sort;
 
+mod anagrams;
 mod bits;
 mod counting_sort;
 mod defuse_bomb;
