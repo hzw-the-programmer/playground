@@ -8,20 +8,32 @@ pub fn find_anagrams(s: &str, p: &str) -> Vec<usize> {
         return res;
     }
 
-    let mut cnt1 = [0; 26];
-    let mut cnt2 = [0; 26];
+    let mut cnt = [0; 26];
     for i in 0..n2 {
-        cnt1[(s[i] - b'a') as usize] += 1;
-        cnt2[(p[i] - b'a') as usize] += 1;
+        cnt[(s[i] - b'a') as usize] += 1;
+        cnt[(p[i] - b'a') as usize] -= 1;
     }
-    if cnt1 == cnt2 {
+    let mut differ = cnt.iter().filter(|&&x| x != 0).count();
+    if differ == 0 {
         res.push(0);
     }
 
     for i in n2..n1 {
-        cnt1[(s[i] - b'a') as usize] += 1;
-        cnt1[(s[i - n2] - b'a') as usize] -= 1;
-        if cnt1 == cnt2 {
+        if cnt[(s[i] - b'a') as usize] == 0 {
+            differ += 1;
+        } else if cnt[(s[i] - b'a') as usize] == -1 {
+            differ -= 1;
+        }
+        cnt[(s[i] - b'a') as usize] += 1;
+
+        if cnt[(s[i - n2] - b'a') as usize] == 0 {
+            differ += 1;
+        } else if cnt[(s[i - n2] - b'a') as usize] == 1 {
+            differ -= 1;
+        }
+        cnt[(s[i - n2] - b'a') as usize] -= 1;
+
+        if differ == 0 {
             res.push(i - n2 + 1);
         }
     }
