@@ -2,32 +2,22 @@
 pub fn substr_hash(s: &str, power: i32, modulo: i32, k: usize, hash_val: i32) -> &str {
     let s = s.as_bytes();
     let n = s.len();
-    let mut hash = 0;
-    let mut p = 1;
-    for i in (0..k).rev() {
-        hash = hash * power + (s[i] - b'a' + 1) as i32;
-        if i != 0 {
-            p *= power;
+    let val = |b| (b - b'`') as i32;
+    let mut cur = 0;
+    let mut res = 0;
+    let mut pk = 1;
+    for i in (0..n).rev() {
+        cur = (cur * power + val(s[i])) % modulo;
+        if i < n - k {
+            cur = (cur + modulo - val(s[i + k]) * pk % modulo) % modulo;
+        } else {
+            pk = pk * power % modulo;
+        }
+        if cur == hash_val {
+            res = i;
         }
     }
-    if hash % modulo == hash_val {
-        unsafe {
-            return std::str::from_utf8_unchecked(&s[0..k]);
-        }
-    }
-
-    for i in k..n {
-        hash -= (s[i - k] - b'a' + 1) as i32;
-        hash /= power;
-        hash += (s[i] - b'a' + 1) as i32 * p;
-        if hash % modulo == hash_val {
-            unsafe {
-                return std::str::from_utf8_unchecked(&s[i - k + 1..=i]);
-            }
-        }
-    }
-
-    unsafe { std::str::from_utf8_unchecked(&s[0..0]) }
+    unsafe { std::str::from_utf8_unchecked(&s[res..res + k]) }
 }
 
 #[cfg(test)]
