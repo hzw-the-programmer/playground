@@ -1,5 +1,5 @@
 // 643. Maximum Average Subarray
-use crate::max_min_sum::max_min_sum;
+use super::max_min_sum::max_min_sum;
 
 pub fn max_average(nums: &[i32], k: usize) -> f32 {
     max_min_sum(nums, k, std::cmp::max) as f32 / k as f32

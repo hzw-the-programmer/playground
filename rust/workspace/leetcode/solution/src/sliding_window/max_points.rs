@@ -1,6 +1,6 @@
 // 1423. Maximum Points You Can Obtain from Cards
 
-use crate::max_min_sum::max_min_sum;
+use super::max_min_sum::max_min_sum;
 
 pub fn max_points(nums: &[i32], k: usize) -> i32 {
     let total: i32 = nums.iter().sum();

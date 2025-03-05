@@ -1,4 +1,4 @@
-use crate::bits::Bits;
+use super::bits::Bits;
 
 // 1461. Check If a String Contains All Binary Codes of Size K
 pub fn has_all_codes(s: &str, k: usize) -> bool {
