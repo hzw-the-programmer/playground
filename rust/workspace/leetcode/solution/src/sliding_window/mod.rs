@@ -27,4 +27,5 @@ mod rabin_karp;
 mod reschedule_meetings;
 mod subarray_beauty;
 mod substr_hash;
+mod substr_with_words;
 mod substrs_no_repeats;
