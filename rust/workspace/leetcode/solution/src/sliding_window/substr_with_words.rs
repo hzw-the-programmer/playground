@@ -20,11 +20,15 @@ pub fn find_substr(s: &str, words: &[&str]) -> Vec<usize> {
         while right + word_len <= str_len {
             let word = &s[right..right + word_len];
             right += word_len;
+            let has = map.contains_key(word);
             *map.entry(word).or_insert(0) += 1;
             while *map.get(word).unwrap() > 0 {
                 let removed = &s[left..left + word_len];
                 left += word_len;
                 *map.get_mut(removed).unwrap() -= 1;
+            }
+            if !has {
+                map.remove(word);
             }
             if right - left == substr_len {
                 res.push(left);
