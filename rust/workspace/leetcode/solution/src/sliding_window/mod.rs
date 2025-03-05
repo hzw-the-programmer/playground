@@ -26,4 +26,5 @@ mod permutation_in_str;
 mod rabin_karp;
 mod reschedule_meetings;
 mod subarray_beauty;
+mod substr_hash;
 mod substrs_no_repeats;
