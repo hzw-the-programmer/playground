@@ -9,6 +9,7 @@ mod bubble_sort;
 
 mod anagrams;
 mod bits;
+mod contains_duplicate_iii;
 mod counting_sort;
 mod defuse_bomb;
 mod diet_plan;
