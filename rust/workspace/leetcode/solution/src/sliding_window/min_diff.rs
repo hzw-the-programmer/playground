@@ -20,5 +20,6 @@ mod tests {
     fn test() {
         assert_eq!(0, min_diff(&[90], 1));
         assert_eq!(2, min_diff(&[9, 4, 1, 7], 2));
+        assert_eq!(5, min_diff(&[1, 4, 7, 9], 3));
     }
 }
