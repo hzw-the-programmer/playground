@@ -1,11 +1,8 @@
 // 2269. Find the K-Beauty of a Number
-pub fn divisor_substrs(num: i32, k: usize) -> i32 {
+pub fn divisor_substrs(num: i32, k: u32) -> i32 {
     let mut n = num;
 
-    let mut pk = 1;
-    for _ in 0..k {
-        pk *= 10;
-    }
+    let pk = 10_i32.pow(k);
 
     let mut count = 0;
     while n >= pk / 10 {
