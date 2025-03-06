@@ -1,4 +1,7 @@
 // 220. Contains Duplicate III
+
+// 时间: O(nk)
+// 空间: O(1)
 pub fn contains_nearby_almost_duplicate_1(nums: &[i32], index_diff: i32, value_diff: i32) -> bool {
     let n = nums.len();
     let k = index_diff as usize + 1;
@@ -19,6 +22,9 @@ pub fn contains_nearby_almost_duplicate_1(nums: &[i32], index_diff: i32, value_d
     false
 }
 
+// 滑动窗口 + 有序集合
+// 时间: O(nlog(min(n,k)))
+// 空间: O(min(n,k))
 use std::collections::BTreeSet;
 
 pub fn contains_nearby_almost_duplicate_2(nums: &[i32], index_diff: i32, value_diff: i32) -> bool {
@@ -40,6 +46,8 @@ pub fn contains_nearby_almost_duplicate_2(nums: &[i32], index_diff: i32, value_d
     }
     false
 }
+
+pub fn contains_nearby_almost_duplicate_3(nums: &[i32], index_diff: i32, value_diff: i32) -> bool {}
 
 #[cfg(test)]
 mod tests {
@@ -63,6 +71,15 @@ mod tests {
         assert_eq!(
             false,
             contains_nearby_almost_duplicate_2(&[1, 5, 9, 1, 5, 9], 2, 3)
+        );
+
+        assert_eq!(
+            true,
+            contains_nearby_almost_duplicate_3(&[1, 2, 3, 1], 3, 0)
+        );
+        assert_eq!(
+            false,
+            contains_nearby_almost_duplicate_3(&[1, 5, 9, 1, 5, 9], 2, 3)
         );
     }
 }
