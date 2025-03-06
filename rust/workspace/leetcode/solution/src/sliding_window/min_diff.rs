@@ -1,14 +1,13 @@
 // 1984. Minimum Difference Between Highest and Lowest of K Scores
 pub fn min_diff(nums: &[i32], k: usize) -> i32 {
-    let n = nums.len();
     if k == 1 {
         return 0;
     }
-    let mut min = i32::MAX;
-    for i in 0..n - 1 {
-        for j in i + 1..n {
-            min = min.min((nums[i] - nums[j]).abs());
-        }
+    let mut nums = Vec::from(nums);
+    nums.sort();
+    let mut min = nums[k - 1] - nums[0];
+    for i in k..nums.len() {
+        min = min.min(nums[i] - nums[i - k + 1]);
     }
     min
 }
