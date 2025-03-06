@@ -14,6 +14,7 @@ mod defuse_bomb;
 mod diet_plan;
 mod distinct_nums;
 mod has_all_codes;
+mod k_beauty;
 mod max_flavors;
 mod max_freq;
 mod max_min_sum;
