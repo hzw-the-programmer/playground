@@ -8,6 +8,7 @@ mod num_of_subarrays;
 mod bubble_sort;
 
 mod anagrams;
+mod binary_string_with_substrings_representing_1_to_n;
 mod bits;
 mod contains_duplicate_iii;
 mod count_complete_substrings;
