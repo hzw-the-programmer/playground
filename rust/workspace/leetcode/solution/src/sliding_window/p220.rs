@@ -1,7 +1,9 @@
 // 220. Contains Duplicate III
 
-// 时间: O(nk)
-// 空间: O(1)
+/*
+  时间: O(nk)
+  空间: O(1)
+*/
 pub fn contains_nearby_almost_duplicate_1(nums: &[i32], index_diff: i32, value_diff: i32) -> bool {
     let n = nums.len();
     let k = index_diff as usize + 1;
@@ -22,10 +24,13 @@ pub fn contains_nearby_almost_duplicate_1(nums: &[i32], index_diff: i32, value_d
     false
 }
 
+/*
+  滑动窗口 + 有序集合
+  时间: O(nlog(min(n,k)))
+  空间: O(min(n,k))
+*/
 use std::collections::BTreeSet;
-// 滑动窗口 + 有序集合
-// 时间: O(nlog(min(n,k)))
-// 空间: O(min(n,k))
+
 pub fn contains_nearby_almost_duplicate_2(nums: &[i32], k: usize, t: i32) -> bool {
     let n = nums.len();
     let mut set = BTreeSet::new();
@@ -45,21 +50,37 @@ pub fn contains_nearby_almost_duplicate_2(nums: &[i32], k: usize, t: i32) -> boo
     false
 }
 
+/*
+  桶排序
+  时间: O(n)
+  空间: O(k)
+
+  用商将数分类：
+  -3 倍的分一类；-2 倍的分一类；-1 倍的分一类
+   0 倍的分一类； 1 倍的分一类； 2 倍的分一类
+
+  设 k=3，那么：
+  0, 1,  2,  3 这一组数相互做减法 |a - b| <= 3，要分到一组：x/(k+1)=0 倍组
+  4, 5,  6,  7 这一组数相互做减法 |a - b| <= 3，要分到一组：x/(k+1)=1 倍组
+  8, 9, 10, 11 这一组数相互做减法 |a - b| <= 3，要分到一组：x/(k+1)=2 倍组
+  2 倍组到 0 倍组，不存在 |a - b| <= 3 的情况：8 - 3 = 5
+  但，1 倍组到 0 倍组，存在 |a - b| <= 3 的情况：4-3, 4-2, 4-1, 5-3, 5-2, 6-3
+
+  -4, -3, -2, -1 这一组数相互做减法 |a - b| <= 3，要分到一组
+  如果按 x/(k+1) 就会有 -4 在 -1 倍组，-3, -2, -1 在 0 倍组
+  如果按 (x+1)/(k+1) -4, -3, -2, -1 会在 0 倍组
+  但 0 倍组已经被 0, 1, 2, 3 占用了
+  所以要按 (x+1)/(k+1) - 1
+  -4, -3, -2, -1 在 -1 倍组
+  -8, -7, -6, -5 在 -2 倍组
+*/
 use std::collections::HashMap;
-// 桶排序
-// 时间: O(n)
-// 空间: O(k)
+
 pub fn contains_nearby_almost_duplicate_3(nums: &[i32], k: usize, t: i32) -> bool {
     let get = |num| {
         if num < 0 {
-            // -4, -3, -2, -1 需要放到一个桶，因为 |-4 - (-1)| = |-3| <= 3
-            // +1 变成 -3, -2, -1, 0 除以 (3+1)=4 为 0 号桶，但 0 号桶被 0, 1, 2, 3 用了，所以要 -1，得到 -1 号桶
-            // -8, -7, -6, -5 需要放到一个桶，因为 |-8 - (-5)| = |-3| <= 3
-            // +1 变成 -7, -6, -5, -4 除以 (3+1)=4 为 -1 号桶，但 -1 号桶被 -4, -3, -2, -1 用了，所以要 -1，得到 -2 号桶
             (num + 1) / (t + 1) - 1
         } else {
-            // 0, 1, 2, 3 要在 0 号桶，所以是除以 (3+1)=4
-            // 4, 5, 6, 7 要在 1 号桶，除以3不行，要除以3+1=4
             num / (t + 1)
         }
     };
@@ -69,9 +90,6 @@ pub fn contains_nearby_almost_duplicate_3(nums: &[i32], k: usize, t: i32) -> boo
         if map.contains_key(&id) {
             return true;
         }
-        // nums = [3, 4]，3在0号桶，4在1号桶
-        // nums = [3, 7]，虽然7在1号桶，但7-3>3
-        // nums = [3, 8]，8在2号桶，前一个桶1号桶不存在，肯定不满足条件
         if let Some(v) = map.get(&(id - 1)) {
             if nums[i] - *v <= t {
                 return true;

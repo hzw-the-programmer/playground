@@ -8,16 +8,12 @@ mod num_of_subarrays;
 mod bubble_sort;
 
 mod anagrams;
-// 1016. Binary String With Substrings Representing 1 To N
 mod bits;
-mod contains_duplicate_iii;
-mod count_complete_substrings;
 mod counting_sort;
 mod defuse_bomb;
 mod diet_plan;
 mod distinct_nums;
 mod has_all_codes;
-mod k_beauty;
 mod max_flavors;
 mod max_freq;
 mod max_min_sum;
@@ -27,7 +23,14 @@ mod min_diff;
 mod min_flips;
 mod min_swaps;
 mod min_swaps_2;
+// 220. Contains Duplicate III
+mod p220;
+// 2269. Find the K-Beauty of a Number
+mod p2269;
+// 1016. Binary String With Substrings Representing 1 To N
 mod p1016;
+// 2953. Count Complete Substrings
+mod p2953;
 mod permutation_in_str;
 mod rabin_karp;
 mod reschedule_meetings;
