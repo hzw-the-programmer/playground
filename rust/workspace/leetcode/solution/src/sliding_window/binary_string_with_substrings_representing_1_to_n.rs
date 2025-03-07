@@ -12,17 +12,14 @@ use std::collections::HashSet;
 
 pub fn query_string_2(s: String, n: i32) -> bool {
     let mut set = HashSet::new();
-    let s = s.as_bytes();
-    let sn = s.len();
-    for (i, &b) in s.iter().enumerate() {
-        let b = b - b'0';
-        if b == 0 {
+    for (i, b) in s.bytes().enumerate() {
+        if b - b'0' == 0 {
             continue;
         }
         let mut x = 0;
-        for j in i..sn {
-            let b = s[j] - b'0';
-            x = (x << 1) + b as i32;
+        for b in s.bytes().skip(i) {
+            let b = (b - b'0') as i32;
+            x = (x << 1) + b;
             if x > n {
                 break;
             }
