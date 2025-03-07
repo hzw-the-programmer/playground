@@ -8,7 +8,7 @@ mod num_of_subarrays;
 mod bubble_sort;
 
 mod anagrams;
-mod binary_string_with_substrings_representing_1_to_n;
+// 1016. Binary String With Substrings Representing 1 To N
 mod bits;
 mod contains_duplicate_iii;
 mod count_complete_substrings;
@@ -27,6 +27,7 @@ mod min_diff;
 mod min_flips;
 mod min_swaps;
 mod min_swaps_2;
+mod p1016;
 mod permutation_in_str;
 mod rabin_karp;
 mod reschedule_meetings;
