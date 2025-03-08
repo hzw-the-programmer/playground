@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 pub fn max_frequency_score(nums: Vec<i32>, k: usize) -> i32 {
     let n = nums.len();
-    let modulus = 10_i32.pow(9) + 7;
+    let modulus = 1_000_000_000 + 7;
     
     let mut map = HashMap::new();
     for i in 0..k {
