@@ -45,13 +45,15 @@ pub fn max_frequency_score(nums: Vec<i32>, k: usize) -> i32 {
     max
 }
 
+// Quick power function for calculating a^n % mod efficiently
 pub fn quick_power(mut base: i32, mut exponent: i32, modulus: i32) -> i32 {
     let mut result = 1;
+    base = base % modulus;
     while exponent > 0 {
         if exponent & 1 == 1 {
-            result = result * base % modulus;
+            result = (result * base) % modulus;
         }
-        base = base * base % modulus;
+        base = (base * base) % modulus;
         exponent >>= 1;
     }
     result
