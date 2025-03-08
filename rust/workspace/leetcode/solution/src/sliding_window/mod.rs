@@ -33,6 +33,8 @@ mod p683;
 mod p1016;
 // 2269. Find the K-Beauty of a Number
 mod p2269;
+// 2524. Maximum Frequency Score of a Subarray
+mod p2524;
 // 2953. Count Complete Substrings
 mod p2953;
 mod permutation_in_str;
