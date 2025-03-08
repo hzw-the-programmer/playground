@@ -1,6 +1,9 @@
 // 2067. Number of Equal Count Substrings
 pub fn equal_count_substrings(s: String, count: usize) -> i32 {
-    let s = s.as_bytes();
+    helper(s.as_bytes(), count)
+}
+
+pub fn helper(s: &[u8], count: usize) -> i32 {
     let mut res = 0;
 
     for x in 1..27 {
