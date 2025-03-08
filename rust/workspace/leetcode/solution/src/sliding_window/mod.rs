@@ -31,6 +31,8 @@ mod p220;
 mod p683;
 // 1016. Binary String With Substrings Representing 1 To N
 mod p1016;
+// 2067. Number of Equal Count Substrings
+mod p2067;
 // 2269. Find the K-Beauty of a Number
 mod p2269;
 // 2524. Maximum Frequency Score of a Subarray
