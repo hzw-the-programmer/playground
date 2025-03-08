@@ -1,21 +1,37 @@
 // 2067. Number of Equal Count Substrings
 pub fn equal_count_substrings(s: String, count: usize) -> i32 {
     let s = s.as_bytes();
-    let n = s.len();
     let mut res = 0;
-    for i in 1..27 {
-        let k = i * count;
-        if k > n {
+
+    for x in 1..27 {
+        let k = x * count;
+        if k > s.len() {
             break;
         }
+        
         let mut map = [0; 26];
-        for j in 0..n {
-            map[(s[j] - b'a') as usize] += 1;
-            if j > k - 2 {
-                if map.iter().filter(|&&x| x==count).count() == i {
-                    res += 1;
+        let mut y = 0;
+        for (i, &b) in s.iter().enumerate() {
+            let index = (b - b'a') as usize;
+            map[index] += 1;
+            if map[index] == count {
+                y += 1;
+            } else if map[index] == count + 1 {
+                y -= 1;
+            }
+            
+            if i >= k {
+                let index = (s[i-k] - b'a') as usize;
+                map[index] -= 1;
+                if map[index] == count {
+                    y += 1;
+                } else if map[index] == count - 1 {
+                    y -= 1;
                 }
-                map[(s[j+1-k]-b'a') as usize] -= 1;
+            }
+
+            if y == x {
+                res += 1;
             }
         }
     }
