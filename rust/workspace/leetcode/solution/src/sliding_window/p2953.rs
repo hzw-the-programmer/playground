@@ -1,4 +1,7 @@
 // 2953. Count Complete Substrings
+
+use super::p2067::helper;
+
 pub fn count_complete_substrings(word: String, k: i32) -> i32 {
     let word = word.as_bytes();
     let k = k as usize;
@@ -11,28 +14,7 @@ pub fn count_complete_substrings(word: String, k: i32) -> i32 {
         while i < n && (word[i] as i32 - word[i - 1] as i32).abs() <= 2 {
             i += 1;
         }
-        res += find(&word[start..i], k);
-    }
-    res
-}
-
-fn find(s: &[u8], k: usize) -> i32 {
-    let n = s.len();
-    let mut res = 0;
-    for i in 1..27usize {
-        if i * k > n {
-            break;
-        }
-        let mut count = [0; 26];
-        for j in 0..n {
-            count[(s[j] - b'a') as usize] += 1;
-            if j >= i * k - 1 {
-                if count.iter().filter(|&&x| x == k).count() == i {
-                    res += 1;
-                }
-                count[(s[j + 1 - i * k] - b'a') as usize] -= 1;
-            }
-        }
+        res += helper(&word[start..i], k);
     }
     res
 }
