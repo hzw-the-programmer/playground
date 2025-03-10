@@ -1,11 +1,11 @@
-struct BinaryIndexedTree(Vec<i32>);
+pub struct BinaryIndexedTree(Vec<i32>);
 
 impl BinaryIndexedTree {
-    fn new(len: usize) -> Self {
+    pub fn new(len: usize) -> Self {
         BinaryIndexedTree(vec![0; len + 1])
     }
 
-    fn update(&mut self, i: usize, d: i32) {
+    pub fn update(&mut self, i: usize, d: i32) {
         let mut i = i + 1;
         while i < self.0.len() {
             self.0[i] += d;
@@ -13,7 +13,7 @@ impl BinaryIndexedTree {
         }
     }
 
-    fn query(&self, i: usize) -> i32 {
+    pub fn query(&self, i: usize) -> i32 {
         let mut i = i + 1;
         let mut sum = 0;
         while i > 0 {
@@ -23,7 +23,7 @@ impl BinaryIndexedTree {
         sum
     }
 
-    fn range(&self, s: usize, e: usize) -> i32 {
+    pub fn range(&self, s: usize, e: usize) -> i32 {
         if s == 0 {
             self.query(e)
         } else {
