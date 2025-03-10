@@ -37,7 +37,7 @@ pub fn length_of_longest_substring_1(s: String) -> i32 {
             l += 1;
         }
         set.insert(c);
-        res = res.max(r-l+1);
+        res = res.max(r - l + 1);
     }
     res.try_into().unwrap()
 }

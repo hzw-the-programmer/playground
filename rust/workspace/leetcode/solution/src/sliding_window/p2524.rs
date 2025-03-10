@@ -5,7 +5,7 @@ use std::collections::HashMap;
 pub fn max_frequency_score(nums: Vec<i32>, k: usize) -> i32 {
     let n = nums.len();
     let modulus = 1_000_000_000 + 7;
-    
+
     let mut map = HashMap::new();
     for i in 0..k {
         *map.entry(nums[i]).or_insert(0) += 1;
@@ -19,7 +19,7 @@ pub fn max_frequency_score(nums: Vec<i32>, k: usize) -> i32 {
     let mut max = cur;
     for i in k..n {
         let added = nums[i];
-        let removed = nums[i-k];
+        let removed = nums[i - k];
         if added != removed {
             if let Some(&v) = map.get(&added) {
                 cur += (added - 1) * quick_power(added, v, modulus);
@@ -40,7 +40,7 @@ pub fn max_frequency_score(nums: Vec<i32>, k: usize) -> i32 {
             *map.entry(removed).or_insert(0) -= 1;
 
             max = max.max(cur);
-        } 
+        }
     }
     max
 }
@@ -65,7 +65,7 @@ mod tests {
 
     #[test]
     fn test() {
-        assert_eq!(5, max_frequency_score(vec![1,1,1,2,1,2], 3));
-        assert_eq!(1, max_frequency_score(vec![1,1,1,1,1,1], 4));
+        assert_eq!(5, max_frequency_score(vec![1, 1, 1, 2, 1, 2], 3));
+        assert_eq!(1, max_frequency_score(vec![1, 1, 1, 1, 1, 1], 4));
     }
 }

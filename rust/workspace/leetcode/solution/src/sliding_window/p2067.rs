@@ -11,7 +11,7 @@ pub fn helper(s: &[u8], count: usize) -> i32 {
         if k > s.len() {
             break;
         }
-        
+
         let mut map = [0; 26];
         let mut y = 0;
         for (i, &b) in s.iter().enumerate() {
@@ -22,9 +22,9 @@ pub fn helper(s: &[u8], count: usize) -> i32 {
             } else if map[index] == count + 1 {
                 y -= 1;
             }
-            
+
             if i >= k {
-                let index = (s[i-k] - b'a') as usize;
+                let index = (s[i - k] - b'a') as usize;
                 map[index] -= 1;
                 if map[index] == count {
                     y += 1;

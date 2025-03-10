@@ -1,4 +1,4 @@
-#![cfg_attr(rustfmt, rustfmt_skip)]
+// #![cfg_attr(rustfmt, rustfmt_skip)]
 
 mod k_radius_average;
 mod max_average;
@@ -10,7 +10,6 @@ mod num_of_subarrays;
 mod bubble_sort;
 
 mod anagrams;
-mod bits;
 mod counting_sort;
 mod defuse_bomb;
 mod diet_plan;
@@ -40,6 +39,8 @@ mod p2269;
 // 2524. Maximum Frequency Score of a Subarray
 mod p2524;
 // 2953. Count Complete Substrings
+mod binary_indexed_tree;
+mod bits;
 mod p2953;
 // 3090. Maximum Length Substring With Two Occurrences
 mod p3090;
