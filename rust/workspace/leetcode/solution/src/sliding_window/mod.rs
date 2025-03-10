@@ -25,6 +25,8 @@ mod min_diff;
 mod min_flips;
 mod min_swaps;
 mod min_swaps_2;
+// 3. Longest Substring Without Repeating Characters
+mod p3;
 // 220. Contains Duplicate III
 mod p220;
 // 683. K Empty Slots
