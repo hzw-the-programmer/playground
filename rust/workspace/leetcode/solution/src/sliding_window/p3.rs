@@ -6,19 +6,18 @@ pub fn length_of_longest_substring(s: String) -> i32 {
     let s = s.as_bytes();
     let n = s.len();
     let mut res = 0;
-    let (mut l, mut r) = (0, 0);
     let mut set = HashSet::new();
-    set.insert(s[0]);
-    while l < n {
+
+    let mut r = 0;
+    for l in 0..n {
         if l > 0 {
-            set.remove(&s[l-1]);
+            set.remove(&s[l - 1]);
         }
-        while r < n-1 && !set.contains(&s[r+1]) {
-            r += 1;
+        while r < n && !set.contains(&s[r]) {
             set.insert(s[r]);
+            r += 1;
         }
-        res = res.max(r-l+1);
-        l += 1;
+        res = res.max(r - l);
     }
     res as i32
 }
