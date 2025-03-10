@@ -22,6 +22,22 @@ pub fn length_of_longest_substring(s: String) -> i32 {
     res as i32
 }
 
+pub fn length_of_longest_substring_1(s: String) -> i32 {
+    let s = s.as_bytes();
+    let mut res = 0;
+    let mut l = 0;
+    let mut set = HashSet::new();
+    for (r, &c) in s.iter().enumerate() {
+        while set.contains(&c) {
+            set.remove(&s[l]);
+            l += 1;
+        }
+        set.insert(c);
+        res = res.max(r-l+1);
+    }
+    res.try_into().unwrap()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -33,5 +49,11 @@ mod tests {
         assert_eq!(3, length_of_longest_substring("pwwkew".to_string()));
 
         assert_eq!(3, length_of_longest_substring("abccbcbb".to_string()));
+
+        assert_eq!(3, length_of_longest_substring_1("abcabcbb".to_string()));
+        assert_eq!(1, length_of_longest_substring_1("bbbbb".to_string()));
+        assert_eq!(3, length_of_longest_substring_1("pwwkew".to_string()));
+
+        assert_eq!(3, length_of_longest_substring_1("abccbcbb".to_string()));
     }
 }
