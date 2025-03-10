@@ -1,11 +1,11 @@
 // 1493. Longest Subarray of 1's After Deleting One Element
 
 /*
-  a  : 0, 1, 1, 1, 0, 1, 1, 0, 1
        --->
   pre: 0, 1, 2, 3, 0, 1, 2, 0, 1
-                            <---
+  a  : 0, 1, 1, 1, 0, 1, 1, 0, 1
   suf: 0, 3, 2, 1, 0, 2, 1, 0, 1
+                            <---
 */
 pub fn longest_subarray(nums: Vec<i32>) -> i32 {
     let n = nums.len();
