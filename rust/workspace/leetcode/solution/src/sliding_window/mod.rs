@@ -41,6 +41,8 @@ mod p2269;
 mod p2524;
 // 2953. Count Complete Substrings
 mod p2953;
+// 3090. Maximum Length Substring With Two Occurrences
+mod p3090;
 mod permutation_in_str;
 mod rabin_karp;
 mod reschedule_meetings;

@@ -1,5 +1,9 @@
-// 3. Longest Substring Without Repeating Characters
+/*
+  3. Longest Substring Without Repeating Characters
 
+  Constraints:
+  * s consists of English letters, digits, symbols and spaces.
+*/
 use std::collections::HashSet;
 
 pub fn length_of_longest_substring(s: String) -> i32 {
