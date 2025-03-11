@@ -52,4 +52,5 @@ mod substr_hash;
 mod substr_with_words;
 mod substrs_no_repeats;
 // 1493. Longest Subarray of 1's After Deleting One Element
+mod binary_search;
 mod p1493;
