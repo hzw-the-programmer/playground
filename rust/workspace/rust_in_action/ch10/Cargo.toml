@@ -4,4 +4,5 @@ edition = "2021"
 
 [dependencies]
 svg = "0.18.0"
-sha256 = "1.6.0"
+# sha256 = "1.6.0"
+sha1 = "0.10.6"

@@ -1,6 +1,7 @@
 use artist::Artist;
 use parse::{parse, Operation, Operation::*};
-use sha256::digest;
+// use sha256::digest;
+use sha1::{Digest, Sha1};
 use svg::node::element::path::{Command, Data, Position};
 use svg::node::element::{Path, Rectangle};
 use svg::Document;
@@ -21,8 +22,14 @@ pub fn run() {
     let input = args.get(1).unwrap();
     let default_filename = format!("{}.svg", input);
     let save_to = args.get(2).unwrap_or(&default_filename);
-    let sha256 = digest(input);
-    let operations = parse(&sha256);
+    // let sha256 = digest(input);
+    // let operations = parse(&sha256);
+    let mut hasher = Sha1::new();
+    hasher.update(input.as_bytes());
+    let hash = hasher.finalize();
+    let hash_str = format!("{:x}", hash);
+    println!("{hash_str}");
+    let operations = parse(&hash_str);
     let path_data = convert(&operations);
     let document = generate_svg(path_data);
     svg::save(save_to, &document).unwrap();
