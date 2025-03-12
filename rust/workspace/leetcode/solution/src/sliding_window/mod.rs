@@ -43,6 +43,7 @@ mod binary_indexed_tree;
 mod bits;
 mod p2953;
 // 3090. Maximum Length Substring With Two Occurrences
+mod binary_search;
 mod p3090;
 mod permutation_in_str;
 mod rabin_karp;
@@ -52,5 +53,6 @@ mod substr_hash;
 mod substr_with_words;
 mod substrs_no_repeats;
 // 1493. Longest Subarray of 1's After Deleting One Element
-mod binary_search;
 mod p1493;
+// 1004. Max Consecutive Ones III
+mod p1004;
