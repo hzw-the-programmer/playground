@@ -5,14 +5,10 @@ pub fn longest_ones(nums: Vec<i32>, k: i32) -> i32 {
     let mut zero_count = 0;
     let mut l = 0;
     for r in 0..nums.len() {
-        if nums[r] == 0 {
-            zero_count += 1;
-        }
+        zero_count += 1 - nums[r];
 
         while zero_count > k {
-            if nums[l] == 0 {
-                zero_count -= 1;
-            }
+            zero_count -= 1 - nums[l];
             l += 1;
         }
 
