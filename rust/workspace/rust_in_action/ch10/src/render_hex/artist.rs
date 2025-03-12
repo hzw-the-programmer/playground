@@ -3,8 +3,8 @@ use Orientation::*;
 
 pub struct Artist {
     orientation: Orientation,
-    x: isize,
-    y: isize,
+    pub x: isize,
+    pub y: isize,
 }
 
 #[derive(PartialEq, Debug)]

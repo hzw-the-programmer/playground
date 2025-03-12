@@ -2,7 +2,7 @@ use super::HEIGHT;
 use Operation::*;
 
 #[derive(Debug, PartialEq)]
-enum Operation {
+pub enum Operation {
     Forward(isize),
     TurnLeft,
     TurnRight,

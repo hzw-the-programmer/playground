@@ -1,1 +1,1 @@
-mod render_hex;
+pub mod render_hex;
