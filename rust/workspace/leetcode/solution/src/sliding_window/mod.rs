@@ -56,3 +56,5 @@ mod substrs_no_repeats;
 mod p1493;
 // 1004. Max Consecutive Ones III
 mod p1004;
+// 1208. Get Equal Substrings Within Budget
+mod p1208;
