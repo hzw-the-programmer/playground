@@ -51,6 +51,27 @@ pub fn longest_subarray_2(nums: Vec<i32>) -> i32 {
     }
 }
 
+pub fn longest_subarray_3(nums: Vec<i32>) -> i32 {
+    let mut res = 0;
+    let mut l = 0;
+    let mut zero_count = 0;
+    for r in 0..nums.len() {
+        if nums[r] == 0 {
+            zero_count += 1;
+        }
+
+        while zero_count > 1 {
+            if nums[l] == 0 {
+                zero_count -= 1;
+            }
+            l += 1;
+        }
+
+        res = res.max(r - l);
+    }
+    res as i32
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -64,5 +85,9 @@ mod tests {
         assert_eq!(3, longest_subarray_2(vec![1, 1, 0, 1]));
         assert_eq!(5, longest_subarray_2(vec![0, 1, 1, 1, 0, 1, 1, 0, 1]));
         assert_eq!(2, longest_subarray_2(vec![1, 1, 1]));
+
+        assert_eq!(3, longest_subarray_3(vec![1, 1, 0, 1]));
+        assert_eq!(5, longest_subarray_3(vec![0, 1, 1, 1, 0, 1, 1, 0, 1]));
+        assert_eq!(2, longest_subarray_3(vec![1, 1, 1]));
     }
 }
