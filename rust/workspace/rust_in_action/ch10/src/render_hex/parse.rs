@@ -10,7 +10,7 @@ pub enum Operation {
     Noop(u8),
 }
 
-fn parse(s: &str) -> Vec<Operation> {
+pub fn parse(s: &str) -> Vec<Operation> {
     let mut steps = Vec::with_capacity(s.len());
     for b in s.bytes() {
         let step = match b {
