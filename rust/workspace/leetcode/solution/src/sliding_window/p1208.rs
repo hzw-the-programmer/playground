@@ -20,14 +20,12 @@ pub fn equal_substring(s: String, t: String, max_cost: i32) -> i32 {
     for r in 0..n {
         sum += costs[r] as i32;
 
-        while sum > max_cost {
+        while l < r && sum > max_cost {
             sum -= costs[l] as i32;
             l += 1;
         }
 
-        if r >= l {
-            res = res.max(r - l + 1);
-        }
+        res = res.max(r - l + 1);
     }
     res as _
 }

@@ -37,13 +37,13 @@ mod p2067;
 // 2269. Find the K-Beauty of a Number
 mod p2269;
 // 2524. Maximum Frequency Score of a Subarray
-mod p2524;
-// 2953. Count Complete Substrings
 mod binary_indexed_tree;
 mod bits;
+mod p2524;
+// 2953. Count Complete Substrings
+mod binary_search;
 mod p2953;
 // 3090. Maximum Length Substring With Two Occurrences
-mod binary_search;
 mod p3090;
 mod permutation_in_str;
 mod rabin_karp;
