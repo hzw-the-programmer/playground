@@ -32,6 +32,7 @@ pub fn run() {
     hasher.update(input.as_bytes());
     let hash = hasher.finalize();
     let hash_str = format!("{:x}", hash);
+    // let hash_str = "4705db24888d030540ada6d306f65ae770fdb8ab15d6a6899e755f1c1b93d973";
     // println!("{hash_str}");
     let operations = parse(&hash_str);
     let path_data = convert(&operations);
