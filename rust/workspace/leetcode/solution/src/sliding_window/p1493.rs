@@ -51,25 +51,10 @@ pub fn longest_subarray_2(nums: Vec<i32>) -> i32 {
     }
 }
 
+use super::p1004;
+
 pub fn longest_subarray_3(nums: Vec<i32>) -> i32 {
-    let mut res = 0;
-    let mut l = 0;
-    let mut zero_count = 0;
-    for r in 0..nums.len() {
-        if nums[r] == 0 {
-            zero_count += 1;
-        }
-
-        while zero_count > 1 {
-            if nums[l] == 0 {
-                zero_count -= 1;
-            }
-            l += 1;
-        }
-
-        res = res.max(r - l);
-    }
-    res as i32
+    p1004::longest_ones(nums, 1) - 1
 }
 
 #[cfg(test)]
