@@ -60,3 +60,5 @@ mod p1004;
 mod p1208;
 // 904. Fruit Into Baskets
 mod p904;
+// 1695. Maximum Erasure Value
+mod p1695;
