@@ -1,20 +1,19 @@
 // 1695. Maximum Erasure Value
 
-use std::collections::HashMap;
+use std::collections::HashSet;
 
 pub fn maximum_unique_subarray(nums: Vec<i32>) -> i32 {
-    let mut map = HashMap::new();
+    let mut set = HashSet::new();
     let mut sum = 0;
     let mut res = 0;
     let mut l = 0;
     for r in 0..nums.len() {
-        *map.entry(nums[r]).or_insert(0) += 1;
-        while *map.get(&nums[r]).unwrap() > 1 {
-            let c = map.get_mut(&nums[l]).unwrap();
-            *c -= 1;
+        while set.contains(&nums[r]) {
+            set.remove(&nums[l]);
             sum -= nums[l];
             l += 1;
         }
+        set.insert(nums[r]);
         sum += nums[r];
         res = res.max(sum);
     }
