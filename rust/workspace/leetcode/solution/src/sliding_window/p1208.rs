@@ -25,8 +25,9 @@ pub fn equal_substring(s: String, t: String, max_cost: i32) -> i32 {
             l += 1;
         }
 
-        let len = if r >= l { r - l + 1 } else { 0 };
-        res = res.max(len);
+        if r >= l {
+            res = res.max(r - l + 1);
+        }
     }
     res as _
 }
