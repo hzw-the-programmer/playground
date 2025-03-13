@@ -10,15 +10,18 @@
 
 // 220. Contains Duplicate III
 
-// 3. Longest Substring Without Repeating Characters
-// 3090. Maximum Length Substring With Two Occurrences
-// 1493. Longest Subarray of 1's After Deleting One Element
-// 1208. Get Equal Substrings Within Budget
-// 904. Fruit Into Baskets
-// 1695. Maximum Erasure Value
-// 2958. Length of Longest Subarray With at Most K Frequency
+/*
+  3. Longest Substring Without Repeating Characters
+  3090. Maximum Length Substring With Two Occurrences
+  1493. Longest Subarray of 1's After Deleting One Element
+  1208. Get Equal Substrings Within Budget
+  904. Fruit Into Baskets
+  1695. Maximum Erasure Value
+  2958. Length of Longest Subarray With at Most K Frequency
+  2024. Maximize the Confusion of an Exam
+  1004. Max Consecutive Ones III
 
-// 1004. Max Consecutive Ones III
+*/
 
 mod anagrams;
 mod binary_indexed_tree;
@@ -50,6 +53,7 @@ mod p1016;
 mod p1208;
 mod p1493;
 mod p1695;
+mod p2024;
 mod p2067;
 mod p220;
 mod p2269;
