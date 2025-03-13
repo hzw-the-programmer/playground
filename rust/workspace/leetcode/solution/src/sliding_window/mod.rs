@@ -58,3 +58,5 @@ mod p1493;
 mod p1004;
 // 1208. Get Equal Substrings Within Budget
 mod p1208;
+// 904. Fruit Into Baskets
+mod p904;
