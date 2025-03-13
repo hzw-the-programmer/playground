@@ -20,7 +20,7 @@
   2958. Length of Longest Subarray With at Most K Frequency
   2024. Maximize the Confusion of an Exam
   1004. Max Consecutive Ones III
-
+  1658. Minimum Operations to Reduce X to Zero
 */
 
 mod anagrams;
@@ -52,6 +52,7 @@ mod p1004;
 mod p1016;
 mod p1208;
 mod p1493;
+mod p1658;
 mod p1695;
 mod p2024;
 mod p2067;
