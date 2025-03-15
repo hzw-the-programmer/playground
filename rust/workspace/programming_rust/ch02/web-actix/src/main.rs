@@ -1,4 +1,5 @@
 use actix_web::{web, App, HttpResponse, HttpServer};
+use math::gcd;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -41,7 +42,7 @@ async fn post_gcd(form: web::Form<GcdParameters>) -> HttpResponse {
         "The greatest common divisor of the numbers {} and {} is <b>{}</b>\n",
         form.m,
         form.n,
-        math::gcd(form.m, form.n)
+        gcd(form.m, form.n)
     );
     HttpResponse::Ok().content_type("text/html").body(response)
 }
