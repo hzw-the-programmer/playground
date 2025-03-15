@@ -1,4 +1,4 @@
-use math::gcd::gcd;
+use math::gcd;
 use std::env;
 use std::str::FromStr;
 
