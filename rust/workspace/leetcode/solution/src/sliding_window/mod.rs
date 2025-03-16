@@ -23,6 +23,10 @@
   1658. Minimum Operations to Reduce X to Zero
 */
 
+/*
+  2730. Find the Longest Semi-Repetitive Substring
+*/
+
 mod anagrams;
 mod binary_indexed_tree;
 mod binary_search;
@@ -72,3 +76,5 @@ mod subarray_beauty;
 mod substr_hash;
 mod substr_with_words;
 mod substrs_no_repeats;
+
+mod p2730;
