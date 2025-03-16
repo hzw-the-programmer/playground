@@ -7,7 +7,7 @@ pub fn max_frequency(nums: Vec<i32>, k: i32) -> i32 {
     let mut sum = 0;
     let mut l = 0;
     for r in 0..nums.len() {
-        while l < r && (sum + k as u64) < nums[r] as u64 * (r - l) as u64 {
+        while (sum + k as u64) < nums[r] as u64 * (r - l) as u64 {
             sum -= nums[l] as u64;
             l += 1;
         }
