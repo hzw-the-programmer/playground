@@ -2,6 +2,9 @@
 
 pub fn longest_semi_repetitive_substring(s: String) -> i32 {
     let s = s.as_bytes();
+    if s.len() == 1 {
+        return 1;
+    }
     let mut res = 0;
     let mut count = 0;
     let mut l = 0;
@@ -31,5 +34,6 @@ mod tests {
         assert_eq!(longest_semi_repetitive_substring("52233".to_string()), 4);
         assert_eq!(longest_semi_repetitive_substring("5494".to_string()), 4);
         assert_eq!(longest_semi_repetitive_substring("1111111".to_string()), 2);
+        assert_eq!(longest_semi_repetitive_substring("0".to_string()), 1);
     }
 }
