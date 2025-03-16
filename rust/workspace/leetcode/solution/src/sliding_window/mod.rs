@@ -25,6 +25,7 @@
 
 /*
   2730. Find the Longest Semi-Repetitive Substring
+  2779. Maximum Beauty of an Array After Applying Operation
 */
 
 mod anagrams;
@@ -78,3 +79,4 @@ mod substr_with_words;
 mod substrs_no_repeats;
 
 mod p2730;
+mod p2779;
