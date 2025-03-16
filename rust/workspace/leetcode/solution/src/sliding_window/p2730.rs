@@ -2,22 +2,19 @@
 
 pub fn longest_semi_repetitive_substring(s: String) -> i32 {
     let s = s.as_bytes();
-    if s.len() == 1 {
-        return 1;
-    }
     let mut res = 0;
     let mut count = 0;
     let mut l = 0;
-    for r in 1..s.len() {
-        if s[r] == s[r - 1] {
+    for r in 0..s.len() {
+        if r != 0 && s[r] == s[r - 1] {
             count += 1;
         }
 
         while count > 1 {
-            l += 1;
-            if s[l] == s[l - 1] {
+            if s[l] == s[l + 1] {
                 count -= 1;
             }
+            l += 1;
         }
 
         res = res.max(r - l + 1);
