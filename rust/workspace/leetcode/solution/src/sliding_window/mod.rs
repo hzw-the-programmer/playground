@@ -28,6 +28,7 @@
   2779. Maximum Beauty of an Array After Applying Operation
   1838. Frequency of the Most Frequent Element
   2516. Take K of Each Character From Left and Right
+  2831. Find the Longest Equal Subarray
 */
 
 mod anagrams;
@@ -84,3 +85,4 @@ mod p1838;
 mod p2516;
 mod p2730;
 mod p2779;
+mod p2831;
