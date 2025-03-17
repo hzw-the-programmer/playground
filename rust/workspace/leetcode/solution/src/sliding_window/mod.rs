@@ -27,6 +27,7 @@
   2730. Find the Longest Semi-Repetitive Substring
   2779. Maximum Beauty of an Array After Applying Operation
   1838. Frequency of the Most Frequent Element
+  2516. Take K of Each Character From Left and Right
 */
 
 mod anagrams;
@@ -80,5 +81,6 @@ mod substr_with_words;
 mod substrs_no_repeats;
 
 mod p1838;
+mod p2516;
 mod p2730;
 mod p2779;
