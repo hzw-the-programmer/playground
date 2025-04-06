@@ -48,6 +48,17 @@ impl<T> Drop for MyBox<T> {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_size() {
+        assert_eq!(std::mem::size_of::<Option<Box<i32>>>(), 8);
+        assert_eq!(std::mem::size_of::<Option<MyBox<i32>>>(), 16);
+    }
+}
+
 pub mod main {
     use super::*;
     use crate::my_global_alloc::COUNTER;
