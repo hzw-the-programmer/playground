@@ -47,3 +47,30 @@ impl<T> Drop for MyBox<T> {
         }
     }
 }
+
+pub mod main {
+    use super::*;
+    use crate::my_global_alloc::COUNTER;
+    use std::sync::atomic::Ordering::Relaxed;
+
+    pub fn test1() {
+        println!("before main: {}", COUNTER.load(Relaxed));
+
+        println!("before block: {}", COUNTER.load(Relaxed));
+        {
+            let _mb = MyBox::new(Foo { id: 1 });
+            println!("after new: {}", COUNTER.load(Relaxed));
+        }
+        println!("after block: {}", COUNTER.load(Relaxed));
+    }
+
+    struct Foo {
+        id: i32,
+    }
+
+    impl Drop for Foo {
+        fn drop(&mut self) {
+            println!("Drop Foo {}", self.id);
+        }
+    }
+}
