@@ -1117,6 +1117,10 @@ name = "mut-test"
 version = "0.0.0"
 
 [[package]]
+name = "my_box"
+version = "0.0.0"
+
+[[package]]
 name = "num-conv"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
