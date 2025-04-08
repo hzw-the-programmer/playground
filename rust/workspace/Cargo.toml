@@ -1,6 +1,10 @@
 [workspace]
-members = ["axum_test", "examples/*", "leetcode/*", "rust_in_action/*", "programming_rust/*/*"]
+members = ["axum_test", "examples/*", "leetcode/*", "rust_in_action/*", "programming_rust/*/*", "blog_os"]
 resolver = "2"
 
 [patch.crates-io]
 tokio = { path = "D:/github/tokio-rs/tokio/tokio" }
+
+# for blog_os
+[profile.dev]
+panic = "abort"

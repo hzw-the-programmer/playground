@@ -349,6 +349,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "blog_os"
+version = "0.0.0"
+
+[[package]]
 name = "brotli"
 version = "7.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

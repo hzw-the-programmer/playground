@@ -1,0 +1,3 @@
+[package]
+name = "blog_os"
+edition = "2024"
