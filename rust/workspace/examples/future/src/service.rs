@@ -5,7 +5,8 @@ use std::task::{Context, Poll, Waker};
 use tower::{Service, ServiceExt};
 
 pub fn test() {
-    test1();
+    // test1();
+    test2();
 }
 
 fn test1() {
@@ -35,6 +36,26 @@ fn test1() {
     // polled after complete
     // let r = fut.as_mut().poll(&mut cx);
     // println!("{r:?}");
+}
+
+fn test2() {
+    let mut cx = Context::from_waker(Waker::noop());
+    let mut fut = pin!(async {
+        println!("async: begin");
+        let r = Srv::new(2, 3).oneshot(23).await;
+        println!("async: {r:?}");
+        println!("async: end");
+        r
+    });
+
+    loop {
+        println!("test2: begin poll");
+        let r = fut.as_mut().poll(&mut cx);
+        println!("test2: after poll: {r:?}");
+        if let Poll::Ready(_) = r {
+            break;
+        }
+    }
 }
 
 struct Srv {
