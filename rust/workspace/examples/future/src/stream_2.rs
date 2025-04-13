@@ -4,7 +4,8 @@ use std::pin::{pin, Pin};
 use std::task::{Context, Poll, Waker};
 
 pub fn test() {
-    test1();
+    // test1();
+    test2();
 }
 
 fn test1() {
@@ -27,6 +28,30 @@ fn test1() {
     println!("test1: poll");
     let r = f.as_mut().poll(&mut cx);
     println!("test1: poll result: {r:?}");
+}
+
+fn test2() {
+    let mut cx = Context::from_waker(Waker::noop());
+    let mut s = Foo::new();
+    let mut f = pin!(s.next());
+
+    println!("test2: poll");
+    let r = f.as_mut().poll(&mut cx);
+    println!("test2: poll result: {r:?}");
+
+    println!("test2: poll");
+    let r = f.as_mut().poll(&mut cx);
+    println!("test2: poll result: {r:?}");
+
+    let mut f = pin!(s.next());
+
+    println!("test2: poll");
+    let r = f.as_mut().poll(&mut cx);
+    println!("test2: poll result: {r:?}");
+
+    println!("test2: poll");
+    let r = f.as_mut().poll(&mut cx);
+    println!("test2: poll result: {r:?}");
 }
 
 struct Foo(usize);
