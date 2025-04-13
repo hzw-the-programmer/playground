@@ -1,6 +1,5 @@
-use futures_util::FutureExt;
 use std::future::Future;
-use std::pin::Pin;
+use std::pin::{pin, Pin};
 use std::task::{Context, Poll, Waker};
 
 pub fn test() {
@@ -9,17 +8,17 @@ pub fn test() {
 
 fn test1() {
     let mut cx = Context::from_waker(Waker::noop());
-    let mut foo = Foo::new(3);
-    let r = foo.poll_unpin(&mut cx);
+    let mut foo = pin!(Foo::new(3));
+    let r = foo.as_mut().poll(&mut cx);
     println!("{r:?}");
-    let r = foo.poll_unpin(&mut cx);
+    let r = foo.as_mut().poll(&mut cx);
     println!("{r:?}");
-    let r = foo.poll_unpin(&mut cx);
+    let r = foo.as_mut().poll(&mut cx);
     println!("{r:?}");
-    let r = foo.poll_unpin(&mut cx);
+    let r = foo.as_mut().poll(&mut cx);
     println!("{r:?}");
 
-    let r = foo.poll_unpin(&mut cx);
+    let r = foo.as_mut().poll(&mut cx);
     println!("{r:?}");
 }
 
