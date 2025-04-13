@@ -5,7 +5,8 @@ use std::task::{Context, Poll, Waker};
 
 pub fn test() {
     // test1();
-    test2();
+    // test2();
+    test3();
 }
 
 fn test1() {
@@ -52,6 +53,41 @@ fn test2() {
     println!("test2: poll");
     let r = f.as_mut().poll(&mut cx);
     println!("test2: poll result: {r:?}");
+}
+
+fn test3() {
+    let mut cx = Context::from_waker(Waker::noop());
+    let mut f = pin!(async {
+        let mut s = Foo::new();
+
+        let f = s.next();
+        println!("async: await");
+        let r = f.await;
+        println!("async: {r:?}");
+
+        let f = s.next();
+        println!("async: await");
+        let r = f.await;
+        println!("async: {r:?}");
+        r
+    });
+
+    println!("test3: poll");
+    let r = f.as_mut().poll(&mut cx);
+    println!("test3: poll result: {r:?}");
+
+    println!("test3: poll");
+    let r = f.as_mut().poll(&mut cx);
+    println!("test3: poll result: {r:?}");
+
+    println!("test3: poll");
+    let r = f.as_mut().poll(&mut cx);
+    println!("test3: poll result: {r:?}");
+
+    // `async fn` resumed after completion
+    // println!("test3: poll");
+    // let r = f.as_mut().poll(&mut cx);
+    // println!("test3: poll result: {r:?}");
 }
 
 struct Foo(usize);
