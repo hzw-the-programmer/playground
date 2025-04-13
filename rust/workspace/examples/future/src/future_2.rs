@@ -18,6 +18,9 @@ fn test1() {
     println!("{r:?}");
     let r = foo.poll_unpin(&mut cx);
     println!("{r:?}");
+
+    let r = foo.poll_unpin(&mut cx);
+    println!("{r:?}");
 }
 
 struct Foo {
