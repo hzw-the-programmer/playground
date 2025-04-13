@@ -51,6 +51,11 @@ fn test2() {
     println!("test2: poll");
     let r = fut.as_mut().poll(&mut cx);
     println!("test2: poll: {r:?}");
+
+    // `async fn` resumed after completion
+    // println!("test2: poll");
+    // let r = fut.as_mut().poll(&mut cx);
+    // println!("test2: poll: {r:?}");
 }
 
 struct Foo {
