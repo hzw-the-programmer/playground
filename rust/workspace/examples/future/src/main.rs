@@ -8,6 +8,7 @@ mod future_2;
 mod future_async_await;
 mod future_state_machine;
 mod futures;
+mod service;
 mod sink;
 mod stream_2;
 mod streams;
@@ -19,7 +20,8 @@ mod streams;
 // use streams as test;
 // use drop as test;
 // use future_2 as test;
-use stream_2 as test;
+// use stream_2 as test;
+use service as test;
 
 fn main() {
     test::test();

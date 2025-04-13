@@ -8,3 +8,4 @@ futures-core = "0.3"
 futures-util = { version = "0.3", features = ["sink"] }
 futures-executor = "0.3"
 futures-channel = "0.3"
+tower = { version = "0.5.2", features = ["util"] }
