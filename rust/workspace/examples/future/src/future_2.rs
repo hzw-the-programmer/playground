@@ -71,10 +71,12 @@ impl Foo {
 impl Future for Foo {
     type Output = i32;
 
-    fn poll(mut self: Pin<&mut Self>, cx: &mut Context) -> Poll<Self::Output> {
+    fn poll(self: Pin<&mut Self>, cx: &mut Context) -> Poll<Self::Output> {
         println!("Foo::poll: count={}", self.count);
         if self.count > 0 {
-            self.count -= 1;
+            unsafe {
+                self.get_unchecked_mut().count -= 1;
+            }
             Poll::Pending
         } else {
             Poll::Ready(23)
