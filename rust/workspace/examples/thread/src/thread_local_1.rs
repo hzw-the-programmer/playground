@@ -1,4 +1,5 @@
 use std::cell::Cell;
+use std::thread;
 use std::thread_local;
 
 pub fn test() {
@@ -30,4 +31,18 @@ fn test1() {
         println!("Foo.with i={}", foo.i.get());
         foo.i.set(3);
     });
+
+    thread::spawn(|| {
+        println!("thread");
+        FOO.with(|foo| {
+            println!("Foo.with i={}", foo.i.get());
+            foo.i.set(2);
+        });
+        FOO.with(|foo| {
+            println!("Foo.with i={}", foo.i.get());
+            foo.i.set(3);
+        });
+    })
+    .join()
+    .unwrap();
 }

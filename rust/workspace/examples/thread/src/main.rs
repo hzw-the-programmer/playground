@@ -1,4 +1,5 @@
 // #![feature(thread_spawn_unchecked)]
+#![allow(dead_code)]
 
 mod test1;
 mod thread_local_1;
