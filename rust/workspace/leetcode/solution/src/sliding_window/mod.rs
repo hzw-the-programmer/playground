@@ -30,6 +30,7 @@
   2516. Take K of Each Character From Left and Right
   2831. Find the Longest Equal Subarray
   2271. Maximum White Tiles Covered by a Carpet
+  2106. Maximum Fruits Harvested After at Most K Steps
 */
 
 mod anagrams;
@@ -83,6 +84,7 @@ mod substr_with_words;
 mod substrs_no_repeats;
 
 mod p1838;
+mod p2106;
 mod p2271;
 mod p2516;
 mod p2730;
