@@ -53,11 +53,33 @@ mod tests {
     #[test]
     fn lower_bound_test() {
         assert_eq!(0, lower_bound(&[], 1));
+        
         assert_eq!(0, lower_bound(&[2], 1));
+        
         assert_eq!(1, lower_bound(&[2, 4], 3));
+        
+        assert_eq!(0, lower_bound(&[2, 4, 6], 1));
+        assert_eq!(1, lower_bound(&[2, 4, 6], 3));
         assert_eq!(2, lower_bound(&[2, 4, 6], 5));
+        assert_eq!(3, lower_bound(&[2, 4, 6], 7));
+        
         assert_eq!(2, lower_bound(&[2, 4, 6, 8], 5));
+        
+        assert_eq!(0, lower_bound(&[2, 4, 6, 8, 10], 1));
+        assert_eq!(1, lower_bound(&[2, 4, 6, 8, 10], 3));
+        assert_eq!(2, lower_bound(&[2, 4, 6, 8, 10], 5));
+        assert_eq!(3, lower_bound(&[2, 4, 6, 8, 10], 7));
+        assert_eq!(4, lower_bound(&[2, 4, 6, 8, 10], 9));
         assert_eq!(5, lower_bound(&[2, 4, 6, 8, 10], 11));
+        
+        assert_eq!(0, lower_bound(&[2], 2));
+        assert_eq!(0, lower_bound(&[2, 4], 2));
+        assert_eq!(1, lower_bound(&[2, 4], 4));
+
+        assert_eq!(0, lower_bound(&[2, 4, 6, 8, 10], 2));
+        assert_eq!(1, lower_bound(&[2, 4, 6, 8, 10], 4));
+        assert_eq!(2, lower_bound(&[2, 4, 6, 8, 10], 6));
         assert_eq!(3, lower_bound(&[2, 4, 6, 8, 10], 8));
+        assert_eq!(4, lower_bound(&[2, 4, 6, 8, 10], 10));
     }
 }
