@@ -1,3 +1,4 @@
+mod binary_search;
 mod test1;
 
 use test1 as test;
