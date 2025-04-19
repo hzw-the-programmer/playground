@@ -31,6 +31,7 @@
   2831. Find the Longest Equal Subarray
   2271. Maximum White Tiles Covered by a Carpet
   2106. Maximum Fruits Harvested After at Most K Steps
+  2555. Maximize Win From Two Segments
 */
 
 mod anagrams;
@@ -87,6 +88,7 @@ mod p1838;
 mod p2106;
 mod p2271;
 mod p2516;
+mod p2555;
 mod p2730;
 mod p2779;
 mod p2831;
