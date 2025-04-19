@@ -1,0 +1,86 @@
+struct MinHeap<T> {
+    elements: Vec<T>,
+}
+
+impl<T: Ord> MinHeap<T> {
+    fn new() -> Self {
+        MinHeap{
+            elements: vec![]
+        }
+    }
+
+    fn len(&self) -> usize {
+        self.elements.len()
+    }
+
+    fn empty(&self) -> bool {
+        self.len() == 0
+    }
+
+    fn push(&mut self, v: T) {
+        self.elements.push(v);
+        self.sift_up(self.len() - 1);
+    }
+
+    fn sift_up(&mut self, index: usize) {
+        let mut current = index;
+        while current > 0 && self.elements[(current-1)/2] > self.elements[current] {
+            self.elements.swap((current-1)/2, current);
+            current = (current - 1) / 2;
+        }
+    }
+
+    fn pop(&mut self) -> Option<T> {
+        self.elements.pop().map(|mut item| {
+            if !self.empty() {
+                unsafe{
+                    std::ptr::swap(&mut item, &mut self.elements[0]);
+                }
+                self.sift_down(0);
+            }
+            item
+        })
+    }
+
+    fn sift_down(&mut self, index: usize) {
+        let mut current = index;
+
+        while current < self.len() {
+            let mut smallest = current;
+            
+            let left = 2 * current + 1;
+            if left < self.len() && self.elements[left] < self.elements[smallest] {
+                smallest = left;
+            }
+    
+            let right = 2 * current + 2;
+            if right < self.len() && self.elements[right] < self.elements[smallest] {
+                smallest = right;
+            }
+    
+            if smallest == current {
+                break;
+            }
+    
+            self.elements.swap(smallest, current);
+            current = smallest;
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn push_pop() {
+        let mut heap = MinHeap::new();
+        heap.push(3);
+        heap.push(2);
+        heap.push(1);
+        assert_eq!(heap.pop(), Some(1));
+        assert_eq!(heap.pop(), Some(2));
+        assert_eq!(heap.pop(), Some(3));
+        assert_eq!(heap.pop(), None);
+    }
+}
