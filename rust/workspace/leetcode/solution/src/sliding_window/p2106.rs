@@ -6,13 +6,15 @@ impl Solution {
     pub fn max_total_fruits(fruits: Vec<Vec<i32>>, start_pos: i32, k: i32) -> i32 {
         let len = fruits.len();
 
+        // 这个居然要快点？
         let mut left = 0;
         while left < len && fruits[left][0] < start_pos - k {
             left += 1;
         }
-        if left == len {
-            return 0;
-        }
+        // let mut left = fruits.binary_search_by_key(&(start_pos - k), |p| p[0]).unwrap_or_else(|e| e);
+        // if left == len {
+        //     return 0;
+        // }
 
         let mut sum = 0;
 
