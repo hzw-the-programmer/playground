@@ -35,6 +35,8 @@ pub fn lower_bound(arr: &[i32], target: i32) -> usize {
     left
 }
 
+// D:\rustup_home\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\core\src\slice\mod.rs
+// binary_search_by
 pub fn lower_bound_by<T, F>(arr: &[T], mut f: F) -> usize
 where
     F: FnMut(&T) -> Ordering,
