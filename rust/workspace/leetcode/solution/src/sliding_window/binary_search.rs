@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 pub fn binary_search(arr: &[i32], target: i32) -> Option<usize> {
     let mut left = 0;
     let mut right = arr.len();
@@ -33,22 +35,20 @@ pub fn lower_bound(arr: &[i32], target: i32) -> usize {
     left
 }
 
-pub fn lower_bound_by_key<T, F, K>(arr: &[T], target: &T, mut f: F) -> usize
-where F: FnMut(&T) -> K,
-      K: Ord {
+pub fn lower_bound_by_key<T, F, K>(arr: &[T], target: &K, mut f: F) -> usize
+where
+    F: FnMut(&T) -> K,
+    K: Ord,
+{
     let mut left = 0;
     let mut right = arr.len();
-    let target = f(&target);
 
     while left < right {
         let mid = left + (right - left) / 2;
-        let key = f(&arr[mid]);
-        if key == target {
-            return mid;
-        } else if key < target {
-            left = mid + 1;
-        } else {
-            right = mid;
+        match f(&arr[mid]).cmp(target) {
+            Ordering::Equal => return mid,
+            Ordering::Less => left = mid + 1,
+            Ordering::Greater => right = mid,
         }
     }
 

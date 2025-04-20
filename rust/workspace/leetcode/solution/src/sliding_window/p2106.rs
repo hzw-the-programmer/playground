@@ -1,5 +1,7 @@
 // 2106. Maximum Fruits Harvested After at Most K Steps
 
+use super::binary_search::lower_bound_by_key;
+
 struct Solution;
 
 impl Solution {
@@ -7,14 +9,20 @@ impl Solution {
         let len = fruits.len();
 
         // 这个居然要快点？
-        let mut left = 0;
-        while left < len && fruits[left][0] < start_pos - k {
-            left += 1;
-        }
+        // 100%
+        // let mut left = 0;
+        // while left < len && fruits[left][0] < start_pos - k {
+        //     left += 1;
+        // }
+        // 75%
         // let mut left = fruits.binary_search_by_key(&(start_pos - k), |p| p[0]).unwrap_or_else(|e| e);
         // if left == len {
         //     return 0;
         // }
+        let mut left = lower_bound_by_key(&fruits, &(start_pos - k), |p| p[0]);
+        if left == len {
+            return 0;
+        }
 
         let mut sum = 0;
 
