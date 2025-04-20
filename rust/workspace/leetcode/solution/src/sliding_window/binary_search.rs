@@ -33,6 +33,28 @@ pub fn lower_bound(arr: &[i32], target: i32) -> usize {
     left
 }
 
+pub fn lower_bound_by_key<T, F, K>(arr: &[T], target: &T, mut f: F) -> usize
+where F: FnMut(&T) -> K,
+      K: Ord {
+    let mut left = 0;
+    let mut right = arr.len();
+    let target = f(&target);
+
+    while left < right {
+        let mid = left + (right - left) / 2;
+        let key = f(&arr[mid]);
+        if key == target {
+            return mid;
+        } else if key < target {
+            left = mid + 1;
+        } else {
+            right = mid;
+        }
+    }
+
+    left
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -81,5 +103,10 @@ mod tests {
         assert_eq!(2, lower_bound(&[2, 4, 6, 8, 10], 6));
         assert_eq!(3, lower_bound(&[2, 4, 6, 8, 10], 8));
         assert_eq!(4, lower_bound(&[2, 4, 6, 8, 10], 10));
+    }
+
+    #[test]
+    fn lower_bound_by_key_test() {
+        assert_eq!(0, lower_bound_by_key(&[2, 4, 6, 8, 10], &1, |v| *v));
     }
 }
