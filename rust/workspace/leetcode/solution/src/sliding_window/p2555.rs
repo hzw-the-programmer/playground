@@ -12,11 +12,13 @@ impl Solution {
             let covered = right - left + 1;
             ans = ans.max(covered + dp[left]);
             dp[right + 1] = dp[right].max(covered);
-            // println!(
-            //     "({right}, {left}), covered={covered}, dp[{left}]={}, dp[{right}]={}",
-            //     dp[left], dp[right]
-            // );
-            // println!("dp[{}]={}", right + 1, dp[right + 1]);
+            println!(
+                "({right}, {left}), covered={covered}, dp[{left}]={}, dp[{right}]={}, dp[{}]={}",
+                dp[left],
+                dp[right],
+                right + 1,
+                dp[right + 1]
+            );
         }
         ans as _
     }
