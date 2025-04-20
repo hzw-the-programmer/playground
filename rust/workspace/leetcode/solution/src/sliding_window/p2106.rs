@@ -1,6 +1,6 @@
 // 2106. Maximum Fruits Harvested After at Most K Steps
 
-use super::binary_search::lower_bound_by_key;
+// use super::binary_search::lower_bound_by_key;
 
 struct Solution;
 
@@ -16,6 +16,8 @@ impl Solution {
         // }
 
         // 75%？leetcode 不稳定，有时100%，有时75%
+        // 每个 positioni 互不相同，所以可以用 binary_search，参见：
+        // D:\github\hzw-the-programmer\playground\rust\workspace\examples\array\src\binary_search.rs
         let mut left = fruits
             .binary_search_by_key(&(start_pos - k), |p| p[0])
             .unwrap_or_else(|e| e);
