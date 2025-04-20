@@ -54,7 +54,7 @@ impl<T: Ord + Clone> BinarySearchTree<T> {
     }
 
     fn to_vec_recursive(&self, node: &Option<Box<TreeNode<T>>>, v: &mut Vec<T>) {
-        if let Some(node) = node.as_ref() {
+        if let Some(node) = node {
             self.to_vec_recursive(&node.left, v);
             v.push(node.value.clone());
             self.to_vec_recursive(&node.right, v);
