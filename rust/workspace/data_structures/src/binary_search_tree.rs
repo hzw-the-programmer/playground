@@ -5,16 +5,16 @@ struct TreeNode<T> {
 }
 
 struct BinarySearchTree<T> {
-    node: Option<Box<TreeNode<T>>>,
+    root: Option<Box<TreeNode<T>>>,
 }
 
 impl<T: Ord + Clone> BinarySearchTree<T> {
     fn new() -> Self {
-        BinarySearchTree { node: None }
+        BinarySearchTree { root: None }
     }
 
     fn insert(&mut self, value: T) {
-        let mut current = &mut self.node;
+        let mut current = &mut self.root;
         loop {
             match current {
                 None => {
@@ -28,8 +28,10 @@ impl<T: Ord + Clone> BinarySearchTree<T> {
                 Some(node) => {
                     if value < node.value {
                         current = &mut node.left;
-                    } else {
+                    } else if value > node.value {
                         current = &mut node.right;
+                    } else {
+                        break;
                     }
                 }
             }
@@ -46,7 +48,7 @@ impl<T: Ord + Clone> BinarySearchTree<T> {
 
     fn to_vec(&self) -> Vec<T> {
         let mut v = vec![];
-        self.to_vec_recursive(&self.node, &mut v);
+        self.to_vec_recursive(&self.root, &mut v);
         v
     }
 }
