@@ -35,17 +35,16 @@ pub fn lower_bound(arr: &[i32], target: i32) -> usize {
     left
 }
 
-pub fn lower_bound_by_key<T, F, K>(arr: &[T], target: &K, mut f: F) -> usize
+pub fn lower_bound_by<T, F>(arr: &[T], mut f: F) -> usize
 where
-    F: FnMut(&T) -> K,
-    K: Ord,
+    F: FnMut(&T) -> Ordering,
 {
     let mut left = 0;
     let mut right = arr.len();
 
     while left < right {
         let mid = left + (right - left) / 2;
-        match f(&arr[mid]).cmp(target) {
+        match f(&arr[mid]) {
             Ordering::Equal => return mid,
             Ordering::Less => left = mid + 1,
             Ordering::Greater => right = mid,
@@ -53,6 +52,14 @@ where
     }
 
     left
+}
+
+pub fn lower_bound_by_key<T, F, K>(arr: &[T], target: &K, mut f: F) -> usize
+where
+    F: FnMut(&T) -> K,
+    K: Ord,
+{
+    lower_bound_by(arr, |v| f(v).cmp(target))
 }
 
 #[cfg(test)]
