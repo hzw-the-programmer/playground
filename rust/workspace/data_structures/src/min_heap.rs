@@ -1,26 +1,26 @@
-struct MinHeap<T> {
+pub struct MinHeap<T> {
     elements: Vec<T>,
 }
 
 impl<T: Ord> MinHeap<T> {
-    fn new() -> Self {
+    pub fn new() -> Self {
         MinHeap { elements: vec![] }
     }
 
-    fn len(&self) -> usize {
+    pub fn len(&self) -> usize {
         self.elements.len()
     }
 
-    fn empty(&self) -> bool {
+    pub fn empty(&self) -> bool {
         self.len() == 0
     }
 
-    fn push(&mut self, item: T) {
+    pub fn push(&mut self, item: T) {
         self.elements.push(item);
         self.sift_up(self.len() - 1);
     }
 
-    fn pop(&mut self) -> Option<T> {
+    pub fn pop(&mut self) -> Option<T> {
         self.elements.pop().map(|mut item| {
             if !self.empty() {
                 std::mem::swap(&mut item, &mut self.elements[0]);
@@ -30,7 +30,7 @@ impl<T: Ord> MinHeap<T> {
         })
     }
 
-    fn peek(&self) -> Option<&T> {
+    pub fn peek(&self) -> Option<&T> {
         self.elements.first()
     }
 

@@ -1,2 +1,2 @@
 pub mod binary_search_tree;
-mod min_heap;
+pub mod min_heap;
