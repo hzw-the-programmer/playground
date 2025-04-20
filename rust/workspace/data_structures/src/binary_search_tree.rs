@@ -38,6 +38,21 @@ impl<T: Ord + Clone> BinarySearchTree<T> {
         }
     }
 
+    fn search(&self, value: T) -> bool {
+        let mut current = &self.root;
+        while let Some(node) = current {
+            if value == node.value {
+                return true;
+            } else if value < node.value {
+                current = &node.left;
+            } else {
+                current = &node.right;
+            }
+        }
+
+        false
+    }
+
     fn to_vec_recursive(&self, node: &Option<Box<TreeNode<T>>>, v: &mut Vec<T>) {
         if let Some(node) = node.as_ref() {
             self.to_vec_recursive(&node.left, v);
@@ -60,6 +75,7 @@ mod tests {
     #[test]
     fn binary_search_tree() {
         let mut bst = BinarySearchTree::new();
+
         bst.insert(5);
         bst.insert(4);
         bst.insert(3);
@@ -67,5 +83,8 @@ mod tests {
         bst.insert(1);
         bst.insert(0);
         assert_eq!(vec![0, 1, 2, 3, 4, 5], bst.to_vec());
+
+        assert!(bst.search(5));
+        assert!(!bst.search(6));
     }
 }
