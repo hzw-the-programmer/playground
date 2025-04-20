@@ -14,15 +14,20 @@ impl Solution {
         // while left < len && fruits[left][0] < start_pos - k {
         //     left += 1;
         // }
-        // 75%
-        // let mut left = fruits.binary_search_by_key(&(start_pos - k), |p| p[0]).unwrap_or_else(|e| e);
-        // if left == len {
-        //     return 0;
-        // }
-        let mut left = lower_bound_by_key(&fruits, &(start_pos - k), |p| p[0]);
+
+        // 75%？leetcode 不稳定，有时100%，有时75%
+        let mut left = fruits
+            .binary_search_by_key(&(start_pos - k), |p| p[0])
+            .unwrap_or_else(|e| e);
         if left == len {
             return 0;
         }
+
+        // 执行用时分布击败 100%
+        // let mut left = lower_bound_by_key(&fruits, &(start_pos - k), |p| p[0]);
+        // if left == len {
+        //     return 0;
+        // }
 
         let mut sum = 0;
 
