@@ -1,14 +1,24 @@
-struct TreeNode<T> {
+struct Node<T: Ord> {
     value: T,
-    left: Option<Box<TreeNode<T>>>,
-    right: Option<Box<TreeNode<T>>>,
+    left: Option<Box<Node<T>>>,
+    right: Option<Box<Node<T>>>,
 }
 
-pub struct BinarySearchTree<T> {
-    root: Option<Box<TreeNode<T>>>,
+impl<T:Ord> Node<T> {
+    fn new(value: T) -> Self {
+        Node {
+            value,
+            left: None,
+            right: None,
+        }
+    }
 }
 
-impl<T: Ord + Clone> BinarySearchTree<T> {
+pub struct BinarySearchTree<T: Ord> {
+    root: Option<Box<Node<T>>>,
+}
+
+impl<T: Ord> BinarySearchTree<T> {
     pub fn new() -> Self {
         BinarySearchTree { root: None }
     }
@@ -18,11 +28,7 @@ impl<T: Ord + Clone> BinarySearchTree<T> {
         loop {
             match current {
                 None => {
-                    *current = Some(Box::new(TreeNode {
-                        value,
-                        left: None,
-                        right: None,
-                    }));
+                    *current = Some(Box::new(Node::new(value)));
                     break;
                 }
                 Some(node) => {
@@ -38,30 +44,29 @@ impl<T: Ord + Clone> BinarySearchTree<T> {
         }
     }
 
-    pub fn search(&self, value: T) -> bool {
+    pub fn contains(&self, value: &T) -> bool {
         let mut current = &self.root;
         while let Some(node) = current {
-            if value == node.value {
+            if *value == node.value {
                 return true;
-            } else if value < node.value {
+            } else if *value < node.value {
                 current = &node.left;
             } else {
                 current = &node.right;
             }
         }
-
         false
     }
 
-    fn to_vec_recursive(&self, node: &Option<Box<TreeNode<T>>>, v: &mut Vec<T>) {
+    fn to_vec_recursive<'a>(&self, node: &'a Option<Box<Node<T>>>, v: &mut Vec<&'a T>) {
         if let Some(node) = node {
             self.to_vec_recursive(&node.left, v);
-            v.push(node.value.clone());
+            v.push(&node.value);
             self.to_vec_recursive(&node.right, v);
         }
     }
 
-    pub fn to_vec(&self) -> Vec<T> {
+    pub fn to_vec(&self) -> Vec<&T> {
         let mut v = vec![];
         self.to_vec_recursive(&self.root, &mut v);
         v
@@ -82,9 +87,9 @@ mod tests {
         bst.insert(2);
         bst.insert(1);
         bst.insert(0);
-        assert_eq!(vec![0, 1, 2, 3, 4, 5], bst.to_vec());
+        assert_eq!(vec![0, 1, 2, 3, 4, 5].iter().collect::<Vec<_>>(), bst.to_vec());
 
-        assert!(bst.search(5));
-        assert!(!bst.search(6));
+        assert!(bst.contains(&5));
+        assert!(!bst.contains(&6));
     }
 }
