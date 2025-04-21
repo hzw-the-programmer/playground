@@ -58,17 +58,17 @@ impl<T: Ord> BinarySearchTree<T> {
         false
     }
 
-    fn to_vec_recursive<'a>(&self, node: &'a Option<Box<Node<T>>>, v: &mut Vec<&'a T>) {
+    fn in_order_recursive<'a>(&self, node: &'a Option<Box<Node<T>>>, v: &mut Vec<&'a T>) {
         if let Some(node) = node {
-            self.to_vec_recursive(&node.left, v);
+            self.in_order_recursive(&node.left, v);
             v.push(&node.value);
-            self.to_vec_recursive(&node.right, v);
+            self.in_order_recursive(&node.right, v);
         }
     }
 
-    pub fn to_vec(&self) -> Vec<&T> {
+    pub fn in_order(&self) -> Vec<&T> {
         let mut v = vec![];
-        self.to_vec_recursive(&self.root, &mut v);
+        self.in_order_recursive(&self.root, &mut v);
         v
     }
 }
@@ -87,7 +87,7 @@ mod tests {
         bst.insert(2);
         bst.insert(1);
         bst.insert(0);
-        assert_eq!(vec![0, 1, 2, 3, 4, 5].iter().collect::<Vec<_>>(), bst.to_vec());
+        assert_eq!(vec![0, 1, 2, 3, 4, 5].iter().collect::<Vec<_>>(), bst.in_order());
 
         assert!(bst.contains(&5));
         assert!(!bst.contains(&6));
