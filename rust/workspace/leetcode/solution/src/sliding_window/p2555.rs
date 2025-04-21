@@ -3,6 +3,20 @@
 struct Solution;
 
 impl Solution {
+    pub fn maximize_win_one_line(prize_positions: Vec<i32>, k: i32) -> i32 {
+        let mut left = 0;
+        let mut ans = 0;
+        for (right, &pos) in prize_positions.iter().enumerate() {
+            while pos - prize_positions[left] > k {
+                println!("({right},{left}): {pos} - {} > {k}", prize_positions[left]);
+                left += 1;
+            }
+            println!("({right},{left}): {}", right - left + 1);
+            ans = ans.max(right - left + 1);
+        }
+        ans as _
+    }
+
     pub fn maximize_win(prize_positions: Vec<i32>, k: i32) -> i32 {
         let n = prize_positions.len();
         let mut dp = vec![0; n + 1];
@@ -22,29 +36,13 @@ impl Solution {
         }
         ans as _
     }
-
-    pub fn maximize_win_1(prize_positions: Vec<i32>, k: i32) -> i32 {
-        let len = prize_positions.len();
-        let mut right = 0;
-        let mut res = 0;
-        for (left, &pos) in prize_positions.iter().enumerate() {
-            while right < len && prize_positions[right] - pos <= k {
-                right += 1;
-            }
-            if right == len {
-                return res.max(right - left) as _;
-            }
-            res = res.max(right - left);
-        }
-        res as _
-    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[test]
+    // #[test]
     fn test_maximize_win() {
         //   0 1 2   3 4 5 6
         // 0 1 2 3 4 5 6 7 8
@@ -54,9 +52,23 @@ mod tests {
         // assert_eq!(2, Solution::maximize_win(vec![1, 2, 3, 4], 0));
     }
 
-    // #[test]
-    fn test_maximize_win_1() {
-        assert_eq!(6, Solution::maximize_win_1(vec![1, 1, 2, 2, 3, 3, 5], 2));
-        assert_eq!(1, Solution::maximize_win_1(vec![1, 2, 3, 4], 0));
+    #[test]
+    fn test_maximize_win_one_line() {
+        //   0 1 2   3 4 5 6
+        // 0 1 2 3 4 5 6 7 8
+        // assert_eq!(3, Solution::maximize_win_one_line(vec![1, 2, 3, 5, 6, 7, 8], 2));
+
+        //   0 1 2     3   4
+        // 0 1 2 3 4 5 6 7 8
+        // assert_eq!(3, Solution::maximize_win_one_line(vec![1, 2, 3, 6, 8], 2));
+
+        // 0 1(0,1) 2(2,3) 3(4,5) 4 5(6)
+        // assert_eq!(6, Solution::maximize_win_one_line(vec![1, 1, 2, 2, 3, 3, 5], 2));
+
+        // 0 1(0) 2(1) 3(2) 4 5 6(3,4,5) 7 8(6)
+        assert_eq!(
+            4,
+            Solution::maximize_win_one_line(vec![1, 2, 3, 6, 6, 6, 8], 2)
+        );
     }
 }
