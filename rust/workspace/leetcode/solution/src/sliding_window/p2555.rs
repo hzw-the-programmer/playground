@@ -5,6 +5,9 @@ struct Solution;
 impl Solution {
     pub fn maximize_win(prize_positions: Vec<i32>, k: i32) -> i32 {
         let n = prize_positions.len();
+        if 2 * k + 1 >= prize_positions[n - 1] - prize_positions[0] {
+            return n as _;
+        }
         let mut left = 0;
         let mut right = 0;
         let mut mx = 0;
@@ -99,6 +102,8 @@ mod tests {
         //   0 1 3 4
         // 0 1 2 3 4
         assert_eq!(2, Solution::maximize_win(vec![1, 2, 3, 4], 0));
+
+        assert_eq!(4, Solution::maximize_win(vec![1, 2, 3, 4], 1));
     }
 
     // #[test]
