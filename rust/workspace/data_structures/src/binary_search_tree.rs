@@ -58,18 +58,18 @@ impl<T: Ord> BinarySearchTree<T> {
         false
     }
 
-    fn in_order_recursive<'a>(&self, node: &'a Option<Box<Node<T>>>, v: &mut Vec<&'a T>) {
-        if let Some(node) = node {
-            self.in_order_recursive(&node.left, v);
-            v.push(&node.value);
-            self.in_order_recursive(&node.right, v);
-        }
-    }
-
     pub fn in_order(&self) -> Vec<&T> {
         let mut v = vec![];
-        self.in_order_recursive(&self.root, &mut v);
+        Self::in_order_traversal(&self.root, &mut v);
         v
+    }
+
+    fn in_order_traversal<'a>(node: &'a Option<Box<Node<T>>>, v: &mut Vec<&'a T>) {
+        if let Some(n) = node {
+            Self::in_order_traversal(&n.left, v);
+            v.push(&n.value);
+            Self::in_order_traversal(&n.right, v);
+        }
     }
 }
 
