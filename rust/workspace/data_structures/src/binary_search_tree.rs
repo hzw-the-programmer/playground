@@ -51,6 +51,25 @@ impl<T: Ord> BinarySearchTree<T> {
         false
     }
 
+    pub fn delete(&mut self, value: &T) {
+        let mut current = &mut self.root;
+        while let Some(node) = current {
+            if *value < node.value {
+                current = &mut node.left;
+            } else if *value > node.value {
+                current = &mut node.right;
+            } else {
+                // match (node.left.take(), node.right.take()) {
+                //     (None, None) => *current = None,
+                //     (Some(left), None) => *current = Some(left),
+                //     (None, Some(right)) => *current = Some(right),
+                //     (Some(left), Some(right)) => todo!(),
+                // }
+                break;
+            }
+        }
+    }
+
     pub fn in_order(&self) -> Vec<&T> {
         let mut v = vec![];
         Self::in_order_traversal(&self.root, &mut v);
@@ -69,6 +88,25 @@ impl<T: Ord> BinarySearchTree<T> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_basic_operations() {
+        let mut bst = BinarySearchTree::new();
+        assert!(!bst.contains(&5));
+
+        bst.insert(5);
+        assert!(bst.contains(&5));
+
+        bst.insert(3);
+        bst.insert(7);
+        assert!(bst.contains(&3));
+        assert!(bst.contains(&7));
+
+        bst.delete(&5);
+        assert!(!bst.contains(&5));
+        assert!(bst.contains(&3));
+        assert!(bst.contains(&7));
+    }
 
     #[test]
     fn binary_search_tree() {
