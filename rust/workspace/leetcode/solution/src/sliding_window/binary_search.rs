@@ -23,9 +23,7 @@ pub fn lower_bound(arr: &[i32], target: i32) -> usize {
 
     while left < right {
         let mid = left + (right - left) / 2;
-        if arr[mid] == target {
-            return mid;
-        } else if arr[mid] < target {
+        if arr[mid] < target {
             left = mid + 1;
         } else {
             right = mid;
@@ -112,6 +110,8 @@ mod tests {
         assert_eq!(2, lower_bound(&[2, 4, 6, 8, 10], 6));
         assert_eq!(3, lower_bound(&[2, 4, 6, 8, 10], 8));
         assert_eq!(4, lower_bound(&[2, 4, 6, 8, 10], 10));
+
+        assert_eq!(1, lower_bound(&[1, 2, 2, 2, 1], 2));
     }
 
     #[test]
