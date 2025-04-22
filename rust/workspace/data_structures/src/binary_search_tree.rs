@@ -1,10 +1,10 @@
-struct Node<T: Ord> {
+struct Node<T> {
     value: T,
     left: Option<Box<Node<T>>>,
     right: Option<Box<Node<T>>>,
 }
 
-impl<T:Ord> Node<T> {
+impl<T> Node<T> {
     fn new(value: T) -> Self {
         Node {
             value,
@@ -14,7 +14,7 @@ impl<T:Ord> Node<T> {
     }
 }
 
-pub struct BinarySearchTree<T: Ord> {
+pub struct BinarySearchTree<T> {
     root: Option<Box<Node<T>>>,
 }
 
@@ -25,34 +25,27 @@ impl<T: Ord> BinarySearchTree<T> {
 
     pub fn insert(&mut self, value: T) {
         let mut current = &mut self.root;
-        loop {
-            match current {
-                None => {
-                    *current = Some(Box::new(Node::new(value)));
-                    break;
-                }
-                Some(node) => {
-                    if value < node.value {
-                        current = &mut node.left;
-                    } else if value > node.value {
-                        current = &mut node.right;
-                    } else {
-                        break;
-                    }
-                }
+        while let Some(node) = current {
+            if value < node.value {
+                current = &mut node.left;
+            } else if value > node.value {
+                current = &mut node.right;
+            } else {
+                return;
             }
         }
+        *current = Some(Box::new(Node::new(value)));
     }
 
     pub fn contains(&self, value: &T) -> bool {
         let mut current = &self.root;
         while let Some(node) = current {
-            if *value == node.value {
-                return true;
-            } else if *value < node.value {
+            if value < &node.value {
                 current = &node.left;
-            } else {
+            } else if value > &node.value {
                 current = &node.right;
+            } else {
+                return true;
             }
         }
         false
@@ -87,7 +80,10 @@ mod tests {
         bst.insert(2);
         bst.insert(1);
         bst.insert(0);
-        assert_eq!(vec![0, 1, 2, 3, 4, 5].iter().collect::<Vec<_>>(), bst.in_order());
+        assert_eq!(
+            vec![0, 1, 2, 3, 4, 5].iter().collect::<Vec<_>>(),
+            bst.in_order()
+        );
 
         assert!(bst.contains(&5));
         assert!(!bst.contains(&6));
