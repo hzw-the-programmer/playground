@@ -10,7 +10,7 @@ impl Solution {
         let mut left = 0;
         let mut ans = 0;
         for (i, &x) in nums.iter().enumerate() {
-            if nums[left] < x - n + 1 {
+            while nums[left] < x - n + 1 {
                 left += 1;
             }
             ans = ans.max(i - left + 1);
@@ -54,6 +54,7 @@ mod tests {
         assert_eq!(2, Solution::min_operations(vec![1, 2, 3, 6, 7, 8, 9]));
         // 1 2 3 (4 5 6) 7 8 9 10
         assert_eq!(3, Solution::min_operations(vec![1, 2, 3, 7, 8, 9, 10]));
+        // 0 1 2           3 4 5  6
         // 1 2 3 (4 5 6 7) 8 9 10 11
         assert_eq!(3, Solution::min_operations(vec![1, 2, 3, 8, 9, 10, 11]));
 
@@ -62,6 +63,7 @@ mod tests {
             4,
             Solution::min_operations(vec![1, 2, 6, 7, 8, 13, 14, 15, 16])
         );
+        // 0 1 2           3 4            5  6  7  8
         // 1 2 3 (4 5 6 7) 8 9 (10 11 12) 13 14 15 16
         assert_eq!(
             3,
