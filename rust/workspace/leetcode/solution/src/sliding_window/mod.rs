@@ -32,6 +32,7 @@
   2271. Maximum White Tiles Covered by a Carpet
   2106. Maximum Fruits Harvested After at Most K Steps
   2555. Maximize Win From Two Segments
+  2009. Minimum Number of Operations to Make Array Continuous
 */
 
 mod anagrams;
@@ -85,6 +86,7 @@ mod substr_with_words;
 mod substrs_no_repeats;
 
 mod p1838;
+mod p2009;
 mod p2106;
 mod p2271;
 mod p2516;
