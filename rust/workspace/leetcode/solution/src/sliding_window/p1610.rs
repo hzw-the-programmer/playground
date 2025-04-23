@@ -6,18 +6,16 @@ impl Solution {
     pub fn visible_points(points: Vec<Vec<i32>>, angle: i32, location: Vec<i32>) -> i32 {
         let mut same_ctn = 0;
 
-        let mut radians = points
-            .iter()
-            .filter_map(|p| {
-                if *p == location {
-                    same_ctn += 1;
-                    return None;
-                }
-                let y = (p[1] - location[1]) as f64;
-                let x = (p[0] - location[0]) as f64;
-                Some(y.atan2(x))
-            })
-            .collect::<Vec<_>>();
+        let mut radians = Vec::new();
+        for point in points.iter() {
+            if *point == location {
+                same_ctn += 1;
+                continue;
+            }
+            let y = (point[1] - location[1]) as f64;
+            let x = (point[0] - location[0]) as f64;
+            radians.push(y.atan2(x));
+        }
 
         radians.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap());
 
