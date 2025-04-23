@@ -25,6 +25,20 @@ impl<T: Ord> Node<T> {
         }
         *root = Some(Box::new(Node::new(value)));
     }
+
+    fn contains(mut root: &Option<Box<Node<T>>>, value: &T) -> bool {
+        while let Some(node) = root {
+            if value < &node.value {
+                root = &node.left;
+            } else if value > &node.value {
+                root = &node.right;
+            } else {
+                return true;
+            }
+        }
+
+        false
+    }
 }
 
 pub struct BinarySearchTree<T> {
@@ -41,17 +55,7 @@ impl<T: Ord> BinarySearchTree<T> {
     }
 
     pub fn contains(&self, value: &T) -> bool {
-        let mut current = &self.root;
-        while let Some(node) = current {
-            if value < &node.value {
-                current = &node.left;
-            } else if value > &node.value {
-                current = &node.right;
-            } else {
-                return true;
-            }
-        }
-        false
+        Node::contains(&self.root, value)
     }
 
     pub fn delete(&mut self, value: &T) {
