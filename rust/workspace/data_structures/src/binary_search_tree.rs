@@ -41,21 +41,38 @@ impl<T: Ord> Node<T> {
         false
     }
 
-    fn delete(mut root: &mut Option<Box<Node<T>>>, value: &T) {
+    fn delete(mut root: &mut Option<Box<Node<T>>>, value: &T) -> Result<(), ()> {
         while let Some(node) = root {
             if *value < node.value {
                 root = &mut root.as_mut().unwrap().left;
             } else if *value > node.value {
                 root = &mut root.as_mut().unwrap().right;
             } else {
-                match (node.left.take(), node.right.take()) {
+                match (node.left.as_ref(), node.right.as_ref()) {
                     (None, None) => *root = None,
-                    (Some(left), None) => *root = Some(left),
-                    (None, Some(right)) => *root = Some(right),
-                    (Some(left), Some(right)) => todo!(),
+                    (Some(_), None) => *root = node.left.take(),
+                    (None, Some(_)) => *root = node.right.take(),
+                    (Some(_), Some(_)) => node.value = Node::delete_min(&mut node.right).unwrap(),
                 }
+                return Ok(());
             }
         }
+
+        Err(())
+    }
+
+    fn delete_min(mut root: &mut Option<Box<Node<T>>>) -> Option<T> {
+        if root.is_some() {
+            while root.as_ref().unwrap().left.is_some() {
+                root = &mut root.as_mut().unwrap().left;
+            }
+
+            let node = root.take().unwrap();
+            *root = node.right;
+            return Some(node.value);
+        }
+
+        None
     }
 }
 
@@ -76,8 +93,8 @@ impl<T: Ord> BinarySearchTree<T> {
         Node::contains(&self.root, value)
     }
 
-    pub fn delete(&mut self, value: &T) {
-        Node::delete(&mut self.root, value);
+    pub fn delete(&mut self, value: &T) -> bool {
+        Node::delete(&mut self.root, value).is_ok()
     }
 
     pub fn in_order(&self) -> Vec<&T> {
@@ -112,10 +129,34 @@ mod tests {
         assert!(bst.contains(&3));
         assert!(bst.contains(&7));
 
-        // bst.delete(&5);
-        // assert!(!bst.contains(&5));
+        bst.delete(&5);
+        assert!(!bst.contains(&5));
         assert!(bst.contains(&3));
         assert!(bst.contains(&7));
+    }
+
+    #[test]
+    fn test_delete() {
+        let mut bst = BinarySearchTree::new();
+        bst.insert(5);
+        bst.insert(3);
+        bst.insert(7);
+        bst.insert(2);
+        bst.insert(4);
+        bst.insert(6);
+        bst.insert(8);
+
+        assert!(bst.delete(&5));
+        assert!(!bst.contains(&5));
+        assert!(bst.contains(&3));
+        assert!(bst.contains(&7));
+        assert!(bst.contains(&6));
+        assert!(bst.contains(&8));
+
+        assert!(bst.delete(&7));
+        assert!(bst.contains(&6));
+        assert!(bst.contains(&8));
+        assert!(!bst.contains(&7));
     }
 
     #[test]
