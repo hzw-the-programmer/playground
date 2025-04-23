@@ -33,6 +33,7 @@
   2106. Maximum Fruits Harvested After at Most K Steps
   2555. Maximize Win From Two Segments
   2009. Minimum Number of Operations to Make Array Continuous
+  1610. Maximum Number of Visible Points
 */
 
 mod anagrams;
@@ -85,6 +86,7 @@ mod substr_hash;
 mod substr_with_words;
 mod substrs_no_repeats;
 
+mod p1610;
 mod p1838;
 mod p2009;
 mod p2106;
