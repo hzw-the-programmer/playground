@@ -1,7 +1,8 @@
 pub fn test() {
     // test1();
     // test2();
-    test3();
+    // test3();
+    test4();
 }
 
 fn test1() {
@@ -109,4 +110,39 @@ fn test3() {
     }
 
     println!("leave test3");
+}
+
+fn test4() {
+    #[derive(Debug)]
+    struct Bar(i32);
+    impl Drop for Bar {
+        fn drop(&mut self) {
+            println!("Bar {} drop", self.0);
+        }
+    }
+    #[derive(Debug)]
+    struct Foo {
+        i: i32,
+        bar1: Option<Bar>,
+        bar2: Bar,
+    }
+    impl Drop for Foo {
+        fn drop(&mut self) {
+            println!("Foo {} drop", self.i);
+        }
+    }
+
+    let mut foo = Some(Foo {
+        i: 1,
+        bar1: Some(Bar(1)),
+        bar2: Bar(2),
+    });
+    let foo_ref = &mut foo;
+    if let Some(_r) = foo_ref {
+        {
+            *foo_ref = None;
+        }
+        println!("leave if");
+    }
+    println!("leave test4");
 }
