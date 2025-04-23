@@ -23,6 +23,7 @@ impl<T: Ord> Node<T> {
                 return;
             }
         }
+
         *root = Some(Box::new(Node::new(value)));
     }
 
@@ -38,6 +39,23 @@ impl<T: Ord> Node<T> {
         }
 
         false
+    }
+
+    fn delete(mut root: &mut Option<Box<Node<T>>>, value: &T) {
+        while let Some(node) = root {
+            if *value < node.value {
+                root = &mut root.as_mut().unwrap().left;
+            } else if *value > node.value {
+                root = &mut root.as_mut().unwrap().right;
+            } else {
+                match (node.left.take(), node.right.take()) {
+                    (None, None) => *root = None,
+                    (Some(left), None) => *root = Some(left),
+                    (None, Some(right)) => *root = Some(right),
+                    (Some(left), Some(right)) => todo!(),
+                }
+            }
+        }
     }
 }
 
@@ -59,26 +77,7 @@ impl<T: Ord> BinarySearchTree<T> {
     }
 
     pub fn delete(&mut self, value: &T) {
-        let mut current = &mut self.root;
-
-        while let Some(node) = current {
-            if *value < node.value {
-                current = &mut node.left;
-            } else if *value > node.value {
-                current = &mut node.right;
-            } else {
-                break;
-            }
-        }
-
-        // if let Some(mut node) = current.take() {
-        //     match (node.left.take(), node.right.take()) {
-        //             (None, None) => *current = None,
-        //             (Some(left), None) => *current = Some(left),
-        //             (None, Some(right)) => *current = Some(right),
-        //             (Some(left), Some(right)) => todo!(),
-        //         }
-        // }
+        Node::delete(&mut self.root, value);
     }
 
     pub fn in_order(&self) -> Vec<&T> {
