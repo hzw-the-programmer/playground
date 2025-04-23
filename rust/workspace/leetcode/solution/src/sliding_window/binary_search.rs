@@ -45,9 +45,8 @@ where
     while left < right {
         let mid = left + (right - left) / 2;
         match f(&arr[mid]) {
-            Ordering::Equal => return mid,
             Ordering::Less => left = mid + 1,
-            Ordering::Greater => right = mid,
+            Ordering::Greater | Ordering::Equal => right = mid,
         }
     }
 
@@ -117,5 +116,6 @@ mod tests {
     #[test]
     fn lower_bound_by_key_test() {
         assert_eq!(0, lower_bound_by_key(&[2, 4, 6, 8, 10], &1, |v| *v));
+        assert_eq!(1, lower_bound_by_key(&[1, 2, 2, 2, 1], &2, |v| *v));
     }
 }
