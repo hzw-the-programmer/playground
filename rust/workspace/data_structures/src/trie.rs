@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+#[derive(Default)]
 struct Node {
     children: HashMap<char, Node>,
     is_end: bool,
@@ -7,20 +8,18 @@ struct Node {
 
 impl Node {
     fn new() -> Self {
-        Node {
-            children: HashMap::new(),
-            is_end: false,
-        }
+        Default::default()
     }
 }
 
+#[derive(Default)]
 pub struct Trie {
     root: Node,
 }
 
 impl Trie {
     pub fn new() -> Self {
-        Trie { root: Node::new() }
+        Default::default()
     }
 
     pub fn insert(&mut self, word: &str) {
