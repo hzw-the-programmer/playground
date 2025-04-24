@@ -46,10 +46,10 @@ impl Trie {
         current.is_end
     }
 
-    pub fn starts_with(&self, word: &str) -> bool {
+    pub fn starts_with(&self, prefix: &str) -> bool {
         let mut current = &self.root;
 
-        for c in word.chars() {
+        for c in prefix.chars() {
             match current.children.get(&c) {
                 Some(node) => current = node,
                 None => return false,
