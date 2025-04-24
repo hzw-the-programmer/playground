@@ -45,6 +45,19 @@ impl Trie {
 
         current.is_end
     }
+
+    pub fn starts_with(&self, word: &str) -> bool {
+        let mut current = &self.root;
+
+        for c in word.chars() {
+            match current.children.get(&c) {
+                Some(node) => current = node,
+                None => return false,
+            }
+        }
+
+        true
+    }
 }
 
 #[cfg(test)]
@@ -58,5 +71,13 @@ mod tests {
         assert!(trie.search("hello"));
         assert!(!trie.search("he"));
         assert!(!trie.search("world"));
+    }
+
+    #[test]
+    fn test_starts_with() {
+        let mut trie = Trie::new();
+        trie.insert("apple");
+        assert!(trie.starts_with("app"));
+        assert!(!trie.starts_with("ban"));
     }
 }
