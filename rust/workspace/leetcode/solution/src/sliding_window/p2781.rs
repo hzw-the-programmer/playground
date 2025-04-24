@@ -1,4 +1,5 @@
 // 2781. Length of the Longest Valid Substring
+// 1 <= forbidden[i].length <= 10
 
 struct Solution;
 
