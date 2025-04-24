@@ -37,14 +37,13 @@ impl Trie {
         let mut current = &self.root;
 
         for c in word.chars() {
-            if let Some(node) = current.children.get(&c) {
-                current = node;
-            } else {
-                return false;
+            match current.children.get(&c) {
+                Some(node) => current = node,
+                None => return false,
             }
         }
 
-        true
+        current.is_end
     }
 }
 
@@ -57,6 +56,7 @@ mod tests {
         let mut trie = Trie::new();
         trie.insert("hello");
         assert!(trie.search("hello"));
+        assert!(!trie.search("he"));
         assert!(!trie.search("world"));
     }
 }
