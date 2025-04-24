@@ -34,6 +34,7 @@
   2555. Maximize Win From Two Segments
   2009. Minimum Number of Operations to Make Array Continuous
   1610. Maximum Number of Visible Points
+  2781. Length of the Longest Valid Substring
 */
 
 mod anagrams;
@@ -95,4 +96,5 @@ mod p2516;
 mod p2555;
 mod p2730;
 mod p2779;
+mod p2781;
 mod p2831;
