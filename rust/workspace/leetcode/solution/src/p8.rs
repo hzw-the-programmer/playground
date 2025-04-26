@@ -7,44 +7,65 @@ impl Solution {
         let mut state = State::Start;
         let mut ans = 0;
         let mut sign = 1;
+
         for c in s.chars() {
             state = state.next(c);
             match state {
                 State::Start => {}
-                State::Sign(s) => sign = s,
-                State::Number(n) => ans = ans * 10 + n as i32,
+                State::Sign(s) => sign = s as i64,
+                State::Digit(d) => {
+                    ans = ans * 10 + d as i64;
+                    if sign == 1 && ans > i32::MAX as i64 {
+                        return i32::MAX;
+                    } else if sign == -1 && -ans < i32::MIN as i64 {
+                        return i32::MIN;
+                    }
+                }
                 State::End => break,
             }
         }
-        ans * sign
+
+        (ans * sign) as _
     }
 }
 
 enum State {
     Start,
-    Sign(i32),
-    Number(u8),
+    Sign(i8),
+    Digit(u8),
     End,
 }
 
 impl State {
     fn next(&self, c: char) -> Self {
         match self {
-            Self::Start => match c {
-                ' ' => Self::Start,
-                '-' => Self::Sign(-1),
-                '+' => Self::Sign(1),
-                '0'..='9' => Self::Number(c.to_digit(10).unwrap() as u8),
-                _ => Self::End,
-            },
-            Self::Sign(_) => match c {
-                '0'..='9' => Self::Number(c.to_digit(10).unwrap() as u8),
-                _ => Self::End,
-            },
-            Self::Number(_) => match c {
-                '0'..='9' => Self::Number(c.to_digit(10).unwrap() as u8),
-                _ => Self::End,
-            },
+            Self::Start => {
+                if c.is_whitespace() {
+                    Self::Start
+                } else if c == '+' {
+                    Self::Sign(1)
+                } else if c == '-' {
+                    Self::Sign(-1)
+                } else if c.is_ascii_digit() {
+                    Self::Digit(c.to_digit(10).unwrap() as u8)
+                } else {
+                    Self::End
+                }
+            }
+            Self::Sign(_) => {
+                if c.is_ascii_digit() {
+                    Self::Digit(c.to_digit(10).unwrap() as u8)
+                } else {
+                    Self::End
+                }
+            }
+            Self::Digit(_) => {
+                if c.is_ascii_digit() {
+                    Self::Digit(c.to_digit(10).unwrap() as u8)
+                } else {
+                    Self::End
+                }
+            }
             Self::End => Self::End,
         }
     }
@@ -61,5 +82,6 @@ mod tests {
         assert_eq!(1337, Solution::my_atoi("1337c0d3".to_string()));
         assert_eq!(0, Solution::my_atoi("0-1".to_string()));
         assert_eq!(0, Solution::my_atoi("words and 987".to_string()));
+        assert_eq!(-2147483648, Solution::my_atoi("-91283472332".to_string()));
     }
 }
