@@ -5,6 +5,7 @@
 
 struct Solution;
 
+mod dfa;
 mod p65;
 mod p8;
 mod sliding_window;
