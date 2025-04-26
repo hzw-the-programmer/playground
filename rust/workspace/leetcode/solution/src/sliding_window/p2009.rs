@@ -1,6 +1,6 @@
 // 2009. Minimum Number of Operations to Make Array Continuous
 
-struct Solution;
+use crate::Solution;
 
 impl Solution {
     pub fn min_operations(mut nums: Vec<i32>) -> i32 {

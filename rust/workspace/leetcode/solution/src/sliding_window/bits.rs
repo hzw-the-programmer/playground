@@ -28,11 +28,11 @@ impl Bits {
         b
     }
 
-    fn len(&self) -> usize {
+    pub fn len(&self) -> usize {
         self.len
     }
 
-    fn cap(&self) -> usize {
+    pub fn cap(&self) -> usize {
         self.bytes.len() * Self::ELEM_SIZE
     }
 
@@ -41,13 +41,13 @@ impl Bits {
         self.bytes[index / Self::ELEM_SIZE] |= 1 << (index % Self::ELEM_SIZE);
     }
 
-    fn clear(&mut self, index: usize) {
+    pub fn clear(&mut self, index: usize) {
         #[cfg(not(test))]
         assert!(index < self.len);
         self.bytes[index / Self::ELEM_SIZE] &= !(1 << (index % Self::ELEM_SIZE));
     }
 
-    fn is_set(&self, index: usize) -> bool {
+    pub fn is_set(&self, index: usize) -> bool {
         #[cfg(not(test))]
         assert!(index < self.len);
         self.bytes[index / Self::ELEM_SIZE] & (1 << (index % Self::ELEM_SIZE)) != 0

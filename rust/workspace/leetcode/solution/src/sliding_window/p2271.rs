@@ -1,6 +1,6 @@
 // 2271. Maximum White Tiles Covered by a Carpet
 
-struct Solution;
+use crate::Solution;
 
 impl Solution {
     pub fn maximum_white_tiles(mut tiles: Vec<Vec<i32>>, carpet_len: i32) -> i32 {

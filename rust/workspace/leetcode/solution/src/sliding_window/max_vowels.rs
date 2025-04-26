@@ -1,4 +1,4 @@
-fn max_vowels(s: &[u8], k: usize) -> usize {
+pub fn max_vowels(s: &[u8], k: usize) -> usize {
     let vowels = ['a', 'e', 'i', 'o', 'u'];
     let mut count = 0;
 

@@ -1,6 +1,4 @@
-#![allow(dead_code)]
-
-struct Solution;
+pub struct Solution;
 
 mod dfa;
-mod sliding_window;
+pub mod sliding_window;

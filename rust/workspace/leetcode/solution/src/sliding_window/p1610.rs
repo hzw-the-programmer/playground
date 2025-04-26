@@ -1,6 +1,6 @@
 // 1610. Maximum Number of Visible Points
 
-struct Solution;
+use crate::Solution;
 
 impl Solution {
     // 执行用时分布 29ms 击败 100.00%

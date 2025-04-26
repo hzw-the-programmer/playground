@@ -1,7 +1,7 @@
 // 2781. Length of the Longest Valid Substring
 // 1 <= forbidden[i].length <= 10
 
-struct Solution;
+use crate::Solution;
 
 impl Solution {
     // 执行用时分布 83ms 击败 100.00%
