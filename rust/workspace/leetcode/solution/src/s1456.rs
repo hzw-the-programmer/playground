@@ -4,29 +4,34 @@ use crate::Solution;
 
 impl Solution {
     pub fn max_vowels(s: String, k: i32) -> i32 {
-        let n = s.len();
         let s = s.as_bytes();
         let k = k as usize;
 
-        let is_vowels =
-            |i| s[i] == b'a' || s[i] == b'e' || s[i] == b'i' || s[i] == b'o' || s[i] == b'u';
+        let is_vowels = |b| b == b'a' || b == b'e' || b == b'i' || b == b'o' || b == b'u';
         let mut max = 0;
         let mut ans = 0;
 
-        for i in 0..n {
-            if is_vowels(i) {
+        for (i, &b) in s.iter().enumerate() {
+            // 1. enter window
+            if is_vowels(b) {
                 max += 1;
             }
 
-            if i >= k - 1 {
-                if i > k - 1 && is_vowels(i - k) {
-                    max -= 1;
-                }
-                ans = max.max(ans);
+            // 2. less than window size
+            if i < k - 1 {
+                continue;
+            }
+
+            // 3. update
+            ans = max.max(ans);
+
+            // 4. leave window
+            if is_vowels(s[i + 1 - k]) {
+                max -= 1;
             }
         }
 
-        ans as _
+        ans
     }
 }
 
