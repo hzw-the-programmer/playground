@@ -7,13 +7,13 @@ impl Solution {
         let s = s.as_bytes();
         let k = k as usize;
 
-        let is_vowels = |b| b == b'a' || b == b'e' || b == b'i' || b == b'o' || b == b'u';
+        let vowels = [b'a', b'e', b'i', b'o', b'u'];
         let mut max = 0;
         let mut ans = 0;
 
         for (i, &b) in s.iter().enumerate() {
             // 1. enter window
-            if is_vowels(b) {
+            if vowels.contains(&b) {
                 max += 1;
             }
 
@@ -26,7 +26,7 @@ impl Solution {
             ans = max.max(ans);
 
             // 4. leave window
-            if is_vowels(s[i + 1 - k]) {
+            if vowels.contains(&s[i + 1 - k]) {
                 max -= 1;
             }
         }
