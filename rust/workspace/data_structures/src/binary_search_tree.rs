@@ -123,14 +123,16 @@ struct Iter<'a, T> {
 impl<'a, T> Iter<'a, T> {
     fn new(root: &'a Option<Box<Node<T>>>) -> Self {
         let mut i = Iter { stack: Vec::new() };
+        i.load(root);
+        i
+    }
 
+    fn load(&mut self, root: &'a Option<Box<Node<T>>>) {
         let mut current = root;
         while let Some(node) = current {
-            i.stack.push(node);
+            self.stack.push(node);
             current = &node.left;
         }
-
-        i
     }
 }
 
@@ -139,11 +141,7 @@ impl<'a, T> Iterator for Iter<'a, T> {
 
     fn next(&mut self) -> Option<Self::Item> {
         if let Some(node) = self.stack.pop() {
-            let mut current = &node.right;
-            while let Some(node) = current {
-                self.stack.push(node);
-                current = &node.left;
-            }
+            self.load(&node.right);
             return Some(&node.value);
         }
 
