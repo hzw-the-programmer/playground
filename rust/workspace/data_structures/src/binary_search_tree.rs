@@ -112,9 +112,19 @@ impl<T: Ord> BinarySearchTree<T> {
     }
 
     fn iter(&self) -> Iter<T> {
+        Iter::new(&self.root)
+    }
+}
+
+struct Iter<'a, T> {
+    stack: Vec<&'a Node<T>>,
+}
+
+impl<'a, T> Iter<'a, T> {
+    fn new(root: &'a Option<Box<Node<T>>>) -> Self {
         let mut i = Iter { stack: Vec::new() };
 
-        let mut current = &self.root;
+        let mut current = root;
         while let Some(node) = current {
             i.stack.push(node);
             current = &node.left;
@@ -122,10 +132,6 @@ impl<T: Ord> BinarySearchTree<T> {
 
         i
     }
-}
-
-struct Iter<'a, T> {
-    stack: Vec<&'a Node<T>>,
 }
 
 impl<'a, T> Iterator for Iter<'a, T> {
