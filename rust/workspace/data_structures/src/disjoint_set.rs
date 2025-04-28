@@ -59,6 +59,28 @@ mod tests {
 
     #[test]
     fn test_union_2() {
+        let mut ds = DisjointSet::new(9);
+        println!("{ds:?}");
+        ds.union(1, 0);
+        println!("{ds:?}");
+        ds.union(2, 1);
+        println!("{ds:?}");
+        ds.union(3, 2);
+        println!("{ds:?}");
+        ds.union(4, 3);
+        println!("{ds:?}");
+        ds.union(5, 4);
+        println!("{ds:?}");
+        ds.union(6, 5);
+        println!("{ds:?}");
+        ds.union(7, 6);
+        println!("{ds:?}");
+        ds.union(8, 7);
+        println!("{ds:?}");
+    }
+
+    #[test]
+    fn test_union_3() {
         let mut ds = DisjointSet::new(10);
 
         ds.union(1, 3);

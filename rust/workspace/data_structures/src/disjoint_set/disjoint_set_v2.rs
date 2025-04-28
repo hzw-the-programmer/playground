@@ -32,6 +32,8 @@ impl DisjointSet {
             } else {
                 self.parent[root_y] = root_x;
                 self.rank[root_x] += 1;
+                // self.parent[root_x] = root_y;
+                // self.rank[root_y] += 1;
             }
         }
     }

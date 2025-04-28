@@ -19,9 +19,10 @@ impl DisjointSet {
     }
 
     pub fn union(&mut self, x: usize, y: usize) {
-        let xrep = self.find(x);
-        let yrep = self.find(y);
-        self.parent[xrep] = yrep;
+        let root_x = self.find(x);
+        let root_y = self.find(y);
+        self.parent[root_y] = root_x;
+        // self.parent[root_x] = root_y;
     }
 
     pub fn connected(&self, x: usize, y: usize) -> bool {
