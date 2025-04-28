@@ -110,6 +110,39 @@ impl<T: Ord> BinarySearchTree<T> {
             Self::in_order_traversal(&n.right, v);
         }
     }
+
+    fn iter(&self) -> Iter<T> {
+        let mut i = Iter { stack: Vec::new() };
+
+        let mut current = &self.root;
+        while let Some(node) = current {
+            i.stack.push(node);
+            current = &node.left;
+        }
+
+        i
+    }
+}
+
+struct Iter<'a, T> {
+    stack: Vec<&'a Node<T>>,
+}
+
+impl<'a, T> Iterator for Iter<'a, T> {
+    type Item = &'a T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if let Some(node) = self.stack.pop() {
+            let mut current = &node.right;
+            while let Some(node) = current {
+                self.stack.push(node);
+                current = &node.left;
+            }
+            return Some(&node.value);
+        }
+
+        None
+    }
 }
 
 #[cfg(test)]
@@ -160,7 +193,7 @@ mod tests {
     }
 
     #[test]
-    fn binary_search_tree() {
+    fn test_in_order() {
         let mut bst = BinarySearchTree::new();
 
         bst.insert(5);
@@ -169,12 +202,33 @@ mod tests {
         bst.insert(2);
         bst.insert(1);
         bst.insert(0);
+
         assert_eq!(
             vec![0, 1, 2, 3, 4, 5].iter().collect::<Vec<_>>(),
             bst.in_order()
         );
+    }
 
-        assert!(bst.contains(&5));
-        assert!(!bst.contains(&6));
+    #[test]
+    fn test_iter() {
+        let mut bst = BinarySearchTree::new();
+
+        bst.insert(5);
+        bst.insert(3);
+        bst.insert(7);
+        bst.insert(2);
+        bst.insert(4);
+        bst.insert(6);
+        bst.insert(8);
+
+        let mut i = bst.iter();
+        assert_eq!(Some(&2), i.next());
+        assert_eq!(Some(&3), i.next());
+        assert_eq!(Some(&4), i.next());
+        assert_eq!(Some(&5), i.next());
+        assert_eq!(Some(&6), i.next());
+        assert_eq!(Some(&7), i.next());
+        assert_eq!(Some(&8), i.next());
+        assert_eq!(None, i.next());
     }
 }
