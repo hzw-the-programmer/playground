@@ -57,7 +57,6 @@ pub mod min_flips;
 pub mod min_swaps;
 pub mod min_swaps_2;
 pub mod minimum_recolors;
-pub mod num_of_subarrays;
 pub mod p1004;
 pub mod p1016;
 pub mod p1208;
