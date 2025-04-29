@@ -50,7 +50,6 @@ pub mod max_freq;
 pub mod max_min_sum;
 pub mod max_points;
 pub mod max_satisfied;
-pub mod max_sum_of_unique;
 pub mod min_diff;
 pub mod min_flips;
 pub mod min_swaps;
