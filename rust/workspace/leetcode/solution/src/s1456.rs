@@ -36,7 +36,7 @@ pub fn max_vowels_v2(s: String, k: i32) -> i32 {
     let k = k as usize;
 
     let is_vowel = |b| b == b'a' || b == b'e' || b == b'i' || b == b'o' || b == b'u';
-    
+
     let mut max = s[0..k].iter().filter(|&&b| is_vowel(b)).count() as i32;
     let mut ans = max;
 
@@ -44,11 +44,11 @@ pub fn max_vowels_v2(s: String, k: i32) -> i32 {
         if is_vowel(s[i]) {
             max += 1;
         }
-        
+
         if is_vowel(s[i - k]) {
             max -= 1;
         }
-        
+
         ans = ans.max(max);
     }
 
