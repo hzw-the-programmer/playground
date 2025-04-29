@@ -46,7 +46,6 @@ pub mod diet_plan;
 pub mod distinct_nums;
 pub mod has_all_codes;
 pub mod k_radius_average;
-pub mod max_average;
 pub mod max_flavors;
 pub mod max_freq;
 pub mod max_min_sum;
