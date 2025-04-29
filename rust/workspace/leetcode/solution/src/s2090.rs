@@ -10,10 +10,7 @@ pub fn get_averages(nums: Vec<i32>, k: i32) -> Vec<i32> {
         return ans;
     }
 
-    let mut sum = 0;
-    for i in 0..len {
-        sum += nums[i] as i64;
-    }
+    let mut sum = nums[0..len].iter().map(|&n| n as i64).sum::<i64>();
     ans[k] = (sum / len as i64) as i32;
 
     for i in len..n {
