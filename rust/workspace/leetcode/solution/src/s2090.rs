@@ -3,19 +3,19 @@
 pub fn get_averages(nums: Vec<i32>, k: i32) -> Vec<i32> {
     let n = nums.len();
     let k = k as usize;
-    let len = 2 * k + 1;
+    let k2 = 2 * k + 1;
     let mut ans = vec![-1; n];
 
-    if n < len {
+    if n < k2 {
         return ans;
     }
 
-    let mut sum = nums[0..len].iter().map(|&n| n as i64).sum::<i64>();
-    ans[k] = (sum / len as i64) as i32;
+    let mut sum = nums[0..k2].iter().map(|&n| n as i64).sum::<i64>();
+    ans[k] = (sum / k2 as i64) as i32;
 
-    for i in len..n {
-        sum += (nums[i] - nums[i - len]) as i64;
-        ans[i - k] = (sum / len as i64) as i32;
+    for i in k2..n {
+        sum += (nums[i] - nums[i - k2]) as i64;
+        ans[i - k] = (sum / k2 as i64) as i32;
     }
 
     ans
