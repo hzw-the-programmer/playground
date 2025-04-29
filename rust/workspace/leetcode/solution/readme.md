@@ -4,6 +4,7 @@
 643. Maximum Average Subarray I
 1343. Number of Sub-arrays of Size K and Average Greater than or Equal to Threshold
 2090. K Radius Subarray Averages
+2379. Minimum Recolors to Get K Consecutive Black Blocks
 
 cargo test p220 -p solution
 cargo test p220 -p solution -- --show-output
