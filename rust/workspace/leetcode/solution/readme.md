@@ -1,6 +1,7 @@
 # sliding window
 ## fixed window size
 1456. Maximum Number of Vowels in a Substring of Given Length
+643. Maximum Average Subarray I
 
 cargo test p220 -p solution
 cargo test p220 -p solution -- --show-output
