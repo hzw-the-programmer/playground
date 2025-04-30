@@ -6,11 +6,16 @@ pub struct SegmentTree {
 impl SegmentTree {
     pub fn new(arr: &[i32]) -> Self {
         let n = arr.len();
+
         let mut st = SegmentTree {
             tree: vec![0; 4 * n],
             n,
         };
-        st.build(0, 0, n - 1, arr);
+
+        if n > 0 {
+            st.build(0, 0, n - 1, arr);
+        }
+
         st
     }
 
@@ -28,7 +33,11 @@ impl SegmentTree {
     }
 
     pub fn query(&self, l: usize, r: usize) -> i32 {
-        self.query_helper(0, 0, self.n - 1, l, r)
+        if self.n > 0 {
+            self.query_helper(0, 0, self.n - 1, l, r)
+        } else {
+            0
+        }
     }
 
     fn query_helper(&self, node: usize, start: usize, end: usize, l: usize, r: usize) -> i32 {
@@ -72,7 +81,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_basic_query() {
+    fn test_query() {
         let arr = [1, 3, 5, 7, 9];
         let st = SegmentTree::new(&arr);
         assert_eq!(st.query(0, 4), 1 + 3 + 5 + 7 + 9);
@@ -90,5 +99,16 @@ mod tests {
 
         st.update(3, 5);
         assert_eq!(st.query(2, 3), 3 + 5);
+    }
+
+    #[test]
+    fn test_edge_cases() {
+        let st = SegmentTree::new(&[]);
+        assert_eq!(st.query(0, 0), 0);
+
+        let mut st = SegmentTree::new(&[42]);
+        assert_eq!(st.query(0, 0), 42);
+        st.update(0, 100);
+        assert_eq!(st.query(0, 0), 100);
     }
 }
