@@ -4,6 +4,10 @@ pub fn max_vowels(s: String, k: i32) -> i32 {
     let s = s.as_bytes();
     let k = k as usize;
 
+    if k == 0 {
+        return 0;
+    }
+
     let vowels = [b'a', b'e', b'i', b'o', b'u'];
     let mut max = 0;
     let mut ans = 0;
@@ -60,11 +64,13 @@ mod tests {
     use super::*;
 
     fn test(f: fn(String, i32) -> i32) {
-        assert_eq!(3, f("abciiidef".to_string(), 3));
-        assert_eq!(2, f("aeiou".to_string(), 2));
-        assert_eq!(2, f("leetcode".to_string(), 3));
-        assert_eq!(0, f("rhythms".to_string(), 4));
-        assert_eq!(1, f("tryhard".to_string(), 4));
+        assert_eq!(f("abciiidef".to_string(), 3), 3);
+        assert_eq!(f("aeiou".to_string(), 2), 2);
+        assert_eq!(f("leetcode".to_string(), 3), 2);
+        assert_eq!(f("rhythms".to_string(), 4), 0);
+        assert_eq!(f("tryhard".to_string(), 4), 1);
+
+        assert_eq!(0, f("tryhard".to_string(), 0));
     }
 
     #[test]
