@@ -48,7 +48,6 @@ pub mod has_all_codes;
 pub mod max_flavors;
 pub mod max_freq;
 pub mod max_min_sum;
-pub mod max_points;
 pub mod max_satisfied;
 pub mod min_diff;
 pub mod min_flips;
