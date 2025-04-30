@@ -1,10 +1,10 @@
-struct SegmentTree {
+pub struct SegmentTree {
     tree: Vec<i32>,
     n: usize,
 }
 
 impl SegmentTree {
-    fn new(arr: &[i32]) -> Self {
+    pub fn new(arr: &[i32]) -> Self {
         let n = arr.len();
         let mut st = SegmentTree {
             tree: vec![0; 4 * n],
@@ -27,7 +27,7 @@ impl SegmentTree {
         }
     }
 
-    fn query(&self, l: usize, r: usize) -> i32 {
+    pub fn query(&self, l: usize, r: usize) -> i32 {
         self.query_helper(0, 0, self.n - 1, l, r)
     }
 
