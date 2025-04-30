@@ -7,28 +7,26 @@ impl SegmentTree {
     pub fn new(arr: &[i32]) -> Self {
         let n = arr.len();
 
-        let mut st = SegmentTree {
-            tree: vec![0; 4 * n],
-            n,
-        };
-
+        let mut tree = vec![0; 4 * n];
         if n > 0 {
-            st.build(0, 0, n - 1, arr);
+            Self::build(&mut tree, 0, 0, n - 1, arr);
         }
 
-        st
+        SegmentTree { tree, n }
     }
 
-    fn build(&mut self, node: usize, start: usize, end: usize, arr: &[i32]) {
+    fn build(tree: &mut Vec<i32>, node: usize, start: usize, end: usize, arr: &[i32]) {
         if start == end {
-            self.tree[node] = arr[start];
+            tree[node] = arr[start];
         } else {
             let mid = (start + end) / 2;
             let left = 2 * node + 1;
             let right = 2 * node + 2;
-            self.build(left, start, mid, arr);
-            self.build(right, mid + 1, end, arr);
-            self.tree[node] = self.tree[left] + self.tree[right];
+
+            Self::build(tree, left, start, mid, arr);
+            Self::build(tree, right, mid + 1, end, arr);
+
+            tree[node] = tree[left] + tree[right];
         }
     }
 
