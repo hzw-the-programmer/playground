@@ -45,6 +45,26 @@ impl SegmentTree {
             left_sum + right_sum
         }
     }
+
+    pub fn update(&mut self, index: usize, value: i32) {
+        self.update_helper(0, 0, self.n - 1, index, value);
+    }
+
+    fn update_helper(&mut self, node: usize, start: usize, end: usize, index: usize, value: i32) {
+        if start == end {
+            self.tree[node] = value;
+        } else {
+            let mid = (start + end) / 2;
+            let left = 2 * node + 1;
+            let right = 2 * node + 2;
+            if index <= mid {
+                self.update_helper(left, start, mid, index, value);
+            } else {
+                self.update_helper(right, mid + 1, end, index, value);
+            }
+            self.tree[node] = self.tree[left] + self.tree[right];
+        }
+    }
 }
 
 #[cfg(test)]
@@ -58,5 +78,17 @@ mod tests {
         assert_eq!(st.query(0, 4), 1 + 3 + 5 + 7 + 9);
         assert_eq!(st.query(1, 3), 3 + 5 + 7);
         assert_eq!(st.query(2, 2), 5);
+    }
+
+    #[test]
+    fn test_update() {
+        let mut st = SegmentTree::new(&[1, 2, 3, 4]);
+        assert_eq!(st.query(0, 3), 1 + 2 + 3 + 4);
+
+        st.update(1, 10);
+        assert_eq!(st.query(0, 3), 1 + 10 + 3 + 4);
+
+        st.update(3, 5);
+        assert_eq!(st.query(2, 3), 3 + 5);
     }
 }
