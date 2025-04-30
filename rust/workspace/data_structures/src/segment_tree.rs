@@ -31,7 +31,7 @@ impl SegmentTree {
     }
 
     pub fn query(&self, l: usize, r: usize) -> i32 {
-        if self.n > 0 {
+        if l <= r && l < self.n {
             self.query_helper(0, 0, self.n - 1, l, r)
         } else {
             0
@@ -54,7 +54,9 @@ impl SegmentTree {
     }
 
     pub fn update(&mut self, index: usize, value: i32) {
-        self.update_helper(0, 0, self.n - 1, index, value);
+        if index < self.n {
+            self.update_helper(0, 0, self.n - 1, index, value);
+        }
     }
 
     fn update_helper(&mut self, node: usize, start: usize, end: usize, index: usize, value: i32) {
@@ -85,6 +87,7 @@ mod tests {
         assert_eq!(st.query(0, 4), 1 + 3 + 5 + 7 + 9);
         assert_eq!(st.query(1, 3), 3 + 5 + 7);
         assert_eq!(st.query(2, 2), 5);
+        assert_eq!(st.query(3, 1), 0);
     }
 
     #[test]
@@ -101,12 +104,25 @@ mod tests {
 
     #[test]
     fn test_edge_cases() {
-        let st = SegmentTree::new(&[]);
+        let mut st = SegmentTree::new(&[]);
+        assert_eq!(st.query(0, 0), 0);
+        st.update(0, 100);
         assert_eq!(st.query(0, 0), 0);
 
         let mut st = SegmentTree::new(&[42]);
         assert_eq!(st.query(0, 0), 42);
         st.update(0, 100);
         assert_eq!(st.query(0, 0), 100);
+    }
+
+    #[test]
+    fn test_out_of_range() {
+        let st = SegmentTree::new(&[1, 2, 3]);
+        assert_eq!(st.query(0, 6), 1 + 2 + 3);
+        assert_eq!(st.query(3, 5), 0);
+
+        let mut st = SegmentTree::new(&[1, 2, 3]);
+        st.update(5, 100);
+        assert_eq!(st.query(0, 2), 1 + 2 + 3);
     }
 }
