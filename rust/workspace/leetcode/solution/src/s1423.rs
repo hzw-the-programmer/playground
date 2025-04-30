@@ -42,6 +42,21 @@ pub fn max_score_v2(card_points: Vec<i32>, k: i32) -> i32 {
     total - min
 }
 
+pub fn max_score_v3(card_points: Vec<i32>, k: i32) -> i32 {
+    let n = card_points.len();
+    let k = k as usize;
+
+    let mut sum: i32 = card_points[0..k].iter().sum();
+    let mut ans = sum;
+
+    for i in 0..k {
+        sum += card_points[n - i - 1] - card_points[k - 1 - i];
+        ans = ans.max(sum);
+    }
+
+    ans
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -62,5 +77,10 @@ mod tests {
     #[test]
     fn test_max_score_v2() {
         test(max_score_v2);
+    }
+
+    #[test]
+    fn test_max_score_v3() {
+        test(max_score_v3);
     }
 }
