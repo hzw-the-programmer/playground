@@ -2,6 +2,14 @@ pub fn quicksort_last<T: Ord>(arr: &mut [T]) {
     quicksort_strategy(arr, partition_last);
 }
 
+pub fn quicksort_median_of_three<T: Ord>(arr: &mut [T]) {
+    quicksort_strategy(arr, median_of_three);
+}
+
+pub fn quicksort_random<T: Ord>(arr: &mut [T]) {
+    quicksort_strategy(arr, partition_random);
+}
+
 fn quicksort_strategy<T: Ord>(arr: &mut [T], strategy: fn(&mut [T]) -> usize) {
     if arr.len() <= 1 {
         return;
@@ -25,4 +33,32 @@ fn partition_last<T: Ord>(arr: &mut [T]) -> usize {
     }
     arr.swap(i, high);
     i
+}
+
+fn median_of_three<T: Ord>(arr: &mut [T]) -> usize {
+    let len = arr.len();
+    let mid = len / 2;
+    let high = len - 1;
+
+    let mut median = high;
+    if (arr[mid] >= arr[0] && arr[mid] <= arr[high])
+        || (arr[mid] >= arr[high] && arr[mid] <= arr[0])
+    {
+        median = mid;
+    } else if (arr[0] >= arr[mid] && arr[0] <= arr[high])
+        || (arr[0] >= arr[high] && arr[0] <= arr[mid])
+    {
+        median = 0;
+    }
+
+    arr.swap(median, high);
+    partition_last(arr)
+}
+
+fn partition_random<T: Ord>(arr: &mut [T]) -> usize {
+    use rand::Rng;
+    let mut rng = rand::rng();
+    let pivot = rng.random_range(0..arr.len());
+    arr.swap(pivot, arr.len() - 1);
+    partition_last(arr)
 }

@@ -1,7 +1,9 @@
 pub mod last;
 // pub use last::quicksort;
-mod strategy;
-pub use strategy::quicksort_last as quicksort;
+pub mod strategy;
+// pub use strategy::quicksort_last as quicksort;
+// pub use strategy::quicksort_median_of_three as quicksort;
+pub use strategy::quicksort_random as quicksort;
 
 #[cfg(test)]
 mod tests {
