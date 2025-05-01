@@ -1,12 +1,16 @@
-pub fn quicksort<T: Ord>(arr: &mut [T]) {
+pub fn quicksort_last<T: Ord>(arr: &mut [T]) {
+    quicksort_strategy(arr, partition_last);
+}
+
+fn quicksort_strategy<T: Ord>(arr: &mut [T], strategy: fn(&mut [T]) -> usize) {
     if arr.len() <= 1 {
         return;
     }
 
-    let p = partition_last(arr);
+    let p = strategy(arr);
     let (left, right) = arr.split_at_mut(p);
-    quicksort(left);
-    quicksort(&mut right[1..]);
+    quicksort_strategy(left, strategy);
+    quicksort_strategy(&mut right[1..], strategy);
 }
 
 fn partition_last<T: Ord>(arr: &mut [T]) -> usize {
