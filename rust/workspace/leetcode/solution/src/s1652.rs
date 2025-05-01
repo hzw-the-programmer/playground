@@ -48,6 +48,26 @@ pub fn decrypt_v2(code: Vec<i32>, k: i32) -> Vec<i32> {
     ans
 }
 
+pub fn decrypt_v3(code: Vec<i32>, k: i32) -> Vec<i32> {
+    let n = code.len();
+    let mut ans = vec![0; n];
+    if k == 0 {
+        return ans;
+    }
+
+    let mut r = if k > 0 { 1 + k as usize } else { n };
+    let k = k.abs() as usize;
+    let mut sum: i32 = code[r - k..r].iter().sum();
+
+    for i in 0..n {
+        ans[i] = sum;
+        sum += code[r % n] - code[(r - k) % n];
+        r += 1;
+    }
+
+    ans
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -66,5 +86,10 @@ mod tests {
     #[test]
     fn test_decrypt_v2() {
         test(decrypt_v2);
+    }
+
+    #[test]
+    fn test_decrypt_v3() {
+        test(decrypt_v3);
     }
 }
