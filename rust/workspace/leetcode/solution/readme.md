@@ -1,5 +1,5 @@
-# sliding window
-## fixed window size
+# Fixed-length sliding window
+## basic
 1456. Maximum Number of Vowels in a Substring of Given Length
 643. Maximum Average Subarray I
 1343. Number of Sub-arrays of Size K and Average Greater than or Equal to Threshold
@@ -9,6 +9,7 @@
 2461. Maximum Sum of Distinct Subarrays With Length K
 1423. Maximum Points You Can Obtain from Cards
 1052. Grumpy Bookstore Owner
+1652. Defuse the Bomb
 
 cargo test p220 -p solution
 cargo test p220 -p solution -- --show-output
