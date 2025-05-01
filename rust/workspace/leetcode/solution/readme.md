@@ -8,6 +8,7 @@
 2841. Maximum Sum of Almost Unique Subarray
 2461. Maximum Sum of Distinct Subarrays With Length K
 1423. Maximum Points You Can Obtain from Cards
+1052. Grumpy Bookstore Owner
 
 cargo test p220 -p solution
 cargo test p220 -p solution -- --show-output

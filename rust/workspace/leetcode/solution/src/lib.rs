@@ -1,6 +1,7 @@
 pub struct Solution;
 
 mod dfa;
+pub mod s1052;
 pub mod s1343;
 pub mod s1423;
 pub mod s1456;
