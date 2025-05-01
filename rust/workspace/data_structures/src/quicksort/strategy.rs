@@ -13,15 +13,19 @@ pub fn quicksort_random<T: Ord>(arr: &mut [T]) {
 const INSERTION_SORT_THRESHOLD: usize = 16;
 
 pub fn quicksort_hybrid<T: Ord>(arr: &mut [T]) {
+    quicksort_hybrid_strategy(arr, median_of_three);
+}
+
+fn quicksort_hybrid_strategy<T: Ord>(arr: &mut [T], strategy: fn(&mut [T]) -> usize) {
     if arr.len() <= INSERTION_SORT_THRESHOLD {
         crate::insertion_sort::insertion_sort(arr);
         return;
     }
 
-    let p = median_of_three(arr);
+    let p = strategy(arr);
     let (left, right) = arr.split_at_mut(p);
-    quicksort_hybrid(left);
-    quicksort_hybrid(&mut right[1..]);
+    quicksort_hybrid_strategy(left, strategy);
+    quicksort_hybrid_strategy(&mut right[1..], strategy);
 }
 
 fn quicksort_strategy<T: Ord>(arr: &mut [T], strategy: fn(&mut [T]) -> usize) {
