@@ -1,4 +1,4 @@
-mod last;
+pub mod last;
 // pub use last::quicksort;
 mod strategy;
 pub use strategy::quicksort_last as quicksort;

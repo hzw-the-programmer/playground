@@ -3,13 +3,13 @@ pub fn quicksort<T: Ord>(arr: &mut [T]) {
         return;
     }
 
-    let p = partition_last(arr);
+    let p = partition(arr);
     let (left, right) = arr.split_at_mut(p);
     quicksort(left);
     quicksort(&mut right[1..]);
 }
 
-fn partition_last<T: Ord>(arr: &mut [T]) -> usize {
+fn partition<T: Ord>(arr: &mut [T]) -> usize {
     let high = arr.len() - 1;
     let mut i = 0;
     for j in 0..high {
