@@ -16,6 +16,9 @@
 1151. Minimum Swaps to Group All 1's Together
 2107. Number of Unique Flavors After Sharing K Candies
 
+## advance
+3439. Reschedule Meetings for Maximum Free Time I
+
 cargo test p220 -p solution
 cargo test p220 -p solution -- --show-output
 cargo build -p solution
