@@ -1,4 +1,5 @@
 // 1100. Find K-Length Substrings With No Repeated Characters
+// 1 <= s.length <= 104
 // s consists of lowercase English letters.
 // 1 <= k <= 10^4
 
@@ -6,6 +7,10 @@ pub fn num_k_len_substr_no_repeats(s: String, k: i32) -> i32 {
     let s = s.as_bytes();
     let n = s.len();
     let k = k as usize;
+
+    if k > n {
+        return 0;
+    }
 
     let mut ans = 0;
     let mut map = vec![0; 26];
