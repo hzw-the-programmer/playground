@@ -46,7 +46,6 @@ pub mod max_freq;
 pub mod max_min_sum;
 pub mod min_diff;
 pub mod min_flips;
-pub mod min_swaps_2;
 pub mod p1004;
 pub mod p1016;
 pub mod p1208;
