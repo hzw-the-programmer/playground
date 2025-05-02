@@ -73,7 +73,6 @@ pub mod reschedule_meetings;
 pub mod subarray_beauty;
 pub mod substr_hash;
 pub mod substr_with_words;
-pub mod substrs_no_repeats;
 
 pub mod p1610;
 pub mod p1838;

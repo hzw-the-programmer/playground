@@ -11,6 +11,7 @@
 1052. Grumpy Bookstore Owner
 1652. Defuse the Bomb
 1176. Diet Plan Performance
+1100. Find K-Length Substrings With No Repeated Characters
 
 cargo test p220 -p solution
 cargo test p220 -p solution -- --show-output
