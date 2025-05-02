@@ -66,7 +66,6 @@ pub mod p683;
 pub mod p904;
 pub mod permutation_in_str;
 pub mod rabin_karp;
-pub mod reschedule_meetings;
 pub mod subarray_beauty;
 pub mod substr_hash;
 pub mod substr_with_words;
