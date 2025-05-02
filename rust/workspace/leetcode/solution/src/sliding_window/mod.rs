@@ -42,7 +42,6 @@ pub mod bits;
 pub mod bubble_sort;
 pub mod counting_sort;
 pub mod has_all_codes;
-pub mod max_flavors;
 pub mod max_freq;
 pub mod max_min_sum;
 pub mod min_diff;

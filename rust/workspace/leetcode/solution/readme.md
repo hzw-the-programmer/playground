@@ -14,6 +14,7 @@
 1100. Find K-Length Substrings With No Repeated Characters
 1852. Distinct Numbers in Each Subarray
 1151. Minimum Swaps to Group All 1's Together
+2107. Number of Unique Flavors After Sharing K Candies
 
 cargo test p220 -p solution
 cargo test p220 -p solution -- --show-output
