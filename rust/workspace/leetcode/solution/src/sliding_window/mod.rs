@@ -41,7 +41,6 @@ pub mod binary_search;
 pub mod bits;
 pub mod bubble_sort;
 pub mod counting_sort;
-pub mod distinct_nums;
 pub mod has_all_codes;
 pub mod max_flavors;
 pub mod max_freq;

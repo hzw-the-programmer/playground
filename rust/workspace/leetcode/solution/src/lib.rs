@@ -8,6 +8,7 @@ pub mod s1343;
 pub mod s1423;
 pub mod s1456;
 pub mod s1652;
+pub mod s1852;
 pub mod s2090;
 pub mod s2379;
 pub mod s2461;
