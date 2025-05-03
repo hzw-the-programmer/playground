@@ -1,5 +1,9 @@
 pub fn knapsack01(weights: &[usize], values: &[usize], capacity: usize) -> usize {
-    assert_eq!(weights.len(), values.len(), "weights and values must have the same length");
+    assert_eq!(
+        weights.len(),
+        values.len(),
+        "weights and values must have the same length"
+    );
 
     let n = weights.len();
 
@@ -54,7 +58,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected="weights and values must have the same length")]
+    #[should_panic(expected = "weights and values must have the same length")]
     fn test_invalid_input() {
         let weights = [1, 2];
         let values = [5];
