@@ -1,3 +1,5 @@
+// time: O(2^n)
+// space: O(n)
 pub fn knapsack01(weights: &[usize], values: &[usize], capacity: usize) -> usize {
     assert_eq!(
         weights.len(),
@@ -29,6 +31,8 @@ pub fn knapsack01(weights: &[usize], values: &[usize], capacity: usize) -> usize
     pick.max(not_pick)
 }
 
+// time: O(n*capacity)
+// space: O(n*capacity)
 pub fn knapsack01_memo(weights: &[usize], values: &[usize], capacity: usize) -> usize {
     let mut memo = vec![vec![-1; capacity + 1]; weights.len() + 1];
     knapsack01_memo_recursive(weights, values, capacity, &mut memo)
@@ -71,6 +75,8 @@ fn knapsack01_memo_recursive(
     memo[n][capacity] as usize
 }
 
+// time: O(n*capacity)
+// space: O(n*capacity)
 pub fn knapsack01_dp(weights: &[usize], values: &[usize], capacity: usize) -> usize {
     let n = weights.len();
     let mut dp = vec![vec![0; capacity + 1]; n + 1];
