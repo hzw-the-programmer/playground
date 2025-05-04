@@ -112,7 +112,7 @@ pub fn knapsack01_dp(weights: &[usize], values: &[usize], capacity: usize) -> us
 // space: O(capacity)
 pub fn knapsack01_dp_v2(weights: &[usize], values: &[usize], capacity: usize) -> usize {
     let n = weights.len();
-    let mut dp = vec![0; n + 1];
+    let mut dp = vec![0; capacity + 1];
     for i in 1..=n {
         let mut j = capacity;
         while j >= weights[i - 1] {
@@ -120,7 +120,7 @@ pub fn knapsack01_dp_v2(weights: &[usize], values: &[usize], capacity: usize) ->
             j -= 1;
         }
     }
-    dp[n]
+    dp[capacity]
 }
 
 #[cfg(test)]
