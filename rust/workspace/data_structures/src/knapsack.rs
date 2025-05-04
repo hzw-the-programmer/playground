@@ -47,6 +47,7 @@ fn knapsack01_memo_recursive(
         return 0;
     }
 
+    // Check if we have previously calculated the same subproblem
     if memo[n][capacity] != -1 {
         return memo[n][capacity] as usize;
     }
@@ -65,6 +66,7 @@ fn knapsack01_memo_recursive(
     // Don't pick the nth item
     let not_pick = knapsack01(&weights[..n - 1], &values[..n - 1], capacity);
 
+    // Store the result in memo[n][capacity] and return it
     memo[n][capacity] = pick.max(not_pick) as i32;
     memo[n][capacity] as usize
 }
