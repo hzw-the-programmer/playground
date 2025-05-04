@@ -1,5 +1,6 @@
 pub mod binary_search_tree;
 pub mod disjoint_set;
+pub mod fibonacci;
 pub mod insertion_sort;
 pub mod knapsack;
 pub mod merge_sort;
