@@ -107,6 +107,22 @@ pub fn knapsack01_dp(weights: &[usize], values: &[usize], capacity: usize) -> us
     dp[n][capacity]
 }
 
+// Bottom-Up DP (Space-Optimized)
+// time: O(n*capacity)
+// space: O(capacity)
+pub fn knapsack01_dp_v2(weights: &[usize], values: &[usize], capacity: usize) -> usize {
+    let n = weights.len();
+    let mut dp = vec![0; n + 1];
+    for i in 1..=n {
+        let mut j = capacity;
+        while j >= weights[i - 1] {
+            dp[j] = dp[j].max(values[i - 1] + dp[j - weights[i - 1]]);
+            j -= 1;
+        }
+    }
+    dp[n]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -118,6 +134,7 @@ mod tests {
         assert_eq!(knapsack01(&weights, &values, 5), 7);
         assert_eq!(knapsack01_memo(&weights, &values, 5), 7);
         assert_eq!(knapsack01_dp(&weights, &values, 5), 7);
+        assert_eq!(knapsack01_dp_v2(&weights, &values, 5), 7);
     }
 
     #[test]
@@ -127,6 +144,7 @@ mod tests {
         assert_eq!(knapsack01(&weights, &values, 7), 9);
         assert_eq!(knapsack01_memo(&weights, &values, 7), 9);
         assert_eq!(knapsack01_dp(&weights, &values, 7), 9);
+        assert_eq!(knapsack01_dp_v2(&weights, &values, 7), 9);
     }
 
     #[test]
@@ -134,6 +152,7 @@ mod tests {
         assert_eq!(knapsack01(&[], &[], 10), 0);
         assert_eq!(knapsack01_memo(&[], &[], 10), 0);
         assert_eq!(knapsack01_dp(&[], &[], 10), 0);
+        assert_eq!(knapsack01_dp_v2(&[], &[], 10), 0);
     }
 
     #[test]
@@ -143,6 +162,7 @@ mod tests {
         assert_eq!(knapsack01(&weights, &values, 0), 0);
         assert_eq!(knapsack01_memo(&weights, &values, 0), 0);
         assert_eq!(knapsack01_dp(&weights, &values, 0), 0);
+        assert_eq!(knapsack01_dp_v2(&weights, &values, 0), 0);
     }
 
     #[test]
