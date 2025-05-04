@@ -69,6 +69,23 @@ pub fn fibonacci_dp_v3(n: usize) -> usize {
     dp[n % 2]
 }
 
+// https://www.geeksforgeeks.org/matrix-exponentiation/
+// time: O(log(n))
+// space: O(1)
+pub fn fibonacci_matrix(n: usize) -> usize {
+    if n == 0 {
+        0
+    } else if n == 1 {
+        1
+    } else {
+        let mut m = [[1, 1], [1, 0]];
+        m = crate::matrix::power2x2(&m, (n - 1) as u32);
+        let initial = [[1, 0], [0, 0]];
+        let result = crate::matrix::multiply2x2(&m, &initial);
+        (result[0][0] % crate::matrix::MOD) as _
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -80,5 +97,6 @@ mod tests {
         assert_eq!(fibonacci_dp(10), 55);
         assert_eq!(fibonacci_dp_v2(10), 55);
         assert_eq!(fibonacci_dp_v3(10), 55);
+        assert_eq!(fibonacci_matrix(10), 55);
     }
 }
