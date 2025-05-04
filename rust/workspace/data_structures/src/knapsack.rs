@@ -7,11 +7,12 @@ pub fn knapsack01(weights: &[usize], values: &[usize], capacity: usize) -> usize
 
     let n = weights.len();
 
-    // base case
+    // Base Case
     if n == 0 || capacity == 0 {
         return 0;
     }
 
+    // Pick nth item if it does not exceed the capacity of knapsack
     let mut pick = 0;
     if weights[n - 1] <= capacity {
         pick = values[n - 1]
@@ -22,6 +23,7 @@ pub fn knapsack01(weights: &[usize], values: &[usize], capacity: usize) -> usize
             );
     }
 
+    // Don't pick the nth item
     let not_pick = knapsack01(&weights[..n - 1], &values[..n - 1], capacity);
 
     pick.max(not_pick)
