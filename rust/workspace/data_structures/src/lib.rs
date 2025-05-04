@@ -7,6 +7,7 @@ pub mod knapsack;
 pub mod merge_sort;
 pub mod min_heap;
 pub mod minimum_spanning_tree;
+pub mod power;
 pub mod quicksort;
 pub mod segment_tree;
 pub mod trie;
