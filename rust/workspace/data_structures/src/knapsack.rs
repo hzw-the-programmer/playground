@@ -33,6 +33,7 @@ pub fn knapsack01(weights: &[usize], values: &[usize], capacity: usize) -> usize
     pick.max(not_pick)
 }
 
+// Top-Down DP (Memoization)
 // time: O(n*capacity)
 // space: O(n*capacity)
 pub fn knapsack01_memo(weights: &[usize], values: &[usize], capacity: usize) -> usize {
@@ -77,6 +78,7 @@ fn knapsack01_memo_recursive(
     memo[n][capacity] as usize
 }
 
+// Bottom-Up DP (Tabulation)
 // time: O(n*capacity)
 // space: O(n*capacity)
 pub fn knapsack01_dp(weights: &[usize], values: &[usize], capacity: usize) -> usize {

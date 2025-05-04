@@ -12,6 +12,7 @@ pub fn fibonacci(n: usize) -> usize {
     }
 }
 
+// Top-Down DP (Memoization)
 // time: O(n)
 // space: O(n)
 pub fn fibonacci_memo(n: usize) -> usize {
@@ -32,6 +33,7 @@ fn fibonacci_memo_recursive(n: usize, memo: &mut [usize]) -> usize {
     }
 }
 
+// Bottom-Up DP (Tabulation)
 // time: O(n)
 // space: O(n)
 pub fn fibonacci_dp(n: usize) -> usize {
@@ -44,6 +46,7 @@ pub fn fibonacci_dp(n: usize) -> usize {
     dp[n]
 }
 
+// Bottom-Up DP (Space-Optimized)
 // time: O(n)
 // space: O(1)
 pub fn fibonacci_dp_v2(n: usize) -> usize {
