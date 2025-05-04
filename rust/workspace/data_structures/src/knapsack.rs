@@ -1,3 +1,5 @@
+// https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10/
+
 // time: O(2^n)
 // space: O(n)
 pub fn knapsack01(weights: &[usize], values: &[usize], capacity: usize) -> usize {
