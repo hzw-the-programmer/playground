@@ -23,7 +23,7 @@ fn test_word_break() {
     assert!(!word_break("catsandog", &dictionary));
 
     let dictionary = ["aaa", "aaaa"];
-    assert!(word_break("aaaaa", &dictionary));
+    assert!(!word_break("aaaaa", &dictionary));
 
     let s = "a";
     assert!(word_break(s, &["a"]));
