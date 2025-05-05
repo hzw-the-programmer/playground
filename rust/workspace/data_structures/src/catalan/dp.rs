@@ -1,3 +1,5 @@
+// Time Complexity: O(n^2)
+// Auxiliary Space: O(n)
 pub fn catalan(n: usize) -> usize {
     if n <= 1 {
         1
