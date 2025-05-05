@@ -7,7 +7,7 @@ pub fn fibonacci(n: usize) -> usize {
 }
 
 fn fibonacci_recursive(n: usize, memo: &mut [usize]) -> usize {
-    if n == 0 || n == 1 {
+    if n <= 1 {
         n
     } else {
         if memo[n] == 0 {

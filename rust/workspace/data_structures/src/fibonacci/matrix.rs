@@ -2,7 +2,7 @@
 // time: O(log(n))
 // space: O(1)
 pub fn fibonacci(n: usize) -> usize {
-    if n == 0 || n == 1 {
+    if n <= 1 {
         n
     } else {
         let mut m = [[1, 1], [1, 0]];

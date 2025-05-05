@@ -2,7 +2,7 @@
 // time: O(n)
 // space: O(n)
 pub fn fibonacci(n: usize) -> usize {
-    if n == 0 || n == 1 {
+    if n <= 1 {
         n
     } else {
         let mut dp = vec![0; n + 1];
