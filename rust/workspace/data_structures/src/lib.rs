@@ -12,3 +12,4 @@ pub mod power;
 pub mod quicksort;
 pub mod segment_tree;
 pub mod trie;
+pub mod word_break;
