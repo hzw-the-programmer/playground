@@ -19,7 +19,7 @@ fn word_break_recursive(s: &str, trie: &Trie) -> bool {
         true
     } else {
         for i in 1..=n {
-            if trie.starts_with(&s[..i]) && word_break_recursive(&s[i..], trie) {
+            if trie.search(&s[..i]) && word_break_recursive(&s[i..], trie) {
                 return true;
             }
         }
