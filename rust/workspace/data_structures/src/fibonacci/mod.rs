@@ -6,11 +6,11 @@
 // mod memo;
 // pub use memo::fibonacci;
 
-// mod bottom_up;
-// pub use bottom_up::fibonacci;
+// mod dp;
+// pub use dp::fibonacci;
 
-// mod bottom_up2;
-// pub use bottom_up2::fibonacci;
+// mod dp2;
+// pub use dp2::fibonacci;
 
 mod matrix;
 pub use matrix::fibonacci;
