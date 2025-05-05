@@ -1,13 +1,31 @@
-const CHARSET_LEN: usize = 26;
+// const CHARSET_LEN: usize = 26;
+// fn get_index(c: char) -> usize {
+//     assert!(c >= 'a' && c <= 'z');
+//     c as usize - 'a' as usize
+// }
+const CHARSET_LEN: usize = 128;
 fn get_index(c: char) -> usize {
-    assert!(c >= 'a' && c <= 'z');
-    c as usize - 'a' as usize
+    let c = c as usize;
+    assert!(c < CHARSET_LEN);
+    c
 }
 
-#[derive(Default)]
+// the trait bound `[Option<Box<trie::array::Node>>; 128]: Default` is not satisfied
+// #[derive(Default)]
 struct Node {
     children: [Option<Box<Node>>; CHARSET_LEN],
     is_end: bool,
+}
+
+impl Default for Node {
+    fn default() -> Self {
+        Self {
+            // the trait bound `Box<trie::array::Node>: Copy` is not satisfied
+            // children: [None; CHARSET_LEN],
+            children: [const { None }; CHARSET_LEN],
+            is_end: false,
+        }
+    }
 }
 
 impl Node {
