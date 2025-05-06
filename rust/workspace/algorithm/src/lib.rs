@@ -4,7 +4,7 @@ pub mod count_ways;
 pub mod disjoint_set;
 pub mod fibonacci;
 pub mod insertion_sort;
-pub mod knapsack;
+pub mod knapsack01;
 pub mod matrix;
 pub mod max_gold;
 pub mod merge_sort;
