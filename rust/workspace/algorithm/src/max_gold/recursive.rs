@@ -15,17 +15,17 @@ fn max_gold_recursive<const N: usize, const M: usize>(
     j: usize,
     mat: &[[u32; M]; N],
 ) -> u32 {
-    let mut ans = 0;
-
     if i == N || j == M {
-        return 0;
-    }
+        0
+    } else {
+        let mut ans = 0;
 
-    if i > 0 {
-        ans = ans.max(max_gold_recursive(i - 1, j + 1, mat));
-    }
-    ans = ans.max(max_gold_recursive(i, j + 1, mat));
-    ans = ans.max(max_gold_recursive(i + 1, j + 1, mat));
+        if i > 0 {
+            ans = ans.max(max_gold_recursive(i - 1, j + 1, mat));
+        }
+        ans = ans.max(max_gold_recursive(i, j + 1, mat));
+        ans = ans.max(max_gold_recursive(i + 1, j + 1, mat));
 
-    mat[i][j] + ans
+        mat[i][j] + ans
+    }
 }
