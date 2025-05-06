@@ -1,3 +1,5 @@
+// time: O(2^n)
+// space: O(n)
 pub fn subset_sum(nums: &[u32], sum: u32) -> bool {
     let n = nums.len();
 
