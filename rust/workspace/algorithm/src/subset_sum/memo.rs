@@ -1,3 +1,5 @@
+// time: O(sum*n)
+// space: O(sum*n)
 pub fn subset_sum(nums: &[u32], sum: u32) -> bool {
     let n = nums.len();
     let mut memo = vec![vec![-1; sum as usize + 1]; n + 1];
