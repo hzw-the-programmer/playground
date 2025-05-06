@@ -6,6 +6,7 @@ pub mod fibonacci;
 pub mod insertion_sort;
 pub mod knapsack;
 pub mod matrix;
+pub mod max_gold;
 pub mod merge_sort;
 pub mod min_heap;
 pub mod minimum_spanning_tree;
