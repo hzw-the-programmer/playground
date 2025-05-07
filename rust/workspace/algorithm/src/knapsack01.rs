@@ -3,57 +3,14 @@
 // mod dp_optimized;
 // pub use dp_optimized::knapsack01;
 
-mod recursive;
-pub use recursive::knapsack01;
+// mod recursive;
+// pub use recursive::knapsack01;
+
+mod memo;
+pub use memo::knapsack01;
 
 #[cfg(test)]
 mod tests;
-
-// Top-Down DP (Memoization)
-// time: O(n*capacity)
-// space: O(n*capacity)
-pub fn knapsack01_memo(weights: &[usize], values: &[usize], capacity: usize) -> usize {
-    let mut memo = vec![vec![-1; capacity + 1]; weights.len() + 1];
-    knapsack01_memo_recursive(weights, values, capacity, &mut memo)
-}
-
-fn knapsack01_memo_recursive(
-    weights: &[usize],
-    values: &[usize],
-    capacity: usize,
-    memo: &mut [Vec<i32>],
-) -> usize {
-    let n = weights.len();
-
-    // Base Case
-    if n == 0 || capacity == 0 {
-        return 0;
-    }
-
-    // Check if we have previously calculated the same subproblem
-    if memo[n][capacity] != -1 {
-        return memo[n][capacity] as usize;
-    }
-
-    // Pick nth item if it does not exceed the capacity of knapsack
-    let mut pick = 0;
-    if weights[n - 1] <= capacity {
-        pick = values[n - 1]
-            + knapsack01_memo_recursive(
-                &weights[..n - 1],
-                &values[..n - 1],
-                capacity - weights[n - 1],
-                memo,
-            );
-    }
-
-    // Don't pick the nth item
-    let not_pick = knapsack01_memo_recursive(&weights[..n - 1], &values[..n - 1], capacity, memo);
-
-    // Store the result in memo[n][capacity] and return it
-    memo[n][capacity] = pick.max(not_pick) as i32;
-    memo[n][capacity] as usize
-}
 
 // Bottom-Up DP (Tabulation)
 // time: O(n*capacity)
@@ -98,43 +55,4 @@ pub fn knapsack01_dp_v2(weights: &[usize], values: &[usize], capacity: usize) ->
         }
     }
     dp[capacity]
-}
-
-#[cfg(test)]
-mod tests2 {
-    use super::*;
-
-    #[test]
-    fn test_basic_case() {
-        let weights = [2, 3, 4, 5];
-        let values = [3, 4, 5, 6];
-        assert_eq!(knapsack01_memo(&weights, &values, 5), 7);
-        assert_eq!(knapsack01_dp(&weights, &values, 5), 7);
-        assert_eq!(knapsack01_dp_v2(&weights, &values, 5), 7);
-    }
-
-    #[test]
-    fn test_medium_case() {
-        let weights = [1, 3, 4, 5];
-        let values = [1, 4, 5, 7];
-        assert_eq!(knapsack01_memo(&weights, &values, 7), 9);
-        assert_eq!(knapsack01_dp(&weights, &values, 7), 9);
-        assert_eq!(knapsack01_dp_v2(&weights, &values, 7), 9);
-    }
-
-    #[test]
-    fn test_empty_items() {
-        assert_eq!(knapsack01_memo(&[], &[], 10), 0);
-        assert_eq!(knapsack01_dp(&[], &[], 10), 0);
-        assert_eq!(knapsack01_dp_v2(&[], &[], 10), 0);
-    }
-
-    #[test]
-    fn test_zero_capacity() {
-        let weights = [1, 2, 3];
-        let values = [2, 3, 4];
-        assert_eq!(knapsack01_memo(&weights, &values, 0), 0);
-        assert_eq!(knapsack01_dp(&weights, &values, 0), 0);
-        assert_eq!(knapsack01_dp_v2(&weights, &values, 0), 0);
-    }
 }
