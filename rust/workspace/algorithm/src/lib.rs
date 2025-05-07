@@ -1,6 +1,7 @@
 pub mod binary_search_tree;
 pub mod catalan;
 pub mod count_ways;
+pub mod cut_rod;
 pub mod disjoint_set;
 pub mod fibonacci;
 pub mod insertion_sort;
