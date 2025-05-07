@@ -5,6 +5,7 @@ pub mod cut_rod;
 pub mod disjoint_set;
 pub mod fibonacci;
 pub mod insertion_sort;
+pub mod knapsack;
 pub mod knapsack01;
 pub mod matrix;
 pub mod max_gold;
