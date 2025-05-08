@@ -3,14 +3,14 @@
 // mod recursive;
 // pub use recursive::knapsack01;
 
-// mod memo;
-// pub use memo::knapsack01;
+mod memo;
+pub use memo::knapsack01;
 
 // mod dp;
 // pub use dp::knapsack01;
 
-mod dp_optimized;
-pub use dp_optimized::knapsack01;
+// mod dp_optimized;
+// pub use dp_optimized::knapsack01;
 
 #[cfg(test)]
 mod tests;
