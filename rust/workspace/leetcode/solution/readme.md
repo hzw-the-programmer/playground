@@ -20,6 +20,9 @@
 3439. Reschedule Meetings for Maximum Free Time I
 2134. Minimum Swaps to Group All 1's Together II
 
+# dynamic programming
+5. Longest Palindromic Substring
+
 cargo test p220 -p solution
 cargo test p220 -p solution -- --show-output
 cargo build -p solution
