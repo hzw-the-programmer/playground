@@ -1,3 +1,5 @@
+// time: O(n^2)
+// space: O(n^2)
 pub fn longest_palindrome(s: String) -> String {
     let n = s.len();
     if n < 2 {
