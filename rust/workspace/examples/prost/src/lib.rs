@@ -1,5 +1,5 @@
-pub mod test4 {
-    include!(concat!(env!("OUT_DIR"), "/test4.rs"));
+pub mod repeated {
+    include!(concat!(env!("OUT_DIR"), "/repeated.rs"));
 }
 
 #[cfg(test)]

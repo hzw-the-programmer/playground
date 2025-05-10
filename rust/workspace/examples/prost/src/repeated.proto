@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package repeated;
+
+message Repeated {
+  string d = 4;
+  repeated int32 e = 6;
+}
+
+message Packed {
+  string d = 4;
+  repeated int32 e = 6 [packed=false];
+}

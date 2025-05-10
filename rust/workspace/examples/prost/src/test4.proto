@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-package test4;
-
-message Test4 {
-  string d = 4;
-  repeated int32 e = 6;
-}
