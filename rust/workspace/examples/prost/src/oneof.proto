@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package oneof;
+
+message Msg {
+  oneof a {
+    string d = 4;
+    int32 e = 6;
+  }
+  int32 f = 7;
+}
