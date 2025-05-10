@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package map;
+
+message Msg {
+  map<string, int32> g = 7;
+}
+
+message Msg2 {
+  message g_Entry {
+    string key = 1;
+    int32 value = 2;
+  }
+  repeated g_Entry g = 7;
+}
