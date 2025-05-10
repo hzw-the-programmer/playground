@@ -5,6 +5,7 @@ fn main() {
             "src/repeated.proto",
             "src/oneof.proto",
             "src/map.proto",
+            "src/submsg.proto",
         ],
         &["src/"],
     )
