@@ -1,22 +1,23 @@
 pub fn combine(n: i32, k: i32) -> Vec<Vec<i32>> {
-    let mut current = vec![];
+    let mut temp = vec![];
     let mut result = vec![];
-    recursive(&mut current, 1, n as usize, k as usize, &mut result);
+    recursive(&mut temp, 1, n as usize, k as usize, &mut result);
     result
 }
 
-fn recursive(current: &mut Vec<i32>, i: usize, n: usize, k: usize, result: &mut Vec<Vec<i32>>) {
-    if current.len() == k {
-        result.push(current.clone());
-        return;
-    }
-    if i > n {
+fn recursive(temp: &mut Vec<i32>, cur: usize, n: usize, k: usize, result: &mut Vec<Vec<i32>>) {
+    if temp.len() + (n + 1 - cur) < k {
         return;
     }
 
-    current.push(i as i32);
-    recursive(current, i + 1, n, k, result);
-    current.pop();
+    if temp.len() == k {
+        result.push(temp.clone());
+        return;
+    }
 
-    recursive(current, i + 1, n, k, result);
+    temp.push(cur as i32);
+    recursive(temp, cur + 1, n, k, result);
+    temp.pop();
+
+    recursive(temp, cur + 1, n, k, result);
 }
