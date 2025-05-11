@@ -20,7 +20,7 @@ fn test_submsg() {
 fn test_optional_1() {
     let t = SubMsg::decode(&hex::decode("").unwrap()[..]).unwrap();
     assert_eq!(t.a, 0);
-    
+
     let t = SubMsg::decode(&hex::decode("0800").unwrap()[..]).unwrap();
     assert_eq!(t.a, 0);
 
@@ -50,5 +50,4 @@ fn test_optional_2() {
     buf.reserve(t.encoded_len());
     t.encode(&mut buf).unwrap();
     assert_eq!(hex::encode(&buf), "0800");
-
 }
