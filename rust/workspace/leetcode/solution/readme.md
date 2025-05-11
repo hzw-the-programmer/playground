@@ -22,6 +22,10 @@
 
 # dynamic programming
 5. Longest Palindromic Substring
+22. Generate Parentheses
+
+# Backtracking
+77. Combinations
 
 cargo test p220 -p solution
 cargo test p220 -p solution -- --show-output
