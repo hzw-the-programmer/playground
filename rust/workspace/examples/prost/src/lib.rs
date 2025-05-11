@@ -1,8 +1,6 @@
 // https://protobuf.dev/programming-guides/encoding/
 
-pub mod submsg {
-    include!(concat!(env!("OUT_DIR"), "/submsg.rs"));
-}
+pub mod submsg;
 
 pub mod repeated {
     include!(concat!(env!("OUT_DIR"), "/repeated.rs"));

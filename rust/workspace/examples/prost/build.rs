@@ -1,13 +1,13 @@
 fn main() {
     prost_build::compile_protos(
         &[
-            "src/items.proto",
-            "src/repeated.proto",
-            "src/oneof.proto",
-            "src/map.proto",
-            "src/submsg.proto",
+            "protos/items.proto",
+            "protos/map.proto",
+            "protos/oneof.proto",
+            "protos/repeated.proto",
+            "protos/submsg.proto",
         ],
-        &["src/"],
+        &["protos/"],
     )
     .unwrap();
 }
