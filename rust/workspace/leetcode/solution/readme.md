@@ -23,6 +23,7 @@
 # dynamic programming
 5. Longest Palindromic Substring
 22. Generate Parentheses
+32. Longest Valid Parentheses
 
 # Backtracking
 77. Combinations
