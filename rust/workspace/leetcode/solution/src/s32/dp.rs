@@ -8,17 +8,15 @@ pub fn longest_valid_parentheses(s: String) -> i32 {
             if s[i - 1] == b'(' {
                 dp[i] = if i > 1 { dp[i - 2] } else { 0 } + 2;
                 ans = ans.max(dp[i]);
-            } else if s[i - 1] == b')' {
-                if s[i - dp[i - 1] - 1] == b'(' {
-                    dp[i] = dp[i - 1]
-                        + 2
-                        + if i - dp[i - 1] - 1 > 0 {
-                            dp[i - dp[i - 1] - 1 - 1]
-                        } else {
-                            0
-                        };
-                    ans = ans.max(dp[i]);
-                }
+            } else if i - dp[i - 1] > 0 && s[i - dp[i - 1] - 1] == b'(' {
+                dp[i] = dp[i - 1]
+                    + 2
+                    + if i - dp[i - 1] - 1 > 0 {
+                        dp[i - dp[i - 1] - 1 - 1]
+                    } else {
+                        0
+                    };
+                ans = ans.max(dp[i]);
             }
         }
     }
