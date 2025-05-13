@@ -11,15 +11,37 @@ pub fn next_greater_element(arr: &[i32]) -> Vec<i32> {
     result
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_next_greater_element() {
-        assert_eq!(
-            next_greater_element(&[2, 1, 2, 4, 3]),
-            vec![4, 2, 4, -1, -1]
-        );
+pub fn largest_rectangle_in_histogram(arr: &[i32]) -> i32 {
+    let n = arr.len();
+    let mut stack = Vec::with_capacity(n);
+    let mut ans = 0;
+    for (i, &n) in arr.iter().enumerate() {
+        while !stack.is_empty() && n < arr[*stack.last().unwrap()] {
+            let j = stack.pop().unwrap();
+            let h = arr[j];
+            let w = if stack.is_empty() {
+                i
+            } else {
+                i - *stack.last().unwrap() - 1
+            };
+            ans = ans.max(h * w as i32);
+        }
+        stack.push(i);
     }
+
+    while !stack.is_empty() {
+        let j = stack.pop().unwrap();
+        let h = arr[j];
+        let w = if stack.is_empty() {
+            n
+        } else {
+            n - *stack.last().unwrap() - 1
+        };
+        ans = ans.max(h * w as i32);
+    }
+
+    ans
 }
+
+#[cfg(test)]
+mod tests;
