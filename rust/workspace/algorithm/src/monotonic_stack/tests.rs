@@ -21,6 +21,8 @@ fn test_largest_rectangle_in_histogram() {
     );
 
     // important test
+    assert_eq!(largest_rectangle_in_histogram(&[5, 4, 3, 2, 1]), 9);
+    assert_eq!(largest_rectangle_in_histogram(&[2, 1, 2]), 3);
     assert_eq!(largest_rectangle_in_histogram(&[2, 4, 6, 3]), 9);
     assert_eq!(largest_rectangle_in_histogram(&[2, 5, 7, 4, 2]), 12);
 }
@@ -43,16 +45,6 @@ fn test_example() {
 #[test]
 fn test_increasing() {
     assert_eq!(largest_rectangle_in_histogram(&[1, 2, 3, 4, 5]), 9);
-}
-
-#[test]
-fn test_decreasing() {
-    assert_eq!(largest_rectangle_in_histogram(&[5, 4, 3, 2, 1]), 9);
-}
-
-#[test]
-fn test_2_1_2() {
-    assert_eq!(largest_rectangle_in_histogram(&[2, 1, 2]), 3);
 }
 
 #[test]
