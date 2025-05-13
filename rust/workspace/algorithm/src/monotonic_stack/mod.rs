@@ -11,6 +11,7 @@ pub fn next_greater_element(arr: &[i32]) -> Vec<i32> {
     result
 }
 
+// https://www.geeksforgeeks.org/largest-rectangular-area-in-a-histogram-using-stack/#further-optimized-approach
 pub fn largest_rectangle_in_histogram(arr: &[i32]) -> i32 {
     let n = arr.len();
     let mut stack = Vec::with_capacity(n);
