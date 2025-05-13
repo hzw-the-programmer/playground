@@ -3,8 +3,8 @@
 // mod dp;
 // pub use dp::trap;
 
-mod stack;
-pub use stack::trap;
+mod monotonic_stack;
+pub use monotonic_stack::trap;
 
 #[cfg(test)]
 mod tests;
