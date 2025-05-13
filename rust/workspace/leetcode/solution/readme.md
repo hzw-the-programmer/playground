@@ -24,6 +24,7 @@
 5. Longest Palindromic Substring
 22. Generate Parentheses
 32. Longest Valid Parentheses
+42. Trapping Rain Water
 
 # Backtracking
 77. Combinations
