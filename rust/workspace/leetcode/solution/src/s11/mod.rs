@@ -1,7 +1,7 @@
 // 11. Container With Most Water
 
-mod greedy;
-pub use greedy::max_area;
+mod two_pointers;
+pub use two_pointers::max_area;
 
 #[cfg(test)]
 mod tests;
