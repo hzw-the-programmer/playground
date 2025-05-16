@@ -25,6 +25,7 @@
 22. Generate Parentheses
 32. Longest Valid Parentheses
 42. Trapping Rain Water
+55. Jump Game
 
 # Backtracking
 77. Combinations
