@@ -3,8 +3,9 @@ pub fn can_jump(nums: Vec<i32>) -> bool {
     dp[0] = true;
     for i in 1..nums.len() {
         for j in 0..i {
-            if nums[j] >= (i - j) as i32 {
-                dp[i] = dp[j];
+            if nums[j] >= (i - j) as i32 && dp[j] {
+                dp[i] = true;
+                break;
             }
         }
     }
