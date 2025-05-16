@@ -6,7 +6,7 @@ fn recursive(nums: &[i32], i: usize) -> bool {
     if i == 0 {
         return true;
     }
-    for j in 0..i {
+    for j in (0..i).rev() {
         if nums[j] >= (i - j) as i32 {
             if recursive(nums, j) {
                 return true;
