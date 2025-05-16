@@ -33,6 +33,9 @@ impl ACAutomaton {
             }
             self.out[current] |= 1 << i;
         }
+
+        #[cfg(test)]
+        self.dump_g(state);
     }
 
     pub fn starts_with(&self, text: &str) -> bool {
@@ -45,5 +48,25 @@ impl ACAutomaton {
             current = self.g[current][i];
         }
         true
+    }
+
+    #[cfg(test)]
+    fn dump_g(&self, total_states: usize) {
+        print!("   ");
+        "abcdefghijklmnopqrstuvwxyz"
+            .chars()
+            .for_each(|c| print!("{c}  "));
+        println!("");
+        for i in 0..total_states {
+            print!("{i:02} ");
+            for j in 0..CHARSET_LEN {
+                if self.g[i][j] == INVALID_STATE {
+                    print!("   ");
+                } else {
+                    print!("{:02} ", self.g[i][j]);
+                }
+            }
+            println!("");
+        }
     }
 }
