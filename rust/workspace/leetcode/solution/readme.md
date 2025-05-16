@@ -25,15 +25,10 @@
 22. Generate Parentheses
 32. Longest Valid Parentheses
 42. Trapping Rain Water
-55. Jump Game
 
 # Backtracking
 77. Combinations
 
 # Greedy
 11. Container With Most Water
-
-cargo test p220 -p solution
-cargo test p220 -p solution -- --show-output
-cargo build -p solution
-cargo fmt -p solution
+55. Jump Game
