@@ -1,14 +1,13 @@
 pub fn max_profit(prices: Vec<i32>, fee: i32) -> i32 {
     let mut profit = 0;
 
-    let mut buy = prices[0] + fee;
+    let mut cost = prices[0] + fee;
     for i in 1..prices.len() {
-        let price = prices[i] + fee;
-        if price < buy {
-            buy = price;
-        } else if prices[i] > buy {
-            profit += prices[i] - buy;
-            buy = prices[i];
+        if cost > prices[i] + fee {
+            cost = prices[i] + fee;
+        } else if prices[i] > cost {
+            profit += prices[i] - cost;
+            cost = prices[i];
         }
     }
 
