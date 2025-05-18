@@ -5,6 +5,7 @@ fn main() {
             "protos/map.proto",
             "protos/oneof.proto",
             "protos/repeated.proto",
+            "protos/sint32.proto",
             "protos/submsg.proto",
         ],
         &["protos/"],
