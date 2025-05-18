@@ -1,8 +1,9 @@
 use serde::{
-    de::{Error, Visitor},
-    Deserializer,
+    de::{Error, SeqAccess, Visitor},
+    Deserialize, Deserializer,
 };
 use std::fmt;
+use std::marker::PhantomData;
 
 #[test]
 fn test_deserialize_bool() {
@@ -49,4 +50,42 @@ fn test_deserialize_bool() {
     let mut d = serde_json::Deserializer::from_str("[");
     let res = d.deserialize_bool(BoolVisitor);
     println!("{}", res.unwrap_err());
+}
+
+#[test]
+fn test_deserialize_seq() {
+    struct VecVisitor<T> {
+        marker: PhantomData<T>,
+    }
+
+    impl<'de, T> Visitor<'de> for VecVisitor<T>
+    where
+        T: Deserialize<'de>,
+    {
+        type Value = Vec<T>;
+
+        fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+            formatter.write_str("a sequence")
+        }
+
+        fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+        where
+            A: SeqAccess<'de>,
+        {
+            let mut values = Vec::<T>::new();
+
+            while let Some(value) = seq.next_element()? {
+                values.push(value);
+            }
+
+            Ok(values)
+        }
+    }
+
+    let mut d = serde_json::Deserializer::from_str("[1, 2, 3]");
+    let visitor: VecVisitor<i32> = VecVisitor {
+        marker: PhantomData,
+    };
+    let res = d.deserialize_seq(visitor);
+    assert_eq!(res.unwrap(), vec![1, 2, 3]);
 }
