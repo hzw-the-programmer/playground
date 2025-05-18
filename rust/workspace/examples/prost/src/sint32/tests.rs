@@ -26,4 +26,21 @@ fn test_sint32() {
         1111_1110 ^ 1111_1111 = 0000_0001 = 1
     */
     assert_eq!(hex::encode(&buf), "4001");
+
+    msg.a = 1;
+    msg.b = 0;
+    let mut buf = Vec::new();
+    buf.reserve(msg.encoded_len());
+    msg.encode(&mut buf).unwrap();
+    assert_eq!(hex::encode(&buf), "3801");
+
+    msg.a = 0;
+    msg.b = 1;
+    let mut buf = Vec::new();
+    buf.reserve(msg.encoded_len());
+    msg.encode(&mut buf).unwrap();
+    /*
+        (0000_0001 << 1) ^ (0000_0001 >> 7)
+    */
+    assert_eq!(hex::encode(&buf), "4002");
 }
