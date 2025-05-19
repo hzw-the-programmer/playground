@@ -1,4 +1,5 @@
 pub mod aho_corasick;
+pub mod base64;
 pub mod binary_search_tree;
 pub mod catalan;
 pub mod count_ways;
