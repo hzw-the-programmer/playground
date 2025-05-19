@@ -1,4 +1,4 @@
-use super::CHARS;
+use crate::base64::CHARS;
 
 pub fn encode(data: &[u8]) -> String {
     let mut result = Vec::with_capacity((data.len() + 2) / 3 * 4);

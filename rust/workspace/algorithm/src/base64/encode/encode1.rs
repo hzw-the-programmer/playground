@@ -1,4 +1,4 @@
-use super::CHARS;
+use crate::base64::CHARS;
 
 pub fn encode(data: &[u8]) -> String {
     let n = data.len();
