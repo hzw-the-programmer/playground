@@ -12,23 +12,23 @@ pub fn encode(data: &[u8]) -> String {
             result.push(ENCODE_TABLE[acc >> 6 & 0x3F]);
             result.push(ENCODE_TABLE[acc & 0x3F]);
             acc = 0;
-        } else if i == data.len() - 1 {
-            match i % 3 {
-                0 => {
-                    result.push(ENCODE_TABLE[acc >> 2]);
-                    result.push(ENCODE_TABLE[acc << 4 & 0x3F]);
-                    result.push(b'=');
-                    result.push(b'=');
-                }
-                1 => {
-                    result.push(ENCODE_TABLE[acc >> 10]);
-                    result.push(ENCODE_TABLE[acc >> 4 & 0x3F]);
-                    result.push(ENCODE_TABLE[acc << 2 & 0x3F]);
-                    result.push(b'=');
-                }
-                _ => {}
-            }
         }
+    }
+
+    match data.len() % 3 {
+        1 => {
+            result.push(ENCODE_TABLE[acc >> 2]);
+            result.push(ENCODE_TABLE[acc << 4 & 0x3F]);
+            result.push(b'=');
+            result.push(b'=');
+        }
+        2 => {
+            result.push(ENCODE_TABLE[acc >> 10]);
+            result.push(ENCODE_TABLE[acc >> 4 & 0x3F]);
+            result.push(ENCODE_TABLE[acc << 2 & 0x3F]);
+            result.push(b'=');
+        }
+        _ => {}
     }
 
     unsafe { String::from_utf8_unchecked(result) }
