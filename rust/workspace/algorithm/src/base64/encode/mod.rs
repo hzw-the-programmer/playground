@@ -1,3 +1,5 @@
+const CHARS: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
 // mod encode1;
 // pub use encode1::encode;
 
