@@ -2,6 +2,8 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::Data;
 
+mod custom_model;
+
 #[proc_macro_derive(IntoStringHashMap)]
 pub fn derive_into_hash_map(item: TokenStream) -> TokenStream {
     println!("{item}");
@@ -44,4 +46,9 @@ pub fn derive_into_hash_map(item: TokenStream) -> TokenStream {
     println!("{out}");
 
     out
+}
+
+#[proc_macro_derive(DeriveCustomModel, attributes(custom_model))]
+pub fn derive_custom_model(item: TokenStream) -> TokenStream {
+    custom_model::derive_custom_model_impl(item)
 }
