@@ -1,7 +1,10 @@
+// https://www.freecodecamp.org/news/procedural-macros-in-rust/
+
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::Data;
 
+mod cached_fn;
 mod custom_model;
 mod log_duration;
 
@@ -57,4 +60,9 @@ pub fn derive_custom_model(item: TokenStream) -> TokenStream {
 #[proc_macro_attribute]
 pub fn log_duration(args: TokenStream, item: TokenStream) -> TokenStream {
     log_duration::log_duration_impl(args, item)
+}
+
+#[proc_macro_attribute]
+pub fn cached_fn(args: TokenStream, item: TokenStream) -> TokenStream {
+    cached_fn::cached_fn_impl(args, item)
 }
