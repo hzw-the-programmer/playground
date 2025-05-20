@@ -7,6 +7,7 @@ use syn::Data;
 mod cached_fn;
 mod constant_string;
 mod custom_model;
+mod hash_mapify;
 mod log_duration;
 
 #[proc_macro_derive(IntoStringHashMap)]
@@ -71,4 +72,9 @@ pub fn cached_fn(args: TokenStream, item: TokenStream) -> TokenStream {
 #[proc_macro]
 pub fn constant_string(item: TokenStream) -> TokenStream {
     constant_string::constant_string_impl(item)
+}
+
+#[proc_macro]
+pub fn hash_mapify(item: TokenStream) -> TokenStream {
+    hash_mapify::hash_mapify_impl(item)
 }
