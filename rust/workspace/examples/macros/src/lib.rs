@@ -3,6 +3,7 @@ use quote::quote;
 use syn::Data;
 
 mod custom_model;
+mod log_duration;
 
 #[proc_macro_derive(IntoStringHashMap)]
 pub fn derive_into_hash_map(item: TokenStream) -> TokenStream {
@@ -51,4 +52,9 @@ pub fn derive_into_hash_map(item: TokenStream) -> TokenStream {
 #[proc_macro_derive(DeriveCustomModel, attributes(custom_model))]
 pub fn derive_custom_model(item: TokenStream) -> TokenStream {
     custom_model::derive_custom_model_impl(item)
+}
+
+#[proc_macro_attribute]
+pub fn log_duration(args: TokenStream, item: TokenStream) -> TokenStream {
+    log_duration::log_duration_impl(args, item)
 }
