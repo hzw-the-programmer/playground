@@ -35,4 +35,5 @@
 55. Jump Game
 122. Best Time to Buy and Sell Stock II
 134. Gas Station
+135. Candy
 714. Best Time to Buy and Sell Stock with Transaction Fee
