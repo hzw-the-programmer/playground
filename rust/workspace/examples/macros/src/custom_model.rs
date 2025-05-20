@@ -44,7 +44,7 @@ pub(crate) fn derive_custom_model_impl(input: TokenStream) -> TokenStream {
     println!("{original_struct:#?}");
 
     // Destructure data & ident fields from the input
-    let DeriveInput { data, ident, .. } = original_struct.clone();
+    let DeriveInput { data, .. } = original_struct.clone();
 
     if let Struct(data_struct) = data {
         // Extract the fields from this data struct
