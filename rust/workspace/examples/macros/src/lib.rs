@@ -13,22 +13,20 @@ pub fn derive_into_hash_map(item: TokenStream) -> TokenStream {
 
     let out = match &input.data {
         Data::Struct(syn::DataStruct { fields, .. }) => {
-            let mut implementation = quote! {
-                let mut map = std::collections::HashMap::<String, String>::new();
-            };
-
-            for field in fields {
-                let identifier = field.ident.as_ref().unwrap();
-                implementation.extend(quote!{
-                    map.insert(stringify!(#identifier).to_string(), String::from(value.#identifier));
-                });
-            }
+            let field_identifiers = fields
+                .iter()
+                .map(|item| item.ident.as_ref().unwrap())
+                .collect::<Vec<_>>();
 
             quote! {
                 #[automatically_derived]
                 impl From<#struct_identifier> for std::collections::HashMap<String, String> {
                     fn from(value: #struct_identifier) -> Self {
-                        #implementation
+                        let mut map = std::collections::HashMap::<String, String>::new();
+
+                        #(
+                            map.insert(stringify!(#field_identifiers).to_string(), String::from(value.#field_identifiers));
+                        )*
 
                         map
                     }
