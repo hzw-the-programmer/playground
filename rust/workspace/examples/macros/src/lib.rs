@@ -5,6 +5,7 @@ use quote::quote;
 use syn::Data;
 
 mod cached_fn;
+mod constant_string;
 mod custom_model;
 mod log_duration;
 
@@ -65,4 +66,9 @@ pub fn log_duration(args: TokenStream, item: TokenStream) -> TokenStream {
 #[proc_macro_attribute]
 pub fn cached_fn(args: TokenStream, item: TokenStream) -> TokenStream {
     cached_fn::cached_fn_impl(args, item)
+}
+
+#[proc_macro]
+pub fn constant_string(item: TokenStream) -> TokenStream {
+    constant_string::constant_string_impl(item)
 }
