@@ -1,0 +1,6 @@
+[package]
+name = "macrostest"
+edition = "2024"
+
+[dependencies]
+macrosexample = { path = "../macros" }
