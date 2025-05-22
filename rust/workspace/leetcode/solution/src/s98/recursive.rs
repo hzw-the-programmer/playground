@@ -14,14 +14,14 @@ fn is_valid_bst_recursive(root: &Tree) -> bool {
         return false;
     }
 
-    if let Some(max) = max(&node.left) {
-        if node.val <= max {
+    if let Some(left) = &node.left {
+        if node.val <= max(left.clone()) {
             return false;
         }
     }
 
-    if let Some(min) = min(&node.right) {
-        if node.val >= min {
+    if let Some(right) = &node.right {
+        if node.val >= min(right.clone()) {
             return false;
         }
     }
@@ -29,30 +29,20 @@ fn is_valid_bst_recursive(root: &Tree) -> bool {
     true
 }
 
-fn max(root: &Tree) -> Option<i32> {
-    if root.is_none() {
-        return None;
+fn max(mut rc: Rc<RefCell<TreeNode>>) -> i32 {
+    while rc.borrow().right.is_some() {
+        let node = rc.borrow().right.clone();
+        rc = node.unwrap();
     }
 
-    let mut node = root.clone().unwrap();
-    while node.borrow().right.is_some() {
-        let n = node.borrow().right.clone();
-        node = n.unwrap();
-    }
-    let val = node.borrow().val;
-    Some(val)
+    rc.borrow().val
 }
 
-fn min(root: &Tree) -> Option<i32> {
-    if root.is_none() {
-        return None;
+fn min(mut rc: Rc<RefCell<TreeNode>>) -> i32 {
+    while rc.borrow().left.is_some() {
+        let node = rc.borrow().left.clone();
+        rc = node.unwrap();
     }
 
-    let mut node = root.clone().unwrap();
-    while node.borrow().left.is_some() {
-        let n = node.borrow().left.clone();
-        node = n.unwrap();
-    }
-    let val = node.borrow().val;
-    Some(val)
+    rc.borrow().val
 }
