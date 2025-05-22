@@ -13,16 +13,15 @@ pub struct TreeNode {
 
 impl TreeNode {
     fn new(val: i32, left: Tree, right: Tree) -> Self {
-        Self {
-            val,
-            left: left,
-            right: right,
-        }
+        Self { val, left, right }
     }
 }
 
-mod recursive;
-pub use recursive::is_valid_bst;
+// mod recursive;
+// pub use recursive::is_valid_bst;
+
+mod recursive2;
+pub use recursive2::is_valid_bst;
 
 #[cfg(test)]
 mod tests;
