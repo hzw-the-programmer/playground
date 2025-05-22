@@ -30,4 +30,5 @@ pub mod s55;
 pub mod s643;
 pub mod s714;
 pub mod s77;
+pub mod s94;
 pub mod sliding_window;
