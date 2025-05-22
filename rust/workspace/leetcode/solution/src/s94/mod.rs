@@ -3,19 +3,17 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
+type Tree = Option<Rc<RefCell<TreeNode>>>;
+
 pub struct TreeNode {
     val: i32,
-    left: Option<Rc<RefCell<TreeNode>>>,
-    right: Option<Rc<RefCell<TreeNode>>>,
+    left: Tree,
+    right: Tree,
 }
 
 impl TreeNode {
-    fn new(val: i32) -> Self {
-        Self {
-            val,
-            left: None,
-            right: None,
-        }
+    fn new(val: i32, left: Tree, right: Tree) -> Self {
+        Self { val, left, right }
     }
 }
 
