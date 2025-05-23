@@ -4,3 +4,8 @@ edition = "2024"
 
 [dependencies]
 aes = { version = "=0.9.0-pre.3" }
+inout = "0.2.0-rc.4"
+
+[features]
+default = ["block-padding"]
+block-padding = ["inout/block-padding"]
