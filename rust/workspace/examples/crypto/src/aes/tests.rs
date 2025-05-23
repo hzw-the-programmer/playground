@@ -32,3 +32,24 @@ fn test_aes() {
         assert_eq!(block, &block_copy);
     }
 }
+
+#[test]
+fn test_2() {
+    let key = Array::from([0u8; 16]);
+    let mut block = Array::from([42u8; 16]);
+    let block_copy = block.clone();
+
+    let cipher = Aes128::new(&key);
+
+    cipher.encrypt_block(&mut block);
+    assert_ne!(block, block_copy);
+
+    cipher.encrypt_block(&mut block);
+    assert_ne!(block, block_copy);
+
+    cipher.decrypt_block(&mut block);
+    assert_ne!(block, block_copy);
+
+    cipher.decrypt_block(&mut block);
+    assert_eq!(block, block_copy);
+}
