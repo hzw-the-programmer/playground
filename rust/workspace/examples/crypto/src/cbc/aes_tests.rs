@@ -2,11 +2,12 @@ use aes::cipher::{BlockModeDecrypt, BlockModeEncrypt, KeyIvInit};
 use hex_literal::hex;
 use inout::block_padding::Pkcs7;
 
+type Aes128CbcEnc = cbc::Encryptor<aes::Aes128>;
+type Aes128CbcDec = cbc::Decryptor<aes::Aes128>;
+
 // D:\github\RustCrypto\block-modes\cbc\src\lib.rs
 #[test]
 fn test_1() {
-    type Aes128CbcEnc = cbc::Encryptor<aes::Aes128>;
-    type Aes128CbcDec = cbc::Decryptor<aes::Aes128>;
     let key = [0x42; 16];
     let iv = [0x24; 16];
     // len = 34
@@ -41,4 +42,30 @@ fn test_1() {
         .decrypt_padded_b2b::<Pkcs7>(ct, &mut buf)
         .unwrap();
     assert_eq!(pt, &plaintext[..]);
+}
+
+#[test]
+fn test_2() {
+    let key = [0x42; 16];
+    let iv = [0x24; 16];
+    let plaintext = b"0123456789123456";
+
+    let mut buf = [0u8; 16];
+    let ct =
+        Aes128CbcEnc::new(&key.into(), &iv.into()).encrypt_padded_b2b::<Pkcs7>(plaintext, &mut buf);
+    assert!(ct.is_err());
+
+    // let mut buf = [0u8; 31];
+    let mut buf = [0u8; 32];
+    // let mut buf = [0u8; 33];
+    let ct = Aes128CbcEnc::new(&key.into(), &iv.into())
+        .encrypt_padded_b2b::<Pkcs7>(plaintext, &mut buf)
+        .unwrap();
+    // let mut buf = [0u8; 31];
+    let mut buf = [0u8; 32];
+    // let mut buf = [0u8; 33];
+    let pt = Aes128CbcDec::new(&key.into(), &iv.into())
+        .decrypt_padded_b2b::<Pkcs7>(ct, &mut buf)
+        .unwrap();
+    assert_eq!(pt, plaintext);
 }
