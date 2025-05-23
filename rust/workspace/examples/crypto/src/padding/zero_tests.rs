@@ -39,3 +39,15 @@ fn test_3() {
     let res = ZeroPadding::unpad(&block).unwrap();
     assert_eq!(res, &msg[..pos - 1]);
 }
+
+#[test]
+fn test_4() {
+    let msg = b"0123456789";
+    let pos = msg.len();
+    let mut block: Array<u8, U10> = [0xff; 10].into();
+    block[..pos].copy_from_slice(msg);
+    ZeroPadding::pad(&mut block, pos);
+    assert_eq!(&block[..], b"0123456789");
+    let res = ZeroPadding::unpad(&block).unwrap();
+    assert_eq!(res, &msg[..]);
+}
