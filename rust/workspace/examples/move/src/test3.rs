@@ -3,8 +3,11 @@ use std::fmt::Debug;
 use std::rc::Rc;
 
 pub fn test() {
-    test1();
+    // test1();
     // test2();
+    // test3();
+    test4();
+    // test5();
 }
 
 fn test1() {
@@ -17,6 +20,33 @@ fn test1() {
 }
 
 fn test2() {
+    let root = new_tree(
+        Foo { i: 1 },
+        new_tree(Foo { i: 2 }, None, None),
+        new_tree(Foo { i: 3 }, None, None),
+    );
+    inorder_traversal_preserve(root);
+}
+
+fn test3() {
+    let root = new_tree(
+        Foo { i: 1 },
+        new_tree(Foo { i: 2 }, None, None),
+        new_tree(Foo { i: 3 }, None, None),
+    );
+    inorder_traversal_preserve_2(root);
+}
+
+fn test4() {
+    let root = new_tree(
+        Foo { i: 1 },
+        new_tree(Foo { i: 2 }, None, None),
+        new_tree(Foo { i: 3 }, None, None),
+    );
+    inorder_traversal_preserve_3(root);
+}
+
+fn test5() {
     let root = new_tree(
         Foo { i: 1 },
         new_tree(Foo { i: 2 }, None, None),
@@ -71,6 +101,68 @@ fn inorder_traversal<T: Debug>(mut root: Tree<T>) {
             println!("3");
         }
     }
+}
+
+fn inorder_traversal_preserve<T: Debug>(root: Tree<T>) {
+    let mut root = root.clone();
+    let mut stack = vec![];
+    while root.is_some() || !stack.is_empty() {
+        while let Some(node) = root {
+            println!("1");
+            root = node.borrow_mut().left.take();
+            stack.push(node);
+        }
+
+        if let Some(node) = stack.pop() {
+            println!("2");
+            println!("{:?}", node.borrow().val);
+            assert!(node.borrow().left.is_none());
+            root = node.borrow_mut().right.take();
+            println!("3");
+        }
+    }
+}
+
+fn inorder_traversal_preserve_2<T: Debug>(root: Tree<T>) {
+    let mut root = root.clone();
+    let mut stack = vec![];
+    while root.is_some() || !stack.is_empty() {
+        while let Some(node) = root {
+            println!("1");
+            root = node.borrow().left.clone();
+            stack.push(node);
+        }
+
+        if let Some(node) = stack.pop() {
+            println!("2");
+            println!("{:?}", node.borrow().val);
+            // assert!(node.borrow().left.is_none());
+            root = node.borrow_mut().right.take();
+            println!("3");
+        }
+    }
+    println!("leave");
+}
+
+fn inorder_traversal_preserve_3<T: Debug>(root: Tree<T>) {
+    let mut root = root.clone();
+    let mut stack = vec![];
+    while root.is_some() || !stack.is_empty() {
+        while let Some(node) = root {
+            println!("1");
+            root = node.borrow().left.clone();
+            stack.push(node);
+        }
+
+        if let Some(node) = stack.pop() {
+            println!("2");
+            println!("{:?}", node.borrow().val);
+            // assert!(node.borrow().left.is_none());
+            root = node.borrow().right.clone();
+            println!("3");
+        }
+    }
+    println!("leave");
 }
 
 fn preorder_traversal<T: Debug>(mut root: Tree<T>) {
