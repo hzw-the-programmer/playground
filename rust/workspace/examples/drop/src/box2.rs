@@ -1,6 +1,7 @@
 pub fn test() {
     // test1();
-    test2();
+    // test2();
+    test3();
 }
 
 fn test1() {
@@ -18,6 +19,19 @@ fn test2() {
     });
     {
         let f1 = b.f1;
+        println!("leave block");
+    }
+    println!("leave");
+}
+
+fn test3() {
+    let b = Box::new(Bar {
+        f1: unsafe { std::mem::uninitialized() },
+        f2: Foo(2),
+    });
+    {
+        // let f1 = b.f1;
+        let _ = std::mem::ManuallyDrop::new(b.f1);
         println!("leave block");
     }
     println!("leave");
