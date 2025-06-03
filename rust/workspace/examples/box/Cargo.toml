@@ -1,0 +1,3 @@
+[package]
+name = "boxtest"
+edition = "2024"
