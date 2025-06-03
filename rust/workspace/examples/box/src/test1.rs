@@ -1,5 +1,6 @@
 pub fn test() {
-    test1();
+    // test1();
+    test2();
 }
 
 fn test1() {
@@ -36,4 +37,22 @@ fn test1() {
     println!("p: {:p}", p.as_ref().unwrap() as *const Box<i32>);
 
     let _ = std::mem::ManuallyDrop::new(p);
+}
+
+fn test2() {
+    let a = Some(Box::new(1));
+    let pa = &a as *const Option<Box<i32>>;
+    let pb = a.as_ref().unwrap() as *const Box<i32>;
+    assert_eq!(pa as u64, pb as u64);
+
+    let n1 = a.as_ref();
+    let n2 = a.as_ref();
+    let p1 = &n1 as *const Option<&Box<i32>>;
+    let p2 = &n2 as *const Option<&Box<i32>>;
+    let p3 = n1.unwrap() as *const Box<i32>;
+    let p4 = n2.unwrap() as *const Box<i32>;
+    assert_ne!(p1 as u64, p2 as u64);
+    assert_eq!(p3 as u64, p4 as u64);
+    assert_ne!(p1 as u64, p3 as u64);
+    assert_ne!(p2 as u64, p4 as u64);
 }
