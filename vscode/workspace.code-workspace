@@ -1,0 +1,33 @@
+{
+	"folders": [
+		{
+			"path": "../rust/workspace"
+		},
+		{
+			"path": "../../../serde-rs"
+		},
+		{
+			"path": "../diary"
+		},
+		{
+			"path": "../../../tokio-rs"
+		},
+		{
+			"path": "../../../redis"
+		},
+		{
+			"path": "../../../rust-lang"
+		},
+		{
+			"path": "../../../../rustup_home/toolchains/stable-x86_64-pc-windows-msvc/lib/rustlib/src/rust/library"
+		}
+	],
+	"settings": {
+		"files.readonlyInclude": {
+			"D:\\github\\serde-rs/**": true,
+			"D:\\github\\tokio-rs/**": true,
+			"D:\\github\\rust-lang/**": true,
+			"D:\\rustup_home\\toolchains\\stable-x86_64-pc-windows-msvc\\lib\\rustlib\\src\\rust\\library/**": true,
+		}
+	}
+}

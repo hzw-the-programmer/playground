@@ -1,0 +1,2 @@
+settings:
+ctr + shift + p
