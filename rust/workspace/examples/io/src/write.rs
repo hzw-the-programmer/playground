@@ -1,6 +1,8 @@
 pub fn test() {
     // test1();
-    test2();
+    // test2();
+    // vec_write();
+    cursor_vec_write();
 }
 
 fn test1() {
@@ -26,4 +28,20 @@ fn test2() {
     let _ = c.write(b"hello");
     // println!("{:?}", s);
     println!("{:?}", a);
+}
+
+fn vec_write() {
+    use std::io::Write;
+
+    let mut v = vec![1, 2, 3];
+    let _ = v.write(&[4, 5, 6][..]);
+    println!("{:?}", v);
+}
+
+fn cursor_vec_write() {
+    use std::io::{Cursor, Write};
+
+    let mut c = Cursor::new(vec![1, 2, 3]);
+    let _ = c.write(&[4, 5, 6][..]);
+    println!("{:?}", c.into_inner());
 }
