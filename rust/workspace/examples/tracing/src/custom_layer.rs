@@ -60,6 +60,26 @@ where
         // And store our data
         extensions.insert::<CustomFieldStorage>(storage);
     }
+
+    fn on_record(
+        &self,
+        id: &tracing::span::Id,
+        values: &tracing::span::Record<'_>,
+        ctx: tracing_subscriber::layer::Context<'_, S>,
+    ) {
+        // Get the span whose data is being recorded
+        let span = ctx.span(id).unwrap();
+
+        // Get a mutable reference to the data we created in new_span
+        let mut extensions_mut = span.extensions_mut();
+        let custom_field_storage: &mut CustomFieldStorage =
+            extensions_mut.get_mut::<CustomFieldStorage>().unwrap();
+        let json_data: &mut BTreeMap<String, serde_json::Value> = &mut custom_field_storage.0;
+
+        // And add to using our old friend the visitor!
+        let mut visitor = JsonVisitor(json_data);
+        values.record(&mut visitor);
+    }
 }
 
 // struct PrintlnVisitor;
