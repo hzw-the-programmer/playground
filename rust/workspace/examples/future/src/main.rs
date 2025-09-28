@@ -13,13 +13,13 @@ mod sink;
 mod stream_2;
 mod streams;
 
-// use future_async_await as test;
+use future_async_await as test;
 // use future_state_machine as test;
 // use sink as test;
 // use futures as test;
 // use streams as test;
 // use drop as test;
-use future_2 as test;
+// use future_2 as test;
 // use stream_2 as test;
 // use service as test;
 

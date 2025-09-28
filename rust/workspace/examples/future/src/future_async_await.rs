@@ -3,7 +3,8 @@ use core::task::{Context, Poll, Waker};
 use std::pin::{pin, Pin};
 
 pub fn test() {
-    test1();
+    // test1();
+    test2();
 }
 
 fn test1() {
@@ -27,6 +28,17 @@ fn test1() {
     // future.as_mut().poll(&mut cx);
 
     println!("test1: end");
+}
+
+fn test2() {
+    let mut cx = Context::from_waker(Waker::noop());
+    let mut f = pin!(f3());
+
+    let r = f.as_mut().poll(&mut cx);
+    println!("poll 1: {r:?}");
+
+    let r = f.as_mut().poll(&mut cx);
+    println!("poll 2: {r:?}");
 }
 
 async fn f1() -> i32 {
@@ -60,6 +72,41 @@ impl Future for Foo {
             Poll::Pending
         } else {
             Poll::Ready(self.0)
+        }
+    }
+}
+
+struct Baz(i32);
+
+impl Drop for Baz {
+    fn drop(&mut self) {
+        println!("Baz {} drop", self.0);
+    }
+}
+
+async fn f3() -> i32 {
+    println!("f3: entered");
+    let baz = Baz(1);
+
+    let res = Bar(0).await;
+    println!("f3: {res:?}");
+
+    3
+}
+
+struct Bar(i32);
+
+impl Future for Bar {
+    type Output = i32;
+
+    fn poll(mut self: Pin<&mut Self>, _cx: &mut Context) -> Poll<i32> {
+        if self.0 == 1 {
+            println!("Bar ready");
+            Poll::Ready(4)
+        } else {
+            self.0 += 1;
+            println!("Bar pending");
+            Poll::Pending
         }
     }
 }
