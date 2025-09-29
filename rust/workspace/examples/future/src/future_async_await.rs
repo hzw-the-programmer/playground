@@ -4,7 +4,8 @@ use std::pin::{pin, Pin};
 
 pub fn test() {
     // test1();
-    test2();
+    // test2();
+    test3();
 }
 
 fn test1() {
@@ -109,4 +110,47 @@ impl Future for Bar {
             Poll::Pending
         }
     }
+}
+
+fn test3() {
+    fn f<T: Future>(f: T) {
+        println!("{}", std::mem::size_of::<T>());
+    }
+
+    // 8
+    f(async {
+        Bar(1).await;
+    });
+
+    // 8
+    f(async {
+        let buf = [0; 1024];
+        Bar(1).await;
+    });
+
+    // 1032 = 1024 + 8
+    f(async {
+        let buf = [0u8; 1024];
+        Bar(1).await;
+        let r = buf[0];
+    });
+
+    // 8
+    f(async {
+        struct Foo([u8; 1024]);
+        let foo = Foo([0; 1024]);
+        Bar(1).await;
+    });
+
+    // 1032 = 1024 + 8
+    f(async {
+        struct Foo([u8; 1024]);
+        impl Drop for Foo {
+            fn drop(&mut self) {
+                println!("hhhh");
+            }
+        }
+        let foo = Foo([0; 1024]);
+        Bar(1).await;
+    })
 }
