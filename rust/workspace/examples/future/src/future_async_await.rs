@@ -118,32 +118,40 @@ fn test3() {
     }
 
     // 8
-    f(async {
+    let fu = async {
         Bar(1).await;
-    });
+    };
+    assert_eq!(std::mem::size_of_val(&fu), 8);
+    f(fu);
 
     // 8
-    f(async {
+    let fu = async {
         let buf = [0; 1024];
         Bar(1).await;
-    });
+    };
+    assert_eq!(std::mem::size_of_val(&fu), 8);
+    f(fu);
 
     // 1032 = 1024 + 8
-    f(async {
+    let fu = async {
         let buf = [0u8; 1024];
         Bar(1).await;
         let r = buf[0];
-    });
+    };
+    assert_eq!(std::mem::size_of_val(&fu), 1032);
+    f(fu);
 
     // 8
-    f(async {
+    let fu = async {
         struct Foo([u8; 1024]);
         let foo = Foo([0; 1024]);
         Bar(1).await;
-    });
+    };
+    assert_eq!(std::mem::size_of_val(&fu), 8);
+    f(fu);
 
     // 1032 = 1024 + 8
-    f(async {
+    let fu = async {
         struct Foo([u8; 1024]);
         impl Drop for Foo {
             fn drop(&mut self) {
@@ -152,5 +160,7 @@ fn test3() {
         }
         let foo = Foo([0; 1024]);
         Bar(1).await;
-    })
+    };
+    assert_eq!(std::mem::size_of_val(&fu), 1032);
+    f(fu);
 }
