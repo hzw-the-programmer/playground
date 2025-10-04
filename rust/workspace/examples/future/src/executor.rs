@@ -8,7 +8,8 @@ use std::time::Duration;
 pub fn test() {
     // test1();
     // test2();
-    thread_pool_3();
+    // thread_pool_3();
+    local_pool_1();
 }
 
 fn test1() {
@@ -63,6 +64,16 @@ fn thread_pool_3() {
     });
 
     thread::sleep(Duration::from_secs(3));
+}
+
+fn local_pool_1() {
+    futures_executor::block_on(async {
+        println!("async block begin");
+        Foo(0).await;
+        println!("Foo(0).await return");
+        Bar(0).await;
+        println!("async block end");
+    });
 }
 
 struct Foo(i32);
