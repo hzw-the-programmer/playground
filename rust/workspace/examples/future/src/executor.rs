@@ -1,4 +1,5 @@
-use futures_executor::ThreadPool;
+use futures_executor::{LocalPool, ThreadPool};
+use futures_util::task::SpawnExt;
 use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -9,7 +10,8 @@ pub fn test() {
     // test1();
     // test2();
     // thread_pool_3();
-    local_pool_1();
+    // local_pool_1();
+    local_pool_2();
 }
 
 fn test1() {
@@ -74,6 +76,13 @@ fn local_pool_1() {
         Bar(0).await;
         println!("async block end");
     });
+}
+
+fn local_pool_2() {
+    let mut pool = LocalPool::new();
+    let mut spawner = pool.spawner();
+    spawner.spawn(Foo(0));
+    pool.run();
 }
 
 struct Foo(i32);
