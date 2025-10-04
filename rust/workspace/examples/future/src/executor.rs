@@ -7,7 +7,8 @@ use std::time::Duration;
 
 pub fn test() {
     // test1();
-    test2();
+    // test2();
+    thread_pool_3();
 }
 
 fn test1() {
@@ -41,6 +42,29 @@ fn test2() {
     thread::sleep(Duration::from_secs(3));
 }
 
+fn thread_pool_3() {
+    let pool = ThreadPool::builder()
+        .after_start(|idx| {
+            println!("{idx} after start");
+        })
+        .before_stop(|idx| {
+            println!("{idx} before stop");
+        })
+        .pool_size(1)
+        .create()
+        .unwrap();
+
+    pool.spawn_ok(async {
+        println!("async block begin");
+        Foo(0).await;
+        println!("Foo(0).await return");
+        Bar(0).await;
+        println!("async block end");
+    });
+
+    thread::sleep(Duration::from_secs(3));
+}
+
 struct Foo(i32);
 
 impl Future for Foo {
@@ -53,11 +77,35 @@ impl Future for Foo {
             let waker = cx.waker().clone();
             thread::spawn(|| {
                 thread::sleep(Duration::from_secs(1));
+                println!("wake");
                 waker.wake();
             });
             Poll::Pending
         } else {
             println!("Foo::poll Ready");
+            Poll::Ready(())
+        }
+    }
+}
+
+struct Bar(i32);
+
+impl Future for Bar {
+    type Output = ();
+
+    fn poll(mut self: Pin<&mut Bar>, cx: &mut Context) -> Poll<()> {
+        if self.0 == 0 {
+            println!("Bar::poll Pending");
+            self.0 += 1;
+            let waker = cx.waker().clone();
+            thread::spawn(|| {
+                thread::sleep(Duration::from_secs(1));
+                println!("wake");
+                waker.wake();
+            });
+            Poll::Pending
+        } else {
+            println!("Bar::poll Ready");
             Poll::Ready(())
         }
     }
