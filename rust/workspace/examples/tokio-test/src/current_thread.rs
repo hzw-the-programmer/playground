@@ -1,3 +1,7 @@
+use std::future::Future;
+use std::pin::Pin;
+use std::task::{Context, Poll};
+use std::time::Duration;
 use tokio::runtime::{Builder, Handle};
 use tokio::task;
 // RUSTFLAGS="--cfg tokio_unstable" cargo run
@@ -10,6 +14,7 @@ pub fn test() {
     // test5();
     // test6();
     test7();
+    // test8();
 }
 
 fn test1() {
@@ -69,7 +74,11 @@ fn test6() {
 }
 
 fn test7() {
-    let rt = Builder::new_current_thread().build().unwrap();
+    let rt = Builder::new_current_thread()
+        .on_thread_park(|| println!("before_park"))
+        .on_thread_unpark(|| println!("after_unpark"))
+        .build()
+        .unwrap();
     rt.block_on(async {
         println!("root future begin");
         let j1 = task::spawn(async {
@@ -80,4 +89,43 @@ fn test7() {
         });
         j1.await.unwrap();
     });
+}
+
+fn test8() {
+    let rt = Builder::new_current_thread()
+        .on_thread_park(|| println!("before_park"))
+        .on_thread_unpark(|| println!("after_unpark"))
+        .build()
+        .unwrap();
+    rt.block_on(async {
+        println!("root future begin");
+        task::spawn(async {
+            println!("child 1");
+        });
+        task::spawn(async {
+            println!("child 2");
+        });
+        Foo(0).await;
+    });
+}
+
+struct Foo(i32);
+
+impl Future for Foo {
+    type Output = ();
+
+    fn poll(mut self: Pin<&mut Self>, cx: &mut Context) -> Poll<Self::Output> {
+        if self.0 == 0 {
+            let waker = cx.waker().clone();
+            std::thread::spawn(move || {
+                std::thread::sleep(Duration::from_secs(3));
+                waker.wake();
+            });
+            self.0 = 1;
+            Poll::Pending
+        } else {
+            println!("Foo ready");
+            Poll::Ready(())
+        }
+    }
 }
