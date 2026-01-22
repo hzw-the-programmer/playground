@@ -1,0 +1,6 @@
+[package]
+name = "totp"
+edition = "2024"
+
+[dependencies]
+totp-rs = { version = "5.7.0", features = ["otpauth"] }

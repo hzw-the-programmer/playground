@@ -13,8 +13,9 @@ pub fn test() {
     // test4();
     // test5();
     // test6();
-    test7();
+    // test7();
     // test8();
+    test9();
 }
 
 fn test1() {
@@ -128,4 +129,23 @@ impl Future for Foo {
             Poll::Ready(())
         }
     }
+}
+
+fn test9() {
+    let rt = Builder::new_current_thread()
+        .enable_time()
+        .on_thread_park(|| println!("before_park"))
+        .on_thread_unpark(|| println!("after_unpark"))
+        .build()
+        .unwrap();
+    rt.block_on(async {
+        println!("root future begin");
+        task::spawn(async {
+            println!("child 1");
+        });
+        task::spawn(async {
+            println!("child 2");
+        });
+        tokio::time::sleep(Duration::from_secs(3)).await;
+    });
 }

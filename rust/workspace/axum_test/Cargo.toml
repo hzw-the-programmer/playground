@@ -3,5 +3,5 @@ name = "axum_text"
 edition = "2021"
 
 [dev-dependencies]
-axum = "0.7.5"
-tokio = { version = "1.37.0", features = ["full"] }
+axum = "0.8.5"
+tokio = { version = "1", features = ["full"] }

@@ -23,10 +23,10 @@ mod tests {
     fn partition_point() {
         let s = [1, 3, 3, 4, 7, 9];
         assert_eq!(s.partition_point(|&x| x < 1), 0);
-        
+
         assert_eq!(s.partition_point(|&x| x < 3), 1);
         assert_eq!(s.partition_point(|&x| x <= 3), 3);
-        
+
         assert_eq!(s.partition_point(|&x| x < 4), 3);
         assert_eq!(s.partition_point(|&x| x < 7), 4);
         assert_eq!(s.partition_point(|&x| x < 9), 5);

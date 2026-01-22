@@ -89,3 +89,18 @@ fn test_deserialize_seq() {
     let res = d.deserialize_seq(visitor);
     assert_eq!(res.unwrap(), vec![1, 2, 3]);
 }
+
+// cargo expand --lib --tests
+#[test]
+fn test_user() {
+    #[derive(Deserialize)]
+    struct User {
+        fingerprint: String,
+        location: String,
+    }
+
+    let j = "{fingerprint: \"0xF9BA143B95FF6D82\", location: \"Menlo Park, CA\"}";
+    let user: User = serde_json::from_str(j).unwrap();
+    assert_eq!(user.fingerprint, "0xF9BA143B95FF6D82");
+    assert_eq!(user.location, "Menlo Park, CA");
+}
