@@ -18,7 +18,8 @@ fn main() {
 
     let model = BertModel::load(vb, &config).unwrap();
 
-    let mut tokenizer = Tokenizer::from_file("D:\\modules\\bge-large-zh-v1.5\\tokenizer.json").unwrap();
+    let mut tokenizer =
+        Tokenizer::from_file("D:\\modules\\bge-large-zh-v1.5\\tokenizer.json").unwrap();
     let tokenizer = tokenizer.with_padding(None).with_truncation(None).unwrap();
     let tokens = tokenizer
         .encode("Here is a test sentence", true)
@@ -31,7 +32,7 @@ fn main() {
         .unwrap();
     let token_type_ids = token_ids.zeros_like().unwrap();
     let ys = model.forward(&token_ids, &token_type_ids, None).unwrap();
-    
+
     println!("{ys}");
     println!("hello");
 }
