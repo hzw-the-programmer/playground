@@ -4304,6 +4304,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "tokenizer"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "candle-core",
+ "candle-nn",
+ "candle-transformers",
+ "clap",
+ "serde_json",
+ "tokenizers",
+]
+
+[[package]]
 name = "tokenizers"
 version = "0.22.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
