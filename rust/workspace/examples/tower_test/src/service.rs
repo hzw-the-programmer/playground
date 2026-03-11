@@ -20,7 +20,7 @@ impl Future for Future0 {
     type Output = Result<i32, ()>;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        println!("Future0::poll");
+        tracing::debug!("Future0::poll");
         Poll::Ready(Ok(1))
     }
 }
@@ -33,12 +33,12 @@ impl<Req> Service<Req> for Service0 {
     type Future = Future0;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        println!("Service0::poll_ready");
+        tracing::debug!("Service0::poll_ready");
         Poll::Ready(Ok(()))
     }
 
     fn call(&mut self, req: Req) -> Self::Future {
-        println!("Service0::call");
+        tracing::debug!("Service0::call");
         Future0
     }
 }
@@ -56,12 +56,12 @@ where
     type Future = T::Future;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        println!("Service1::poll_ready");
+        tracing::debug!("Service1::poll_ready");
         self.inner.poll_ready(cx)
     }
 
     fn call(&mut self, req: Request) -> Self::Future {
-        println!("Service1::call");
+        tracing::debug!("Service1::call");
         self.inner.call(req)
     }
 }
@@ -72,7 +72,7 @@ impl<S> Layer<S> for Layer1 {
     type Service = Service1<S>;
 
     fn layer(&self, service: S) -> Self::Service {
-        println!("Layer1::layer");
+        tracing::debug!("Layer1::layer");
         Service1 { inner: service }
     }
 }
@@ -90,12 +90,12 @@ where
     type Future = T::Future;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        println!("Service2::poll_ready");
+        tracing::debug!("Service2::poll_ready");
         self.inner.poll_ready(cx)
     }
 
     fn call(&mut self, req: Request) -> Self::Future {
-        println!("Service2::call");
+        tracing::debug!("Service2::call");
         self.inner.call(req)
     }
 }
@@ -106,7 +106,7 @@ impl<S> Layer<S> for Layer2 {
     type Service = Service2<S>;
 
     fn layer(&self, service: S) -> Self::Service {
-        println!("Layer2::layer");
+        tracing::debug!("Layer2::layer");
         Service2 { inner: service }
     }
 }
