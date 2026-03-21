@@ -23,3 +23,6 @@ impl AtomicCounter {
         self.count.load(Ordering::SeqCst)
     }
 }
+
+#[cfg(test)]
+mod tests;
