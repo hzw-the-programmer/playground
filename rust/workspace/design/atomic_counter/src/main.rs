@@ -1,7 +1,8 @@
 use std::sync::Arc;
 use std::thread;
 
-use atomic_counter::atomic_counter::AtomicCounter;
+// use atomic_counter::atomic_counter::AtomicCounter;
+use atomic_counter::AtomicCounter;
 
 fn main() {
     let counter = Arc::new(AtomicCounter::new(0));
