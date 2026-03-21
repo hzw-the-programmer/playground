@@ -1,6 +1,8 @@
 use std::sync::Arc;
-use std::sync::atomic::{AtomicI64, Ordering};
 use std::thread;
+
+mod atomic_counter;
+use atomic_counter::AtomicCounter;
 
 fn main() {
     let counter = Arc::new(AtomicCounter::new(0));
@@ -24,28 +26,4 @@ fn main() {
     }
 
     println!("{}", counter.get());
-}
-
-struct AtomicCounter {
-    count: AtomicI64,
-}
-
-impl AtomicCounter {
-    pub fn new(initial: i64) -> Self {
-        Self {
-            count: AtomicI64::new(initial),
-        }
-    }
-
-    pub fn inc(&self) {
-        self.count.fetch_add(1, Ordering::SeqCst);
-    }
-
-    pub fn dec(&self) {
-        self.count.fetch_sub(1, Ordering::SeqCst);
-    }
-
-    pub fn get(&self) -> i64 {
-        self.count.load(Ordering::SeqCst)
-    }
 }
