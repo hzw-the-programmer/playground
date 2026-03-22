@@ -87,6 +87,48 @@ impl<T> LinkedList<T> {
 
         current.map(|node| &node.value)
     }
+
+    pub fn insert(&mut self, index: usize, value: T) {
+        if index > self.len {
+            panic!("index out of bounds");
+        }
+
+        if index == 0 {
+            self.push_front(value);
+            return;
+        }
+
+        let mut current = self.head.as_mut().unwrap();
+        for _ in 0..index - 1 {
+            current = current.next.as_mut().unwrap();
+        }
+
+        let node = Box::new(Node {
+            value,
+            next: current.next.take(),
+        });
+        current.next = Some(node);
+        self.len += 1;
+    }
+
+    pub fn remove(&mut self, index: usize) -> Option<T> {
+        if index >= self.len {
+            return None;
+        }
+
+        if index == 0 {
+            return self.pop_front();
+        }
+
+        let mut current = self.head.as_mut().unwrap();
+        for _ in 0..index - 1 {
+            current = current.next.as_mut().unwrap();
+        }
+        let node = current.next.take().unwrap();
+        current.next = node.next;
+        self.len -= 1;
+        Some(node.value)
+    }
 }
 
 #[cfg(test)]
