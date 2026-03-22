@@ -192,9 +192,16 @@ impl<T> Iterator for IntoIter<T> {
     }
 }
 
+// 手动清空链表，避免递归析构导致栈溢出
 impl<T> Drop for LinkedList<T> {
     fn drop(&mut self) {
         while self.pop_front().is_some() {}
+    }
+}
+
+impl<T: std::fmt::Debug> std::fmt::Debug for LinkedList<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_list().entries(self.iter()).finish()
     }
 }
 
