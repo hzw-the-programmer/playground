@@ -1,6 +1,36 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
+/*
+设计一个内存安全的链表（禁止使用 unsafe）
+
+题目要求
+
+实现一个单向链表，支持：
+追加节点（push_back）；
+插入节点到指定位置（insert）；
+删除指定值的节点（remove）；
+遍历链表（iter）；
+内存安全（无悬垂引用、无内存泄漏、无数据竞争）；
+禁止使用 unsafe 代码（考察 Rust 安全抽象）。
+
+设计思路
+
+核心结构：使用 Rc<RefCell<Node>> 实现共享可变节点（Rc 共享所有权，RefCell 运行时借用检查）；
+节点设计：Node 包含值和指向下一个节点的 Option<Rc<RefCell<Node>>>；
+链表头：使用 Option<Rc<RefCell<Node>>> 表示链表头；
+遍历：实现 IntoIterator，返回安全的不可变迭代器；
+内存安全：依赖 Rc 的引用计数自动释放内存，RefCell 防止同时可变借用。
+
+关键考点
+
+所有权与借用（Rc/RefCell 的使用）；
+安全的可变共享；
+迭代器实现；
+无 unsafe 的数据结构设计；
+内存泄漏避免（打破循环引用）。
+*/
+
 #[derive(PartialEq)]
 struct Node<T> {
     value: T,
