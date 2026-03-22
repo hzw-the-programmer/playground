@@ -58,3 +58,11 @@ fn iterators() {
     let values: Vec<_> = list.into_iter().collect();
     assert_eq!(values, [1, 3, 5]);
 }
+
+#[test]
+fn drop_large_list() {
+    let mut list = LinkedList::new();
+    for i in 0..100000 {
+        list.push_front(i);
+    }
+}
