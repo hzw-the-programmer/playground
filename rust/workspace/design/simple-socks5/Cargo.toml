@@ -1,0 +1,8 @@
+[package]
+name = "simple-socks5"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+thiserror = "2.0.18"
+tokio = { version = "1.50.0", features = ["io-util", "macros", "net", "rt", "rt-multi-thread"] }
