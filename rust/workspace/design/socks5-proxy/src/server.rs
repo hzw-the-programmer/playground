@@ -9,6 +9,8 @@ use crate::error::Socks5Error;
 
 const SOCKS5_VERSION: u8 = 0x05;
 const SOCKS5_CMD_CONNECT: u8 = 0x01;
+const SOCKS5_CMD_BIND: u8 = 0x02;
+const SOCKS5_CMD_UDP_ASSOCIATE: u8 = 0x03;
 const SOCKS5_ATYP_IPV4: u8 = 0x01;
 const SOCKS5_ATYP_DOMAIN: u8 = 0x03;
 const SOCKS5_ATYP_IPV6: u8 = 0x04;
@@ -98,8 +100,8 @@ async fn parse_request(client: &mut TcpStream) -> Result<(String, u16), Socks5Er
 
     if cmd != SOCKS5_CMD_CONNECT {
         let code = match cmd {
-            0x02 => SOCKS5_REP_COMMAND_NOT_SUPPORTED,
-            0x03 => SOCKS5_REP_COMMAND_NOT_SUPPORTED,
+            SOCKS5_CMD_BIND => SOCKS5_REP_COMMAND_NOT_SUPPORTED,
+            SOCKS5_CMD_UDP_ASSOCIATE => SOCKS5_REP_COMMAND_NOT_SUPPORTED,
             _ => SOCKS5_REP_COMMAND_NOT_SUPPORTED,
         };
         send_response(client, code).await?;
