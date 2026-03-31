@@ -2456,6 +2456,8 @@ dependencies = [
  "hyper",
  "hyper-util",
  "pretty_env_logger",
+ "serde",
+ "serde_json",
  "tokio",
 ]
 
