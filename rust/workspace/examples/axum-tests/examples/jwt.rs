@@ -2,13 +2,20 @@
 // curl -s -w '\n' -H 'Content-Type: application/json' -d '{"client_id": "foo", "client_secret": "bar"}' http://localhost:3000/authorize
 // {"access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiQGIuY29tIiwiY29tcGFueSI6IkFDTUUiLCJleHAiOjIwMDAwMDAwMDB9.ULPZ0NLBq9tfHroRgxJJeEYCy0tguZrEwix3fo-2dFc","token_type":"Bearer"}
 
+use std::fmt::Display;
+
 use axum::{
-    Json, Router,
-    http::StatusCode,
+    Json, RequestPartsExt, Router,
+    extract::FromRequestParts,
+    http::{StatusCode, request::Parts},
     response::{IntoResponse, Response},
     routing::{get, post},
 };
-use jsonwebtoken::{DecodingKey, EncodingKey, Header, encode};
+use axum_extra::{
+    TypedHeader,
+    headers::{Authorization, authorization::Bearer},
+};
+use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode};
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -32,7 +39,7 @@ async fn main() {
         .init();
 
     let app = Router::new()
-        // .route("/protected", get(protected))
+        .route("/protected", get(protected))
         .route("/authorize", post(authorize));
 
     let listener = TcpListener::bind("127.0.0.1:3000").await.unwrap();
@@ -42,9 +49,11 @@ async fn main() {
         .unwrap();
 }
 
-// async fn protected(claims: Claims) -> Result<String, AuthError> {
-//     Ok(format!("Welcome to the protected area :)\nYour data:\n{claims}"))
-// }
+async fn protected(claims: Claims) -> Result<String, AuthError> {
+    Ok(format!(
+        "Welcome to the protected area :)\nYour data:\n{claims}"
+    ))
+}
 
 async fn authorize(Json(payload): Json<AuthPayload>) -> Result<Json<AuthBody>, AuthError> {
     if payload.client_id.is_empty() || payload.client_secret.is_empty() {
@@ -112,11 +121,36 @@ impl IntoResponse for AuthError {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Debug)]
 struct Claims {
     sub: String,
     company: String,
     exp: usize,
+}
+
+impl<S> FromRequestParts<S> for Claims
+where
+    S: Send + Sync,
+{
+    type Rejection = AuthError;
+
+    async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
+        let TypedHeader(Authorization(bearer)) = parts
+            .extract::<TypedHeader<Authorization<Bearer>>>()
+            .await
+            .map_err(|_| AuthError::InvalidToken)?;
+        tracing::debug!("{:#?}", bearer);
+        let token_data = decode::<Claims>(bearer.token(), &KEYS.decoding, &Validation::default())
+            .map_err(|_| AuthError::InvalidToken)?;
+        tracing::debug!("{:#?}", token_data);
+        Ok(token_data.claims)
+    }
+}
+
+impl Display for Claims {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Email: {}\nCompany: {}", self.sub, self.company)
+    }
 }
 
 struct Keys {

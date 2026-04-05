@@ -719,11 +719,34 @@ dependencies = [
 ]
 
 [[package]]
+name = "axum-extra"
+version = "0.12.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fef252edff26ddba56bbcdf2ee3307b8129acb86f5749b68990c168a6fcc9c76"
+dependencies = [
+ "axum 0.8.8",
+ "axum-core 0.5.6",
+ "bytes",
+ "futures-core",
+ "futures-util",
+ "headers",
+ "http 1.4.0",
+ "http-body",
+ "http-body-util",
+ "mime",
+ "pin-project-lite",
+ "tower-layer",
+ "tower-service",
+ "tracing",
+]
+
+[[package]]
 name = "axum-tests"
 version = "0.1.0"
 dependencies = [
  "askama",
  "axum 0.8.8",
+ "axum-extra",
  "futures",
  "http-body-util",
  "jsonwebtoken",
