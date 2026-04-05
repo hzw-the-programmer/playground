@@ -1,6 +1,7 @@
 // JWT_SECRET=secret cargo run --example jwt
 // curl -s -w '\n' -H 'Content-Type: application/json' -d '{"client_id": "foo", "client_secret": "bar"}' http://localhost:3000/authorize
 // {"access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiQGIuY29tIiwiY29tcGFueSI6IkFDTUUiLCJleHAiOjIwMDAwMDAwMDB9.ULPZ0NLBq9tfHroRgxJJeEYCy0tguZrEwix3fo-2dFc","token_type":"Bearer"}
+// curl -s -w '\n' -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiQGIuY29tIiwiY29tcGFueSI6IkFDTUUiLCJleHAiOjIwMDAwMDAwMDB9.ULPZ0NLBq9tfHroRgxJJeEYCy0tguZrEwix3fo-2dFc' http://localhost:3000/protected
 
 use std::fmt::Display;
 
