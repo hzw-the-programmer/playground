@@ -5,7 +5,8 @@ edition = "2024"
 
 [dependencies]
 askama = "0.15.6"
-axum = "0.8.8"
+axum = { version = "0.8.8", features = ["ws"] }
+futures = "0.3.32"
 minijinja = "2.19.0"
 serde = { version = "1.0.228", features = ["serde_derive"] }
 tokio = { version = "1.51.0", features = ["full"] }
