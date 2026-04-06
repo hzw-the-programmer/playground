@@ -749,14 +749,18 @@ dependencies = [
  "axum-extra",
  "futures",
  "http-body-util",
+ "hyper",
+ "hyper-util",
  "jsonwebtoken",
  "minijinja",
  "once_cell",
  "serde",
  "serde_json",
  "tokio",
+ "tokio-rustls",
  "tower 0.5.3",
  "tower-http",
+ "tower-service",
  "tracing",
  "tracing-subscriber",
 ]
@@ -2688,9 +2692,9 @@ dependencies = [
 
 [[package]]
 name = "hyper"
-version = "1.8.1"
+version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2ab2d4f250c3d7b1c9fcdff1cece94ea4e2dfbec68614f7b87cb205f24ca9d11"
+checksum = "6299f016b246a94207e63da54dbe807655bf9e00044f73ded42c3ac5305fbcca"
 dependencies = [
  "atomic-waker",
  "bytes",
@@ -2703,7 +2707,6 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "pin-utils",
  "smallvec",
  "tokio",
  "want",
@@ -4603,6 +4606,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "758025cb5fccfd3bc2fd74708fd4682be41d99e5dff73c377c0646c6012c73a4"
 dependencies = [
  "aws-lc-rs",
+ "log",
  "once_cell",
  "rustls-pki-types",
  "rustls-webpki",
