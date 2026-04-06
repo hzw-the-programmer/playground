@@ -1,4 +1,4 @@
-use rustls::{ClientConfig, RootCertStore, Stream, pki_types::ServerName};
+use rustls::{ClientConfig, ClientConnection, RootCertStore, Stream, pki_types::ServerName};
 use std::{
     io::{Read, Write},
     net::TcpStream,
@@ -20,7 +20,7 @@ fn main() -> anyhow::Result<()> {
     let mut tcp_stream = TcpStream::connect(addr)?;
 
     let server_name = ServerName::try_from(domain)?.to_owned();
-    let mut client_conn = rustls::ClientConnection::new(config, server_name)?;
+    let mut client_conn = ClientConnection::new(config, server_name)?;
     let mut tls_stream = Stream::new(&mut client_conn, &mut tcp_stream);
 
     let request = format!(
