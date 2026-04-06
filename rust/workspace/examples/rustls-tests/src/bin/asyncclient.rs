@@ -9,7 +9,10 @@ use tokio_rustls::TlsConnector;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let mut root_store = RootCertStore::empty();
-    root_store.extend(webpki_roots::TLS_SERVER_ROOTS.iter().cloned());
+    // root_store.extend(webpki_roots::TLS_SERVER_ROOTS.iter().cloned());
+    for cert in rustls_native_certs::load_native_certs().unwrap() {
+        root_store.add(cert)?
+    }
 
     let config = ClientConfig::builder()
         .with_root_certificates(root_store)
