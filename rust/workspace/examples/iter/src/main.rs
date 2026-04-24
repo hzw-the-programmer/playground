@@ -12,9 +12,10 @@
 #![feature(iter_array_chunks)]
 
 // mod iter;
-mod iter2;
+// mod iter2;
+mod iter3;
 
-use iter2 as test;
+use iter3 as test;
 
 fn main() {
     test::test();
