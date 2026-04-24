@@ -11,9 +11,10 @@
 #![feature(iter_intersperse)]
 #![feature(iter_array_chunks)]
 
-mod iter;
+// mod iter;
+mod iter2;
 
-use iter as test;
+use iter2 as test;
 
 fn main() {
     test::test();
