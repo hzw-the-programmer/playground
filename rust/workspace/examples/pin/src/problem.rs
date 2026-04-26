@@ -112,4 +112,12 @@ pub fn test() {
     println!("a.data: {:p}", &a.data);
     println!("a.ptr : {:p}", a.ptr);
     println!("{}\n", unsafe { &(*a.ptr) });
+
+    let b = *a;
+    println!("b     : {:p}", &b);
+    // error[E0277]: the trait bound `SelfRef: Pointer` is not satisfied
+    // println!("b     : {:p}", b);
+    println!("b.data: {:p}", &b.data);
+    println!("b.ptr : {:p}", b.ptr);
+    println!("{}\n", unsafe { &(*b.ptr) });
 }
