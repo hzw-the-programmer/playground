@@ -4,9 +4,10 @@
 // mod test2;
 // mod test3;
 // mod test4;
-mod pin_project;
+// mod pin_project;
+mod problem;
 
-use pin_project as test;
+use problem as test;
 
 fn main() {
     test::test();
