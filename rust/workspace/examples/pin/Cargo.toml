@@ -4,3 +4,4 @@ edition = "2021"
 
 [dependencies]
 pin-project = "1.1.11"
+pin-project-lite = "0.2.17"
