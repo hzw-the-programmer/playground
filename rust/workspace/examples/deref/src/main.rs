@@ -1,12 +1,13 @@
-#![allow(dead_code)]
+#![allow(unused)]
 
-mod test1;
-mod test2;
-mod test3;
-mod test4;
-mod test5;
+// mod test1;
+// mod test2;
+// mod test3;
+// mod test4;
+// mod test5;
+mod deref_test;
 
-use test5 as test;
+use deref_test as test;
 
 fn main() {
     test::test();
