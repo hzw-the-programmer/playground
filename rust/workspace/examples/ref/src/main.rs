@@ -1,6 +1,7 @@
-mod test1;
+// mod test1;
+mod copy_move;
 
-use test1 as test;
+use copy_move as test;
 
 fn main() {
     test::test();
