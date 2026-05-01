@@ -1,5 +1,10 @@
 
 
+任务的根 Future 会调用 TcpListener 的相关读写函数。
+如果这些函数没准备好，则会将任务的 waker 注册到 ScheduledIo 上，并返回 Pending。
+等 dirver::turn 函数监测到可读写事件，通过 ScheduleIo::wake 唤醒注册到 ScheduleIo 上的任务 waker。
+waker 将任务从新放入就绪队列。
+
 D:\cargo_home\registry\src\index.crates.io-1949cf8c6b5b557f\tokio-1.50.0\src\net\tcp\listener.rs
 ```rust
 pub struct TcpListener {
