@@ -5,6 +5,7 @@ use std::{
     time::Duration,
 };
 
+use futures_util::future::join_all;
 use tower::{Service, ServiceBuilder, ServiceExt, limit::ConcurrencyLimitLayer};
 
 #[tokio::main]
@@ -21,9 +22,12 @@ async fn main() {
         })
         .collect();
 
-    for handle in handles {
-        let _ = handle.await.unwrap();
-    }
+    let ret: Vec<_> = join_all(handles)
+        .await
+        .into_iter()
+        .map(|r| r.unwrap().unwrap())
+        .collect();
+    assert_eq!(ret, [123; 10]);
 }
 
 #[derive(Clone)]

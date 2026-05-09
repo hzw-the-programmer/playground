@@ -4,5 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+futures-util = "0.3.32"
 tokio = { version = "1.52.3", features = ["time", "rt", "macros", "rt-multi-thread"] }
 tower = { version = "0.5.3", features = ["limit", "util"] }
