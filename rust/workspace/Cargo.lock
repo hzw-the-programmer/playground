@@ -1293,6 +1293,8 @@ dependencies = [
  "futures-util",
  "tokio",
  "tower 0.5.3",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]
