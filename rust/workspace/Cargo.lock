@@ -3210,17 +3210,6 @@ name = "lift"
 version = "0.0.0"
 
 [[package]]
-name = "limit"
-version = "0.1.0"
-dependencies = [
- "futures-util",
- "tokio",
- "tower 0.5.3",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "linux-raw-sys"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3389,6 +3378,17 @@ checksum = "38d1115007560874e373613744c6fba374c17688327a71c1476d1a5954cc857b"
 [[package]]
 name = "method"
 version = "0.0.0"
+
+[[package]]
+name = "middleware"
+version = "0.1.0"
+dependencies = [
+ "futures-util",
+ "tokio",
+ "tower 0.5.3",
+ "tracing",
+ "tracing-subscriber",
+]
 
 [[package]]
 name = "miette"
