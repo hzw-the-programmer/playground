@@ -20,7 +20,9 @@ async fn main() {
         .init();
 
     let svc = ServiceBuilder::new()
+        // 第一次失败后，再尝试 3 次，总共 4 次
         .layer(RetryLayer::new(Attempts(3)))
+        // 4 次失败，1 次成功，总共 5 次
         .service(Svc(4));
 
     assert!(svc.oneshot(1).await.is_err());
