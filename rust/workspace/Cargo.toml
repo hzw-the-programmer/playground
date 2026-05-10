@@ -1,5 +1,5 @@
 [workspace]
-members = ["axum_test", "examples/*", "leetcode/*", "rust_in_action/*", "programming_rust/*/*", "blog_os", "algorithm", "candle_test/*", "design/*", "ffmpeg-examples/*", "tower-tests/*"]
+members = ["axum_test", "examples/*", "leetcode/*", "rust_in_action/*", "programming_rust/*/*", "blog_os", "algorithm", "candle_test/*", "design/*", "ffmpeg-examples/*", "tower-tests/*", "axum-tests"]
 resolver = "2"
 
 # [patch.crates-io]
