@@ -73,3 +73,86 @@ fn release_acquire_is_correct() {
         reader.join().unwrap();
     });
 }
+
+/*
+// thread 'test::test_relaxed_bug' (23160) panicked at D:\cargo_home\registry\src\index.crates.io-1949cf8c6b5b557f\loom-0.7.2\src\rt\path.rs:247:13:
+// Model exceeded maximum number of branches. This is often caused by an algorithm requiring the processor to make progress, e.g. spin locks.
+#[test]
+fn test_relaxed_bug() {
+    loom::model(|| {
+        let flag = Arc::new(AtomicBool::new(false));
+        let data = Arc::new(AtomicI32::new(0));
+
+        // 线程1：先写 flag，再写 data（Relaxed 允许重排）
+        let t1 = {
+            let flag = flag.clone();
+            let data = data.clone();
+            thread::spawn(move || {
+                data.store(100, Ordering::Relaxed);
+                flag.store(true, Ordering::Relaxed);
+            })
+        };
+
+        // 线程2：读 flag，再读 data
+        let t2 = {
+            let flag = flag.clone();
+            let data = data.clone();
+            thread::spawn(move || {
+                loop {
+                    if flag.load(Ordering::Relaxed) {
+                        let d = data.load(Ordering::Relaxed);
+                        // Loom 会触发：flag=true 但 d=0
+                        if d == 0 {
+                            panic!("BUG: flag=true but data=0 (Relaxed 乱序)");
+                        }
+                        break;
+                    }
+                }
+            })
+        };
+
+        t1.join().unwrap();
+        t2.join().unwrap();
+    });
+}
+*/
+
+/*
+// thread 'test::test_release_acquire_correct' (24600) panicked at D:\cargo_home\registry\src\index.crates.io-1949cf8c6b5b557f\loom-0.7.2\src\rt\path.rs:247:13:
+// Model exceeded maximum number of branches. This is often caused by an algorithm requiring the processor to make progress, e.g. spin locks.
+#[test]
+fn test_release_acquire_correct() {
+    loom::model(|| {
+        let flag = Arc::new(AtomicBool::new(false));
+        let data = Arc::new(AtomicI32::new(0));
+
+        // 线程1：Release 保证 data 先写，flag 后写
+        let t1 = {
+            let flag = flag.clone();
+            let data = data.clone();
+            thread::spawn(move || {
+                data.store(100, Ordering::Release);
+                flag.store(true, Ordering::Release);
+            })
+        };
+
+        // 线程2：Acquire 保证读到 flag=true 后，data 一定可见
+        let t2 = {
+            let flag = flag.clone();
+            let data = data.clone();
+            thread::spawn(move || {
+                loop {
+                    if flag.load(Ordering::Acquire) {
+                        let d = data.load(Ordering::Acquire);
+                        assert_eq!(d, 100); // 永远成功
+                        break;
+                    }
+                }
+            })
+        };
+
+        t1.join().unwrap();
+        t2.join().unwrap();
+    });
+}
+*/
