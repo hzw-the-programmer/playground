@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 mod test1;
 mod test2;
 
