@@ -3,8 +3,10 @@
 
 mod test1;
 mod test2;
+mod test3;
+mod test4;
 
-use test2 as test;
+use test4 as test;
 
 fn main() {
     test::test();
