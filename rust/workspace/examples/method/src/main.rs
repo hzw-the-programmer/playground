@@ -6,6 +6,7 @@ mod test2;
 mod test3;
 mod test4;
 mod test5;
+mod test6;
 
 use test5 as test;
 
