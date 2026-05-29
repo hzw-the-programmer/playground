@@ -1,15 +1,17 @@
-use crate::foo_bar::{Bar, Foo};
+use crate::foo_bar::{Bar, Baz, Foo};
 use crate::poll_result_custom::{PollCustom, ResultCustom};
 
 pub fn test() {
-    test1();
-    test2();
-    test3();
-    test4();
-    test5();
-    test6();
+    // test1();
+    // test2();
+    // test3();
+    // test4();
+    // test5();
+    // test6();
+    test7();
 }
 
+/*
 fn test1() {
     println!("\ntest1: enter");
 
@@ -138,4 +140,28 @@ fn test6() {
     println!("test6: {:?}", r);
 
     println!("test6: leave");
+}
+*/
+
+fn test7() {
+    println!("\ntest7: enter");
+
+    fn f() -> PollCustom<ResultCustom<Foo, Bar>> {
+        println!("f: enter");
+
+        let r = PollCustom::Ready(ResultCustom::<i32, i32>::Ok(1));
+        let r = r?;
+        println!("{r:?}");
+
+        let r = PollCustom::Ready(ResultCustom::<i32, Baz>::Err(Baz));
+
+        let _r = r?;
+
+        PollCustom::Ready(ResultCustom::Ok(Foo))
+    }
+
+    let r = f();
+    println!("test7: {:?}", r);
+
+    println!("test7: leave");
 }
